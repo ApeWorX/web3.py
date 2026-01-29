@@ -1,0 +1,1 @@
+Remove all ``get_uncle*`` sync/async methods as deprecated

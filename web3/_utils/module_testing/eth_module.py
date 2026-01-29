@@ -2238,36 +2238,6 @@ class AsyncEthModuleTest:
         assert transaction_count >= 1
 
     @pytest.mark.asyncio
-    async def test_eth_getUncleCountByBlockHash(
-        self, async_w3: "AsyncWeb3[Any]", async_empty_block: BlockData
-    ) -> None:
-        with pytest.warns(
-            DeprecationWarning,
-            match=r"get_uncle_count is deprecated: all get_uncle\* "
-            r"methods will be removed in v8",
-        ):
-            uncle_count = await async_w3.eth.get_uncle_count(async_empty_block["hash"])
-
-            assert is_integer(uncle_count)
-            assert uncle_count == 0
-
-    @pytest.mark.asyncio
-    async def test_eth_getUncleCountByBlockNumber(
-        self, async_w3: "AsyncWeb3[Any]", async_empty_block: BlockData
-    ) -> None:
-        with pytest.warns(
-            DeprecationWarning,
-            match=r"get_uncle_count is deprecated: all get_uncle\* "
-            r"methods will be removed in v8",
-        ):
-            uncle_count = await async_w3.eth.get_uncle_count(
-                async_empty_block["number"]
-            )
-
-            assert is_integer(uncle_count)
-            assert uncle_count == 0
-
-    @pytest.mark.asyncio
     async def test_eth_getBlockTransactionCountByNumber_block_with_txn(
         self, async_w3: "AsyncWeb3[Any]", async_block_with_txn: BlockData
     ) -> None:
@@ -2875,28 +2845,6 @@ class EthModuleTest:
 
         assert is_integer(transaction_count)
         assert transaction_count >= 1
-
-    def test_eth_getUncleCountByBlockHash(
-        self, w3: "Web3", empty_block: BlockData
-    ) -> None:
-        with pytest.warns(
-            DeprecationWarning, match=r"All get_uncle\* methods have been deprecated"
-        ):
-            uncle_count = w3.eth.get_uncle_count(empty_block["hash"])
-
-            assert is_integer(uncle_count)
-            assert uncle_count == 0
-
-    def test_eth_getUncleCountByBlockNumber(
-        self, w3: "Web3", empty_block: BlockData
-    ) -> None:
-        with pytest.warns(
-            DeprecationWarning, match=r"All get_uncle\* methods have been deprecated"
-        ):
-            uncle_count = w3.eth.get_uncle_count(empty_block["number"])
-
-            assert is_integer(uncle_count)
-            assert uncle_count == 0
 
     def test_eth_get_code(
         self, w3: "Web3", math_contract_address: ChecksumAddress

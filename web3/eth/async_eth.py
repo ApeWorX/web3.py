@@ -30,9 +30,6 @@ from web3._utils.blocks import (
 from web3._utils.compat import (
     Unpack,
 )
-from web3._utils.decorators import (
-    deprecated_for,
-)
 from web3._utils.fee_utils import (
     async_fee_history_priority_fee,
 )
@@ -653,22 +650,6 @@ class AsyncEth(BaseEth):
         self, account: Address | ChecksumAddress | ENS, data: dict[str, Any]
     ) -> HexStr:
         return await self._sign_typed_data(account, data)
-
-    # eth_getUncleCountByBlockHash
-    # eth_getUncleCountByBlockNumber
-
-    _get_uncle_count: Method[Callable[[BlockIdentifier], Awaitable[int]]] = Method(
-        method_choice_depends_on_args=select_method_for_block_identifier(
-            if_predefined=RPC.eth_getUncleCountByBlockNumber,
-            if_hash=RPC.eth_getUncleCountByBlockHash,
-            if_number=RPC.eth_getUncleCountByBlockNumber,
-        ),
-        mungers=[default_root_munger],
-    )
-
-    @deprecated_for("all get_uncle* methods will be removed in v8")
-    async def get_uncle_count(self, block_identifier: BlockIdentifier) -> int:
-        return await self._get_uncle_count(block_identifier)
 
     # eth_newFilter, eth_newBlockFilter, eth_newPendingTransactionFilter
 
