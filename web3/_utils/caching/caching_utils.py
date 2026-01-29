@@ -152,8 +152,6 @@ BLOCKNUM_IN_PARAMS = {
     RPC.eth_getBlockByNumber,
     RPC.eth_getRawTransactionByBlockNumberAndIndex,
     RPC.eth_getBlockTransactionCountByNumber,
-    RPC.eth_getUncleByBlockNumberAndIndex,
-    RPC.eth_getUncleCountByBlockNumber,
 }
 BLOCK_IN_RESULT = {
     RPC.eth_getBlockByHash,
@@ -164,8 +162,6 @@ BLOCK_IN_RESULT = {
 }
 BLOCKHASH_IN_PARAMS = {
     RPC.eth_getRawTransactionByBlockHashAndIndex,
-    RPC.eth_getUncleByBlockHashAndIndex,
-    RPC.eth_getUncleCountByBlockHash,
 }
 
 INTERNAL_VALIDATION_MAP: dict[

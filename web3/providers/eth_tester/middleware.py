@@ -264,10 +264,6 @@ request_formatters = {
         apply_formatter_if(is_not_named_block, to_integer_if_hex),
         to_integer_if_hex,
     ),
-    RPCEndpoint("eth_getUncleByBlockNumberAndIndex"): apply_formatters_to_args(
-        apply_formatter_if(is_not_named_block, to_integer_if_hex),
-        to_integer_if_hex,
-    ),
     RPCEndpoint("eth_newFilter"): apply_formatters_to_args(
         filter_request_transformer,
     ),

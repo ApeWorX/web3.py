@@ -726,12 +726,6 @@ PYTHONIC_REQUEST_FORMATTERS: dict[RPCEndpoint, Callable[..., Any]] = {
     RPC.eth_getRawTransactionByBlockHashAndIndex: apply_formatter_at_index(
         to_hex_if_integer, 1
     ),
-    RPC.eth_getUncleCountByBlockNumber: apply_formatter_at_index(to_hex_if_integer, 0),
-    RPC.eth_getUncleByBlockNumberAndIndex: compose(
-        apply_formatter_at_index(to_hex_if_integer, 0),
-        apply_formatter_at_index(to_hex_if_integer, 1),
-    ),
-    RPC.eth_getUncleByBlockHashAndIndex: apply_formatter_at_index(to_hex_if_integer, 1),
     RPC.eth_newFilter: apply_formatter_at_index(filter_params_formatter, 0),
     RPC.eth_getLogs: apply_formatter_at_index(filter_params_formatter, 0),
     RPC.eth_call: apply_one_of_formatters(
@@ -1031,8 +1025,6 @@ PYTHONIC_RESULT_FORMATTERS: dict[RPCEndpoint, Callable[..., Any]] = {
         is_not_null,
         receipt_formatter,
     ),
-    RPC.eth_getUncleCountByBlockHash: to_integer_if_hex,
-    RPC.eth_getUncleCountByBlockNumber: to_integer_if_hex,
     RPC.eth_protocolVersion: compose(
         apply_formatter_if(is_0x_prefixed, to_integer_if_hex),
         apply_formatter_if(is_integer, str),
@@ -1184,10 +1176,6 @@ NULL_RESULT_FORMATTERS: dict[RPCEndpoint, Callable[..., Any]] = {
     RPC.eth_getBlockReceipts: raise_block_not_found,
     RPC.eth_getBlockTransactionCountByHash: raise_block_not_found,
     RPC.eth_getBlockTransactionCountByNumber: raise_block_not_found,
-    RPC.eth_getUncleCountByBlockHash: raise_block_not_found,
-    RPC.eth_getUncleCountByBlockNumber: raise_block_not_found,
-    RPC.eth_getUncleByBlockHashAndIndex: raise_block_not_found_for_uncle_at_index,
-    RPC.eth_getUncleByBlockNumberAndIndex: raise_block_not_found_for_uncle_at_index,
     RPC.eth_getTransactionByHash: raise_transaction_not_found,
     RPC.eth_getTransactionByBlockHashAndIndex: raise_transaction_not_found_with_index,
     RPC.eth_getTransactionByBlockNumberAndIndex: raise_transaction_not_found_with_index,
