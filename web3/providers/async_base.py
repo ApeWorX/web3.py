@@ -192,7 +192,10 @@ class AsyncJSONBaseProvider(AsyncBaseProvider):
             "id": request_id,
             "jsonrpc": "2.0",
             "method": method,
-            "params": params or [],
+            # Preserve the caller's params shape (e.g. empty tuple stays an empty
+            # tuple) so send/recv-caching compute the same cache key. JSON
+            # serialization still emits `[]` for empty iterables.
+            "params": [] if params is None else params,
         }
         return cast(RPCRequest, rpc_dict)
 

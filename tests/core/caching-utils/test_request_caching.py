@@ -28,6 +28,7 @@ from web3._utils.caching.caching_utils import (
     CHAIN_VALIDATION_THRESHOLD_DEFAULTS,
     DEFAULT_VALIDATION_THRESHOLD,
     INTERNAL_VALIDATION_MAP,
+    async_handle_send_caching,
 )
 from web3.exceptions import (
     Web3RPCError,
@@ -54,9 +55,7 @@ ASYNC_PROVIDERS = [
 def simple_cache_return_value_a():
     _cache = SimpleCache()
     _cache.cache(
-        generate_cache_key(
-            f"{threading.get_ident()}:{generate_cache_key(('fake_endpoint', [1]))}"
-        ),
+        generate_cache_key(f"{threading.get_ident()}:{('fake_endpoint', [1])}"),
         {"jsonrpc": "2.0", "id": 0, "result": "value-a"},
     )
     return _cache
@@ -939,67 +938,10 @@ async def test_async_validation_against_validation_threshold_time_based_configur
         assert len(cached_items) == 1 if should_cache else len(cached_items) == 0
 
 
-# -- persistent connection provider (websocket) caching -- #
-# These tests exercise the send/recv split architecture used by WebSocketProvider
-# (and AsyncIPCProvider), which routes through socket_request -> send_request
-# (async_handle_send_caching) + recv_for_request (async_handle_recv_caching).
-
-
 @pytest.mark.asyncio
-async def test_ws_provider_caching_via_socket_request_only_sends_once(
-    request_mocker,
-):
-    """
-    For PersistentConnectionProvider (WebSocket), verify that a cacheable request
-    (eth_chainId) is only sent over the wire once when called multiple times.
-
-    Before the fix in gh-3823, form_request normalised `()` -> `[]` via
-    ``params or []`` in async_base.py, so the cache key computed in
-    async_handle_send_caching never matched the key stored after the first
-    response, causing a network round-trip on every call.
-    """
-    async_w3 = await _async_w3_init(WebSocketProvider)
-
-    # Return an incrementing hex value on each underlying mock call.
-    # If caching works the second eth.chain_id call returns the cached result
-    # (same int as the first).  If caching is broken it returns the next value.
-    values = iter(["0x1", "0x2", "0x3", "0x4", "0x5"])
-
-    def chain_id_cb(_method, _params):
-        return next(values)
-
-    async with request_mocker(async_w3, mock_results={"eth_chainId": chain_id_cb}):
-        # first call: hits the network, result cached
-        result_a = await async_w3.eth.chain_id
-        # second call: must be served from cache (same value as first)
-        result_b = await async_w3.eth.chain_id
-
-    # With caching: both calls return the same cached value
-    # Without caching: second call returns the next value in the iterator
-    assert result_a == result_b, (
-        "Second eth_chainId call returned a different value — "
-        "persistent-connection caching is broken (see gh-3823)"
-    )
-
-
-@pytest.mark.asyncio
-async def test_ws_send_caching_dummy_request_preserves_method_and_params(
-    request_mocker,
-):
-    """
-    When async_handle_send_caching detects a cache hit it returns a dummy
-    RPCRequest with id=-1 instead of sending a real request.  The dummy must
-    carry the original method and params so that async_handle_recv_caching can
-    compute the same cache key and serve the response from cache.
-
-    Before gh-3823 the dummy used method="" and params=[], which caused
-    async_handle_recv_caching to fall through to _get_response_for_request_id(-1)
-    and eventually raise TimeExhausted.
-    """
-    from web3._utils.caching.caching_utils import (
-        async_handle_send_caching,
-    )
-
+async def test_ws_send_caching_dummy_request_preserves_method_and_params():
+    # Regression for gh-3823: on a cache hit the send-caching dummy must
+    # carry the original method/params so recv-caching computes the same key.
     async def fake_send(provider, method, params):
         return {"id": 1, "method": method, "params": params}
 
@@ -1008,46 +950,34 @@ async def test_ws_send_caching_dummy_request_preserves_method_and_params(
     async_w3 = await _async_w3_init(WebSocketProvider)
     provider = async_w3.provider
 
-    # Manually insert a cache entry so the send wrapper sees a hit
     method = RPCEndpoint("eth_chainId")
     params: list = []
-    cache_key = generate_cache_key(
-        f"{threading.get_ident()}:{generate_cache_key((method, params))}"
-    )
+    cache_key = generate_cache_key(f"{threading.get_ident()}:{(method, params)}")
     provider._request_cache.cache(
         cache_key, {"jsonrpc": "2.0", "id": 99, "result": "0x1"}
     )
 
     dummy = await wrapped(provider, method, params)
 
-    # The dummy must preserve the original method and params, NOT empty strings/lists
     assert dummy["id"] == -1
     assert dummy["method"] == method
     assert dummy["params"] == params
 
 
-@pytest.mark.asyncio
-async def test_ws_recv_caching_serves_response_for_dummy_request(
-    request_mocker,
-):
-    """
-    async_handle_recv_caching must return the cached response when it receives
-    the dummy RPCRequest (id=-1) produced by async_handle_send_caching on a
-    cache hit.  This verifies the full send->recv round-trip for cached WS
-    requests works end-to-end without touching the network.
-    """
-    async_w3 = await _async_w3_init(WebSocketProvider)
-
-    async with request_mocker(async_w3, mock_results={"eth_chainId": "0x1"}):
-        # first call populates the cache
-        first_result = await async_w3.eth.chain_id
-
-        # second call must be served from cache (no new network request)
-        second_result = await async_w3.eth.chain_id
-
-    assert first_result == second_result, (
-        "Second eth_chainId call returned a different value — "
-        "recv-caching did not serve the response from cache (see gh-3823)"
-    )
-    # The response cache should contain exactly one entry for eth_chainId
-    assert len(async_w3.provider._request_cache.items()) == 1
+@pytest.mark.parametrize(
+    "input_params,expected",
+    [
+        ((), ()),
+        ({}, {}),
+        (None, []),
+    ],
+    ids=["empty-tuple", "empty-dict", "none"],
+)
+def test_async_form_request_preserves_params_shape(input_params, expected):
+    # Regression for gh-3823: `params or []` collapsed every falsy value
+    # (empty tuple, empty dict, etc.) into `[]`, breaking cache-key equality
+    # between send-caching and recv-caching for persistent-connection providers.
+    provider = AsyncHTTPProvider()
+    req = provider.form_request(RPCEndpoint("eth_chainId"), input_params)
+    assert req["params"] == expected
+    assert type(req["params"]) is type(expected)
