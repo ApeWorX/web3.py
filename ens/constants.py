@@ -1,3 +1,5 @@
+import re
+
 from eth_typing import (
     ChecksumAddress,
     HexAddress,
@@ -32,3 +34,30 @@ ENS_TEXT_INTERFACE_ID = HexStr("0x59d1d43c")
 ENS_CONTENT_HASH_INTERFACE_ID = HexStr("0xbc1c58d1")
 ENS_MULTICHAIN_ADDRESS_INTERFACE_ID = HexStr("0xf1cb7e06")  # ENSIP-9
 ENS_EXTENDED_RESOLVER_INTERFACE_ID = HexStr("0x9061b923")  # ENSIP-10
+
+# --- avatar resolution regex --- #
+NETWORK_REGEX = re.compile(
+    r"""
+    (?P<protocol>https?:\/\/[^/]*|ipfs:\/|ipns:\/|ar:\/)?
+    (?P<root>\/)?
+    (?P<subpath>ipfs\/|ipns\/)?
+    (?P<target>[\w\-.]+)
+    (?P<subtarget>\/.*)?
+    """,
+    re.VERBOSE,
+)
+
+IPFS_HASH_REGEX = re.compile(
+    r"""
+    ^(Qm[1-9A-HJ-NP-Za-km-z]{44,}
+    |b[A-Za-z2-7]{58,}
+    |B[A-Z2-7]{58,}
+    |z[1-9A-HJ-NP-Za-km-z]{48,}
+    |F[0-9A-F]{50,})
+    (\/(?P<target>[\w\-.]+))?
+    (?P<subtarget>\/.*)?$
+    """,
+    re.VERBOSE,
+)
+BASE64_REGEX = re.compile(r"^data:([a-zA-Z\-/+]*);base64,([^\"].*)")
+DATA_URI_REGEX = re.compile(r"^data:([a-zA-Z\-/+]*)?(;[a-zA-Z0-9].*?)?(,)")

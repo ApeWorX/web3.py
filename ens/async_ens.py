@@ -1,6 +1,7 @@
 from copy import (
     deepcopy,
 )
+import re
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -45,6 +46,7 @@ from ens.constants import (
 )
 from ens.exceptions import (
     AddressMismatch,
+    EnsAvatarError,
     ENSValueError,
     ResolverNotFound,
     UnauthorizedError,
@@ -52,6 +54,8 @@ from ens.exceptions import (
     UnsupportedFunction,
 )
 from ens.utils import (
+    UriItem,
+    _parse_avatar_uri,
     address_in,
     address_to_reverse_domain,
     default,
@@ -62,6 +66,7 @@ from ens.utils import (
     label_to_hash,
     normal_name_to_hash,
     normalize_name,
+    parse_nft_uri,
     raw_name_to_hash,
 )
 
@@ -435,6 +440,65 @@ class AsyncENS(BaseENS):
         return await self._set_property(
             name, r.functions.setText, (node, key, value), transact
         )
+
+    async def get_avatar(
+        self, name: str, gateway_urls: Optional[dict[str, str]] = None
+    ) -> Optional[str]:
+        """
+        Resolve the 'avatar' text record for `name` into a usable URI when possible.
+        For more details checkout out [ENSIP 15](https://docs.ens.domains/ensip/15/)
+
+        :param str name: ENS name to look up
+        :param dict gateway_urls: optional mapping
+        of gateway overrides,
+        e.g. {"ipfs": "...", "arweave": "..."}
+        :return: resolved avatar URI or None
+        :raises EnsAvatarError: when avatar resolution fails in specific ways
+        """
+        record = await self.get_text(name, "avatar")
+        if not record:
+            return None
+        gateway_urls = gateway_urls or {}
+        # If the avatar record contains an eip155 NFT URI, resolve token URI first
+        if re.search(r"eip155:", record, re.IGNORECASE):
+            return await self._parse_nft_avatar_uri(record, gateway_urls)
+        item = _parse_avatar_uri(record, gateway_urls)
+        if isinstance(item, UriItem):
+            return item.uri
+        raise EnsAvatarError(f"Unexpected avatar parse result for {name!r}")
+
+    async def _parse_nft_avatar_uri(
+        self, record: str, gateway_urls: Optional[dict[str, str]] = None
+    ) -> Optional[str]:
+        parsed_nft = parse_nft_uri(record)
+        nft_uri: Optional[str] = None
+        if parsed_nft.namespace == "erc721":
+            nft_token_contract = self.w3.eth.contract(
+                abi=abis.ERC_721_TOKEN_URI,
+                address=self.w3.to_checksum_address(parsed_nft.contract_address),
+            )
+            nft_uri = await nft_token_contract.functions.tokenURI(
+                int(parsed_nft.token_id)
+            ).call()
+        if parsed_nft.namespace == "erc1155":
+            nft_token_contract = self.w3.eth.contract(
+                abi=abis.ERC_1155_TOKEN_URI,
+                address=self.w3.to_checksum_address(parsed_nft.contract_address),
+            )
+            nft_uri = await nft_token_contract.functions.uri(
+                int(parsed_nft.token_id)
+            ).call()
+        if not nft_uri:
+            raise EnsAvatarError(
+                f"""
+                Could not resolve to token uri
+                given contract address of {parsed_nft.contract_address}
+                """
+            )
+        avatar = _parse_avatar_uri(nft_uri, gateway_urls)
+        if isinstance(avatar, UriItem):
+            return avatar.uri
+        raise EnsAvatarError(f"Unexpected avatar parse result for {record}")
 
     # -- private methods -- #
 

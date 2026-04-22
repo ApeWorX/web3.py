@@ -1,4 +1,5 @@
 import pytest
+import base64
 from unittest import (
     mock,
 )
@@ -23,6 +24,8 @@ from ens.exceptions import (
     ENSValidationError,
 )
 from ens.utils import (
+    UriItem,
+    _parse_avatar_uri,
     dns_encode_name,
     ens_encode_name,
     init_async_web3,
@@ -245,3 +248,45 @@ async def test_init_async_web3_with_provider_argument_adds_async_eth():
     latest_block = await async_w3.eth.get_block("latest")
     assert latest_block
     assert is_integer(latest_block["number"])
+
+
+def test_ipfs_path_normalizes_to_gateway():
+    # use a simple ipfs path form that network_regex will match (subpath "ipfs/")
+    uri = "ipfs/QmTestHash123"
+    item = _parse_avatar_uri(uri)
+    assert isinstance(item, UriItem)
+    assert item.uri == "https://ipfs.io/ipfs/QmTestHash123"
+    assert item.is_on_chain is False
+    assert item.is_encoded is False
+
+
+def test_inline_svg_converted_to_data_uri():
+    svg = "<svg xmlns='http://www.w3.org/2000/svg'><rect width='10' height='10'/></svg>"
+    item = _parse_avatar_uri(svg)
+    assert isinstance(item, UriItem)
+    assert item.is_on_chain is True
+    assert item.is_encoded is False
+    assert item.uri.startswith("data:image/svg+xml;base64,")
+    # verify the payload decodes back to the original svg (utf-8)
+    payload_b64 = item.uri.split(",", 1)[1]
+    decoded = base64.b64decode(payload_b64).decode("utf-8")
+    assert decoded == svg
+
+
+def test_data_base64_detected_as_encoded():
+    data_uri = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA"
+    item = _parse_avatar_uri(data_uri)
+    assert isinstance(item, UriItem)
+    assert item.is_on_chain is True
+    assert item.is_encoded is True
+    assert item.uri == data_uri
+
+
+def test_arweave_gateway_replacement():
+    original = "https://arweave.net/someid/g.png"
+    custom = {"arweave": "https://mygateway.test"}
+    item = _parse_avatar_uri(original, gateway_urls=custom)
+    assert isinstance(item, UriItem)
+    assert item.uri == "https://mygateway.test/someid/g.png"
+    assert item.is_on_chain is False
+    assert item.is_encoded is False

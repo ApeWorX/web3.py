@@ -1209,3 +1209,23 @@ REVERSE_REGISTRAR = [
         "type": "constructor",
     },
 ]
+
+ERC_721_TOKEN_URI = [
+    {
+        "name": "tokenURI",
+        "type": "function",
+        "stateMutability": "view",
+        "inputs": [{"name": "tokenId", "type": "uint256"}],
+        "outputs": [{"name": "", "type": "string"}],
+    }
+]
+
+ERC_1155_TOKEN_URI = [
+    {
+        "name": "uri",
+        "type": "function",
+        "stateMutability": "view",
+        "inputs": [{"name": "_id", "type": "uint256"}],
+        "outputs": [{"name": "", "type": "string"}],
+    }
+]
