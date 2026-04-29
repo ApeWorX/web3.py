@@ -5,6 +5,10 @@ from unittest.mock import (
     patch,
 )
 
+from eth_abi import (
+    encode as abi_encode,
+)
+
 from ens import (
     ENS,
     AsyncENS,
@@ -17,6 +21,9 @@ from ens.utils import (
 )
 from web3 import (
     AsyncWeb3,
+)
+from web3.exceptions import (
+    ContractLogicError,
 )
 from web3.middleware import (
     GasPriceStrategyMiddleware,
@@ -195,6 +202,31 @@ def test_ens_address_lookup_with_coin_type(ens):
     assert returned_address == address
 
 
+@pytest.mark.parametrize(
+    "ur_resolve_outcome",
+    (
+        pytest.param(ContractLogicError("ResolverNotFound"), id="revert"),
+        pytest.param((b"", "0x" + "00" * 20), id="empty-bytes"),
+        pytest.param(
+            (abi_encode(["bytes"], [b"\x00" * 20]), "0x" + "00" * 20),
+            id="zero-address",
+        ),
+        pytest.param((b"\x00" * 20, "0x" + "00" * 20), id="raw-zero-bytes"),
+    ),
+)
+def test_ens_address_with_coin_type_returns_none_when_no_record(
+    ens, ur_resolve_outcome
+):
+    mock_ur_caller = MagicMock()
+    if isinstance(ur_resolve_outcome, Exception):
+        mock_ur_caller.resolve.side_effect = ur_resolve_outcome
+    else:
+        mock_ur_caller.resolve.return_value = ur_resolve_outcome
+
+    with patch.object(ens._universal_resolver, "caller", mock_ur_caller):
+        assert ens.address("tester.eth", coin_type=60) is None
+
+
 # -- async -- #
 
 
@@ -371,3 +403,29 @@ async def test_async_ens_address_lookup_with_coin_type(async_ens):
     assert decoded_node == expected_node
     assert decoded_coin_type == coin_type
     assert returned_address == address
+
+
+@pytest.mark.parametrize(
+    "ur_resolve_outcome",
+    (
+        pytest.param(ContractLogicError("ResolverNotFound"), id="revert"),
+        pytest.param((b"", "0x" + "00" * 20), id="empty-bytes"),
+        pytest.param(
+            (abi_encode(["bytes"], [b"\x00" * 20]), "0x" + "00" * 20),
+            id="zero-address",
+        ),
+        pytest.param((b"\x00" * 20, "0x" + "00" * 20), id="raw-zero-bytes"),
+    ),
+)
+@pytest.mark.asyncio
+async def test_async_ens_address_with_coin_type_returns_none_when_no_record(
+    async_ens, ur_resolve_outcome
+):
+    mock_ur_caller = AsyncMock()
+    if isinstance(ur_resolve_outcome, Exception):
+        mock_ur_caller.resolve.side_effect = ur_resolve_outcome
+    else:
+        mock_ur_caller.resolve.return_value = ur_resolve_outcome
+
+    with patch.object(async_ens._universal_resolver, "caller", mock_ur_caller):
+        assert await async_ens.address("tester.eth", coin_type=60) is None

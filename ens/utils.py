@@ -275,7 +275,7 @@ def assert_signer_in_modifier_kwargs(modifier_kwargs: Any) -> ChecksumAddress:
 
 
 def is_none_or_zero_address(addr: Address | ChecksumAddress | HexAddress) -> bool:
-    return not addr or addr == EMPTY_ADDR_HEX
+    return not addr or addr == EMPTY_ADDR_HEX or addr == b"\x00" * 20
 
 
 def is_empty_name(name: str) -> bool:
