@@ -1,10 +1,6 @@
 import pytest
 import asyncio
 import json
-from unittest.mock import (
-    AsyncMock,
-    MagicMock,
-)
 
 from eth_tester import (
     EthereumTester,
@@ -34,6 +30,10 @@ from ens.contract_data import (
 )
 from ens.exceptions import (
     ENSTypeError,
+)
+from tests.ens._ur_mock import (
+    install_async_ur_mock,
+    install_ur_mock,
 )
 from web3 import (
     AsyncWeb3,
@@ -158,174 +158,11 @@ def ENSRegistryFactory(w3):
     )
 
 
-def _make_ur_mock(ens_instance):
-    """
-    Create a mock Universal Resolver that delegates to the local eth_tester
-    registry. This simulates what the real UR does on mainnet.
-    """
-    from ens.utils import (
-        is_none_or_zero_address,
-        normal_name_to_hash,
-    )
-
-    def _dns_decode_name(dns_name):
-        """Decode DNS wire format back to dot-separated name."""
-        labels = []
-        i = 0
-        while i < len(dns_name):
-            length = dns_name[i]
-            if length == 0:
-                break
-            i += 1
-            labels.append(dns_name[i : i + length].decode("utf-8"))
-            i += length
-        return ".".join(labels)
-
-    def _find_resolver(dns_name):
-        """Walk up the name hierarchy to find a resolver, like the real UR."""
-        name = _dns_decode_name(dns_name)
-        current = name
-        while current:
-            node = normal_name_to_hash(current)
-            resolver_addr = ens_instance.ens.caller.resolver(node)
-            if not is_none_or_zero_address(resolver_addr):
-                return resolver_addr, normal_name_to_hash(name), 0
-            parts = current.split(".", 1)
-            current = parts[1] if len(parts) > 1 else ""
-        return "0x" + "00" * 20, b"\x00" * 32, 0
-
-    def mock_resolve(dns_name, calldata):
-        # Simulate UR resolve: find resolver, forward calldata, handle CCIP-Read.
-        resolver_addr, _, _ = _find_resolver(dns_name)
-        if is_none_or_zero_address(resolver_addr):
-            from web3.exceptions import (
-                ContractLogicError,
-            )
-
-            raise ContractLogicError("No resolver found")
-        # Try ENSIP-10 resolve() — handles CCIP-Read/offchain resolvers.
-        # Only fall back to direct eth_call if the resolver doesn't have
-        # a resolve() function (simple resolvers).
-        try:
-            resolver = ens_instance._resolver_contract(address=resolver_addr)
-            result = resolver.caller.resolve(dns_name, calldata)
-            return result, resolver_addr
-        except Exception as e:
-            from eth_tester.exceptions import (
-                TransactionFailed,
-            )
-
-            from web3.exceptions import (
-                ContractLogicError,
-            )
-
-            if not isinstance(e, (TransactionFailed, ContractLogicError)):
-                raise
-        # Direct call for resolvers without resolve().
-        # Wrap eth_tester errors as ContractLogicError to match real UR behavior.
-        try:
-            result = ens_instance.w3.eth.call({"to": resolver_addr, "data": calldata})
-        except Exception as e:
-            from web3.exceptions import (
-                ContractLogicError,
-            )
-
-            raise ContractLogicError(str(e)) from e
-        return result, resolver_addr
-
-    def mock_find_resolver(dns_name):
-        return _find_resolver(dns_name)
-
-    mock_caller = MagicMock()
-    mock_caller.resolve = mock_resolve
-    mock_caller.findResolver = mock_find_resolver
-    ens_instance._universal_resolver = MagicMock()
-    ens_instance._universal_resolver.caller = mock_caller
-
-
-def _make_async_ur_mock(ens_instance):
-    """Async version of the UR mock."""
-    from ens.utils import (
-        is_none_or_zero_address,
-        normal_name_to_hash,
-    )
-
-    def _dns_decode_name(dns_name):
-        labels = []
-        i = 0
-        while i < len(dns_name):
-            length = dns_name[i]
-            if length == 0:
-                break
-            i += 1
-            labels.append(dns_name[i : i + length].decode("utf-8"))
-            i += length
-        return ".".join(labels)
-
-    async def _find_resolver(dns_name):
-        name = _dns_decode_name(dns_name)
-        current = name
-        while current:
-            node = normal_name_to_hash(current)
-            resolver_addr = await ens_instance.ens.caller.resolver(node)
-            if not is_none_or_zero_address(resolver_addr):
-                return resolver_addr, normal_name_to_hash(name), 0
-            parts = current.split(".", 1)
-            current = parts[1] if len(parts) > 1 else ""
-        return "0x" + "00" * 20, b"\x00" * 32, 0
-
-    async def mock_resolve(dns_name, calldata):
-        resolver_addr, _, _ = await _find_resolver(dns_name)
-        if is_none_or_zero_address(resolver_addr):
-            from web3.exceptions import (
-                ContractLogicError,
-            )
-
-            raise ContractLogicError("No resolver found")
-        try:
-            resolver = ens_instance._resolver_contract(address=resolver_addr)
-            result = await resolver.caller.resolve(dns_name, calldata)
-            return result, resolver_addr
-        except Exception as e:
-            from eth_tester.exceptions import (
-                TransactionFailed,
-            )
-
-            from web3.exceptions import (
-                ContractLogicError,
-            )
-
-            if not isinstance(e, (TransactionFailed, ContractLogicError)):
-                raise
-        # Direct call for resolvers without resolve().
-        # Wrap eth_tester errors as ContractLogicError to match real UR behavior.
-        try:
-            result = await ens_instance.w3.eth.call(
-                {"to": resolver_addr, "data": calldata}
-            )
-        except Exception as e:
-            from web3.exceptions import (
-                ContractLogicError,
-            )
-
-            raise ContractLogicError(str(e)) from e
-        return result, resolver_addr
-
-    async def mock_find_resolver(dns_name):
-        return await _find_resolver(dns_name)
-
-    mock_caller = AsyncMock()
-    mock_caller.resolve = mock_resolve
-    mock_caller.findResolver = mock_find_resolver
-    ens_instance._universal_resolver = MagicMock()
-    ens_instance._universal_resolver.caller = mock_caller
-
-
 @pytest.fixture
 def ens(ens_setup, mocker):
     mocker.patch("web3.middleware.stalecheck._is_fresh", return_value=True)
     ens_setup.w3.eth.default_account = ens_setup.w3.eth.accounts[0]
-    _make_ur_mock(ens_setup)
+    install_ur_mock(ens_setup)
     return ens_setup
 
 
@@ -828,5 +665,5 @@ async def async_ens(async_ens_setup, mocker):
     mocker.patch("web3.middleware.stalecheck._is_fresh", return_value=True)
     accounts = await async_ens_setup.w3.eth.accounts
     async_ens_setup.w3.eth.default_account = accounts[0]
-    _make_async_ur_mock(async_ens_setup)
+    install_async_ur_mock(async_ens_setup)
     return async_ens_setup

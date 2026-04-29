@@ -156,12 +156,7 @@ class ENS(BaseENS):
         if coin_type is None:
             return cast(ChecksumAddress, self._resolve(name, "addr"))
         else:
-            node = raw_name_to_hash(name)
-            normal_name = normalize_name(name)
-            dns_name = dns_encode_name(normal_name)
-            calldata = self._resolver_contract.encode_abi(
-                "addr", args=[node, coin_type]
-            )
+            dns_name, calldata = self._prepare_resolve_call(name, "addr", [coin_type])
             try:
                 result, resolver_addr = self._universal_resolver.caller.resolve(
                     dns_name, calldata
@@ -410,10 +405,7 @@ class ENS(BaseENS):
             ContractLogicError,
         )
 
-        node = raw_name_to_hash(name)
-        normal_name = normalize_name(name)
-        dns_name = dns_encode_name(normal_name)
-        calldata = self._resolver_contract.encode_abi("text", args=[node, key])
+        dns_name, calldata = self._prepare_resolve_call(name, "text", [key])
         try:
             result, resolver_addr = self._universal_resolver.caller.resolve(
                 dns_name, calldata
@@ -477,6 +469,19 @@ class ENS(BaseENS):
             self.ens.functions.setResolver(namehash, resolver_addr).transact(transact)
         return cast("Contract", self._resolver_contract(address=resolver_addr))
 
+    def _prepare_resolve_call(
+        self,
+        name: str,
+        fn_name: str,
+        args: Sequence[Any] = (),
+        contract: Optional["Contract"] = None,
+    ) -> tuple[HexBytes, str]:
+        contract = contract or cast("Contract", self._resolver_contract)
+        node = raw_name_to_hash(name)
+        dns_name = dns_encode_name(name)
+        calldata = contract.encode_abi(fn_name, args=[node, *args])
+        return dns_name, calldata
+
     def _resolve(
         self, name: str, fn_name: str = "addr"
     ) -> ChecksumAddress | str | None:
@@ -484,17 +489,15 @@ class ENS(BaseENS):
             ContractLogicError,
         )
 
-        normal_name = normalize_name(name)
-        node = self.namehash(normal_name)
-        dns_name = dns_encode_name(normal_name)
-
-        # Use the appropriate contract ABI to encode the calldata
-        if fn_name == "name":
-            calldata = self._reverse_resolver_contract.encode_abi(fn_name, args=[node])
-            resolver_contract = cast("Contract", self._reverse_resolver_contract)
-        else:
-            calldata = self._resolver_contract.encode_abi(fn_name, args=[node])
-            resolver_contract = cast("Contract", self._resolver_contract)
+        resolver_contract = cast(
+            "Contract",
+            self._reverse_resolver_contract
+            if fn_name == "name"
+            else self._resolver_contract,
+        )
+        dns_name, calldata = self._prepare_resolve_call(
+            name, fn_name, contract=resolver_contract
+        )
 
         try:
             result, resolver_addr = self._universal_resolver.caller.resolve(
