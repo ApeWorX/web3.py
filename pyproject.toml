@@ -167,7 +167,7 @@ values = [
 	"stable",
 ]
 
-[tool.bumpversion.part.devnum]
+[tool.bumpversion.parts.devnum]
 
 [[tool.bumpversion.files]]
 filename = "setup.py"
