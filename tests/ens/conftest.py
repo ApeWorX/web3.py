@@ -31,6 +31,10 @@ from ens.contract_data import (
 from ens.exceptions import (
     ENSTypeError,
 )
+from tests.ens._ur_mock import (
+    install_async_ur_mock,
+    install_ur_mock,
+)
 from web3 import (
     AsyncWeb3,
     Web3,
@@ -158,6 +162,7 @@ def ENSRegistryFactory(w3):
 def ens(ens_setup, mocker):
     mocker.patch("web3.middleware.stalecheck._is_fresh", return_value=True)
     ens_setup.w3.eth.default_account = ens_setup.w3.eth.accounts[0]
+    install_ur_mock(ens_setup)
     return ens_setup
 
 
@@ -660,4 +665,5 @@ async def async_ens(async_ens_setup, mocker):
     mocker.patch("web3.middleware.stalecheck._is_fresh", return_value=True)
     accounts = await async_ens_setup.w3.eth.accounts
     async_ens_setup.w3.eth.default_account = accounts[0]
+    install_async_ur_mock(async_ens_setup)
     return async_ens_setup

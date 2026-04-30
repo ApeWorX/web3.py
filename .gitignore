@@ -121,3 +121,10 @@ crashlytics-build.properties
 fabric.properties
 
 # END JetBrains section
+
+# uv
+uv.lock
+
+# Claude Code
+.claude/
+pr-review.md
