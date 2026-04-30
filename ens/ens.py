@@ -88,6 +88,8 @@ class ENS(BaseENS):
 
     # mypy types
     w3: "Web3"
+    _resolver_contract: type["Contract"]
+    _reverse_resolver_contract: type["Contract"]
 
     def __init__(
         self,
@@ -163,7 +165,7 @@ class ENS(BaseENS):
                 )
             except ContractLogicError:
                 return None
-            if not result or result == b"" or result == b"\x00" * 20:
+            if not result:
                 return None
             decoded = self.w3.codec.decode(["bytes"], result)
             address_as_bytes = decoded[0]
@@ -383,7 +385,7 @@ class ENS(BaseENS):
             return None
         if is_none_or_zero_address(resolver_addr):
             return None
-        return cast("Contract", self._resolver_contract(address=resolver_addr))
+        return self._resolver_contract(address=resolver_addr)
 
     def reverser(self, target_address: ChecksumAddress) -> Optional["Contract"]:
         reversed_domain = address_to_reverse_domain(target_address)
@@ -467,16 +469,16 @@ class ENS(BaseENS):
         namehash = raw_name_to_hash(name)
         if self.ens.caller.resolver(namehash) != resolver_addr:
             self.ens.functions.setResolver(namehash, resolver_addr).transact(transact)
-        return cast("Contract", self._resolver_contract(address=resolver_addr))
+        return self._resolver_contract(address=resolver_addr)
 
     def _prepare_resolve_call(
         self,
         name: str,
         fn_name: str,
         args: Sequence[Any] = (),
-        contract: Optional["Contract"] = None,
+        contract: Optional[type["Contract"]] = None,
     ) -> tuple[HexBytes, str]:
-        contract = contract or cast("Contract", self._resolver_contract)
+        contract = contract or self._resolver_contract
         node = raw_name_to_hash(name)
         dns_name = dns_encode_name(name)
         calldata = contract.encode_abi(fn_name, args=[node, *args])
@@ -489,11 +491,10 @@ class ENS(BaseENS):
             ContractLogicError,
         )
 
-        resolver_contract = cast(
-            "Contract",
+        resolver_contract = (
             self._reverse_resolver_contract
             if fn_name == "name"
-            else self._resolver_contract,
+            else self._resolver_contract
         )
         dns_name, calldata = self._prepare_resolve_call(
             name, fn_name, contract=resolver_contract

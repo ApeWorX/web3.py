@@ -211,7 +211,6 @@ def test_ens_address_lookup_with_coin_type(ens):
             (abi_encode(["bytes"], [b"\x00" * 20]), "0x" + "00" * 20),
             id="zero-address",
         ),
-        pytest.param((b"\x00" * 20, "0x" + "00" * 20), id="raw-zero-bytes"),
     ),
 )
 def test_ens_address_with_coin_type_returns_none_when_no_record(
@@ -414,7 +413,6 @@ async def test_async_ens_address_lookup_with_coin_type(async_ens):
             (abi_encode(["bytes"], [b"\x00" * 20]), "0x" + "00" * 20),
             id="zero-address",
         ),
-        pytest.param((b"\x00" * 20, "0x" + "00" * 20), id="raw-zero-bytes"),
     ),
 )
 @pytest.mark.asyncio

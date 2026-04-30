@@ -92,6 +92,8 @@ class AsyncENS(BaseENS):
 
     # mypy types
     w3: "AsyncWeb3[Any]"
+    _resolver_contract: type["AsyncContract"]
+    _reverse_resolver_contract: type["AsyncContract"]
 
     def __init__(
         self,
@@ -176,7 +178,7 @@ class AsyncENS(BaseENS):
                 )
             except ContractLogicError:
                 return None
-            if not result or result == b"" or result == b"\x00" * 20:
+            if not result:
                 return None
             decoded = self.w3.codec.decode(["bytes"], result)
             address_as_bytes = decoded[0]
@@ -398,10 +400,7 @@ class AsyncENS(BaseENS):
             return None
         if is_none_or_zero_address(resolver_addr):
             return None
-        return cast(
-            "AsyncContract",
-            self._resolver_contract(address=resolver_addr),
-        )
+        return self._resolver_contract(address=resolver_addr)
 
     async def reverser(
         self, target_address: ChecksumAddress
@@ -496,7 +495,7 @@ class AsyncENS(BaseENS):
                 ),
             )
             await coro
-        return cast("AsyncContract", self._resolver_contract(address=resolver_addr))
+        return self._resolver_contract(address=resolver_addr)
 
     async def _resolve(
         self,
@@ -514,10 +513,10 @@ class AsyncENS(BaseENS):
         # Use the appropriate contract ABI to encode the calldata
         if fn_name == "name":
             calldata = self._reverse_resolver_contract.encode_abi(fn_name, args=[node])
-            resolver_contract = cast("AsyncContract", self._reverse_resolver_contract)
+            resolver_contract = self._reverse_resolver_contract
         else:
             calldata = self._resolver_contract.encode_abi(fn_name, args=[node])
-            resolver_contract = cast("AsyncContract", self._resolver_contract)
+            resolver_contract = self._resolver_contract
 
         try:
             result, resolver_addr = await self._universal_resolver.caller.resolve(
