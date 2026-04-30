@@ -1,0 +1,2 @@
+Add Windows contributor setup instructions covering both native ``conda`` and
+WSL-based development workflows.
