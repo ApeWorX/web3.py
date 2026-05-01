@@ -6,6 +6,7 @@ from eth_utils import (
 
 from ens.exceptions import (
     ResolverNotFound,
+    UnsupportedFunction,
 )
 from web3 import (
     Web3,
@@ -81,9 +82,13 @@ def test_get_text_resolver_not_found(ens):
 
 
 def test_get_text_when_resolver_does_not_support_text(ens):
-    # With the Universal Resolver, unsupported functions raise ResolverNotFound
-    # since the UR call reverts when the resolver doesn't support the function
     with pytest.raises(ResolverNotFound, match="No resolver found"):
+        ens.get_text("simple-resolver.eth", "any_key")
+
+
+def test_get_text_unsupported_function_catch_is_backward_compatible(ens):
+    # TODO: Remove in v8
+    with pytest.raises(UnsupportedFunction):
         ens.get_text("simple-resolver.eth", "any_key")
 
 
@@ -163,7 +168,14 @@ async def test_async_get_text_resolver_not_found(async_ens):
 
 @pytest.mark.asyncio
 async def test_async_get_text_when_resolver_does_not_support_text(async_ens):
-    # With the Universal Resolver, unsupported functions raise ResolverNotFound
-    # since the UR call reverts when the resolver doesn't support the function
     with pytest.raises(ResolverNotFound, match="No resolver found"):
+        await async_ens.get_text("simple-resolver.eth", "any_key")
+
+
+@pytest.mark.asyncio
+async def test_async_get_text_unsupported_function_catch_is_backward_compatible(
+    async_ens,
+):
+    # TODO: Can remove in v8
+    with pytest.raises(UnsupportedFunction):
         await async_ens.get_text("simple-resolver.eth", "any_key")
