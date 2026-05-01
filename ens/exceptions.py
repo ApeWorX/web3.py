@@ -54,15 +54,24 @@ class UnownedName(ENSException):
     """
 
 
-class ResolverNotFound(ENSException):
-    """
-    Raised if no resolver was found for the name you are trying to resolve.
-    """
-
-
 class UnsupportedFunction(ENSException):
     """
     Raised if a resolver does not support a particular method.
+
+    .. deprecated::
+        Use :class:`ResolverNotFound` instead. ``UnsupportedFunction`` is kept
+        as the parent of :class:`ResolverNotFound` so that ``except
+        UnsupportedFunction`` clauses from before the Universal Resolver
+        migration continue to catch the equivalent failures, which now
+        surface as ``ResolverNotFound`` (the UR collapses both conditions
+        into a single revert). Will be removed in v8.
+    """
+
+
+class ResolverNotFound(UnsupportedFunction):
+    """
+    Raised if no resolver was found for the name you are trying to resolve,
+    or if the resolver does not support the requested function.
     """
 
 

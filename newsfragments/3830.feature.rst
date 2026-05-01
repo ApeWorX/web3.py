@@ -1,0 +1,1 @@
+ENS read operations now use the Universal Resolver (``0xeEeEEEeE14D718C2B47D9923Deab1335E144EeEe``) instead of querying the ENS Registry directly, aligning with ENSv2 readiness requirements.

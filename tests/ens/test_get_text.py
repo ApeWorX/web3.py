@@ -33,7 +33,10 @@ def test_set_text_fails_with_bad_address(ens):
     zero_address = "0x" + "00" * 20
     with pytest.raises(EthUtilsValidationError):
         ens.set_text(
-            "tester.eth", "url", "http://example.com", transact={"from": zero_address}
+            "tester.eth",
+            "url",
+            "http://example.com",
+            transact={"from": zero_address},
         )
 
     # teardown
@@ -74,15 +77,18 @@ def test_get_text(ens, key, expected):
 
 
 def test_get_text_resolver_not_found(ens):
-    with pytest.raises(ResolverNotFound):
+    with pytest.raises(ResolverNotFound, match="No resolver found"):
         ens.get_text("tld", "any_key")
 
 
-def test_get_text_for_resolver_with_unsupported_function(ens):
-    with pytest.raises(
-        UnsupportedFunction,
-        match="does not support the `text` interface",
-    ):
+def test_get_text_when_resolver_does_not_support_text(ens):
+    with pytest.raises(ResolverNotFound, match="No resolver found"):
+        ens.get_text("simple-resolver.eth", "any_key")
+
+
+def test_get_text_unsupported_function_catch_is_backward_compatible(ens):
+    # TODO: Remove in v8
+    with pytest.raises(UnsupportedFunction):
         ens.get_text("simple-resolver.eth", "any_key")
 
 
@@ -104,7 +110,10 @@ async def test_async_set_text_fails_with_bad_address(async_ens):
     zero_address = "0x" + "00" * 20
     with pytest.raises(EthUtilsValidationError):
         await async_ens.set_text(
-            "tester.eth", "url", "http://example.com", transact={"from": zero_address}
+            "tester.eth",
+            "url",
+            "http://example.com",
+            transact={"from": zero_address},
         )
 
     # teardown
@@ -153,14 +162,20 @@ async def test_async_get_text(async_ens, key, expected):
 
 @pytest.mark.asyncio
 async def test_async_get_text_resolver_not_found(async_ens):
-    with pytest.raises(ResolverNotFound):
+    with pytest.raises(ResolverNotFound, match="No resolver found"):
         await async_ens.get_text("tld", "any_key")
 
 
 @pytest.mark.asyncio
-async def test_async_get_text_for_resolver_with_unsupported_function(async_ens):
-    with pytest.raises(
-        UnsupportedFunction,
-        match="does not support the `text` interface",
-    ):
+async def test_async_get_text_when_resolver_does_not_support_text(async_ens):
+    with pytest.raises(ResolverNotFound, match="No resolver found"):
+        await async_ens.get_text("simple-resolver.eth", "any_key")
+
+
+@pytest.mark.asyncio
+async def test_async_get_text_unsupported_function_catch_is_backward_compatible(
+    async_ens,
+):
+    # TODO: Can remove in v8
+    with pytest.raises(UnsupportedFunction):
         await async_ens.get_text("simple-resolver.eth", "any_key")

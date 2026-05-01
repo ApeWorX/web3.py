@@ -101,7 +101,7 @@ class BaseENS:
     def _decode_ensip10_resolve_data(
         self,
         contract_call_result: bytes,
-        extended_resolver: Union["Contract", "AsyncContract"],
+        extended_resolver: Union[Type["Contract"], Type["AsyncContract"]],
         fn_name: str,
     ) -> Any:
         # avoid getting 2 resolver functions named `addr`
@@ -115,14 +115,3 @@ class BaseENS:
 
         # if decoding a single value, return that value - else, return the tuple
         return decoded[0] if len(decoded) == 1 else decoded
-
-    def _type_aware_resolver(
-        self,
-        address: ChecksumAddress,
-        func: str,
-    ) -> Union["Contract", "AsyncContract"]:
-        return (
-            self._reverse_resolver_contract(address=address)
-            if func == "name"
-            else self._resolver_contract(address=address)
-        )

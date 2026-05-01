@@ -1209,3 +1209,55 @@ REVERSE_REGISTRAR = [
         "type": "constructor",
     },
 ]
+
+UNIVERSAL_RESOLVER = [
+    {
+        "inputs": [
+            {"name": "name", "type": "bytes"},
+            {"name": "data", "type": "bytes"},
+        ],
+        "name": "resolve",
+        "outputs": [
+            {"name": "", "type": "bytes"},
+            {"name": "", "type": "address"},
+        ],
+        "stateMutability": "view",
+        "type": "function",
+    },
+    {
+        "inputs": [
+            {"name": "lookupAddress", "type": "bytes"},
+            {"name": "coinType", "type": "uint256"},
+        ],
+        "name": "reverse",
+        "outputs": [
+            {"name": "", "type": "string"},
+            {"name": "", "type": "address"},
+            {"name": "", "type": "address"},
+        ],
+        "stateMutability": "view",
+        "type": "function",
+    },
+    {
+        "inputs": [{"name": "name", "type": "bytes"}],
+        "name": "findResolver",
+        "outputs": [
+            {"name": "", "type": "address"},
+            {"name": "", "type": "bytes32"},
+            {"name": "", "type": "uint256"},
+        ],
+        "stateMutability": "view",
+        "type": "function",
+    },
+    {
+        "inputs": [
+            {"name": "sender", "type": "address"},
+            {"name": "urls", "type": "string[]"},
+            {"name": "callData", "type": "bytes"},
+            {"name": "callbackFunction", "type": "bytes4"},
+            {"name": "extraData", "type": "bytes"},
+        ],
+        "name": "OffchainLookup",
+        "type": "error",
+    },
+]
