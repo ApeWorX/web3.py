@@ -26,6 +26,9 @@ from requests.adapters import (
 from web3._utils.caching import (
     generate_cache_key,
 )
+from web3._utils.http import (
+    DEFAULT_HTTP_TIMEOUT,
+)
 from web3._utils.http_session_manager import (
     HTTPSessionManager,
 )
@@ -245,9 +248,7 @@ def test_session_manager_evicted_close_timer_uses_request_timeout_plus_slack(
     # so any in-flight request has slack to finish before its session is closed.
     # An earlier version dropped the slack for non-default timeouts because of
     # operator precedence (``x or DEFAULT + 0.1`` parses as ``x or (DEFAULT + 0.1)``).
-    timer_mock = mocker.patch(
-        "web3._utils.http_session_manager.threading.Timer"
-    )
+    timer_mock = mocker.patch("web3._utils.http_session_manager.threading.Timer")
 
     http_session_manager.session_cache = SimpleCache(1)
     http_session_manager.cache_and_return_session(
@@ -266,9 +267,7 @@ def test_session_manager_evicted_close_timer_uses_request_timeout_plus_slack(
 def test_session_manager_evicted_close_timer_falls_back_to_default(
     mocker, http_session_manager
 ):
-    timer_mock = mocker.patch(
-        "web3._utils.http_session_manager.threading.Timer"
-    )
+    timer_mock = mocker.patch("web3._utils.http_session_manager.threading.Timer")
 
     http_session_manager.session_cache = SimpleCache(1)
     http_session_manager.cache_and_return_session(
@@ -281,8 +280,6 @@ def test_session_manager_evicted_close_timer_falls_back_to_default(
     assert timer_mock.called
     interval = timer_mock.call_args.args[0]
     # ``DEFAULT_HTTP_TIMEOUT`` is 30 in this codebase; verify we still add the slack.
-    from web3._utils.http import DEFAULT_HTTP_TIMEOUT
-
     assert interval == pytest.approx(DEFAULT_HTTP_TIMEOUT + 0.1)
 
 
