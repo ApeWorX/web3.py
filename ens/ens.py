@@ -7,6 +7,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    Type,
     Union,
     cast,
 )
@@ -90,8 +91,8 @@ class ENS(BaseENS):
 
     # mypy types
     w3: "Web3"
-    _resolver_contract: type["Contract"]
-    _reverse_resolver_contract: type["Contract"]
+    _resolver_contract: Type["Contract"]
+    _reverse_resolver_contract: Type["Contract"]
 
     def __init__(
         self,
@@ -478,8 +479,8 @@ class ENS(BaseENS):
         name: str,
         fn_name: str,
         args: Sequence[Any] = (),
-        contract: Optional[type["Contract"]] = None,
-    ) -> tuple[HexBytes, str]:
+        contract: Optional[Type["Contract"]] = None,
+    ) -> Tuple[HexBytes, str]:
         contract = contract or self._resolver_contract
         node = raw_name_to_hash(name)
         dns_name = dns_encode_name(name)

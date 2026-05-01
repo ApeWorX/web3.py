@@ -8,6 +8,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    Type,
     Union,
     cast,
 )
@@ -94,8 +95,8 @@ class AsyncENS(BaseENS):
 
     # mypy types
     w3: "AsyncWeb3[Any]"
-    _resolver_contract: type["AsyncContract"]
-    _reverse_resolver_contract: type["AsyncContract"]
+    _resolver_contract: Type["AsyncContract"]
+    _reverse_resolver_contract: Type["AsyncContract"]
 
     def __init__(
         self,
