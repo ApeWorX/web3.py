@@ -6,6 +6,21 @@ v7 Breaking Changes Summary
 
 .. towncrier release notes start
 
+web3.py v7.16.0 (2026-05-01)
+----------------------------
+
+Bugfixes
+~~~~~~~~
+
+- Fixed ``ens.utils.is_none_or_zero_address`` not detecting bytes-form zero addresses (``b"\x00" * 20``) — the function compared against the hex string ``EMPTY_ADDR_HEX`` only, even though its signature accepts ``Address`` (which is ``bytes``). This caused ``ens.address(name, coin_type=N)`` to return the zero-address checksum string instead of ``None`` when the resolver recorded a zero address. (`#3830 <https://github.com/ethereum/web3.py/issues/3830>`__)
+
+
+Features
+~~~~~~~~
+
+- ENS read operations now use the Universal Resolver (``0xeEeEEEeE14D718C2B47D9923Deab1335E144EeEe``) instead of querying the ENS Registry directly, aligning with ENSv2 readiness requirements. (`#3830 <https://github.com/ethereum/web3.py/issues/3830>`__)
+
+
 web3.py v7.15.0 (2026-04-02)
 ----------------------------
 
