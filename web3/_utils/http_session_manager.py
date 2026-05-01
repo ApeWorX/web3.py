@@ -95,8 +95,10 @@ class HTTPSessionManager:
                 )
             threading.Timer(
                 # If `request_timeout` is `None`, don't wait forever for the closing
-                # session to finish the request. Instead, wait over the default timeout.
-                request_timeout or DEFAULT_HTTP_TIMEOUT + 0.1,
+                # session to finish the request. Instead, wait over the default
+                # timeout. Parenthesize the `or` so the `+ 0.1` slack is applied to
+                # the chosen timeout rather than only to the fallback.
+                (request_timeout or DEFAULT_HTTP_TIMEOUT) + 0.1,
                 self._close_evicted_sessions,
                 args=[evicted_sessions],
             ).start()
@@ -267,8 +269,9 @@ class HTTPSessionManager:
                 self._async_close_evicted_sessions(
                     # if `ClientTimeout.total` is `None`, don't wait forever for the
                     # closing session to finish the request. Instead, use the default
-                    # timeout.
-                    request_timeout.total or DEFAULT_HTTP_TIMEOUT + 0.1,
+                    # timeout. Parenthesize the `or` so the `+ 0.1` slack is applied
+                    # to the chosen timeout rather than only to the fallback.
+                    (request_timeout.total or DEFAULT_HTTP_TIMEOUT) + 0.1,
                     evicted_sessions,
                 )
             )
