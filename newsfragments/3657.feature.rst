@@ -1,0 +1,5 @@
+``RequestBatcher.execute`` and ``RequestBatcher.async_execute`` now accept
+``raise_on_error`` (default ``True``). Passing ``False`` returns per-request
+errors as raw RPC response dicts instead of aborting the whole batch on the
+first failing entry, so callers can inspect the ``error`` field alongside
+successful results.

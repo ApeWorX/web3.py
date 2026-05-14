@@ -131,9 +131,20 @@ class RequestBatcher(Generic[TFunc]):
             for param in params:
                 self.add(method(param))
 
-    def execute(self) -> list["RPCResponse"]:
+    def execute(self, raise_on_error: bool = True) -> list["RPCResponse"]:
+        """
+        Execute the batch.
+
+        When ``raise_on_error`` is ``False``, per-request errors are returned
+        as raw RPC response dicts instead of raising, so a single failing
+        request does not discard the rest of the batch (#3657). The
+        batch-level envelope error (server returned a single error object
+        instead of an array) still raises.
+        """
         self._validate_is_batching()
-        responses = self.web3.manager._make_batch_request(self._requests_info)
+        responses = self.web3.manager._make_batch_request(
+            self._requests_info, raise_on_error=raise_on_error
+        )
         self._end_batching()
         return responses
 
@@ -160,7 +171,17 @@ class RequestBatcher(Generic[TFunc]):
 
     # -- async -- #
 
-    async def async_execute(self) -> list["RPCResponse"]:
+    async def async_execute(
+        self, raise_on_error: bool = True
+    ) -> list["RPCResponse"]:
+        """
+        Execute the batch asynchronously. See ``execute`` for ``raise_on_error``
+        semantics.
+
+        Persistent-connection providers always raise per-request errors at the
+        socket layer today; ``raise_on_error`` is only honored for stateless
+        (HTTP) providers.
+        """
         self._validate_is_batching()
         if self._provider.has_persistent_connection:
             responses = await self.web3.manager._async_make_socket_batch_request(
@@ -168,7 +189,7 @@ class RequestBatcher(Generic[TFunc]):
             )
         else:
             responses = await self.web3.manager._async_make_batch_request(
-                self._async_requests_info
+                self._async_requests_info, raise_on_error=raise_on_error
             )
         self._end_batching()
         return responses
