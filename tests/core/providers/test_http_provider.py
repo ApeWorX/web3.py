@@ -137,6 +137,36 @@ def test_http_empty_batch_response(mock_post):
     assert not w3.provider._is_batching
 
 
+@patch(
+    "web3._utils.http_session_manager.HTTPSessionManager.make_post_request",
+    new_callable=Mock,
+)
+def test_http_batch_request_raise_on_error_false_returns_per_request_errors(
+    mock_post,
+):
+    # Two requests, the first one fails, the second one succeeds. With the
+    # default behavior (raise_on_error=True) the failing entry would abort the
+    # whole batch via Web3RPCError, which is what #3657 is asking us to opt out
+    # of.
+    mock_post.return_value = (
+        b'[{"jsonrpc":"2.0","id":0,"error":{"code":-32000,"message":"bad request"}},'
+        b'{"jsonrpc":"2.0","id":1,"result":"0x539"}]'
+    )
+    w3 = Web3(HTTPProvider())
+    with w3.batch_requests() as batch:
+        batch.add(w3.eth.chain_id)
+        batch.add(w3.eth.chain_id)
+        responses = batch.execute(raise_on_error=False)
+
+    assert not w3.provider._is_batching
+    assert len(responses) == 2
+    assert "error" in responses[0]
+    assert responses[0]["error"]["message"] == "bad request"
+    # Second request still went through and is formatted as the chain_id would
+    # normally be (int after the result formatter).
+    assert responses[1] == 0x539
+
+
 def test_user_provided_session_shared_across_threads():
     """
     Test that when a user provides an explicit session to HTTPProvider,

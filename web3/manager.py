@@ -258,10 +258,18 @@ class RequestManager:
         return RequestBatcher(self.w3)
 
     def _make_batch_request(
-        self, requests_info: list[tuple[tuple["RPCEndpoint", Any], tuple[Any, ...]]]
+        self,
+        requests_info: list[tuple[tuple["RPCEndpoint", Any], tuple[Any, ...]]],
+        raise_on_error: bool = True,
     ) -> list[RPCResponse]:
         """
         Make a batch request using the provider
+
+        When ``raise_on_error`` is ``False`` per-request errors in the batch are
+        returned as raw RPC response dicts instead of raising. The batch-level
+        envelope error (a JSON object instead of a list) still raises so the
+        caller can distinguish "no responses came back" from "some responses
+        carry an error".
         """
         provider = cast(JSONBaseProvider, self.provider)
         request_func = provider.batch_request_func(
@@ -277,7 +285,9 @@ class RequestManager:
         if isinstance(response, list):
             # expected format
             formatted_responses = [
-                self._format_batched_response(info, cast(RPCResponse, resp))
+                self._format_batched_response(
+                    info, cast(RPCResponse, resp), raise_on_error=raise_on_error
+                )
                 for info, resp in zip(requests_info, response)
             ]
             return list(formatted_responses)
@@ -290,9 +300,12 @@ class RequestManager:
         requests_info: list[
             Coroutine[Any, Any, tuple[tuple["RPCEndpoint", Any], tuple[Any]]]
         ],
+        raise_on_error: bool = True,
     ) -> list[RPCResponse]:
         """
-        Make an asynchronous batch request using the provider
+        Make an asynchronous batch request using the provider.
+
+        See ``_make_batch_request`` for ``raise_on_error`` semantics.
         """
         provider = cast(AsyncJSONBaseProvider, self.provider)
         request_func = await provider.batch_request_func(
@@ -313,7 +326,9 @@ class RequestManager:
             # expected format
             response = cast(list[RPCResponse], response)
             formatted_responses = [
-                self._format_batched_response(info, resp)
+                self._format_batched_response(
+                    info, resp, raise_on_error=raise_on_error
+                )
                 for info, resp in zip(unpacked_requests_info, response)
             ]
             return list(formatted_responses)
@@ -405,15 +420,22 @@ class RequestManager:
         self,
         requests_info: tuple[tuple[RPCEndpoint, Any], Sequence[Any]],
         response: RPCResponse,
+        raise_on_error: bool = True,
     ) -> RPCResponse:
         result_formatters, error_formatters, null_result_formatters = requests_info[1]
-        validate_rpc_response_and_raise_if_error(
-            response,
-            error_formatters,
-            is_subscription_response=False,
-            logger=self.logger,
-            params=requests_info[0][1],
-        )
+        if raise_on_error:
+            validate_rpc_response_and_raise_if_error(
+                response,
+                error_formatters,
+                is_subscription_response=False,
+                logger=self.logger,
+                params=requests_info[0][1],
+            )
+        elif "error" in response:
+            # Caller opted out of per-request raising. Return the raw RPC
+            # response dict so they can inspect ``error`` themselves without
+            # losing the rest of the batch (#3657).
+            return response
         return apply_result_formatters(
             result_formatters,
             self.formatted_response(
