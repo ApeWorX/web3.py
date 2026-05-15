@@ -7,7 +7,6 @@ from web3 import (
     Web3,
 )
 from web3.exceptions import (
-    InvalidAddress,
     NameNotFound,
 )
 from web3.middleware import (
@@ -95,7 +94,7 @@ def test_pass_name_resolver_send_transaction_dict_args(
 
 
 def test_fail_name_resolver(w3):
-    with pytest.raises(InvalidAddress, match=r".*ethereum\.eth.*"):
+    with pytest.raises(NameNotFound, match=r".*ethereum\.eth.*"):
         w3.eth.get_balance("ethereum.eth")
 
 

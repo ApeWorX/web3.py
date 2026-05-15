@@ -46,7 +46,6 @@ from web3._utils.encoding import (
     text_if_str,
 )
 from web3._utils.ens import (
-    StaticENS,
     async_validate_name_has_address,
     is_ens_name,
     validate_name_has_address,
@@ -57,7 +56,6 @@ from web3._utils.validation import (
 )
 from web3.exceptions import (
     InvalidAddress,
-    NameNotFound,
     Web3ValueError,
 )
 
@@ -219,16 +217,7 @@ def abi_ens_resolver(
             raise InvalidAddress(
                 f"Could not look up name {val!r} because ENS is set to None"
             )
-        else:
-            try:
-                return type_str, validate_name_has_address(_ens, val)
-            except NameNotFound as e:
-                # TODO: This try/except is to keep backwards compatibility when we
-                #  removed the mainnet requirement. Remove this in web3.py v8 and allow
-                #  NameNotFound to raise.
-                if not isinstance(_ens, StaticENS):
-                    raise InvalidAddress(f"{e}")
-                raise e
+        return type_str, validate_name_has_address(_ens, val)
     else:
         return type_str, val
 
