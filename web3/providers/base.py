@@ -142,7 +142,7 @@ class JSONBaseProvider(BaseProvider):
         rpc_dict = {
             "jsonrpc": "2.0",
             "method": method,
-            "params": params or [],
+            "params": [] if params is None else params,
             "id": next(self.request_counter),
         }
         encoded = FriendlyJsonSerde().json_encode(rpc_dict, Web3JsonEncoder)
