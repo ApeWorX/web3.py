@@ -1,0 +1,1 @@
+Tighten the Windows wheel release smoke test so the temporary virtualenv activation, wheel install, and import check run in the same shell session.
