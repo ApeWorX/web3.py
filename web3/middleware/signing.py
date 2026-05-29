@@ -169,10 +169,11 @@ class SignAndSendRawMiddlewareBuilder(Web3MiddlewareBuilder):
         else:
             w3 = cast("Web3", self._w3)
             if self.format_and_fill_tx is None:
+                # Complete the definition of format_and_fill_tx
                 self.format_and_fill_tx = compose(
-                    format_transaction,
                     fill_transaction_defaults(w3),
                     fill_nonce(w3),
+                    format_transaction,
                 )
 
             filled_transaction = self.format_and_fill_tx(params[0])
