@@ -3,6 +3,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    cast,
     Generic,
     Optional,
     Sequence,
@@ -20,6 +21,7 @@ from web3._utils.batching import (
     RPC_METHODS_UNSUPPORTED_DURING_BATCH,
 )
 from web3._utils.method_formatters import (
+    FILTER_RESULT_FORMATTERS,
     get_error_formatters,
     get_null_result_formatters,
     get_request_formatters,
@@ -49,6 +51,8 @@ if TYPE_CHECKING:
 
 
 Munger = Callable[..., Any]
+RequestFormatters = Callable[..., Any]
+ResponseFormatters = tuple[Any, Callable[..., Any], Any]
 
 
 @to_tuple
@@ -144,6 +148,10 @@ class Method(Generic[TFunc]):
         )
         self.method_choice_depends_on_args = method_choice_depends_on_args
         self.is_property = is_property
+        self._request_formatters_cache: dict[RPCEndpoint, RequestFormatters] = {}
+        self._result_formatters_cache: dict[RPCEndpoint, Callable[..., Any]] = {}
+        self._error_formatters_cache: dict[RPCEndpoint, Callable[..., Any]] = {}
+        self._null_result_formatters_cache: dict[RPCEndpoint, Callable[..., Any]] = {}
 
     def __get__(
         self,
@@ -193,16 +201,52 @@ class Method(Generic[TFunc]):
             lambda args, munger: munger(module, *args, **kwargs), self.mungers, args
         )
 
+    def _get_request_formatters(self, method: RPCEndpoint) -> RequestFormatters:
+        if method not in self._request_formatters_cache:
+            self._request_formatters_cache[method] = cast(
+                RequestFormatters, self.request_formatters(method)
+            )
+        return self._request_formatters_cache[method]
+
+    def _get_result_formatters(
+        self, method: RPCEndpoint, module: "Module"
+    ) -> Callable[..., Any]:
+        if (
+            self.result_formatters is get_result_formatters
+            and method not in FILTER_RESULT_FORMATTERS
+        ):
+            if method not in self._result_formatters_cache:
+                self._result_formatters_cache[method] = cast(
+                    Callable[..., Any], self.result_formatters(method, module)
+                )
+            return self._result_formatters_cache[method]
+
+        return cast(Callable[..., Any], self.result_formatters(method, module))
+
+    def _get_error_formatters(self, method: RPCEndpoint) -> Callable[..., Any]:
+        if method not in self._error_formatters_cache:
+            self._error_formatters_cache[method] = get_error_formatters(method)
+        return self._error_formatters_cache[method]
+
+    def _get_null_result_formatters(self, method: RPCEndpoint) -> Callable[..., Any]:
+        if method not in self._null_result_formatters_cache:
+            self._null_result_formatters_cache[method] = cast(
+                Callable[..., Any], self.null_result_formatters(method)
+            )
+        return self._null_result_formatters_cache[method]
+
+    def _get_response_formatters(
+        self, method: RPCEndpoint, module: "Module"
+    ) -> ResponseFormatters:
+        return (
+            self._get_result_formatters(method, module),
+            self._get_error_formatters(method),
+            self._get_null_result_formatters(method),
+        )
+
     def process_params(
         self, module: "Module", *args: Any, **kwargs: Any
-    ) -> tuple[
-        tuple[RPCEndpoint | Callable[..., RPCEndpoint], tuple[RPCEndpoint, ...]],
-        tuple[
-            TReturn | dict[str, Callable[..., Any]],
-            Callable[..., Any],
-            TReturn | Callable[..., Any],
-        ],
-    ]:
+    ) -> tuple[tuple[RPCEndpoint, tuple[Any, ...]], ResponseFormatters]:
         params = self.input_munger(module, args, kwargs)
 
         if self.method_choice_depends_on_args:
@@ -220,14 +264,10 @@ class Method(Generic[TFunc]):
                 params = []
 
         method = self.method_selector_fn()
-        response_formatters = (
-            self.result_formatters(method, module),
-            get_error_formatters(method),
-            self.null_result_formatters(method),
-        )
+        response_formatters = self._get_response_formatters(method, module)
         request = (
             method,
-            _apply_request_formatters(params, self.request_formatters(method)),
+            _apply_request_formatters(params, self._get_request_formatters(method)),
         )
         return request, response_formatters
 
