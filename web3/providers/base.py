@@ -111,8 +111,7 @@ class BaseProvider:
         """
         middleware: tuple[Middleware, ...] = middleware_onion.as_tuple_of_middleware()
 
-        cache_key = self._request_func_cache[0]
-        if cache_key != middleware:
+        if self._request_func_cache[0] != middleware:
             self._request_func_cache = (
                 middleware,
                 combine_middleware(
@@ -184,15 +183,13 @@ class JSONBaseProvider(BaseProvider):
     ) -> Callable[..., list[RPCResponse] | RPCResponse]:
         middleware: tuple[Middleware, ...] = middleware_onion.as_tuple_of_middleware()
 
-        cache_key = self._batch_request_func_cache[0]
-        if cache_key != middleware:
+        if self._batch_request_func_cache[0] != middleware:
             accumulator_fn = self.make_batch_request
             for mw in reversed(middleware):
-                initialized = mw(w3)
                 # type ignore bc in order to wrap the method, we have to call
                 # `wrap_make_batch_request` with the accumulator_fn as the argument
                 # which breaks the type hinting for this particular case.
-                accumulator_fn = initialized.wrap_make_batch_request(  # type: ignore
+                accumulator_fn = mw(w3).wrap_make_batch_request(  # type: ignore
                     accumulator_fn
                 )
             self._batch_request_func_cache = (middleware, accumulator_fn)

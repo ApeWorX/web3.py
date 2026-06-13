@@ -221,8 +221,7 @@ def get_logs_multipart(
     The getLog request is partitioned into multiple calls of the max number of blocks
     ``max_blocks``.
     """
-    _block_ranges = block_ranges(start_block, stop_block, max_blocks)
-    for from_block, to_block in _block_ranges:
+    for from_block, to_block in block_ranges(start_block, stop_block, max_blocks):
         params = {
             "fromBlock": from_block,
             "toBlock": to_block,
