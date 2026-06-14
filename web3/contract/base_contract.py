@@ -166,12 +166,29 @@ class BaseContractEvent:
     signature: str = None
     w3: Union["Web3", "AsyncWeb3[Any]"] = None
     contract_abi: ABI = None
-    abi: ABIEvent = None
+    _abi: ABIEvent = None
     argument_names: tuple[str, ...] = tuple()
     argument_types: tuple[str, ...] = tuple()
     args: Any = None
     kwargs: Any = None
     _topic: HexStr = None
+
+    @property
+    def abi(self) -> ABIEvent | None:
+        if self._abi is None and self.contract_abi is not None and self.w3 is not None:
+            self._abi = cast(
+                ABIEvent,
+                get_abi_element(
+                    filter_abi_by_type("event", self.contract_abi),
+                    self.abi_element_identifier,
+                    abi_codec=self.w3.codec,
+                ),
+            )
+        return self._abi
+
+    @abi.setter
+    def abi(self, value: ABIEvent | None) -> None:
+        self._abi = value
 
     def __init__(self, *argument_names: str, abi: ABIEvent | None = None) -> None:
         self.abi_element_identifier = type(self).__name__
@@ -179,7 +196,7 @@ class BaseContractEvent:
         self.event_name = self.name
 
         if abi:
-            self.abi = abi
+            self._abi = abi
 
         self.signature = abi_to_signature(self.abi)
 
@@ -206,20 +223,11 @@ class BaseContractEvent:
 
     @combomethod
     def _get_event_abi(cls) -> ABIEvent:
-        if cls.abi:
-            return cls.abi
-
-        return cast(
-            ABIEvent,
-            get_abi_element(
-                filter_abi_by_type("event", cls.contract_abi),
-                cls.abi_element_identifier,
-                abi_codec=cls.w3.codec,
-            ),
-        )
+        return cls.abi
 
     def _set_event_info(self) -> None:
-        self.abi = self._get_event_abi()
+        # trigger the property to resolve and cache the abi
+        self.abi  # noqa: B018
 
     @combomethod
     def process_receipt(
@@ -494,7 +502,7 @@ class BaseContractEvents(Generic[TContractEvent]):
                     w3=self.w3,
                     contract_abi=self.abi,
                     address=self.address,
-                    abi=event,
+                    _abi=event,
                 )
 
                 # Set event name on instance if it does not already exist
