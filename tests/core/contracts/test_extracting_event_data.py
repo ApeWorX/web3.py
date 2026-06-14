@@ -1332,3 +1332,30 @@ def test_receipt_processing_catches_insufficientdatabytes_error_by_default(
     with pytest.raises(InsufficientDataBytes):
         returned_log = event_instance.process_receipt(txn_receipt_dict, errors=STRICT)
         assert len(returned_log) == 0
+
+
+def test_process_log_with_abi_not_set(w3, emitter, wait_for_transaction):
+    # process_log should not crash when .abi is None
+    txn_hash = emitter.functions.logListArgs([b"13"], [b"54"]).transact()
+    txn_receipt = wait_for_transaction(w3, txn_hash)
+
+    event_instance = emitter.events.LogListArgs
+
+    # .abi can be None if the event is accessed without proper initialization
+    event_instance.abi = None
+
+    rich_log = event_instance.process_log(txn_receipt["logs"][0])
+    assert rich_log["event"] == "LogListArgs"
+
+
+def test_process_receipt_with_abi_not_set(w3, emitter, wait_for_transaction):
+    # process_receipt should not crash when .abi is None
+    txn_hash = emitter.functions.logListArgs([b"13"], [b"54"]).transact()
+    txn_receipt = wait_for_transaction(w3, txn_hash)
+
+    event_instance = emitter.events.LogListArgs
+    event_instance.abi = None
+
+    processed_logs = event_instance.process_receipt(txn_receipt)
+    assert len(processed_logs) == 1
+    assert processed_logs[0]["event"] == "LogListArgs"
