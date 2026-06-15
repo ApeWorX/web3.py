@@ -65,7 +65,7 @@ validate-newsfragments:
 check-docs: build-docs validate-newsfragments
 
 build-docs:
-	sphinx-apidoc -o docs/ . setup.py "*conftest*" "tests" "web3/tools/*"
+	sphinx-apidoc -o docs/ . "*conftest*" "tests" "web3/tools/*"
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(MAKE) -C docs doctest
