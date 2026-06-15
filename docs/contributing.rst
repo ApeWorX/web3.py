@@ -480,7 +480,7 @@ After confirming that the release package looks okay, release a new version:
 
 This command will:
 
-- Bump the version number as specified in ``.pyproject.toml`` and ``setup.py``.
+- Bump the version number as specified in ``pyproject.toml``.
 - Create a git commit and tag for the new version.
 - Build the package.
 - Push the commit and tag to github.

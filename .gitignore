@@ -120,9 +120,6 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-# uv
-uv.lock
-
 # Claude Code
 .claude/
 pr-review.md

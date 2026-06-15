@@ -15,13 +15,17 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import os
+import re
 
 DIR = os.path.dirname(__file__)
-with open(os.path.join(DIR, "../setup.py")) as f:
-    for line in f:
-        if "version=" in line:
-            setup_version = line.split('"')[1]
-            break
+with open(os.path.join(DIR, "../pyproject.toml")) as f:
+    pyproject_contents = f.read()
+
+setup_version = re.search(
+    r'^version = "([^"]+)"',
+    pyproject_contents,
+    re.MULTILINE,
+).group(1)
 
 # -- General configuration ------------------------------------------------
 

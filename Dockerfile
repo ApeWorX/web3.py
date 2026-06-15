@@ -10,7 +10,7 @@ COPY web3 ./web3/
 COPY tests ./tests/
 COPY ens ./ens/
 
-COPY setup.py .
+COPY pyproject.toml .
 COPY README.md .
 
 RUN pip install -e .[dev]
