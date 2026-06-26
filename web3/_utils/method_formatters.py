@@ -246,8 +246,8 @@ AUTH_LIST_RESULT_FORMATTER = apply_formatter_if(
                 "address": to_checksum_address,
                 "nonce": to_integer_if_hex,
                 "yParity": to_integer_if_hex,
-                "r": to_hexbytes(32, variable_length=True),
-                "s": to_hexbytes(32, variable_length=True),
+                "r": to_integer_if_hex,
+                "s": to_integer_if_hex,
             }
         ),
     ),

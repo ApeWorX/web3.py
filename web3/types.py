@@ -109,8 +109,8 @@ class SetCodeAuthorizationData(TypedDict):
     address: ChecksumAddress
     nonce: Nonce
     yParity: int
-    r: HexBytes
-    s: HexBytes
+    r: int
+    s: int
 
 
 # syntax b/c "from" keyword not allowed w/ class construction
