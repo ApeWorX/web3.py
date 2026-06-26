@@ -2,6 +2,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    Optional,
     Sequence,
     cast,
     overload,
@@ -79,6 +80,7 @@ from web3.types import (
     LogReceipt,
     MerkleProof,
     Nonce,
+    SetCodeAuthorizationParams,
     SignedTx,
     SimulateV1Payload,
     SimulateV1Result,
@@ -626,6 +628,67 @@ class Eth(BaseEth):
         RPC.eth_signTypedData,
         mungers=[default_root_munger],
     )
+
+    # EIP-7702: sign_authorization (local, no RPC call for signing)
+
+    def sign_authorization(
+        self,
+        address: Address | ChecksumAddress,
+        private_key: Any,
+        *,
+        chain_id: Optional[int] = None,
+        nonce: Optional[Nonce] = None,
+    ) -> "SignedSetCodeAuthorization":
+        """Sign an EIP-7702 authorization for the given contract address.
+
+        A convenience wrapper around :meth:`w3.eth.account.sign_authorization`
+        that auto-populates ``chainId`` from the connected network and ``nonce``
+        from the current on-chain transaction count of the signing account when
+        those values are not supplied explicitly.
+
+        :param address: the contract address the EOA will delegate code
+            execution to (the ``address`` field of the authorization tuple).
+        :param private_key: the private key of the EOA signing the
+            authorization; accepts the same formats as
+            :meth:`eth_account.Account.sign_authorization`.
+        :param chain_id: override the chain ID used in the authorization
+            tuple.  Defaults to ``w3.eth.chain_id`` (i.e. the chain the
+            connected node is on).  Pass ``0`` to create a chain-agnostic
+            authorization that is replayable on any EVM network.
+        :param nonce: override the authorization nonce.  Defaults to the
+            current on-chain transaction count of the signing account.
+            See the EIP-7702 specification for nonce semantics — the nonce
+            in the authorization tuple prevents replays independently of the
+            transaction nonce.
+        :returns: a :class:`~eth_account.datastructures.SignedSetCodeAuthorization`
+            suitable for inclusion in the ``authorizationList`` field of an
+            EIP-7702 (type 4) transaction.
+
+        Example::
+
+            acct = w3.eth.account.from_key(my_private_key)
+            contract = w3.eth.contract(address=contract_address, abi=abi)
+
+            auth = w3.eth.sign_authorization(contract.address, my_private_key)
+
+            tx = {
+                "from": acct.address,
+                "to": acct.address,
+                "authorizationList": [auth],
+                "data": contract.encode_abi("myFunction", args=[arg1, arg2]),
+            }
+            signed = acct.sign_transaction(tx)
+            w3.eth.send_raw_transaction(signed.raw_transaction)
+        """
+        from eth_account import Account
+
+        signer = Account.from_key(private_key)
+        auth_params: SetCodeAuthorizationParams = {
+            "chainId": chain_id if chain_id is not None else self.chain_id,
+            "address": address,
+            "nonce": nonce if nonce is not None else self.get_transaction_count(signer.address),
+        }
+        return self.account.sign_authorization(auth_params, private_key)
 
     # eth_newFilter, eth_newBlockFilter, eth_newPendingTransactionFilter
 
