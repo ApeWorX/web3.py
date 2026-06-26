@@ -4,6 +4,7 @@ from typing import (
     Any,
     Awaitable,
     Callable,
+    Optional,
     Sequence,
     cast,
     overload,
@@ -86,6 +87,7 @@ from web3.types import (
     LogReceipt,
     LogsSubscriptionArg,
     Nonce,
+    SetCodeAuthorizationParams,
     SignedTx,
     SimulateV1Payload,
     SimulateV1Result,
@@ -656,6 +658,50 @@ class AsyncEth(BaseEth):
         self, account: Address | ChecksumAddress | ENS, data: dict[str, Any]
     ) -> HexStr:
         return await self._sign_typed_data(account, data)
+
+    # EIP-7702: sign_authorization (local signing + chain-state auto-fill)
+
+    async def sign_authorization(
+        self,
+        address: Address | ChecksumAddress,
+        private_key: Any,
+        *,
+        chain_id: Optional[int] = None,
+        nonce: Optional[Nonce] = None,
+    ) -> "SignedSetCodeAuthorization":
+        """Sign an EIP-7702 authorization for the given contract address.
+
+        Async counterpart of :meth:`Eth.sign_authorization`.  Auto-populates
+        ``chainId`` and ``nonce`` from chain state when they are not supplied
+        explicitly.
+
+        :param address: the contract address the EOA will delegate code execution to.
+        :param private_key: the private key of the EOA signing the authorization.
+        :param chain_id: override the chain ID; defaults to ``await w3.eth.chain_id``.
+        :param nonce: override the authorization nonce; defaults to the current
+            on-chain transaction count of the signing account.
+        :returns: a :class:`~eth_account.datastructures.SignedSetCodeAuthorization`
+            suitable for inclusion in the ``authorizationList`` of a type-4 transaction.
+
+        Example::
+
+            auth = await w3.eth.sign_authorization(contract.address, my_private_key)
+        """
+        from eth_account import Account
+
+        signer = Account.from_key(private_key)
+        effective_chain_id = chain_id if chain_id is not None else await self.chain_id  # type: ignore[misc]
+        effective_nonce = (
+            nonce
+            if nonce is not None
+            else await self.get_transaction_count(signer.address)
+        )
+        auth_params: SetCodeAuthorizationParams = {
+            "chainId": effective_chain_id,
+            "address": address,
+            "nonce": effective_nonce,
+        }
+        return self.account.sign_authorization(auth_params, private_key)
 
     # eth_getUncleCountByBlockHash
     # eth_getUncleCountByBlockNumber
