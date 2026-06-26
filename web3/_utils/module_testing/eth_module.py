@@ -774,8 +774,8 @@ class AsyncEthModuleTest:
         assert get_auth["address"] == async_math_contract.address
         assert get_auth["nonce"] == nonce + 1
         assert isinstance(get_auth["yParity"], int)
-        assert isinstance(get_auth["r"], HexBytes)
-        assert isinstance(get_auth["s"], HexBytes)
+        assert isinstance(get_auth["r"], int)
+        assert isinstance(get_auth["s"], int)
 
         # reset code
         reset_auth = {
@@ -3873,8 +3873,8 @@ class EthModuleTest:
         assert get_auth["address"] == math_contract.address
         assert get_auth["nonce"] == nonce + 1
         assert isinstance(get_auth["yParity"], int)
-        assert isinstance(get_auth["r"], HexBytes)
-        assert isinstance(get_auth["s"], HexBytes)
+        assert isinstance(get_auth["r"], int)
+        assert isinstance(get_auth["s"], int)
 
         # reset code
         reset_auth = {
