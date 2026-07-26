@@ -51,6 +51,7 @@ from web3._utils.abi import (
 )
 from web3._utils.blocks import (
     is_hex_encoded_block_hash,
+    is_hex_encoded_block_number,
 )
 from web3._utils.encoding import (
     to_hex,
@@ -343,6 +344,8 @@ def parse_block_identifier(
         block_identifier
     ):
         return w3.eth.get_block(block_identifier)["number"]
+    elif is_hex_encoded_block_number(block_identifier):
+        return BlockNumber(int(block_identifier, 16))
     else:
         raise BlockNumberOutOfRange
 
@@ -372,6 +375,8 @@ async def async_parse_block_identifier(
     ):
         requested_block = await async_w3.eth.get_block(block_identifier)
         return requested_block["number"]
+    elif is_hex_encoded_block_number(block_identifier):
+        return BlockNumber(int(block_identifier, 16))
     else:
         raise BlockNumberOutOfRange
 

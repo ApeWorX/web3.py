@@ -1,0 +1,1 @@
+Accept a hex-encoded block number (e.g. ``"0x1510FA4"``) as a contract call ``block_identifier``, matching the documented behavior, instead of raising ``BlockNumberOutOfRange``.
