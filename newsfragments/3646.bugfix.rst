@@ -1,1 +1,1 @@
-Accept a hex-encoded block number (e.g. ``"0x1510FA4"``) as a contract call ``block_identifier``, matching the documented behavior, instead of raising ``BlockNumberOutOfRange``.
+Accept a ``0x``-prefixed hex-encoded block number (e.g. ``"0x1510FA4"``) as a contract call ``block_identifier``, consistent with ``HexStr`` being part of the ``BlockIdentifier`` union, instead of raising ``BlockNumberOutOfRange``.

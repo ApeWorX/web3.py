@@ -63,6 +63,16 @@ def test_parse_block_identifier_hex_block_number(w3, block_identifier, expected_
         1.5,
         "cats",
         -70,
+        # hex-like values that are not canonical ``0x``-prefixed hex must still
+        # be rejected rather than silently reinterpreted as base 16. see #3646
+        "abc",
+        "20",
+        "1000000",
+        " 0x1a ",
+        "0x1_a",
+        "+0x1a",
+        "0b11",
+        "0x",
     ),
 )
 def test_parse_block_identifier_error(w3, block_identifier):
@@ -147,6 +157,16 @@ async def test_async_parse_block_identifier_hex_block_number(
         1.5,
         "cats",
         -70,
+        # hex-like values that are not canonical ``0x``-prefixed hex must still
+        # be rejected rather than silently reinterpreted as base 16. see #3646
+        "abc",
+        "20",
+        "1000000",
+        " 0x1a ",
+        "0x1_a",
+        "+0x1a",
+        "0b11",
+        "0x",
     ),
 )
 async def test_async_parse_block_identifier_error(async_w3, block_identifier):
