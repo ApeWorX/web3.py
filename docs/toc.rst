@@ -23,6 +23,7 @@ Table of Contents
     formatters
     internals
     ens_overview
+    exceptions
     troubleshooting
     migration
 
