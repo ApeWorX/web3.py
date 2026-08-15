@@ -1,6 +1,5 @@
 import asyncio
 from concurrent.futures import (
-    Future as ConcurrentFuture,
     ThreadPoolExecutor,
 )
 import contextlib
