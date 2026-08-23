@@ -1,10 +1,7 @@
 import asyncio
+from collections.abc import Awaitable, Callable
 import ipaddress
 import socket
-from typing import (
-    Awaitable,
-    Callable,
-)
 from urllib.parse import (
     urlparse,
 )

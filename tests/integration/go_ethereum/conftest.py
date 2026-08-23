@@ -182,7 +182,7 @@ def start_geth_process_and_yield_port(
         # Ensure cleanup happens even if test fails
         kill_proc_gracefully(proc)
         output, errors = proc.communicate(timeout=5)
-        print("Geth Process Exited:\n" f"stdout: {output}\n\n" f"stderr: {errors}\n\n")
+        print(f"Geth Process Exited:\nstdout: {output}\n\nstderr: {errors}\n\n")
 
 
 @pytest.fixture

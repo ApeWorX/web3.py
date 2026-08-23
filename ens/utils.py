@@ -1,3 +1,4 @@
+from collections.abc import Collection, Sequence
 from datetime import (
     datetime,
     timezone,
@@ -5,8 +6,6 @@ from datetime import (
 from typing import (
     TYPE_CHECKING,
     Any,
-    Collection,
-    Sequence,
     cast,
 )
 import warnings
@@ -109,7 +108,7 @@ def customize_web3(w3: "_Web3") -> "_Web3":
 def normalize_name(name: str) -> str:
     """
     Clean the fully qualified name, as defined in ENS `EIP-137
-    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_  # blocklint: pragma # noqa: E501
+    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_  # noqa: E501
 
     This does *not* enforce whether ``name`` is a label or fully qualified domain.
 
@@ -123,7 +122,7 @@ def normalize_name(name: str) -> str:
 
     if is_empty_name(name):
         return ""
-    elif isinstance(name, (bytes, bytearray)):
+    elif isinstance(name, bytes | bytearray):
         name = name.decode("utf-8")
 
     return normalize_name_ensip15(name).as_text
@@ -176,7 +175,7 @@ def ens_encode_name(name: str) -> bytes:
 def is_valid_name(name: str) -> bool:
     """
     Validate whether the fully qualified name is valid, as defined in ENS `EIP-137
-    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_  # blocklint: pragma # noqa: E501
+    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_  # noqa: E501
 
     :param str name: the dot-separated ENS name
     :returns: True if ``name`` is set, and :meth:`~ens.ENS.nameprep` will not
@@ -236,7 +235,7 @@ def raw_name_to_hash(name: str) -> HexBytes:
     behind the scenes. For advanced usage, it is a helpful utility.
 
     This normalizes the name with `nameprep
-    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_  # blocklint: pragma # noqa: E501
+    <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-137.md#name-syntax>`_  # noqa: E501
     before hashing.
 
     :param str name: ENS name to hash
@@ -323,7 +322,7 @@ def init_async_web3(
             )
         )
 
-    async_w3: "AsyncWeb3[Any]"
+    async_w3: AsyncWeb3[Any]
     if provider is default:
         async_w3 = AsyncWeb3Main(
             middleware=middleware, ens=None, modules={"eth": (AsyncEthMain)}

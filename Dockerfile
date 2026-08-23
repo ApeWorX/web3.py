@@ -10,9 +10,10 @@ COPY web3 ./web3/
 COPY tests ./tests/
 COPY ens ./ens/
 
-COPY setup.py .
+COPY pyproject.toml .
 COPY README.md .
 
-RUN pip install -e .[dev]
+RUN pip install uv \
+    && UV_CACHE_DIR=/tmp/uv-cache uv sync --all-extras --all-groups
 
 WORKDIR /code

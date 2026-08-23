@@ -3,12 +3,12 @@ import asyncio
 from collections import (
     defaultdict,
 )
+from collections.abc import Callable
 import logging
 import sys
 import timeit
 from typing import (
     Any,
-    Callable,
 )
 
 from web3 import (
@@ -21,20 +21,21 @@ from web3.middleware import (
     BufferedGasEstimateMiddleware,
     GasPriceStrategyMiddleware,
 )
-from web3.tools.benchmark.node import (
+from web3.types import (
+    Wei,
+)
+
+from .node import (
     GethBenchmarkFixture,
 )
-from web3.tools.benchmark.reporting import (
+from .reporting import (
     print_entry,
     print_footer,
     print_header,
 )
-from web3.tools.benchmark.utils import (
+from .utils import (
     wait_for_aiohttp,
     wait_for_http,
-)
-from web3.types import (
-    Wei,
 )
 
 KEYFILE_PW = "web3py-test"
@@ -120,38 +121,48 @@ def main(logger: logging.Logger, num_calls: int) -> None:
                     "name": "eth_gasPrice",
                     "params": {},
                     "exec": lambda w3_http=w3_http: w3_http.eth.gas_price,
-                    "async_exec": lambda async_w3_http=async_w3_http: async_w3_http.eth.gas_price,  # noqa: E501
+                    "async_exec": lambda async_w3_http=async_w3_http: (
+                        async_w3_http.eth.gas_price
+                    ),  # noqa: E501
                 },
                 {
                     "name": "eth_sendTransaction",
                     "params": {},
-                    "exec": lambda w3_http=w3_http, account=account: w3_http.eth.send_transaction(  # noqa: E501
-                        {
-                            "to": "0xd3CdA913deB6f67967B99D67aCDFa1712C293601",
-                            "from": account,
-                            "value": Wei(1),
-                        }
+                    "exec": lambda w3_http=w3_http, account=account: (
+                        w3_http.eth.send_transaction(  # noqa: E501
+                            {
+                                "to": "0xd3CdA913deB6f67967B99D67aCDFa1712C293601",
+                                "from": account,
+                                "value": Wei(1),
+                            }
+                        )
                     ),
-                    "async_exec": lambda async_w3_http=async_w3_http, async_account=async_account: async_w3_http.eth.send_transaction(  # noqa: E501
-                        {
-                            "to": "0xd3CdA913deB6f67967B99D67aCDFa1712C293601",
-                            "from": async_account,
-                            "value": Wei(1),
-                        }
+                    "async_exec": lambda async_w3_http=async_w3_http, async_account=async_account: (
+                        async_w3_http.eth.send_transaction(  # noqa: E501
+                            {
+                                "to": "0xd3CdA913deB6f67967B99D67aCDFa1712C293601",
+                                "from": async_account,
+                                "value": Wei(1),
+                            }
+                        )
                     ),
                 },
                 {
                     "name": "eth_blockNumber",
                     "params": {},
                     "exec": lambda w3_http=w3_http: w3_http.eth.block_number,
-                    "async_exec": lambda async_w3_http=async_w3_http: async_w3_http.eth.block_number,  # noqa: E501
+                    "async_exec": lambda async_w3_http=async_w3_http: (
+                        async_w3_http.eth.block_number
+                    ),  # noqa: E501
                 },
                 {
                     "name": "eth_getBlock",
                     "params": {},
                     "exec": lambda w3_http=w3_http: w3_http.eth.get_block(1),
-                    "async_exec": lambda async_w3_http=async_w3_http: async_w3_http.eth.get_block(  # noqa: E501
-                        1
+                    "async_exec": lambda async_w3_http=async_w3_http: (
+                        async_w3_http.eth.get_block(  # noqa: E501
+                            1
+                        )
                     ),
                 },
             ]

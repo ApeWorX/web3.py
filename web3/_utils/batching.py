@@ -1,11 +1,10 @@
+from collections.abc import Callable, Coroutine
 from types import (
     TracebackType,
 )
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
     Generic,
     Union,
     cast,

@@ -1,8 +1,6 @@
+from collections.abc import Callable, Iterable, Sequence
 from typing import (
     Any,
-    Callable,
-    Iterable,
-    Sequence,
 )
 
 from eth_typing import (

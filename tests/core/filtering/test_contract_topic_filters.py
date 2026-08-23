@@ -184,9 +184,7 @@ def test_topic_filters_with_fixed_arguments(
             arg1=vals["matching"][1],
             arg2=vals["matching"][2],
             arg3=vals["matching"][3],
-        ).transact(
-            {"maxFeePerGas": 10**9, "maxPriorityFeePerGas": 10**9, "gas": 60000}
-        )
+        ).transact({"maxFeePerGas": 10**9, "maxPriorityFeePerGas": 10**9, "gas": 60000})
     )
     txn_hashes.append(
         emitter.functions.logQuadruple(
@@ -195,9 +193,7 @@ def test_topic_filters_with_fixed_arguments(
             arg1=vals["non_matching"][1],
             arg2=vals["non_matching"][2],
             arg3=vals["non_matching"][3],
-        ).transact(
-            {"maxFeePerGas": 10**9, "maxPriorityFeePerGas": 10**9, "gas": 60000}
-        )
+        ).transact({"maxFeePerGas": 10**9, "maxPriorityFeePerGas": 10**9, "gas": 60000})
     )
 
     for txn_hash in txn_hashes:
@@ -376,9 +372,7 @@ async def test_async_topic_filters_with_fixed_arguments(
             arg1=vals["matching"][1],
             arg2=vals["matching"][2],
             arg3=vals["matching"][3],
-        ).transact(
-            {"maxFeePerGas": 10**9, "maxPriorityFeePerGas": 10**9, "gas": 60000}
-        )
+        ).transact({"maxFeePerGas": 10**9, "maxPriorityFeePerGas": 10**9, "gas": 60000})
     )
     txn_hashes.append(
         await async_emitter.functions.logQuadruple(
@@ -387,9 +381,7 @@ async def test_async_topic_filters_with_fixed_arguments(
             arg1=vals["non_matching"][1],
             arg2=vals["non_matching"][2],
             arg3=vals["non_matching"][3],
-        ).transact(
-            {"maxFeePerGas": 10**9, "maxPriorityFeePerGas": 10**9, "gas": 60000}
-        )
+        ).transact({"maxFeePerGas": 10**9, "maxPriorityFeePerGas": 10**9, "gas": 60000})
     )
 
     for txn_hash in txn_hashes:

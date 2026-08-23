@@ -1,9 +1,7 @@
+from collections.abc import Callable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Sequence,
-    cast,
     overload,
 )
 import warnings
@@ -500,7 +498,7 @@ class Eth(BaseEth):
 
         except Timeout:
             raise TimeExhausted(
-                f"Transaction {HexBytes(transaction_hash) !r} is not in the chain "
+                f"Transaction {HexBytes(transaction_hash)!r} is not in the chain "
                 f"after {timeout} seconds"
             )
 
@@ -597,7 +595,7 @@ class Eth(BaseEth):
     def modify_transaction(
         self, transaction_hash: _Hash32, **transaction_params: Unpack[TxParams]
     ) -> HexBytes:
-        assert_valid_transaction_params(cast(TxParams, transaction_params))
+        assert_valid_transaction_params(transaction_params)
         current_transaction = get_required_transaction(self.w3, transaction_hash)
         current_transaction_params = extract_valid_transaction_params(
             current_transaction
@@ -654,14 +652,12 @@ class Eth(BaseEth):
     )
 
     @overload
-    def contract(self, address: None = None, **kwargs: Any) -> type[Contract]:
-        ...
+    def contract(self, address: None = None, **kwargs: Any) -> type[Contract]: ...
 
     @overload
     def contract(
         self, address: Address | ChecksumAddress | ENS, **kwargs: Any
-    ) -> Contract:
-        ...
+    ) -> Contract: ...
 
     def contract(
         self,

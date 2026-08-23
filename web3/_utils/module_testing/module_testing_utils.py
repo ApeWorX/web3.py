@@ -1,11 +1,9 @@
 import asyncio
+from collections.abc import Collection, Generator, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Collection,
-    Generator,
     Literal,
-    Sequence,
     Union,
 )
 

@@ -1,10 +1,7 @@
+from collections.abc import Callable, Collection, Iterator, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Collection,
-    Iterator,
-    Sequence,
 )
 
 from eth_abi.codec import (
@@ -57,8 +54,10 @@ from web3.types import (
 )
 
 if TYPE_CHECKING:
-    from web3.eth import AsyncEth  # noqa: F401
-    from web3.eth import Eth  # noqa: F401
+    from web3.eth import (
+        AsyncEth,  # noqa: F401
+        Eth,  # noqa: F401
+    )
 
 
 def _sanitize_addresses(

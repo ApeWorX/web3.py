@@ -100,7 +100,7 @@ class BaseENS:
     def _decode_ensip10_resolve_data(
         self,
         contract_call_result: bytes,
-        extended_resolver: Union[type["Contract"], type["AsyncContract"]],
+        extended_resolver: type["Contract"] | type["AsyncContract"],
         fn_name: str,
     ) -> Any:
         # avoid getting 2 resolver functions named `addr`

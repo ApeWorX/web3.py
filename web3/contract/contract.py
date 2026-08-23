@@ -1,9 +1,7 @@
+from collections.abc import Callable, Iterable, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Iterable,
-    Sequence,
     cast,
 )
 
@@ -139,18 +137,20 @@ class ContractEvent(BaseContractEvent):
         .. code-block:: python
 
             (
-                AttributeDict({
-                 'args': AttributeDict({}),
-                 'event': 'LogNoArguments',
-                 'logIndex': 0,
-                 'transactionIndex': 0,
-                 'transactionHash': HexBytes('...'),
-                 'address': '0xF2E246BB76DF876Cef8b38ae84130F4F55De395b',
-                 'blockHash': HexBytes('...'),
-                 'blockNumber': 3
-                }),
+                AttributeDict(
+                    {
+                        "args": AttributeDict({}),
+                        "event": "LogNoArguments",
+                        "logIndex": 0,
+                        "transactionIndex": 0,
+                        "transactionHash": HexBytes("..."),
+                        "address": "0xF2E246BB76DF876Cef8b38ae84130F4F55De395b",
+                        "blockHash": HexBytes("..."),
+                        "blockNumber": 3,
+                    }
+                ),
                 AttributeDict(...),
-                ...
+                ...,
             )
 
         See also: :func:`web3.middleware.filter.LocalFilterMiddleware`.
@@ -261,9 +261,7 @@ class ContractFunction(BaseContractFunction):
 
         .. code-block:: python
 
-            ContractFactory = w3.eth.contract(
-                abi=wallet_contract_definition["abi"]
-            )
+            ContractFactory = w3.eth.contract(abi=wallet_contract_definition["abi"])
 
             # Not a real contract address
             contract = ContractFactory("0x2f70d3d26829e412A602E83FE8EeBF80255AEeA5")

@@ -1,12 +1,10 @@
+from collections.abc import Callable, Coroutine, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
     Literal,
     NewType,
     Optional,
-    Sequence,
     TypedDict,
     TypeVar,
     Union,
@@ -67,7 +65,7 @@ _Hash32 = Union[Hash32, HexBytes, HexStr]
 TopicFilter = Union[
     None,
     _Hash32,
-    Sequence[Union[None, _Hash32]],
+    Sequence[None | _Hash32],
     Sequence["TopicFilter"],
 ]
 
@@ -125,7 +123,7 @@ TxData = TypedDict(
         "blockHash": HexBytes,
         "blockNumber": BlockNumber,
         "chainId": int,
-        "data": Union[bytes, HexStr],
+        "data": bytes | HexStr,
         "from": ChecksumAddress,
         "gas": int,
         "gasPrice": Wei,
@@ -139,7 +137,7 @@ TxData = TypedDict(
         "s": HexBytes,
         "to": ChecksumAddress,
         "transactionIndex": int,
-        "type": Union[int, HexStr],
+        "type": int | HexStr,
         "v": int,
         "value": Wei,
         "yParity": int,
@@ -163,24 +161,24 @@ TxParams = TypedDict(
     {
         "accessList": AccessList,
         "authorizationList": Sequence[
-            Union[SetCodeAuthorizationParams, SignedSetCodeAuthorization]
+            SetCodeAuthorizationParams | SignedSetCodeAuthorization
         ],
-        "blobVersionedHashes": Sequence[Union[str, HexStr, bytes, HexBytes]],
+        "blobVersionedHashes": Sequence[str | HexStr | bytes | HexBytes],
         "chainId": int,
-        "data": Union[bytes, HexStr],
+        "data": bytes | HexStr,
         # addr or ens
-        "from": Union[Address, ChecksumAddress, str],
+        "from": Address | ChecksumAddress | str,
         "gas": int,
         # legacy pricing
         "gasPrice": Wei,
-        "maxFeePerBlobGas": Union[str, Wei],
+        "maxFeePerBlobGas": str | Wei,
         # dynamic fee pricing
-        "maxFeePerGas": Union[str, Wei],
-        "maxPriorityFeePerGas": Union[str, Wei],
+        "maxFeePerGas": str | Wei,
+        "maxPriorityFeePerGas": str | Wei,
         "nonce": Nonce,
         # addr or ens
-        "to": Union[Address, ChecksumAddress, str],
-        "type": Union[int, HexStr],
+        "to": Address | ChecksumAddress | str,
+        "type": int | HexStr,
         "value": Wei,
     },
     total=False,
@@ -291,7 +289,7 @@ EthSubscriptionParams = Union[
     GethSyncingSubscriptionResponse,
 ]
 
-RPCId = Optional[Union[int, str]]
+RPCId = Optional[int | str]
 
 
 class RPCRequest(TypedDict, total=False):
@@ -334,12 +332,12 @@ class CreateAccessListResponse(TypedDict):
 
 MakeRequestFn = Callable[[RPCEndpoint, Any], RPCResponse]
 MakeBatchRequestFn = Callable[
-    [list[tuple[RPCEndpoint, Any]]], Union[list[RPCResponse], RPCResponse]
+    [list[tuple[RPCEndpoint, Any]]], list[RPCResponse] | RPCResponse
 ]
 AsyncMakeRequestFn = Callable[[RPCEndpoint, Any], Coroutine[Any, Any, RPCResponse]]
 AsyncMakeBatchRequestFn = Callable[
     [list[tuple[RPCEndpoint, Any]]],
-    Coroutine[Any, Any, Union[list[RPCResponse], RPCResponse]],
+    Coroutine[Any, Any, list[RPCResponse] | RPCResponse],
 ]
 
 
@@ -372,7 +370,7 @@ class StateOverrideParams(TypedDict, total=False):
     stateDiff: dict[HexStr, HexStr] | None
 
 
-StateOverride = dict[Union[str, Address, ChecksumAddress], StateOverrideParams]
+StateOverride = dict[str | Address | ChecksumAddress, StateOverrideParams]
 
 
 GasPriceStrategy = Union[
@@ -386,7 +384,7 @@ TxReceipt = TypedDict(
     {
         "blockHash": HexBytes,
         "blockNumber": BlockNumber,
-        "contractAddress": Optional[ChecksumAddress],
+        "contractAddress": ChecksumAddress | None,
         "cumulativeGasUsed": int,
         "effectiveGasPrice": Wei,
         "gasUsed": int,
@@ -670,7 +668,5 @@ SubscriptionType = Literal[
 
 
 class LogsSubscriptionArg(TypedDict, total=False):
-    address: (
-        Address | ChecksumAddress | ENS | Sequence[Address | ChecksumAddress | ENS]
-    )
+    address: Address | ChecksumAddress | ENS | Sequence[Address | ChecksumAddress | ENS]
     topics: Sequence[TopicFilter]

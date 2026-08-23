@@ -251,19 +251,19 @@ def event_abi():
 def test_construct_event_filter_params(w3, event_abi, fn_kwargs, expected):
     _, filter_params = construct_event_filter_params(event_abi, w3.codec, **fn_kwargs)
     # Ensure that the filter_params contains the expected keys
-    assert (
-        filter_params.keys() == expected.keys()
-    ), f"Keys don't match. Expected {set(expected.keys())}, got {set(filter_params.keys())}"  # noqa: E501
+    assert filter_params.keys() == expected.keys(), (
+        f"Keys don't match. Expected {set(expected.keys())}, got {set(filter_params.keys())}"
+    )  # noqa: E501
     # Verify all values in filter_params match the expected values
     for key, value in expected.items():
         if isinstance(value, list) and isinstance(filter_params[key], list):
-            assert sorted(filter_params[key]) == sorted(
-                value
-            ), f"Expected {key}={value}, got {key}={filter_params.get(key)}"
+            assert sorted(filter_params[key]) == sorted(value), (
+                f"Expected {key}={value}, got {key}={filter_params.get(key)}"
+            )
         else:
-            assert (
-                filter_params[key] == value
-            ), f"Expected {key}={value}, got {key}={filter_params.get(key)}"
+            assert filter_params[key] == value, (
+                f"Expected {key}={value}, got {key}={filter_params.get(key)}"
+            )
 
 
 @pytest.mark.parametrize(

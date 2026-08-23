@@ -223,7 +223,8 @@ class AcceptsHexStrEncoder(encoding.BaseEncoder):
         # cast b/c expects BaseCoder but `from_type_string`
         # restricted to BaseEncoder subclasses
         subencoder = cast(
-            encoding.BaseEncoder, subencoder_cls.from_type_str(abi_type, registry)  # type: ignore[no-untyped-call]  # noqa: E501
+            encoding.BaseEncoder,
+            subencoder_cls.from_type_str(abi_type, registry),  # type: ignore[no-untyped-call]  # noqa: E501
         )
         return cls(subencoder)
 
@@ -394,7 +395,7 @@ def _align_abi_input(
         new_abi = copy.copy(arg_abi)
         new_abi["type"] = tuple_prefix + "[]" * (num_dims - 1)
 
-        sub_abis = [cast(ABIComponent, abi) for abi in itertools.repeat(new_abi)]
+        sub_abis = list(itertools.repeat(new_abi))
 
     if isinstance(arg, abc.Mapping):
         # Arg is mapping.  Align values according to abi order.
@@ -458,10 +459,7 @@ BASE_TYPE_REGEX = "|".join(
 
 SUB_TYPE_REGEX = r"\[" "[0-9]*" r"\]"
 
-TYPE_REGEX = ("^" "(?:{base_type})" "(?:(?:{sub_type})*)?" "$").format(
-    base_type=BASE_TYPE_REGEX,
-    sub_type=SUB_TYPE_REGEX,
-)
+TYPE_REGEX = f"^(?:{BASE_TYPE_REGEX})(?:(?:{SUB_TYPE_REGEX})*)?$"
 
 
 def is_recognized_type(abi_type: TypeStr) -> bool:
@@ -537,19 +535,17 @@ def length_of_array_type(abi_type: TypeStr) -> int:
         return int(inner_brackets)
 
 
-ARRAY_REGEX = ("^" "[a-zA-Z0-9_]+" "({sub_type})+" "$").format(sub_type=SUB_TYPE_REGEX)
+ARRAY_REGEX = f"^[a-zA-Z0-9_]+({SUB_TYPE_REGEX})+$"
 
 
 def is_array_type(abi_type: TypeStr) -> bool:
     return bool(re.match(ARRAY_REGEX, abi_type))
 
 
-NAME_REGEX = "[a-zA-Z_]" "[a-zA-Z0-9_]*"
+NAME_REGEX = "[a-zA-Z_][a-zA-Z0-9_]*"
 
 
-ENUM_REGEX = ("^" "{lib_name}" r"\." "{enum_name}" "$").format(
-    lib_name=NAME_REGEX, enum_name=NAME_REGEX
-)
+ENUM_REGEX = "^" f"{NAME_REGEX}" r"\." f"{NAME_REGEX}" "$"
 
 
 def is_probably_enum(abi_type: TypeStr) -> bool:
@@ -653,9 +649,9 @@ class ABITypedData(namedtuple("ABITypedData", "abi_type, data")):
     """
     Marks data as having a certain ABI-type.
 
-    >>> a1 = ABITypedData(['address', addr1])
-    >>> a2 = ABITypedData(['address', addr2])
-    >>> addrs = ABITypedData(['address[]', [a1, a2]])
+    >>> a1 = ABITypedData(["address", addr1])
+    >>> a2 = ABITypedData(["address", addr2])
+    >>> addrs = ABITypedData(["address[]", [a1, a2]])
 
     You can access the fields using tuple() interface, or with
     attributes:

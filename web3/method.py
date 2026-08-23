@@ -1,11 +1,10 @@
+from collections.abc import Callable, Sequence
 import functools
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     Generic,
     Optional,
-    Sequence,
 )
 import warnings
 
@@ -196,11 +195,11 @@ class Method(Generic[TFunc]):
     def process_params(
         self, module: "Module", *args: Any, **kwargs: Any
     ) -> tuple[
-        tuple[RPCEndpoint | Callable[..., RPCEndpoint], tuple[RPCEndpoint, ...]],
+        tuple[RPCEndpoint, tuple[Any, ...]],
         tuple[
-            TReturn | dict[str, Callable[..., Any]],
+            Any,
             Callable[..., Any],
-            TReturn | Callable[..., Any],
+            Any,
         ],
     ]:
         params = self.input_munger(module, args, kwargs)

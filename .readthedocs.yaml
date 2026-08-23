@@ -5,16 +5,16 @@ build:
   tools:
     python: "3.10"
 
+python:
+  install:
+    - method: uv
+      command: sync
+      groups:
+        - docs
+
 sphinx:
   configuration: docs/conf.py
   fail_on_warning: true
-
-python:
-  install:
-    - method: pip
-      path: .
-      extra_requirements:
-        - docs
 
 formats:
   - epub

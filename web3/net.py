@@ -1,7 +1,4 @@
-from typing import (
-    Awaitable,
-    Callable,
-)
+from collections.abc import Awaitable, Callable
 
 from web3._utils.rpc_abi import (
     RPC,

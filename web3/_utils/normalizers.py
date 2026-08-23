@@ -1,10 +1,10 @@
 import codecs
+from collections.abc import Callable
 import functools
 import json
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     cast,
 )
 
@@ -211,8 +211,7 @@ def abi_ens_resolver(
     if type_str == "address" and is_ens_name(val):
         if w3 is None:
             raise InvalidAddress(
-                f"Could not look up name {val!r} because no web3"
-                " connection available"
+                f"Could not look up name {val!r} because no web3 connection available"
             )
 
         _ens = cast(ENS, w3.ens)
@@ -287,8 +286,7 @@ async def async_abi_ens_resolver(
     if type_str == "address" and is_ens_name(val):
         if async_w3 is None:
             raise InvalidAddress(
-                f"Could not look up name {val!r} because no web3"
-                " connection available"
+                f"Could not look up name {val!r} because no web3 connection available"
             )
 
         _async_ens = cast(AsyncENS, async_w3.ens)

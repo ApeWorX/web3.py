@@ -1,3 +1,4 @@
+from collections.abc import Generator, Sequence
 import os
 import socket
 from subprocess import (
@@ -10,8 +11,6 @@ from tempfile import (
 )
 from typing import (
     Any,
-    Generator,
-    Sequence,
 )
 import zipfile
 
@@ -20,7 +19,7 @@ from geth.install import (
     install_geth,
 )
 
-from web3.tools.benchmark.utils import (
+from .utils import (
     kill_proc_gracefully,
 )
 
@@ -38,7 +37,7 @@ class GethBenchmarkFixture:
             zipfile_path = os.path.abspath(
                 os.path.join(
                     os.path.dirname(__file__),
-                    "../../../tests/integration/",
+                    "../../tests/integration/",
                     GETH_FIXTURE_ZIP,
                 )
             )

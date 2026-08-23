@@ -1,8 +1,8 @@
+from collections.abc import Callable
 import operator
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
 )
 
 from eth_typing import (

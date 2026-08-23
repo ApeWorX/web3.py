@@ -1,12 +1,9 @@
+from collections.abc import Callable, Coroutine, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Sequence,
     TypeVar,
     Union,
-    cast,
 )
 
 from eth_abi.codec import (
@@ -72,9 +69,9 @@ def retrieve_request_information_for_batching(
         )
         if isinstance(w3.provider, PersistentConnectionProvider):
             w3.provider._request_processor.cache_request_information(
-                None, cast(RPCEndpoint, method_str), params, response_formatters
+                None, method_str, params, response_formatters
             )
-        return (cast(RPCEndpoint, method_str), params), response_formatters
+        return (method_str, params), response_formatters
 
     def inner(
         *args: Any, **kwargs: Any
@@ -82,7 +79,7 @@ def retrieve_request_information_for_batching(
         (method_str, params), response_formatters = method.process_params(
             module, *args, **kwargs
         )
-        return (cast(RPCEndpoint, method_str), params), response_formatters
+        return (method_str, params), response_formatters
 
     return async_inner if module.is_async else inner
 
@@ -139,7 +136,7 @@ def retrieve_async_method_call_fn(
 
         if isinstance(async_w3.provider, PersistentConnectionProvider):
             return await async_w3.manager.socket_request(
-                cast(RPCEndpoint, method_str),
+                method_str,
                 params,
                 response_formatters=response_formatters,
             )

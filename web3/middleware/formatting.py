@@ -1,8 +1,7 @@
+from collections.abc import Callable, Coroutine
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
     Literal,
     Union,
     cast,
@@ -22,7 +21,6 @@ from web3.middleware.base import (
     Web3MiddlewareBuilder,
 )
 from web3.types import (
-    EthSubscriptionParams,
     Formatters,
     FormattersDict,
     RPCEndpoint,
@@ -62,7 +60,7 @@ def _apply_response_formatters(
         appropriate_response = response[response_type]
 
         if response_type == "params":
-            appropriate_response = cast(EthSubscriptionParams, response[response_type])
+            appropriate_response = response[response_type]
             return assoc(
                 response,
                 response_type,
@@ -80,7 +78,7 @@ def _apply_response_formatters(
     if not isinstance(response, dict):
         raise BadResponseFormat(
             "Malformed response: expected a valid JSON-RPC response object, got: "
-            "`{}`".format(response)
+            f"`{response}`"
         )
     elif response.get("result") is not None and method in result_formatters:
         return _format_response("result", result_formatters[method])

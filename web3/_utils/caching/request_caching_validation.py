@@ -1,8 +1,8 @@
+from collections.abc import Sequence
 import time
 from typing import (
     TYPE_CHECKING,
     Any,
-    Sequence,
     TypeVar,
 )
 

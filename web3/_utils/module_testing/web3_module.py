@@ -1,12 +1,12 @@
 import pytest
 import asyncio
+from collections.abc import Sequence
 import threading
 import time
 from typing import (
     TYPE_CHECKING,
     Any,
     NoReturn,
-    Sequence,
     cast,
 )
 

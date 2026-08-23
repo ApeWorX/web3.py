@@ -1,10 +1,8 @@
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Sequence,
 )
+from collections.abc import Callable, Coroutine, Sequence
 
 from .attrdict import (
     AttributeDictMiddleware,

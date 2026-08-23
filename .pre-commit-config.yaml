@@ -1,4 +1,3 @@
-exclude: '.project-template|docs/conf.py'
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
@@ -7,60 +6,25 @@ repos:
     -   id: check-toml
     -   id: end-of-file-fixer
     -   id: trailing-whitespace
--   repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.2
+-   repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.2
     hooks:
-    -   id: pyupgrade
-        args: [--py38-plus]
--   repo: https://github.com/psf/black
-    rev: 23.9.1
-    hooks:
-    -   id: black
--   repo: https://github.com/PyCQA/flake8
-    rev: 6.1.0
-    hooks:
-    -   id: flake8
-        additional_dependencies:
-        -   flake8-bugbear==23.9.16
-        exclude: setup.py
--   repo: https://github.com/PyCQA/autoflake
-    rev: v2.2.1
-    hooks:
-    -   id: autoflake
--   repo: https://github.com/pycqa/isort
-    rev: 5.12.0
-    hooks:
-    -   id: isort
--   repo: https://github.com/pycqa/pydocstyle
-    rev: 6.3.0
-    hooks:
-    -   id: pydocstyle
-        additional_dependencies:
-        -   tomli  # required until >= python311
+    -   id: ruff-check
+        args: [--fix]
+    -   id: ruff-format
 -   repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.17
+    rev: 0.7.22
     hooks:
     -   id: mdformat
         additional_dependencies:
         -   mdformat-gfm
+        -   mdformat-frontmatter
+        -   mdformat-pyproject
 -   repo: local
     hooks:
     -   id: mypy-local
         name: run mypy with all dev dependencies present
-        entry: python -m mypy -p web3
-        language: system
-        always_run: true
-        pass_filenames: false
--   repo: https://github.com/PrincetonUniversity/blocklint
-    rev: v0.2.5
-    hooks:
-    -   id: blocklint
-        exclude: 'normalization_tests.json|docs/(Makefile|release_notes.rst|web3.eth.rst|ens_overview.rst|troubleshooting.rst|transactions.rst|web3.contract.rst)'
--   repo: local
-    hooks:
-    -   id: check-rst-files
-        name: Check for .rst files in the top-level directory
-        entry: sh -c 'ls *.rst 1>/dev/null 2>&1 && { echo "found .rst file in top-level folder"; exit 1; } || exit 0'
+        entry: python -m mypy -p web3 -p ens
         language: system
         always_run: true
         pass_filenames: false

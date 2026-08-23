@@ -1,0 +1,250 @@
+on: ["push", "pull_request"]
+
+name: Test
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  UV_CACHE_DIR: /tmp/uv-cache
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: "3.10"
+    - name: Run Ruff Lint
+      run: uv run --group lint ruff check .
+    - name: Run Ruff Format
+      run: uv run --group lint ruff format --check .
+    - name: Run mdformat
+      run: uv run --group lint mdformat --check *.md
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: "3.10"
+    - name: Run MyPy
+      run: uv run --group lint --group test mypy -p web3 -p ens
+
+  core:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Run Core Tests
+      run: uv run --group test pytest tests/core -m "not asyncio" -n auto --maxprocesses=15
+
+  core-async:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Run Async Core Tests
+      run: uv run --group test pytest tests/core -m asyncio -n auto --maxprocesses=15
+
+  ens:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Run ENS Tests
+      run: uv run --group test pytest tests/ens --ignore=tests/ens/normalization/test_normalize_name_ensip15.py -n auto --maxprocesses=15
+
+  ensip15:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Run ENSIP-15 Tests
+      run: uv run --group test pytest tests/ens/normalization/test_normalize_name_ensip15.py -q -n auto --maxprocesses=15
+
+  integration-ethtester:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Run Ethereum Tester Integration Tests
+      run: uv run --group test pytest tests/integration/test_ethereum_tester.py -n auto --maxprocesses=15
+
+  integration-geth-ipc:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    env:
+      GETH_VERSION: "1.16.7"
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Geth
+      run: |
+        uv run --group test python -m geth.install v${GETH_VERSION}
+        echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
+    - name: Run Geth IPC Integration Tests
+      run: uv run --group test pytest tests/integration/go_ethereum/test_goethereum_ipc.py -k "not Async" -n auto --maxprocesses=15
+
+  integration-geth-ipc-async:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    env:
+      GETH_VERSION: "1.16.7"
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Geth
+      run: |
+        uv run --group test python -m geth.install v${GETH_VERSION}
+        echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
+    - name: Run Async Geth IPC Integration Tests
+      run: uv run --group test pytest tests/integration/go_ethereum/test_goethereum_ipc.py -k Async -n auto --maxprocesses=15
+
+  integration-geth-http:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    env:
+      GETH_VERSION: "1.16.7"
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Geth
+      run: |
+        uv run --group test python -m geth.install v${GETH_VERSION}
+        echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
+    - name: Run Geth HTTP Integration Tests
+      run: uv run --group test pytest tests/integration/go_ethereum/test_goethereum_http.py -k "not Async" -n auto --maxprocesses=15
+
+  integration-geth-http-async:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    env:
+      GETH_VERSION: "1.16.7"
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Geth
+      run: |
+        uv run --group test python -m geth.install v${GETH_VERSION}
+        echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
+    - name: Run Async Geth HTTP Integration Tests
+      run: uv run --group test pytest tests/integration/go_ethereum/test_goethereum_http.py -k Async -n auto --maxprocesses=15
+
+  integration-geth-ws:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    env:
+      GETH_VERSION: "1.16.7"
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Geth
+      run: |
+        uv run --group test python -m geth.install v${GETH_VERSION}
+        echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
+    - name: Run Geth WebSocket Integration Tests
+      run: uv run --group test pytest tests/integration/go_ethereum/test_goethereum_ws -n auto --maxprocesses=15
+
+  benchmark:
+    runs-on: ubuntu-latest
+    env:
+      GETH_VERSION: "1.16.7"
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: "3.10"
+    - name: Install Geth
+      run: |
+        uv run --group test python -m geth.install v${GETH_VERSION}
+        echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
+    - name: Run Benchmarks
+      run: |
+        uv run --group test python -m scripts.benchmark.main --num-calls 5
+        uv run --group test python -m scripts.benchmark.main --num-calls 50
+        uv run --group test python -m scripts.benchmark.main --num-calls 100

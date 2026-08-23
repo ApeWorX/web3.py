@@ -418,7 +418,7 @@ def normalize_name_ensip15(name: str) -> ENSNormalizedName:
     """
     if not name:
         return ENSNormalizedName([])
-    elif isinstance(name, (bytes, bytearray)):
+    elif isinstance(name, bytes | bytearray):
         name = name.decode("utf-8")
 
     raw_labels = name.split(".")

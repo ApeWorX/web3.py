@@ -1,12 +1,11 @@
 import pytest
+from collections.abc import Callable, Sequence
 from decimal import (
     Decimal,
 )
 import re
 from typing import (
     Any,
-    Callable,
-    Sequence,
 )
 
 from eth_abi.codec import (

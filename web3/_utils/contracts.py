@@ -1,10 +1,9 @@
+from collections.abc import Callable, Sequence
 import copy
 import functools
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Sequence,
     Union,
     cast,
 )
@@ -96,7 +95,7 @@ def find_matching_event_abi(
     event_name: str | None = None,
     argument_names: Sequence[str] | None = None,
 ) -> ABIEvent:
-    filters: list[functools.partial[Sequence[ABIElement]]] = [
+    filters: list[Callable[[ABI], Sequence[ABIElement]]] = [
         functools.partial(filter_abi_by_type, "event"),
     ]
 

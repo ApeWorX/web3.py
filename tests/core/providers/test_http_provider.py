@@ -215,13 +215,13 @@ def test_no_explicit_session_creates_per_thread_sessions():
 
     # Verify thread isolation: same thread always gets the same session
     for _, sessions in sessions_by_thread.items():
-        assert all(
-            s is sessions[0] for s in sessions
-        ), "Same thread should always get the same session"
+        assert all(s is sessions[0] for s in sessions), (
+            "Same thread should always get the same session"
+        )
 
     # Verify different threads get different sessions (not the main thread's)
     for thread_id, sessions in sessions_by_thread.items():
         if thread_id != main_thread_id:
-            assert (
-                sessions[0] is not main_thread_session
-            ), "Different threads should have different sessions"
+            assert sessions[0] is not main_thread_session, (
+                "Different threads should have different sessions"
+            )

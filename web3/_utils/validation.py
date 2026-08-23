@@ -1,8 +1,8 @@
+from collections.abc import Callable
 import itertools
 import logging
 from typing import (
     Any,
-    Callable,
     NoReturn,
 )
 
@@ -304,7 +304,7 @@ def validate_rpc_response_and_raise_if_error(
         if response_id is None and "error" in response:
             # errors can sometimes have null `id`, according to the JSON-RPC spec
             pass
-        elif not isinstance(response_id, (str, int)):
+        elif not isinstance(response_id, str | int):
             _raise_bad_response_format(response, int_error_msg)
         elif isinstance(response_id, str):
             try:

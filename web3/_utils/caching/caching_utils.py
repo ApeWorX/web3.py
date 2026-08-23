@@ -1,14 +1,11 @@
 import collections
+from collections.abc import Callable, Coroutine, Sequence
 import hashlib
 import inspect
 import threading
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Sequence,
-    Union,
 )
 
 from eth_typing import (
@@ -264,7 +261,7 @@ def handle_request_caching(
 
 ASYNC_VALIDATOR_TYPE = Callable[
     ["AsyncBaseProvider", Sequence[Any], dict[str, Any]],
-    Union[bool, Coroutine[Any, Any, bool]],
+    bool | Coroutine[Any, Any, bool],
 ]
 
 ASYNC_INTERNAL_VALIDATION_MAP: dict[RPCEndpoint, ASYNC_VALIDATOR_TYPE] = {
@@ -326,11 +323,10 @@ async def _async_should_cache_response(
         and provider.request_cache_validation_threshold is not None
     ):
         cache_validator = ASYNC_INTERNAL_VALIDATION_MAP[method]
-        return (
-            await cache_validator(provider, params, result)
-            if inspect.iscoroutinefunction(cache_validator)
-            else cache_validator(provider, params, result)
-        )
+        validation_result = cache_validator(provider, params, result)
+        if inspect.isawaitable(validation_result):
+            return await validation_result
+        return validation_result
     return True
 
 

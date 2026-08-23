@@ -1,21 +1,119 @@
-[tool.autoflake]
-exclude = "__init__.py"
-remove_all_unused_imports = true
+[build-system]
+requires = ["setuptools>=75", "wheel", "setuptools_scm[toml]>=8"]
+build-backend = "setuptools.build_meta"
 
-[tool.isort]
-combine_as_imports = true
-extra_standard_library = "pytest"
-force_grid_wrap = 1
-force_sort_within_sections = true
-force_to_top = "pytest"
-honor_noqa = true
-known_first_party = "web3"
-known_third_party = "hypothesis"
-multi_line_output = 3
-profile = "black"
-use_parentheses = true
-# skip `__init__.py` files because sometimes order of initialization is important
-skip="__init__.py,web3/main.py,web3/_utils/windows.py"
+[project]
+name = "web3"
+dynamic = ["version"]
+description = "web3: A Python library for interacting with Ethereum"
+readme = "README.md"
+requires-python = ">=3.10,<4"
+license = "MIT"
+authors = [
+    { name = "The Ethereum Foundation", email = "snakecharmers@ethereum.org" },
+    { name = "ApeWorX Collective", email = "admin@apeworx.io" },
+]
+maintainers = [
+    { name = "ApeWorX Collective", email = "admin@apeworx.io" },
+]
+keywords = ["ethereum"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "aiohttp>=3.7.4.post0",
+    "eth-abi>=6",
+    "eth-account>=0.14",
+    "eth-hash[pycryptodome]>=0.5.1",
+    "eth-typing>=5.0.0",
+    "eth-utils>=5.3.0",
+    "hexbytes>=2",
+    "pydantic>=2.4",
+    "pyunormalize>=15",
+    "pywin32>=223; platform_system == 'Windows'",
+    "requests>=2.23.0",
+    "typing-extensions>=4.0.1",
+    "websockets>=14",
+]
+
+[project.urls]
+Homepage = "https://github.com/ApeWorX/web3.py"
+Repository = "https://github.com/ApeWorX/web3.py.git"
+Issues = "https://github.com/ApeWorX/web3.py/issues"
+Documentation = "https://web3py.readthedocs.io/"
+Funding = "https://github.com/sponsors/ApeWorX"
+
+[project.optional-dependencies]
+tester = [
+    "eth-tester[py-evm]>=0.14.0b1,<0.15.0b1",
+    "py-geth>=6.4.0",
+]
+[dependency-groups]
+test = [
+    {include-group = "tester"},
+    "cached-property>=2.0.1",
+    "flaky>=3.7.0",
+    "hypothesis>=3.31.2",
+    "pytest>=7.0.0",
+    "pytest-asyncio>=1.3.0",
+    "pytest-mock>=1.10",
+    "pytest-xdist>=2.4.0",
+]
+tester = [
+    "eth-tester[py-evm]>=0.14.0b1,<0.15.0b1",
+    "py-geth>=6.4.0",
+]
+lint = [
+    "mdformat>=0.7.22",
+    "mdformat-gfm>=0.3.5",
+    "mdformat-frontmatter>=0.4.1",
+    "mdformat-pyproject>=0.0.2",
+    "mypy>=2.3.0",
+    "ruff>=0.12.0",
+    "types-requests>=2.0.0",
+]
+docs = [
+    "sphinx>=6.0.0",
+    "sphinx-autobuild>=2021.3.14",
+    "sphinx_rtd_theme>=1.0.0",
+]
+maintenance = [
+    "py-solc-x",
+    "ruff>=0.12.0",
+]
+dev = [
+    {include-group = "test"},
+    {include-group = "lint"},
+    {include-group = "docs"},
+    "ipython",
+    "prek",
+    "tqdm>4.32",
+]
+
+[tool.setuptools.packages.find]
+exclude = ["scripts", "scripts.*", "tests", "tests.*"]
+namespaces = false
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.package-data]
+ens = ["specs/*.json"]
+web3 = [
+    "py.typed",
+    "_utils/contract_sources/*.sol",
+]
+
+[tool.setuptools_scm]
+fallback_version = "8.0.0b3"
 
 [tool.mypy]
 check_untyped_defs = true
@@ -26,7 +124,7 @@ disallow_untyped_calls = true
 disallow_untyped_decorators = false
 disallow_untyped_defs = true
 ignore_missing_imports = true
-python_version="3.10"
+python_version = "3.10"
 strict_equality = true
 strict_optional = false
 warn_redundant_casts = true
@@ -38,38 +136,6 @@ warn_unused_ignores = true
 module = "sphinx.*"
 follow_imports = "skip"
 
-[tool.pydocstyle]
-# All error codes found here:
-# http://www.pydocstyle.org/en/3.0.0/error_codes.html
-#
-# Ignored:
-# D1 - Missing docstring error codes
-#
-# Selected:
-# D2 - Whitespace error codes
-# D3 - Quote error codes
-# D4 - Content related error codes
-select = "D2,D3,D4"
-
-# Extra ignores:
-# D200 - One-line docstring should fit on one line with quotes
-# D203 - 1 blank line required before class docstring
-# D204 - 1 blank line required after class docstring
-# D205 - 1 blank line required between summary line and description
-# D212 - Multi-line docstring summary should start at the first line
-# D302 - Use u""" for Unicode docstrings
-# D400 - First line should end with a period
-# D401 - First line should be in imperative mood
-# D412 - No blank lines allowed between a section header and its content
-# D415 - First line should end with a period, question mark, or exclamation point
-add-ignore = "D200,D203,D204,D205,D212,D302,D400,D401,D412,D415"
-
-# Explanation:
-# D400 - Enabling this error code seems to make it a requirement that the first
-# sentence in a docstring is not split across two lines.  It also makes it a
-# requirement that no docstring can have a multi-sentence description without a
-# summary line.  Neither one of those requirements seem appropriate.
-
 [tool.pytest.ini_options]
 addopts = "-v --showlocals --durations 10"
 asyncio_mode = "strict"
@@ -77,99 +143,77 @@ log_date_format = "%m-%d %H:%M:%S"
 log_format = "%(levelname)8s  %(asctime)s  %(filename)20s  %(message)s"
 xfail_strict = true
 
-[tool.towncrier]
-# Read https://github.com/ethereum/web3.py/blob/main/newsfragments/README.md for instructions
-directory = "newsfragments"
-filename = "docs/release_notes.rst"
-issue_format = "`#{issue} <https://github.com/ethereum/web3.py/issues/{issue}>`__"
-package = "web3"
-title_format = "web3.py v{version} ({project_date})"
-underlines = ["-", "~", "^"]
-
-[[tool.towncrier.type]]
-directory = "breaking"
-name = "Breaking Changes"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "bugfix"
-name = "Bugfixes"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "deprecation"
-name = "Deprecations"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "docs"
-name = "Improved Documentation"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "feature"
-name = "Features"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "internal"
-name = "Internal Changes - for web3.py Contributors"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "misc"
-name = "Miscellaneous Changes"
-showcontent = false
-
-[[tool.towncrier.type]]
-directory = "performance"
-name = "Performance Improvements"
-showcontent = true
-
-[[tool.towncrier.type]]
-directory = "removal"
-name = "Removals"
-showcontent = true
-
-[tool.bumpversion]
-current_version = "8.0.0-beta.3"
-parse = """
-    (?P<major>\\d+)
-    \\.(?P<minor>\\d+)
-    \\.(?P<patch>\\d+)
-		(-
-			(?P<stage>[^.]*)
-			\\.(?P<devnum>\\d+)
-		)?
-"""
-serialize = [
-	"{major}.{minor}.{patch}-{stage}.{devnum}",
-	"{major}.{minor}.{patch}",
-]
-search = "{current_version}"
-replace = "{new_version}"
-regex = false
-ignore_missing_version = false
-tag = true
-sign_tags = true
-tag_name = "v{new_version}"
-tag_message = "Bump version: {current_version} → {new_version}"
-allow_dirty = false
-commit = true
-message = "Bump version: {current_version} → {new_version}"
-
-[tool.bumpversion.parts.stage]
-optional_value = "stable"
-first_value = "stable"
-values = [
-	"alpha",
-	"beta",
-	"stable",
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+exclude = [
+    ".eggs",
+    ".git",
+    ".mypy_cache",
+    ".nox",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "build",
+    "dist",
 ]
 
-[tool.bumpversion.part.devnum]
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "W",
+    "B",
+    "I",
+    "UP",
+    "D2",
+    "D3",
+    "D4",
+]
+ignore = [
+    "B018",
+    "B008",
+    "B904",
+    "B905",
+    "D200",
+    "D203",
+    "D204",
+    "D205",
+    "D212",
+    "D400",
+    "D401",
+    "D412",
+    "D415",
+    "E501",
+    "UP007",
+    "UP035",
+    "UP045",
+]
 
-[[tool.bumpversion.files]]
-filename = "setup.py"
-search = "version=\"{current_version}\""
-replace = "version=\"{new_version}\""
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "I001"]
+"ens/abis.py" = ["F401", "F403"]
+"ens/contract_data.py" = ["F401", "F403"]
+"docs/conf.py" = ["E402", "E501"]
+"web3/main.py" = ["I001"]
+"web3/_utils/windows.py" = ["I001"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+extra-standard-library = ["pytest"]
+force-sort-within-sections = true
+force-to-top = ["pytest"]
+known-first-party = ["web3", "ens"]
+known-third-party = ["hypothesis"]
+
+[tool.ruff.format]
+quote-style = "double"
+line-ending = "auto"
+indent-style = "space"
+docstring-code-format = true
+
+[tool.mdformat]
+number = true

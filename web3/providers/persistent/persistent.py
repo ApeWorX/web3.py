@@ -3,14 +3,12 @@ from abc import (
     abstractmethod,
 )
 import asyncio
+from collections.abc import Callable, Coroutine
 import logging
 import signal
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Optional,
     cast,
 )
 
@@ -93,7 +91,7 @@ class PersistentConnectionProvider(AsyncJSONBaseProvider, ABC):
             subscription_response_queue_size=subscription_response_queue_size,
             request_information_cache_size=request_information_cache_size,
         )
-        self._message_listener_task: Optional["asyncio.Task[None]"] = None
+        self._message_listener_task: asyncio.Task[None] | None = None
         self._listen_event: asyncio.Event = asyncio.Event()
         self._max_connection_retries = max_connection_retries
 
