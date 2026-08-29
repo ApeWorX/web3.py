@@ -549,7 +549,7 @@ EthereumTesterProvider
     constructor argument should be an instance of the :class:`~eth_tester.EthereumTester`
     or a subclass of :class:`~eth_tester.backends.base.BaseChainBackend` class provided
     by the ``eth-tester`` library. The ``api_endpoints`` argument should be a ``dict``
-    of RPC endpoints. You can see the structure and defaults `here <https://github.com/ethereum/web3.py/blob/283b536c7d53e605c61468941e3fc07a6c5d0c09/web3/providers/eth_tester/defaults.py#L228>`_.
+    of RPC endpoints. You can see the structure and defaults `here <https://github.com/ApeWorX/web3.py/blob/283b536c7d53e605c61468941e3fc07a6c5d0c09/web3/providers/eth_tester/defaults.py#L228>`_.
     If you would like a custom ``eth-tester`` instance to test with, see the
     ``eth-tester`` library `documentation <https://github.com/ethereum/eth-tester>`_
     for details.

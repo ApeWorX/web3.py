@@ -553,7 +553,7 @@ Expect the following methods to be removed in v6:
 - ``web3.sha3`` was deprecated for :meth:`~Web3.keccak`
 - ``web3.soliditySha3`` was deprecated for :meth:`~Web3.solidityKeccak`
 - :meth:`~web3.net.Net.chainId` was deprecated for :meth:`~web3.eth.Eth.chainId`.
-  Follow issue `#1293 <https://github.com/ethereum/web3.py/issues/1293>`_ for details
+  Follow issue `#1293 <https://github.com/ApeWorX/web3.py/issues/1293>`_ for details
 - ``web3.eth.getCompilers()`` was deprecated and will not be replaced
 - :meth:`~web3.eth.getTransactionFromBlock()` was deprecated for :meth:`~Web3.getTransactionByBlock`
 

@@ -143,7 +143,7 @@ def test_user_provided_session_shared_across_threads():
     that same session is used by ALL threads, not just the creating thread.
 
     This is a regression test for:
-    https://github.com/ethereum/web3.py/issues/3789
+    https://github.com/ApeWorX/web3.py/issues/3789
     """
     shared_session = Session()
     provider = HTTPProvider(endpoint_uri=URI, session=shared_session)

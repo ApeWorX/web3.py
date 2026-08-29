@@ -392,7 +392,7 @@ def update_doc_version(new_version):
             },
             {
                 "line_to_replace": "GETH_BINARY=~",
-                "replace_with": f"      $ GETH_BINARY=~/.py-geth/geth-v{new_version}/bin/geth uv run --group test python -m scripts.generate_fixtures.go_ethereum\n",  # noqa: E501,
+                "replace_with": f"      $ GETH_BINARY=~/.py-geth/geth-v{new_version}/bin/geth uv run --group integration python -m scripts.generate_fixtures.go_ethereum\n",  # noqa: E501,
             },
         ]
     }

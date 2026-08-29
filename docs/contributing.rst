@@ -16,7 +16,7 @@ Without code:
 * Answer user questions within GitHub issues, Stack Overflow, or the `Python Discord server`_.
 * Write or record tutorial content.
 * Improve our documentation (including typo fixes).
-* `Open an issue <https://github.com/ethereum/web3.py/issues/new>`_ on GitHub to document a bug. Include as much detail as possible, e.g., how to reproduce the issue and any exception messages.
+* `Open an issue <https://github.com/ApeWorX/web3.py/issues/new>`_ on GitHub to document a bug. Include as much detail as possible, e.g., how to reproduce the issue and any exception messages.
 
 With code:
 
@@ -115,7 +115,7 @@ First, install the test dependencies:
 
 .. code:: sh
 
-    $ python -m pip install -e ".[test]"
+    $ uv sync --group test
 
 
 You can run all tests with:
@@ -329,17 +329,13 @@ submission.
 
 See GitHub's documentation for `working on pull requests`_.
 
-Once you've made a pull request take a look at the Circle CI build status in
+Once you've made a pull request, check the GitHub Actions status in
 the GitHub interface and make sure all tests are passing. In general, pull
 requests that do not pass the CI build yet won't get reviewed unless explicitly
 requested.
 
-If the pull request introduces changes that should be reflected in the release
-notes, please add a **newsfragment** file as explained
-in the pull request title using the conventional-commit format.
-
-If possible, the change to the release notes file should be included in the
-commit that introduces the feature or bugfix.
+Use the conventional-commit format for the pull request title. GitHub generates
+release notes from merged pull requests.
 
 .. _generating_fixtures:
 
@@ -354,7 +350,7 @@ Before generating new fixtures, make sure you have the test dependencies install
 
 .. code:: sh
 
-    $ python -m pip install -e ".[test]"
+    $ uv sync --group test
 
 .. note::
 
@@ -376,13 +372,13 @@ Geth Fixtures
 
    .. code:: sh
 
-      $ python -m geth.install v1.16.7
+      $ uv run --group integration python -m geth.install v1.16.7
 
 2. Specify the Geth binary and run the fixture creation script (from within the web3.py directory):
 
    .. code:: sh
 
-      $ GETH_BINARY=~/.py-geth/geth-v1.16.7/bin/geth uv run --group test python -m scripts.generate_fixtures.go_ethereum
+      $ GETH_BINARY=~/.py-geth/geth-v1.16.7/bin/geth uv run --group integration python -m scripts.generate_fixtures.go_ethereum
 
 3. The output of this script is your fixture, a zip file, which is now stored in ``/tests/integration/``.
    The ``/tests/integration/go_ethereum/conftest.py`` and
@@ -444,7 +440,10 @@ Review the documentation that will get published:
 
 .. code:: sh
 
-    $ make docs
+    $ uv run --group docs sphinx-apidoc -o docs/ . "*conftest*" "tests" "scripts" "web3/tools/*"
+    $ uv run --group docs sphinx-build -W -b html docs docs/_build/html
+    $ uv run --group docs sphinx-build -W -b doctest docs docs/_build/doctest
+    $ uv run --group docs sphinx-build -W -b epub docs docs/_build/epub
 
 Push the release to github & pypi
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

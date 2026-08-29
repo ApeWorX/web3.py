@@ -1764,7 +1764,7 @@ dependencies you can use the pinned extra for testing:
 
 .. code-block:: bash
 
-    $ pip install web3[test] pytest
+    $ pip install "web3[tester]" pytest
 
 Once you have an environment set up for testing, you can then write your tests
 like so:

@@ -4,8 +4,6 @@ Release Notes
 v7 Breaking Changes Summary
    See the :ref:`v7 Migration Guide<migrating_v6_to_v7>`
 
-.. towncrier release notes start
-
 web3.py v8.0.0-beta.3 (2026-04-30)
 ----------------------------------
 
