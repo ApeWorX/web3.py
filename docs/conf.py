@@ -85,6 +85,10 @@ exclude_patterns = [
     "web3.tools.*",
 ]
 
+# The EPUB builder packages its generated doctree cache and warns about those
+# binary files. They are expected build artifacts, not documentation sources.
+suppress_warnings = ["epub.unknown_project_files"]
+
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
 # default_role = None

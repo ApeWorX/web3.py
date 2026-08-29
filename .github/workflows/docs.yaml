@@ -20,7 +20,7 @@ jobs:
       with:
         python-version: "3.10"
     - name: Build Docs
-      run: uv run --group docs sphinx-apidoc -o docs/ . "*conftest*" "tests" "web3/tools/*"
+      run: uv run --group docs sphinx-apidoc -o docs/ . "*conftest*" "tests" "scripts" "web3/tools/*"
     - name: Run HTML Docs
       run: uv run --group docs sphinx-build -W -b html docs docs/_build/html
     - name: Run Doctests
