@@ -59,10 +59,10 @@ jobs:
       env:
         GETH_VERSION: ${{ inputs.geth-version }}
       run: |
-        uv run --group test python -m geth.install v${GETH_VERSION}
+        uv run --group integration python -m geth.install v${GETH_VERSION}
         echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
     - name: Generate Geth fixture
-      run: uv run --group test python -m scripts.generate_fixtures.go_ethereum
+      run: uv run --group integration python -m scripts.generate_fixtures.go_ethereum
     - uses: actions/upload-artifact@v4
       with:
         name: geth-${{ inputs.geth-version }}-fixture

@@ -54,7 +54,6 @@ Funding = "https://github.com/sponsors/ApeWorX"
 [project.optional-dependencies]
 tester = [
     "eth-tester[py-evm]>=0.14.0b1,<0.15.0b1",
-    "py-geth>=7.0.1",
 ]
 [dependency-groups]
 test = [
@@ -69,7 +68,10 @@ test = [
 ]
 tester = [
     "eth-tester[py-evm]>=0.14.0b1,<0.15.0b1",
-    "py-geth>=6.4.0",
+]
+integration = [
+    {include-group = "test"},
+    "py-geth>=7.0.1",
 ]
 lint = [
     "mdformat>=0.7.22",
