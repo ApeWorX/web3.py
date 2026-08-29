@@ -408,12 +408,6 @@ def update_fixture_generation_version(new_version):
                 "replace_with": f'GETH_FIXTURE_ZIP = "geth-{new_version}-fixture.zip"\n',  # noqa: E501
             },
         ],
-        "./scripts/benchmark/node.py": [
-            {
-                "line_to_replace": "GETH_FIXTURE_ZIP = ",
-                "replace_with": f'GETH_FIXTURE_ZIP = "geth-{new_version}-fixture.zip"\n',  # noqa: E501
-            },
-        ],
     }
     update_geth_version_string(changes, new_version)
 

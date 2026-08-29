@@ -70,7 +70,6 @@ jobs:
         path: |
           tests/integration/geth-*-fixture.zip
           tests/integration/go_ethereum/conftest.py
-          scripts/benchmark/node.py
           .github/workflows/test.yaml
           .github/workflows/maintenance.yaml
           docs/contributing.rst

@@ -381,9 +381,8 @@ Geth Fixtures
       $ GETH_BINARY=~/.py-geth/geth-v1.16.7/bin/geth uv run --group integration python -m scripts.generate_fixtures.go_ethereum
 
 3. The output of this script is your fixture, a zip file, which is now stored in ``/tests/integration/``.
-   The ``/tests/integration/go_ethereum/conftest.py`` and
-   ``/scripts/benchmark/node.py`` files should be updated automatically to point to this new fixture.
-   Delete the old fixture.
+   The ``/tests/integration/go_ethereum/conftest.py`` file should be updated automatically
+   to point to this new fixture. Delete the old fixture.
 
 4. Run the tests. To ensure that the tests run with the correct Geth version locally,
    you may again include the ``GETH_BINARY`` environment variable.

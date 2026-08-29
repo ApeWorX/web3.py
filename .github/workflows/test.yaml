@@ -107,24 +107,3 @@ jobs:
         echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
     - name: Run Geth Integration Tests
       run: uv run --group integration pytest tests/integration/go_ethereum -n auto --maxprocesses=15
-
-  benchmark:
-    runs-on: ubuntu-latest
-    env:
-      GETH_VERSION: "1.16.7"
-    steps:
-    - uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
-    - uses: astral-sh/setup-uv@v7
-      with:
-        python-version: "3.10"
-    - name: Install Geth
-      run: |
-        uv run --group integration python -m geth.install v${GETH_VERSION}
-        echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
-    - name: Run Benchmarks
-      run: |
-        uv run --group integration python -m scripts.benchmark.main --num-calls 5
-        uv run --group integration python -m scripts.benchmark.main --num-calls 50
-        uv run --group integration python -m scripts.benchmark.main --num-calls 100
