@@ -1,5 +1,6 @@
 import pytest
 import os
+import sys
 
 from web3.providers import (
     HTTPProvider,
@@ -33,10 +34,14 @@ def delete_environment_variables(monkeypatch):
             HTTPProvider,
             {"endpoint_uri": "https://node.ontheweb.com"},
         ),
-        (
+        pytest.param(
             "file:///root/path/to/file.ipc",
             IPCProvider,
             {"ipc_path": "/root/path/to/file.ipc"},
+            marks=pytest.mark.skipif(
+                sys.platform == "win32",
+                reason="Unix domain sockets are not supported on Windows",
+            ),
         ),
     ),
 )
@@ -48,8 +53,12 @@ def test_load_provider_from_env(monkeypatch, uri, expected_type, expected_attrs)
         assert getattr(provider, attr) == val
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="Unix domain sockets are not supported on Windows"
+)
 def test_get_dev_ipc_path(monkeypatch, tmp_path):
     # test default path
+    monkeypatch.delenv("TMPDIR", raising=False)
     path = get_dev_ipc_path()
     assert path == "/tmp/geth.ipc"
 

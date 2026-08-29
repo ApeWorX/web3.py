@@ -29,6 +29,10 @@ from web3.types import (
     RPCEndpoint,
 )
 
+pytestmark = pytest.mark.skipif(
+    sys.platform == "win32", reason="Unix domain sockets are not supported on Windows"
+)
+
 
 @pytest.fixture
 def jsonrpc_ipc_pipe_path():
