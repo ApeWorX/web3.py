@@ -101,6 +101,11 @@ def base_geth_command_arguments(geth_binary, datadir):
         # in order to raise on underpriced transactions, ``txpool.nolocals`` is now
         # necessary: https://github.com/ethereum/go-ethereum/pull/31202
         "--txpool.nolocals",
+        # Geth's filtermaps log index can race with ``--dev.period`` mining and
+        # fail ``eth_getLogs`` topic queries with
+        # ``failed to retrieve log value pointer ... pebble: not found``.
+        # Tests only need correct log results, so skip the index.
+        "--history.logs.disable",
     )
 
 
