@@ -4,9 +4,6 @@ from .persistent import (
 from .persistent_connection import (
     PersistentConnection,
 )
-from .request_processor import (
-    RequestProcessor,
-)
 from .async_ipc import (
     AsyncIPCProvider,
 )
