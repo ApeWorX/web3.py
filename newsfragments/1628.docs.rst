@@ -1,0 +1,1 @@
+Add documentation for TypedDict types in ``web3.types`` module, enabling better IDE autocompletion and type checking support for third-party applications.
