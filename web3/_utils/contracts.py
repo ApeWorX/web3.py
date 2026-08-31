@@ -63,6 +63,9 @@ from web3._utils.normalizers import (
     abi_ens_resolver,
     abi_string_to_text,
 )
+from web3._utils.type_conversion import (
+    to_hex_if_bytes,
+)
 from web3.exceptions import (
     BlockNumberOutOfRange,
     Web3TypeError,
@@ -341,7 +344,13 @@ def parse_block_identifier(
     elif isinstance(block_identifier, bytes) or is_hex_encoded_block_hash(
         block_identifier
     ):
-        return w3.eth.get_block(block_identifier)["number"]
+        # Forward the block hash to the JSON-RPC call instead of resolving it to
+        # a block number first. The execution-apis spec lists block hashes as a
+        # valid default-block parameter and the major clients (geth, reth,
+        # erigon, nethermind) accept them for eth_call/eth_estimateGas, so we
+        # avoid an extra eth_getBlockBy* round-trip. If a node rejects the
+        # hash, the underlying RPC error propagates to the caller unchanged.
+        return to_hex_if_bytes(block_identifier)
     else:
         raise BlockNumberOutOfRange
 
@@ -369,8 +378,9 @@ async def async_parse_block_identifier(
     elif isinstance(block_identifier, bytes) or is_hex_encoded_block_hash(
         block_identifier
     ):
-        requested_block = await async_w3.eth.get_block(block_identifier)
-        return requested_block["number"]
+        # See parse_block_identifier for rationale. Pass the hash through so a
+        # single eth_call request is enough.
+        return to_hex_if_bytes(block_identifier)
     else:
         raise BlockNumberOutOfRange
 

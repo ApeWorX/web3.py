@@ -32,13 +32,13 @@ def test_parse_block_identifier_int_and_string(w3, block_identifier, expected_ou
 def test_parse_block_identifier_bytes_and_hex(w3):
     block_0 = w3.eth.get_block(0)
     block_0_hash = block_0["hash"]
-    # test retrieve by bytes
-    block_id_by_hash = parse_block_identifier(w3, block_0_hash)
-    assert block_id_by_hash == 0
-    # test retrieve by hexstring
     block_0_hexstring = w3.to_hex(block_0_hash)
-    block_id_by_hex = parse_block_identifier(w3, block_0_hexstring)
-    assert block_id_by_hex == 0
+    # Block hashes are passed through unchanged so the RPC node receives them
+    # directly. This avoids an extra eth_getBlockBy* round-trip just to look
+    # up a block number that the major clients already accept as a
+    # default-block parameter. See issue #3646.
+    assert parse_block_identifier(w3, block_0_hash) == block_0_hexstring
+    assert parse_block_identifier(w3, block_0_hexstring) == block_0_hexstring
 
 
 @pytest.mark.parametrize(
@@ -98,13 +98,16 @@ async def test_async_parse_block_identifier_int_and_string(
 async def test_async_parse_block_identifier_bytes_and_hex(async_w3):
     block_0 = await async_w3.eth.get_block(0)
     block_0_hash = block_0["hash"]
-    # test retrieve by bytes
-    block_id_by_hash = await async_parse_block_identifier(async_w3, block_0_hash)
-    assert block_id_by_hash == 0
-    # test retrieve by hexstring
     block_0_hexstring = async_w3.to_hex(block_0_hash)
-    block_id_by_hex = await async_parse_block_identifier(async_w3, block_0_hexstring)
-    assert block_id_by_hex == 0
+    # See test_parse_block_identifier_bytes_and_hex for rationale.
+    assert (
+        await async_parse_block_identifier(async_w3, block_0_hash)
+        == block_0_hexstring
+    )
+    assert (
+        await async_parse_block_identifier(async_w3, block_0_hexstring)
+        == block_0_hexstring
+    )
 
 
 @pytest.mark.asyncio
