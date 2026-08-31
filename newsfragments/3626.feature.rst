@@ -1,0 +1,2 @@
+Add abi properties stateMutability, type, inputs, outputs to the ``ContractFunction`` object as ``state_mutability``, ``type``, ``inputs``, ``outputs``.
+Add abi properties type, anonymous, inputs to the ``ContractEvent`` object with the same name.
