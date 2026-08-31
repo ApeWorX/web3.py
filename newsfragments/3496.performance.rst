@@ -1,5 +1,0 @@
-``FriendlyJsonSerde.json_encode`` now emits compact JSON
-(``separators=(",", ":")``). JSON-RPC payloads are no longer padded with
-``", "``/``": "`` between entries, shaving roughly two bytes per dict/list
-member off every outgoing request. Large payloads (``eth_getLogs``, batched
-calls) see a meaningful reduction in bandwidth and log volume.
