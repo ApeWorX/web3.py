@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>账户 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="交易" href="transactions.html" />
+    <link rel="prev" title="提供者" href="providers.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">账户</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#local-vs-hosted-nodes">Local vs Hosted Nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#local-vs-hosted-keys">Local vs Hosted Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#some-common-uses-for-local-private-keys">Some Common Uses for Local Private Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-a-private-key">Creating a Private Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#funding-a-new-account">Funding a New Account</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-a-private-key-from-an-environment-variable">Reading a Private Key from an Environment Variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extract-private-key-from-geth-keyfile">Extract private key from geth keyfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sign-a-message">Sign a Message</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verify-a-message">Verify a Message</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prepare-message-for-ecrecover-in-solidity">Prepare message for ecrecover in Solidity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verify-a-message-with-ecrecover-in-solidity">Verify a message with ecrecover in Solidity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sign-a-transaction">Sign a Transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sign-a-contract-transaction">Sign a Contract Transaction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">账户</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/web3.eth.account.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="accounts">
+<span id="eth-account"></span><h1>账户<a class="headerlink" href="#accounts" title="Link to this heading"></a></h1>
+<section id="local-vs-hosted-nodes">
+<span id="local-vs-hosted"></span><h2>Local vs Hosted Nodes<a class="headerlink" href="#local-vs-hosted-nodes" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Hosted Node</dt><dd><p>A <strong>hosted</strong> node is controlled by someone else. You may also see these referred to
+as <strong>remote</strong> nodes. View a list of commercial <a class="reference external" href="https://ethereum.org/en/developers/docs/nodes-and-clients/nodes-as-a-service/">node providers</a>.</p>
+</dd>
+<dt>Local Node</dt><dd><p>A <strong>local</strong> node is started and controlled by you on your computer. For several reasons
+(e.g., privacy, security), this is the recommended path, but it requires more resources
+and work to set up and maintain. See <a class="reference external" href="https://ethereum.org/en/developers/docs/nodes-and-clients/">ethereum.org</a> for a guided tour.</p>
+</dd>
+</dl>
+</section>
+<section id="local-vs-hosted-keys">
+<h2>Local vs Hosted Keys<a class="headerlink" href="#local-vs-hosted-keys" title="Link to this heading"></a></h2>
+<p>An Ethereum private key is a 256-bit (32 bytes) random integer.
+For each private key, you get one Ethereum address,
+also known as an Externally Owned Account (EOA).</p>
+<p>In Python, the private key is expressed as a 32-byte long Python <code class="docutils literal notranslate"><span class="pre">bytes</span></code> object.
+When a private key is presented to users in a hexadecimal format, it may or may
+not contain a starting <code class="docutils literal notranslate"><span class="pre">0x</span></code> hexadecimal prefix.</p>
+<dl>
+<dt>Local Private Key</dt><dd><p>A local private key is a locally stored secret you import to your Python application.
+Please read below how you can create and import a local private key
+and use it to sign transactions.</p>
+</dd>
+<dt>Hosted Private Key</dt><dd><p>This is a legacy way to use accounts when working with unit test backends like
+<code class="docutils literal notranslate"><span class="pre">EthereumTesterProvider</span></code> or <a class="reference external" href="https://book.getfoundry.sh/reference/anvil/">Anvil</a>.
+Calling <code class="docutils literal notranslate"><span class="pre">web3.eth.accounts</span></code> gives you a
+predefined list of accounts that have been funded with test ETH.
+You can use <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a> on any of these accounts
+without further configuration.</p>
+<p>In the past, around 2015, this was also a way to use private keys
+in a locally hosted node, but this practice is now discouraged.</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p><code class="docutils literal notranslate"><span class="pre">web3.eth.send_transaction</span></code> does not work with modern node providers,
+because they relied on a node state and all modern nodes are stateless.
+You must always use local private keys when working with nodes hosted by
+someone else.</p>
+</div>
+</section>
+<section id="some-common-uses-for-local-private-keys">
+<h2>Some Common Uses for Local Private Keys<a class="headerlink" href="#some-common-uses-for-local-private-keys" title="Link to this heading"></a></h2>
+<p>A very common reason to work with local private keys is to interact
+with a hosted node.</p>
+<p>Some common things you might want to do with a <cite>Local Private Key</cite> are:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#sign-a-transaction">Sign a Transaction</a></p></li>
+<li><p><a class="reference internal" href="#sign-a-contract-transaction">Sign a Contract Transaction</a></p></li>
+<li><p><a class="reference internal" href="#sign-a-message">Sign a Message</a></p></li>
+<li><p><a class="reference internal" href="#verify-a-message">Verify a Message</a></p></li>
+</ul>
+<p>Using private keys usually involves <code class="docutils literal notranslate"><span class="pre">w3.eth.account</span></code> in one way or another. Read on for more,
+or see a full list of things you can do in the docs for
+<a class="reference external" href="https://eth-account.readthedocs.io/en/latest/eth_account.html#eth_account.account.Account" title="（在 eth-account v0.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">eth_account.Account</span></code></a>.</p>
+</section>
+<section id="creating-a-private-key">
+<h2>Creating a Private Key<a class="headerlink" href="#creating-a-private-key" title="Link to this heading"></a></h2>
+<p>Each Ethereum address has a matching private key. To create a new Ethereum
+account you can just generate a random number that acts as a private key.</p>
+<ul class="simple">
+<li><p>A private key is just a random unguessable, or cryptographically safe, 256-bit integer number</p></li>
+<li><p>A valid private key is &gt; 0 and &lt; max private key value (a number above the elliptic curve order FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141)</p></li>
+<li><p>Private keys do not have checksums.</p></li>
+</ul>
+<p>To create a private key using web3.py and command line you can do:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from web3 import Web3; w3 = Web3(); acc = w3.eth.account.create(); print(f&#39;private key={w3.to_hex(acc.key)}, account={acc.address}&#39;)&quot;</span>
+</pre></div>
+</div>
+<p>Which outputs a new private key and an account pair:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">private</span> <span class="n">key</span><span class="o">=</span><span class="mh">0x480c4aec9fa</span><span class="o">...</span><span class="p">,</span> <span class="n">account</span><span class="o">=</span><span class="mh">0x9202a9d5D2d129CB400a40e00aC822a53ED81167</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><em>Never store private key with your source</em>. Use environment variables
+to store the key. Read more below.</p></li>
+<li><p>You can also import the raw hex private key to MetaMask and any other
+wallet - the private key can be shared between your Python code
+and any number of wallets.</p></li>
+</ul>
+</section>
+<section id="funding-a-new-account">
+<h2>Funding a New Account<a class="headerlink" href="#funding-a-new-account" title="Link to this heading"></a></h2>
+<p>If you create a private key, it comes with its own Ethereum address.
+By default, the balance of this address is zero.
+Before you can send any transactions with your account,
+you need to top up.</p>
+<ul class="simple">
+<li><p>For a local test environment (e.g., <code class="docutils literal notranslate"><span class="pre">EthereumTesterProvider</span></code>), any
+environment is bootstrapped with accounts that have test ETH in them.
+Move ETH from default accounts to your newly created account.</p></li>
+<li><p>For public mainnet, you need to buy ETH in a cryptocurrency exchange
+and send it to your privately controlled account.</p></li>
+<li><p>For a testnet, find a relevant testnet <a class="reference internal" href="troubleshooting.html#faucets"><span class="std std-ref">faucet</span></a>.</p></li>
+</ul>
+</section>
+<section id="reading-a-private-key-from-an-environment-variable">
+<h2>Reading a Private Key from an Environment Variable<a class="headerlink" href="#reading-a-private-key-from-an-environment-variable" title="Link to this heading"></a></h2>
+<p>In this example we pass the private key to our Python application in an
+<a class="reference external" href="https://en.wikipedia.org/wiki/Environment_variable">environment variable</a>.
+This private key is then added to the transaction signing keychain
+with <code class="docutils literal notranslate"><span class="pre">Signing</span></code> middleware.</p>
+<p>If unfamiliar, note that you can <a class="reference external" href="https://metamask.zendesk.com/hc/en-us/articles/360015289632-How-to-Export-an-Account-Private-Key">export your private keys from Metamask and other wallets</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<ul class="simple">
+<li><p><strong>Never</strong> share your private keys.</p></li>
+<li><p><strong>Never</strong> put your private keys in source code.</p></li>
+<li><p><strong>Never</strong> commit private keys to a Git repository.</p></li>
+</ul>
+</div>
+<p>Example <code class="docutils literal notranslate"><span class="pre">account_test_script.py</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eth_account</span><span class="w"> </span><span class="kn">import</span> <span class="n">Account</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eth_account.signers.local</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalAccount</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SignAndSendRawMiddlewareBuilder</span>
+
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">())</span>
+
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PRIVATE_KEY&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">private_key</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;You must set PRIVATE_KEY environment variable&quot;</span>
+<span class="k">assert</span> <span class="n">private_key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;0x&quot;</span><span class="p">),</span> <span class="s2">&quot;Private key must start with 0x hex prefix&quot;</span>
+
+<span class="n">account</span><span class="p">:</span> <span class="n">LocalAccount</span> <span class="o">=</span> <span class="n">Account</span><span class="o">.</span><span class="n">from_key</span><span class="p">(</span><span class="n">private_key</span><span class="p">)</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">SignAndSendRawMiddlewareBuilder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">account</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Your hot wallet address is </span><span class="si">{</span><span class="n">account</span><span class="o">.</span><span class="n">address</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Now you can use web3.eth.send_transaction(), Contract.functions.xxx.transact() functions</span>
+<span class="c1"># with your local private key through middleware and you no longer get the error</span>
+<span class="c1"># &quot;ValueError: The method eth_sendTransaction does not exist/is not available</span>
+</pre></div>
+</div>
+<p>Example how to run this in UNIX shell:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate a new 256-bit random integer using openssl UNIX command that acts as a private key.</span>
+<span class="c1"># You can also do:</span>
+<span class="c1"># python -c &quot;from web3 import Web3; w3 = Web3(); acc = w3.eth.account.create(); print(f&#39;private key={w3.to_hex(acc.key)}, account={acc.address}&#39;)&quot;</span>
+<span class="c1"># Store this in a safe place, like in your password manager.</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PRIVATE_KEY</span><span class="o">=</span>0x<span class="sb">`</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="sb">`</span>
+
+<span class="c1"># Run our script</span>
+python<span class="w"> </span>account_test_script.py
+</pre></div>
+</div>
+<p>This will print:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Your</span> <span class="n">hot</span> <span class="n">wallet</span> <span class="n">address</span> <span class="ow">is</span> <span class="mh">0x27C8F899bb69E1501BBB96d09d7477a2a7518918</span>
+</pre></div>
+</div>
+</section>
+<section id="extract-private-key-from-geth-keyfile">
+<span id="extract-geth-pk"></span><h2>Extract private key from geth keyfile<a class="headerlink" href="#extract-private-key-from-geth-keyfile" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>The amount of available ram should be greater than 1GB.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;~/.ethereum/keystore/UTC--...--5ce9454909639D2D17A3F753ce7d93fa0b9aB12E&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">keyfile</span><span class="p">:</span>
+    <span class="n">encrypted_key</span> <span class="o">=</span> <span class="n">keyfile</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">private_key</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">encrypted_key</span><span class="p">,</span> <span class="s1">&#39;correcthorsebatterystaple&#39;</span><span class="p">)</span>
+    <span class="c1"># tip: do not save the key or password anywhere, especially into a shared source file</span>
+</pre></div>
+</div>
+</section>
+<section id="sign-a-message">
+<h2>Sign a Message<a class="headerlink" href="#sign-a-message" title="Link to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>There is no single message format that is broadly adopted
+with community consensus. Keep an eye on several options,
+like <a class="reference external" href="https://github.com/ethereum/EIPs/pull/683">EIP-683</a>,
+<a class="reference external" href="https://github.com/ethereum/EIPs/pull/712">EIP-712</a>, and
+<a class="reference external" href="https://github.com/ethereum/EIPs/pull/719">EIP-719</a>. Consider
+the <a class="reference internal" href="web3.eth.html#web3.eth.Eth.sign" title="web3.eth.Eth.sign"><code class="xref py py-meth docutils literal notranslate"><span class="pre">w3.eth.sign()</span></code></a> approach be deprecated.</p>
+</div>
+<p>For this example, we will use the same message hashing mechanism that
+is provided by <a class="reference internal" href="web3.eth.html#web3.eth.Eth.sign" title="web3.eth.Eth.sign"><code class="xref py py-meth docutils literal notranslate"><span class="pre">w3.eth.sign()</span></code></a>.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eth_account.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">encode_defunct</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;I♥SF&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">private_key</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xb2\\</span><span class="s2">}</span><span class="se">\xb3\x1f\xee\xd9\x12</span><span class="s2">&#39;&#39;</span><span class="se">\xbf\t</span><span class="s2">9</span><span class="se">\xdc</span><span class="s2">v</span><span class="se">\x9a\x96</span><span class="s2">VK-</span><span class="se">\xe4\xc4</span><span class="s2">rm</span><span class="se">\x03</span><span class="s2">[6</span><span class="se">\xec\xf1\xe5\xb3</span><span class="s2">d&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">message</span> <span class="o">=</span> <span class="n">encode_defunct</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">msg</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed_message</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_message</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed_message</span>
+<span class="go">SignedMessage(message_hash=HexBytes(&#39;0x1476abb745d423bf09273f1afd887d951181d25adc66c4834a70491911b7f750&#39;),</span>
+<span class="go"> r=104389933075820307925104709181714897380569894203213074526835978196648170704563,</span>
+<span class="go"> s=28205917190874851400050446352651915501321657673772411533993420917949420456142,</span>
+<span class="go"> v=28,</span>
+<span class="go"> signature=HexBytes(&#39;0xe6ca9bba58c88611fad66a6ce8f996908195593807c4b38bd528d2cff09d4eb33e5bfbbf4d3e39b1a2fd816a7680c19ebebaf3a141b239934ad43cb33fcec8ce1c&#39;))</span>
+</pre></div>
+</div>
+</section>
+<section id="verify-a-message">
+<h2>Verify a Message<a class="headerlink" href="#verify-a-message" title="Link to this heading"></a></h2>
+<p>With the original message text and a signature:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">message</span> <span class="o">=</span> <span class="n">encode_defunct</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;I♥SF&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">recover_message</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">signature</span><span class="o">=</span><span class="n">signed_message</span><span class="o">.</span><span class="n">signature</span><span class="p">)</span>
+<span class="go">&#39;0x5ce9454909639D2D17A3F753ce7d93fa0b9aB12E&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="prepare-message-for-ecrecover-in-solidity">
+<h2>Prepare message for ecrecover in Solidity<a class="headerlink" href="#prepare-message-for-ecrecover-in-solidity" title="Link to this heading"></a></h2>
+<p>Let's say you want a contract to validate a signed message,
+like if you're making payment channels, and you want to
+validate the value in Remix or web3.js.</p>
+<p>You might have produced the signed_message locally, as in
+<a class="reference internal" href="#sign-a-message">Sign a Message</a>. If so, this will prepare it for Solidity:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+
+<span class="go"># ecrecover in Solidity expects v as a uint8, but r and s as left-padded bytes32</span>
+<span class="go"># Remix / web3.js expect r and s to be encoded to hex</span>
+<span class="go"># This convenience method will do the pad &amp; hex for us:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">to_32byte_hex</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="k">return</span> <span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">val</span><span class="p">)</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\0</span><span class="s1">&#39;</span><span class="p">))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ec_recover_args</span> <span class="o">=</span> <span class="p">(</span><span class="n">msghash</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span>
+<span class="gp">... </span>  <span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">signed_message</span><span class="o">.</span><span class="n">message_hash</span><span class="p">),</span>
+<span class="gp">... </span>  <span class="n">signed_message</span><span class="o">.</span><span class="n">v</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="n">to_32byte_hex</span><span class="p">(</span><span class="n">signed_message</span><span class="o">.</span><span class="n">r</span><span class="p">),</span>
+<span class="gp">... </span>  <span class="n">to_32byte_hex</span><span class="p">(</span><span class="n">signed_message</span><span class="o">.</span><span class="n">s</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ec_recover_args</span>
+<span class="go">(&#39;0x1476abb745d423bf09273f1afd887d951181d25adc66c4834a70491911b7f750&#39;,</span>
+<span class="go"> 28,</span>
+<span class="go"> &#39;0xe6ca9bba58c88611fad66a6ce8f996908195593807c4b38bd528d2cff09d4eb3&#39;,</span>
+<span class="go"> &#39;0x3e5bfbbf4d3e39b1a2fd816a7680c19ebebaf3a141b239934ad43cb33fcec8ce&#39;)</span>
+</pre></div>
+</div>
+<p>Instead, you might have received a message and a signature encoded to hex. Then
+this will prepare it for Solidity:</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eth_account.messages</span><span class="w"> </span><span class="kn">import</span> <span class="n">encode_defunct</span><span class="p">,</span> <span class="n">_hash_eip191_message</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hex_message</span> <span class="o">=</span> <span class="s1">&#39;0x49e299a55346&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hex_signature</span> <span class="o">=</span> <span class="s1">&#39;0xe6ca9bba58c88611fad66a6ce8f996908195593807c4b38bd528d2cff09d4eb33e5bfbbf4d3e39b1a2fd816a7680c19ebebaf3a141b239934ad43cb33fcec8ce1c&#39;</span>
+
+<span class="go"># ecrecover in Solidity expects an encoded version of the message</span>
+
+<span class="go"># - encode the message</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">message</span> <span class="o">=</span> <span class="n">encode_defunct</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="n">hex_message</span><span class="p">)</span>
+
+<span class="go"># - hash the message explicitly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">message_hash</span> <span class="o">=</span> <span class="n">_hash_eip191_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+<span class="go"># Remix / web3.js expect the message hash to be encoded to a hex string</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hex_message_hash</span> <span class="o">=</span> <span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">message_hash</span><span class="p">)</span>
+
+<span class="go"># ecrecover in Solidity expects the signature to be split into v as a uint8,</span>
+<span class="go">#   and r, s as a bytes32</span>
+<span class="go"># Remix / web3.js expect r and s to be encoded to hex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="n">hex_signature</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v</span><span class="p">,</span> <span class="n">hex_r</span><span class="p">,</span> <span class="n">hex_s</span> <span class="o">=</span> <span class="n">Web3</span><span class="o">.</span><span class="n">to_int</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">sig</span><span class="p">[:</span><span class="mi">32</span><span class="p">]),</span> <span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="mi">32</span><span class="p">:</span><span class="mi">64</span><span class="p">])</span>
+
+<span class="go"># ecrecover in Solidity takes the arguments in order = (msghash, v, r, s)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ec_recover_args</span> <span class="o">=</span> <span class="p">(</span><span class="n">hex_message_hash</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">hex_r</span><span class="p">,</span> <span class="n">hex_s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ec_recover_args</span>
+<span class="go">(&#39;0x1476abb745d423bf09273f1afd887d951181d25adc66c4834a70491911b7f750&#39;,</span>
+<span class="go"> 28,</span>
+<span class="go"> &#39;0xe6ca9bba58c88611fad66a6ce8f996908195593807c4b38bd528d2cff09d4eb3&#39;,</span>
+<span class="go"> &#39;0x3e5bfbbf4d3e39b1a2fd816a7680c19ebebaf3a141b239934ad43cb33fcec8ce&#39;)</span>
+</pre></div>
+</div>
+</section>
+<section id="verify-a-message-with-ecrecover-in-solidity">
+<h2>Verify a message with ecrecover in Solidity<a class="headerlink" href="#verify-a-message-with-ecrecover-in-solidity" title="Link to this heading"></a></h2>
+<p>Create a simple ecrecover contract in <a class="reference external" href="https://remix.ethereum.org/">Remix</a>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pragma solidity ^0.4.19;
+
+contract Recover {
+  function ecr (bytes32 msgh, uint8 v, bytes32 r, bytes32 s) public pure
+  returns (address sender) {
+    return ecrecover(msgh, v, r, s);
+  }
+}
+</pre></div>
+</div>
+<p>Then call ecr with these arguments from <a class="reference internal" href="#prepare-message-for-ecrecover-in-solidity">Prepare message for ecrecover in Solidity</a> in Remix,
+<code class="docutils literal notranslate"><span class="pre">&quot;0x1476abb745d423bf09273f1afd887d951181d25adc66c4834a70491911b7f750&quot;,</span> <span class="pre">28,</span> <span class="pre">&quot;0xe6ca9bba58c88611fad66a6ce8f996908195593807c4b38bd528d2cff09d4eb3&quot;,</span> <span class="pre">&quot;0x3e5bfbbf4d3e39b1a2fd816a7680c19ebebaf3a141b239934ad43cb33fcec8ce&quot;</span></code></p>
+<p>The message is verified, because we get the correct sender of
+the message back in response: <code class="docutils literal notranslate"><span class="pre">0x5ce9454909639d2d17a3f753ce7d93fa0b9ab12e</span></code>.</p>
+</section>
+<section id="sign-a-transaction">
+<span id="local-sign-transaction"></span><h2>Sign a Transaction<a class="headerlink" href="#sign-a-transaction" title="Link to this heading"></a></h2>
+<p>Create a transaction, sign it locally, and then send it to your node for broadcasting,
+with <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_raw_transaction" title="web3.eth.Eth.send_raw_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_raw_transaction()</span></code></a>.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">transaction</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0xF0109fC8DF283027b6285cc889F5aA624EaC1F55&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">1000000000</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;gas&#39;</span><span class="p">:</span> <span class="mi">2000000</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;maxFeePerGas&#39;</span><span class="p">:</span> <span class="mi">2000000000</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;maxPriorityFeePerGas&#39;</span><span class="p">:</span> <span class="mi">1000000000</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;chainId&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;0x2&#39;</span><span class="p">,</span>  <span class="c1"># the type is optional and, if omitted, will be interpreted based on the provided transaction parameters</span>
+<span class="gp">... </span>    <span class="s1">&#39;accessList&#39;</span><span class="p">:</span> <span class="p">(</span>  <span class="c1"># accessList is optional for dynamic fee transactions</span>
+<span class="gp">... </span>        <span class="p">{</span>
+<span class="gp">... </span>            <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="s1">&#39;0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae&#39;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s1">&#39;storageKeys&#39;</span><span class="p">:</span> <span class="p">(</span>
+<span class="gp">... </span>                <span class="s1">&#39;0x0000000000000000000000000000000000000000000000000000000000000003&#39;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="s1">&#39;0x0000000000000000000000000000000000000000000000000000000000000007&#39;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="p">)</span>
+<span class="gp">... </span>        <span class="p">},</span>
+<span class="gp">... </span>        <span class="p">{</span>
+<span class="gp">... </span>            <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="s1">&#39;0xbb9bc244d798123fde783fcc1c72d3bb8c189413&#39;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s1">&#39;storageKeys&#39;</span><span class="p">:</span> <span class="p">()</span>
+<span class="gp">... </span>        <span class="p">},</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed</span><span class="o">.</span><span class="n">raw_transaction</span>
+<span class="go">HexBytes(&#39;0x02f8e20180843b9aca008477359400831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080f872f85994de0b295669a9fd93d5f28d9ec85e40f4cb697baef842a00000000000000000000000000000000000000000000000000000000000000003a00000000000000000000000000000000000000000000000000000000000000007d694bb9bc244d798123fde783fcc1c72d3bb8c189413c001a0b9ec671ccee417ff79e06e9e52bfa82b37cf1145affde486006072ca7a11cf8da0484a9beea46ff6a90ac76e7bbf3718db16a8b4b09cef477fb86cf4e123d98fde&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed</span><span class="o">.</span><span class="n">hash</span>
+<span class="go">HexBytes(&#39;0xe85ce7efa52c16cb5c469c7bde54fbd4911639fdfde08003f65525a85076d915&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed</span><span class="o">.</span><span class="n">r</span>
+<span class="go">84095564551732371065849105252408326384410939276686534847013731510862163857293</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed</span><span class="o">.</span><span class="n">s</span>
+<span class="go">32698347985257114675470251181312399332782188326270244072370350491677872459742</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed</span><span class="o">.</span><span class="n">v</span>
+<span class="go">1</span>
+
+<span class="go"># When you run send_raw_transaction, you get back the hash of the transaction:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed</span><span class="o">.</span><span class="n">raw_transaction</span><span class="p">)</span>
+<span class="go">&#39;0xe85ce7efa52c16cb5c469c7bde54fbd4911639fdfde08003f65525a85076d915&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="sign-a-contract-transaction">
+<h2>Sign a Contract Transaction<a class="headerlink" href="#sign-a-contract-transaction" title="Link to this heading"></a></h2>
+<p>To sign a transaction locally that will invoke a smart contract:</p>
+<ol class="arabic simple">
+<li><p>Initialize your <a class="reference internal" href="web3.eth.html#web3.eth.Eth.contract" title="web3.eth.Eth.contract"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Contract</span></code></a> object</p></li>
+<li><p>Build the transaction</p></li>
+<li><p>Sign the transaction, with <a class="reference external" href="https://eth-account.readthedocs.io/en/latest/eth_account.html#eth_account.account.Account.sign_transaction" title="（在 eth-account v0.13）"><code class="xref py py-meth docutils literal notranslate"><span class="pre">w3.eth.account.sign_transaction()</span></code></a></p></li>
+<li><p>Broadcast the transaction with <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_raw_transaction" title="web3.eth.Eth.send_raw_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_raw_transaction()</span></code></a></p></li>
+</ol>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="go"># When running locally, execute the statements found in the file linked below to load the EIP20_ABI variable.</span>
+<span class="go"># See: https://github.com/carver/ethtoken.py/blob/v0.0.1-alpha.4/ethtoken/abi.py</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">())</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unicorns</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s2">&quot;0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359&quot;</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="n">EIP20_ABI</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nonce</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction_count</span><span class="p">(</span><span class="s1">&#39;0x5ce9454909639D2D17A3F753ce7d93fa0b9aB12E&#39;</span><span class="p">)</span>
+
+<span class="go"># Build a transaction that invokes this contract&#39;s function, called transfer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unicorn_txn</span> <span class="o">=</span> <span class="n">unicorns</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">transfer</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s1">&#39;0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span><span class="o">.</span><span class="n">build_transaction</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;chainId&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;gas&#39;</span><span class="p">:</span> <span class="mi">70000</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;maxFeePerGas&#39;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">to_wei</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;gwei&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="s1">&#39;maxPriorityFeePerGas&#39;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">to_wei</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;gwei&#39;</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="n">nonce</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">})</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unicorn_txn</span>
+<span class="go">{&#39;value&#39;: 0,</span>
+<span class="go"> &#39;chainId&#39;: 1,</span>
+<span class="go"> &#39;gas&#39;: 70000,</span>
+<span class="go"> &#39;maxFeePerGas&#39;: 2000000000,</span>
+<span class="go"> &#39;maxPriorityFeePerGas&#39;: 1000000000,</span>
+<span class="go"> &#39;nonce&#39;: 0,</span>
+<span class="go"> &#39;to&#39;: &#39;0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359&#39;,</span>
+<span class="go"> &#39;data&#39;: &#39;0xa9059cbb000000000000000000000000fb6916095ca1df60bb79ce92ce3ea74c37c5d3590000000000000000000000000000000000000000000000000000000000000001&#39;}</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">private_key</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xb2\\</span><span class="s2">}</span><span class="se">\xb3\x1f\xee\xd9\x12</span><span class="s2">&#39;&#39;</span><span class="se">\xbf\t</span><span class="s2">9</span><span class="se">\xdc</span><span class="s2">v</span><span class="se">\x9a\x96</span><span class="s2">VK-</span><span class="se">\xe4\xc4</span><span class="s2">rm</span><span class="se">\x03</span><span class="s2">[6</span><span class="se">\xec\xf1\xe5\xb3</span><span class="s2">d&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed_txn</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">unicorn_txn</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">private_key</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed_txn</span><span class="o">.</span><span class="n">hash</span>
+<span class="go">HexBytes(&#39;0x748db062639a45e519dba934fce09c367c92043867409160c9989673439dc817&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed_txn</span><span class="o">.</span><span class="n">raw_transaction</span>
+<span class="go">HexBytes(&#39;0x02f8b00180843b9aca0084773594008301117094fb6916095ca1df60bb79ce92ce3ea74c37c5d35980b844a9059cbb000000000000000000000000fb6916095ca1df60bb79ce92ce3ea74c37c5d3590000000000000000000000000000000000000000000000000000000000000001c001a0cec4150e52898cf1295cc4020ac0316cbf186071e7cdc5ec44eeb7cdda05afa2a06b0b3a09c7fb0112123c0bef1fd6334853a9dcf3cb5bab3ccd1f5baae926d449&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed_txn</span><span class="o">.</span><span class="n">r</span>
+<span class="go">93522894155654168208483453926995743737629589441154283159505514235904280342434</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed_txn</span><span class="o">.</span><span class="n">s</span>
+<span class="go">48417310681110102814014302147799665717176259465062324746227758019974374282313</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">signed_txn</span><span class="o">.</span><span class="n">v</span>
+<span class="go">1</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_txn</span><span class="o">.</span><span class="n">raw_transaction</span><span class="p">)</span>
+
+<span class="go"># When you run send_raw_transaction, you get the same result as the hash of the transaction:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">keccak</span><span class="p">(</span><span class="n">signed_txn</span><span class="o">.</span><span class="n">raw_transaction</span><span class="p">))</span>
+<span class="go">&#39;0x748db062639a45e519dba934fce09c367c92043867409160c9989673439dc817&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="providers.html" class="btn btn-neutral float-left" title="提供者" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="transactions.html" class="btn btn-neutral float-right" title="交易" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

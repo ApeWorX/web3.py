@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Net API &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Geth API" href="web3.geth.html" />
+    <link rel="prev" title="Beacon API" href="web3.beacon.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Events and Logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">Event Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">Ethereum Name Service (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Net API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#properties">Properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.net.listening"><code class="docutils literal notranslate"><span class="pre">listening()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.net.peer_count"><code class="docutils literal notranslate"><span class="pre">peer_count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.net.version"><code class="docutils literal notranslate"><span class="pre">version()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas Price API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resources and Learning Material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">Code of Conduct</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Net API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/web3.net.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-web3.net">
+<span id="net-api"></span><h1>Net API<a class="headerlink" href="#module-web3.net" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">web3.net</span></code> object exposes methods to interact with the RPC APIs under
+the <code class="docutils literal notranslate"><span class="pre">net_</span></code> namespace.</p>
+<section id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Link to this heading"></a></h2>
+<p>The following properties are available on the <code class="docutils literal notranslate"><span class="pre">web3.net</span></code> namespace.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.net.listening">
+<span class="sig-prename descclassname"><span class="pre">web3.net.</span></span><span class="sig-name descname"><span class="pre">listening</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.net.listening" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">..py:property::</span></span></dt>
+<dd><blockquote>
+<div><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">net_listening</span></code> RPC method</p></li>
+</ul>
+<p>Returns true if client is actively listening for network connections.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">listening</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.net.peer_count">
+<span class="sig-prename descclassname"><span class="pre">web3.net.</span></span><span class="sig-name descname"><span class="pre">peer_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.net.peer_count" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">..py:property::</span></span></dt>
+<dd><blockquote>
+<div><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">net_peerCount</span></code> RPC method</p></li>
+</ul>
+<p>Returns number of peers currently connected to the client.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">peer_count</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.net.version">
+<span class="sig-prename descclassname"><span class="pre">web3.net.</span></span><span class="sig-name descname"><span class="pre">version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.net.version" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">..py:property::</span></span></dt>
+<dd><blockquote>
+<div><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">net_version</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the current network id.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">version</span>
+<span class="go">&#39;8996&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="web3.beacon.html" class="btn btn-neutral float-left" title="Beacon API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="web3.geth.html" class="btn btn-neutral float-right" title="Geth API" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

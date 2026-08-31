@@ -1,0 +1,312 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../resources.rst:5
+msgid "Resources and Learning Material"
+msgstr "资源和学习材料"
+
+#: ../../resources.rst:7
+msgid ""
+"web3.py and the Ethereum Python ecosystem have an active community of "
+"developers and educators. Here you'll find libraries, tutorials, "
+"examples, courses and other learning material."
+msgstr ""
+
+#: ../../resources.rst:12
+msgid ""
+"Links on this page are community submissions and are not vetted by the "
+"team that maintains web3.py. As always, DYOR (Do Your Own Research)."
+msgstr ""
+
+#: ../../resources.rst:17
+msgid "First Steps"
+msgstr ""
+
+#: ../../resources.rst:19
+msgid "Resources for those brand new to Ethereum:"
+msgstr ""
+
+#: ../../resources.rst:21
+msgid ""
+"`A Developer's Guide to Ethereum, Pt. 1 "
+"<https://snakecharmers.ethereum.org/a-developers-guide-to-ethereum-"
+"pt-1/>`__"
+msgstr ""
+
+#: ../../resources.rst:22
+msgid ""
+"`Ethereum Python Ecosystem Tour <https://snakecharmers.ethereum.org"
+"/python-ecosystem/>`__"
+msgstr ""
+
+#: ../../resources.rst:26
+msgid "Courses"
+msgstr ""
+
+#: ../../resources.rst:28
+msgid ""
+"`freeCodeCamp Solidity and Python Course (2022) "
+"<https://www.youtube.com/watch?v=umg2fWQX6jM>`__"
+msgstr ""
+
+#: ../../resources.rst:29
+msgid ""
+"`Blockchain Python Programming Tutorial (2019) "
+"<https://www.youtube.com/watch?v=pZSegEXtgAE>`__"
+msgstr ""
+
+#: ../../resources.rst:33
+msgid "Tutorials"
+msgstr ""
+
+#: ../../resources.rst:35
+msgid ""
+"Intro to `Ape development framework <https://snakecharmers.ethereum.org"
+"/intro-to-ape/>`__"
+msgstr ""
+
+#: ../../resources.rst:36
+msgid ""
+"Intro to `websockets "
+"<https://snakecharmers.ethereum.org/websocketprovider/>`__ and web3.py"
+msgstr ""
+
+#: ../../resources.rst:37
+msgid ""
+"Intro to `asynchronous web3.py <https://snakecharmers.ethereum.org/web3"
+"-py-patterns-intro-async/>`__"
+msgstr ""
+
+#: ../../resources.rst:38
+msgid ""
+"Intro to `threaded web3.py <https://snakecharmers.ethereum.org/web3-py-"
+"patterns-multithreading/>`__"
+msgstr ""
+
+#: ../../resources.rst:39
+msgid ""
+"Sign `typed data messages <https://snakecharmers.ethereum.org/typed-data-"
+"message-signing/>`__ (EIP 712)"
+msgstr ""
+
+#: ../../resources.rst:40
+msgid ""
+"Look up offchain data via `CCIP Read "
+"<https://snakecharmers.ethereum.org/web3-py-patterns-off-chain-"
+"lookups/>`__"
+msgstr ""
+
+#: ../../resources.rst:41
+msgid ""
+"Configure and `customize web3.py <https://snakecharmers.ethereum.org/web3"
+"-py-patterns-customizations/>`__"
+msgstr ""
+
+#: ../../resources.rst:42
+msgid ""
+"`Decode a signed transaction <https://snakecharmers.ethereum.org/web3-py-"
+"patterns-decoding-signed-transactions/>`__"
+msgstr ""
+
+#: ../../resources.rst:43
+msgid ""
+"Find a historical contract `revert reason "
+"<https://snakecharmers.ethereum.org/web3py-revert-reason-parsing/>`__"
+msgstr ""
+
+#: ../../resources.rst:44
+msgid ""
+"Generate a `vanity address <https://snakecharmers.ethereum.org/web3-py-"
+"patterns-mining-addresses/>`__"
+msgstr ""
+
+#: ../../resources.rst:45
+msgid ""
+"Simulate transactions with `call state overrides "
+"<https://snakecharmers.ethereum.org/web3-py-patterns-eth_call-"
+"overrides/>`__"
+msgstr ""
+
+#: ../../resources.rst:46
+msgid ""
+"Configure web3 for `JSON-RPC fallback and MEV blocker providers "
+"<https://web3-ethereum-defi.readthedocs.io/tutorials/mev-blocker.html"
+"#mev-protection-and-multiple-json-rpcs-configuration>`__"
+msgstr ""
+
+#: ../../resources.rst:50
+msgid "Conference Presentations and Videos"
+msgstr ""
+
+#: ../../resources.rst:52
+msgid ""
+"`Web3.Py - Now And Near Future by Marc Garreau (2022, 15 mins) "
+"<https://www.youtube.com/watch?v=hj6ubyyE_TY>`__"
+msgstr ""
+
+#: ../../resources.rst:53
+msgid ""
+"`Python and DeFi by Curve Finance (2022, 15 mins) "
+"<https://www.youtube.com/watch?v=4HOU3z0LoDg>`__"
+msgstr ""
+
+#: ../../resources.rst:54
+msgid ""
+"`Working with MetaMask in Python by Rishab Kattimani (2022, 15 mins) "
+"<https://www.youtube.com/watch?v=cFB1BGeCpn0>`__"
+msgstr ""
+
+#: ../../resources.rst:58
+msgid "Smart Contract Programming Languages"
+msgstr ""
+
+#: ../../resources.rst:60
+msgid ""
+"`Vyper <https://docs.vyperlang.org/en/stable/>`__ - Contract-oriented, "
+"pythonic programming language that targets EVM"
+msgstr ""
+
+#: ../../resources.rst:64
+msgid "Frameworks and Tooling"
+msgstr ""
+
+#: ../../resources.rst:66
+msgid ""
+"`Ape <https://www.apeworx.io/>`__ - The Ethereum development framework "
+"for Python Developers, Data Scientists, and Security Professionals"
+msgstr ""
+
+#: ../../resources.rst:67
+msgid ""
+"`Titanoboa <https://github.com/vyperlang/titanoboa>`__ - A Vyper "
+"interpreter and testing framework"
+msgstr ""
+
+#: ../../resources.rst:68
+msgid ""
+"`Wake <https://github.com/Ackee-Blockchain/wake>`__ - A Python-based "
+"development and testing framework for Solidity"
+msgstr ""
+
+#: ../../resources.rst:69
+msgid ""
+"`Brownie <https://github.com/eth-brownie/brownie>`__ - [No longer "
+"actively maintained] A Python-based development and testing framework for"
+" smart contracts targeting EVM"
+msgstr ""
+
+#: ../../resources.rst:73
+msgid "Libraries"
+msgstr ""
+
+#: ../../resources.rst:75
+msgid ""
+"`Web3 Ethereum DeFi <https://github.com/tradingstrategy-ai/web3-ethereum-"
+"defi>`__ - Library for DeFi trading and protocols (Uniswap, PancakeSwap, "
+"Sushi, Aave, Chainlink)"
+msgstr ""
+
+#: ../../resources.rst:76
+msgid ""
+"`lighter-v1-python <https://github.com/elliottech/lighter-v1-python>`__ -"
+" Lighter.xyz DEX client for Python"
+msgstr ""
+
+#: ../../resources.rst:77
+msgid ""
+"`uniswap-python <https://uniswap-python.com/>`__ - Library lets you "
+"easily retrieve prices and make trades on all Uniswap versions."
+msgstr ""
+
+#: ../../resources.rst:78
+msgid ""
+"`pyWalletConnect <https://github.com/bitlogik/pyWalletConnect>`__ - "
+"WalletConnect implementation for wallets in Python"
+msgstr ""
+
+#: ../../resources.rst:79
+msgid ""
+"`dydx-v3-python <https://github.com/dydxprotocol/dydx-v3-python>`__ - "
+"Python client for dYdX v3"
+msgstr ""
+
+#: ../../resources.rst:80
+msgid ""
+"`Lido Python SDK <https://github.com/lidofinance/lido-python-sdk>`__ - "
+"Library with which you can get all Lido validator's signatures and check "
+"their validity"
+msgstr ""
+
+#: ../../resources.rst:84
+msgid "Applications"
+msgstr ""
+
+#: ../../resources.rst:86
+msgid ""
+"`Curve Finance "
+"<https://github.com/curvefi?q=&type=all&language=python&sort=>`__"
+msgstr ""
+
+#: ../../resources.rst:87
+msgid ""
+"`Yearn Finance "
+"<https://github.com/yearn?q=&type=all&language=python&sort=>`__"
+msgstr ""
+
+#: ../../resources.rst:88
+msgid "`StakeWise Oracle <https://github.com/stakewise/oracle/>`__"
+msgstr ""
+
+#: ../../resources.rst:92
+msgid "Hackathon Helpers"
+msgstr ""
+
+#: ../../resources.rst:94
+msgid ""
+"`ape-hackathon-kit <https://github.com/wolovim/ape-hackathon-kit>`__ - "
+"Ape project template with a web front-end (Next.js, Tailwind, RainbowKit,"
+" wagmi)"
+msgstr ""
+
+#: ../../resources.rst:95
+msgid ""
+"`eth-flogger <https://github.com/wolovim/eth-flogger>`__ - Sample web app"
+" utilizing async web3.py, Flask, SQLite, Sourcify"
+msgstr ""
+
+#: ../../resources.rst:96
+msgid ""
+"`Temo <https://github.com/wolovim/temo>`__ - Sample terminal app "
+"utilizing async web3py, Textual, Anvil"
+msgstr ""
+
+#: ../../resources.rst:97
+msgid ""
+"`web3py-discord-bot <https://github.com/wolovim/web3py-discord-bot>`__ - "
+"Sample Discord bot utilizing websockets, ``eth_subscribe``, and "
+"discord.py"
+msgstr ""
+
+#: ../../resources.rst:98
+msgid ""
+"`py-signer <https://github.com/wolovim/py-signer>`__ - Demo of typed data"
+" message signing (EIP-712) with eth-account and Ape"
+msgstr ""

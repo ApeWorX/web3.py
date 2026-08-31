@@ -1,0 +1,757 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geth API &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Tracing API" href="web3.tracing.html" />
+    <link rel="prev" title="Net API" href="web3.net.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Events and Logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">Event Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">Ethereum Name Service (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Geth API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gethadmin-api">GethAdmin API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.admin.datadir"><code class="docutils literal notranslate"><span class="pre">datadir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.admin.node_info"><code class="docutils literal notranslate"><span class="pre">node_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.admin.peers"><code class="docutils literal notranslate"><span class="pre">peers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.admin.add_peer"><code class="docutils literal notranslate"><span class="pre">add_peer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.admin.start_http"><code class="docutils literal notranslate"><span class="pre">start_http()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.admin.start_ws"><code class="docutils literal notranslate"><span class="pre">start_ws()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.admin.stop_http"><code class="docutils literal notranslate"><span class="pre">stop_http()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.admin.stop_ws"><code class="docutils literal notranslate"><span class="pre">stop_ws()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gethtxpool-api">GethTxPool API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.txpool.TxPool.inspect"><code class="docutils literal notranslate"><span class="pre">TxPool.inspect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.txpool.TxPool.status"><code class="docutils literal notranslate"><span class="pre">TxPool.status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.txpool.TxPool.content"><code class="docutils literal notranslate"><span class="pre">TxPool.content()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#gethdebug-api">GethDebug API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.geth.debug.Debug.trace_transaction"><code class="docutils literal notranslate"><span class="pre">Debug.trace_transaction()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas Price API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resources and Learning Material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">Code of Conduct</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Geth API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/web3.geth.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-web3.geth">
+<span id="geth-api"></span><h1>Geth API<a class="headerlink" href="#module-web3.geth" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">web3.geth</span></code> object exposes modules that enable you to interact with the JSON-RPC endpoints supported by <a class="reference external" href="https://github.com/ethereum/go-ethereum/wiki/Management-APIs">Geth</a> that are not defined in the standard set of Ethereum JSONRPC endpoints according to <a class="reference external" href="https://github.com/ethereum/EIPs/pull/1474">EIP 1474</a>.</p>
+<section id="gethadmin-api">
+<h2>GethAdmin API<a class="headerlink" href="#gethadmin-api" title="Link to this heading"></a></h2>
+<p>The following methods are available on the <code class="docutils literal notranslate"><span class="pre">web3.geth.admin</span></code> namespace.</p>
+<p id="module-web3.geth.admin">The <code class="docutils literal notranslate"><span class="pre">web3.geth.admin</span></code> object exposes methods to interact with the RPC APIs under the
+<code class="docutils literal notranslate"><span class="pre">admin_</span></code> namespace that are supported by the Geth client.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.admin.datadir">
+<span class="sig-prename descclassname"><span class="pre">web3.geth.admin.</span></span><span class="sig-name descname"><span class="pre">datadir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.admin.datadir" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">admin_datadir</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the system path of the node's data directory.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">datadir</span><span class="p">()</span>
+<span class="go">&#39;/Users/snakecharmers/Library/Ethereum&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.admin.node_info">
+<span class="sig-prename descclassname"><span class="pre">web3.geth.admin.</span></span><span class="sig-name descname"><span class="pre">node_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.admin.node_info" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">admin_nodeInfo</span></code> RPC Method</p></li>
+</ul>
+<p>Returns information about the currently running node.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">node_info</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">    &#39;enode&#39;: &#39;enode://e54eebad24dce1f6d246bea455ffa756d97801582420b9ed681a2ea84bf376d0bd87ae8dd6dc06cdb862a2ca89ecabe1be1050be35b4e70d62bc1a092cb7e2d3@[::]:30303&#39;,</span>
+<span class="go">    &#39;id&#39;: &#39;e54eebad24dce1f6d246bea455ffa756d97801582420b9ed681a2ea84bf376d0bd87ae8dd6dc06cdb862a2ca89ecabe1be1050be35b4e70d62bc1a092cb7e2d3&#39;,</span>
+<span class="go">    &#39;ip&#39;: &#39;::&#39;,</span>
+<span class="go">    &#39;listenAddr&#39;: &#39;[::]:30303&#39;,</span>
+<span class="go">    &#39;name&#39;: &#39;Geth/v1.4.11-stable-fed692f6/darwin/go1.7&#39;,</span>
+<span class="go">    &#39;ports&#39;: {&#39;discovery&#39;: 30303, &#39;listener&#39;: 30303},</span>
+<span class="go">    &#39;protocols&#39;: {</span>
+<span class="go">        &#39;eth&#39;: {</span>
+<span class="go">            &#39;difficulty&#39;: 57631175724744612603,</span>
+<span class="go">            &#39;genesis&#39;: &#39;0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3&#39;,</span>
+<span class="go">            &#39;head&#39;: &#39;0xaaef6b9dd0d34088915f4c62b6c166379da2ad250a88f76955508f7cc81fb796&#39;,</span>
+<span class="go">            &#39;network&#39;: 1,</span>
+<span class="go">        },</span>
+<span class="go">    },</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.admin.peers">
+<span class="sig-prename descclassname"><span class="pre">web3.geth.admin.</span></span><span class="sig-name descname"><span class="pre">peers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.admin.peers" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">admin_peers</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the current peers the node is connected to.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">peers</span><span class="p">()</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;caps&#39;: [&#39;eth/63&#39;],</span>
+<span class="go">        &#39;id&#39;: &#39;146e8e3e2460f1e18939a5da37c4a79f149c8b9837240d49c7d94c122f30064e07e4a42ae2c2992d0f8e7e6f68a30e7e9ad31d524349ec9d17effd2426a37b40&#39;,</span>
+<span class="go">        &#39;name&#39;: &#39;Geth/v1.4.10-stable/windows/go1.6.2&#39;,</span>
+<span class="go">        &#39;network&#39;: {</span>
+<span class="go">            &#39;localAddress&#39;: &#39;10.0.3.115:64478&#39;,</span>
+<span class="go">            &#39;remoteAddress&#39;: &#39;72.208.167.127:30303&#39;,</span>
+<span class="go">        },</span>
+<span class="go">        &#39;protocols&#39;: {</span>
+<span class="go">            &#39;eth&#39;: {</span>
+<span class="go">                &#39;difficulty&#39;: 17179869184,</span>
+<span class="go">                &#39;head&#39;: &#39;0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3&#39;,</span>
+<span class="go">                &#39;version&#39;: 63,</span>
+<span class="go">            },</span>
+<span class="go">        }</span>
+<span class="go">    },</span>
+<span class="go">    {</span>
+<span class="go">        &#39;caps&#39;: [&#39;eth/62&#39;, &#39;eth/63&#39;],</span>
+<span class="go">        &#39;id&#39;: &#39;76cb6cd3354be081923a90dfd4cda40aa78b307cc3cf4d5733dc32cc171d00f7c08356e9eb2ea47eab5aad7a15a3419b859139e3f762e1e1ebf5a04f530dcef7&#39;,</span>
+<span class="go">        &#39;name&#39;: &#39;Geth/v1.4.10-stable-5f55d95a/linux/go1.5.1&#39;,</span>
+<span class="go">        &#39;network&#39;: {</span>
+<span class="go">            &#39;localAddress&#39;: &#39;10.0.3.115:64784&#39;,</span>
+<span class="go">            &#39;remoteAddress&#39;: &#39;60.205.92.119:30303&#39;,</span>
+<span class="go">        },</span>
+<span class="go">        &#39;protocols&#39;: {</span>
+<span class="go">            &#39;eth&#39;: {</span>
+<span class="go">                &#39;difficulty&#39;: 57631175724744612603,</span>
+<span class="go">                &#39;head&#39;: &#39;0xaaef6b9dd0d34088915f4c62b6c166379da2ad250a88f76955508f7cc81fb796&#39;,</span>
+<span class="go">                &#39;version&#39;: 63,</span>
+<span class="go">            },</span>
+<span class="go">        },</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.admin.add_peer">
+<span class="sig-prename descclassname"><span class="pre">web3.geth.admin.</span></span><span class="sig-name descname"><span class="pre">add_peer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.admin.add_peer" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">admin_addPeer</span></code> RPC Method</p></li>
+</ul>
+<p>Requests adding a new remote node to the list of tracked static nodes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">add_peer</span><span class="p">(</span><span class="s1">&#39;enode://e54eebad24dce1f6d246bea455ffa756d97801582420b9ed681a2ea84bf376d0bd87ae8dd6dc06cdb862a2ca89ecabe1be1050be35b4e70d62bc1a092cb7e2d3@52.71.255.237:30303&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.admin.start_http">
+<span class="sig-prename descclassname"><span class="pre">web3.geth.admin.</span></span><span class="sig-name descname"><span class="pre">start_http</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8545</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'eth,net,web3'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.admin.start_http" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">admin_startHTTP</span></code> RPC Method</p></li>
+</ul>
+<p>Starts the HTTP based JSON RPC API webserver on the specified <code class="docutils literal notranslate"><span class="pre">host</span></code> and
+<code class="docutils literal notranslate"><span class="pre">port</span></code>, with the <code class="docutils literal notranslate"><span class="pre">rpccorsdomain</span></code> set to the provided <code class="docutils literal notranslate"><span class="pre">cors</span></code> value and
+with the APIs specified by <code class="docutils literal notranslate"><span class="pre">apis</span></code> enabled.  Returns boolean as to whether
+the server was successfully started.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">start_http</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.admin.start_ws">
+<span class="sig-prename descclassname"><span class="pre">web3.geth.admin.</span></span><span class="sig-name descname"><span class="pre">start_ws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8546</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'eth,net,web3'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.admin.start_ws" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">admin_startWS</span></code> RPC Method</p></li>
+</ul>
+<p>Starts the WebSocket based JSON RPC API webserver on the specified <code class="docutils literal notranslate"><span class="pre">host</span></code>
+and <code class="docutils literal notranslate"><span class="pre">port</span></code>, with the <code class="docutils literal notranslate"><span class="pre">rpccorsdomain</span></code> set to the provided <code class="docutils literal notranslate"><span class="pre">cors</span></code> value
+and with the APIs specified by <code class="docutils literal notranslate"><span class="pre">apis</span></code> enabled.  Returns boolean as to
+whether the server was successfully started.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">start_ws</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.admin.stop_http">
+<span class="sig-prename descclassname"><span class="pre">web3.geth.admin.</span></span><span class="sig-name descname"><span class="pre">stop_http</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.admin.stop_http" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">admin_stopHTTP</span></code> RPC Method</p></li>
+</ul>
+<p>Stops the HTTP based JSON RPC server.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">stop_http</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.admin.stop_ws">
+<span class="sig-prename descclassname"><span class="pre">web3.geth.admin.</span></span><span class="sig-name descname"><span class="pre">stop_ws</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.admin.stop_ws" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">admin_stopWS</span></code> RPC Method</p></li>
+</ul>
+<p>Stops the WebSocket based JSON RPC server.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">admin</span><span class="o">.</span><span class="n">stop_ws</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="gethtxpool-api">
+<span id="module-web3.geth.txpool"></span><h2>GethTxPool API<a class="headerlink" href="#gethtxpool-api" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">web3.geth.txpool</span></code> object exposes methods to interact with the RPC APIs under
+the <code class="docutils literal notranslate"><span class="pre">txpool_</span></code> namespace. These methods are only exposed under the <code class="docutils literal notranslate"><span class="pre">geth</span></code> namespace
+since they are not standard.</p>
+<p>The following methods are available on the <code class="docutils literal notranslate"><span class="pre">web3.geth.txpool</span></code> namespace.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.txpool.TxPool.inspect">
+<span class="sig-prename descclassname"><span class="pre">TxPool.</span></span><span class="sig-name descname"><span class="pre">inspect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.txpool.TxPool.inspect" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">txpool_inspect</span></code> RPC Method</p></li>
+</ul>
+<p>Returns a textual summary of all transactions currently pending for
+inclusion in the next block(s) as well as ones that are scheduled for
+future execution.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">txpool</span><span class="o">.</span><span class="n">inspect</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">    &#39;pending&#39;: {</span>
+<span class="go">        &#39;0x26588a9301b0428d95e6Fc3A5024fcE8BEc12D51&#39;: {</span>
+<span class="go">          31813: [&quot;0x3375Ee30428b2A71c428afa5E89e427905F95F7e: 0 wei + 500000 × 20000000000 gas&quot;]</span>
+<span class="go">        },</span>
+<span class="go">        &#39;0x2a65Aca4D5fC5B5C859090a6c34d164135398226&#39;: {</span>
+<span class="go">          563662: [&quot;0x958c1Fa64B34db746925c6F8a3Dd81128e40355E: 1051546810000000000 wei + 90000 × 20000000000 gas&quot;],</span>
+<span class="go">          563663: [&quot;0x77517B1491a0299A44d668473411676f94e97E34: 1051190740000000000 wei + 90000 × 20000000000 gas&quot;],</span>
+<span class="go">          563664: [&quot;0x3E2A7Fe169c8F8eee251BB00d9fb6d304cE07d3A: 1050828950000000000 wei + 90000 × 20000000000 gas&quot;],</span>
+<span class="go">          563665: [&quot;0xAF6c4695da477F8C663eA2D8B768Ad82Cb6A8522: 1050544770000000000 wei + 90000 × 20000000000 gas&quot;],</span>
+<span class="go">          563666: [&quot;0x139B148094C50F4d20b01cAf21B85eDb711574dB: 1048598530000000000 wei + 90000 × 20000000000 gas&quot;],</span>
+<span class="go">          563667: [&quot;0x48B3Bd66770b0D1EeceFCe090daFeE36257538aE: 1048367260000000000 wei + 90000 × 20000000000 gas&quot;],</span>
+<span class="go">          563668: [&quot;0x468569500925D53e06Dd0993014aD166fD7Dd381: 1048126690000000000 wei + 90000 × 20000000000 gas&quot;],</span>
+<span class="go">          563669: [&quot;0x3DcB4C90477a4b8Ff7190b79b524773CbE3bE661: 1047965690000000000 wei + 90000 × 20000000000 gas&quot;],</span>
+<span class="go">          563670: [&quot;0x6DfeF5BC94b031407FFe71ae8076CA0FbF190963: 1047859050000000000 wei + 90000 × 20000000000 gas&quot;]</span>
+<span class="go">        },</span>
+<span class="go">        &#39;0x9174E688d7dE157C5C0583Df424EAAB2676aC162&#39;: {</span>
+<span class="go">          3: [&quot;0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413: 30000000000000000000 wei + 85000 × 21000000000 gas&quot;]</span>
+<span class="go">        },</span>
+<span class="go">        &#39;0xb18F9d01323e150096650ab989CfecD39D757Aec&#39;: {</span>
+<span class="go">          777: [&quot;0xcD79c72690750F079ae6AB6ccd7e7aEDC03c7720: 0 wei + 1000000 × 20000000000 gas&quot;]</span>
+<span class="go">        },</span>
+<span class="go">        &#39;0xB2916C870Cf66967B6510B76c07E9d13a5D23514&#39;: {</span>
+<span class="go">          2: [&quot;0x576f25199D60982A8f31A8DfF4da8aCB982e6ABa: 26000000000000000000 wei + 90000 × 20000000000 gas&quot;]</span>
+<span class="go">        },</span>
+<span class="go">        &#39;0xBc0CA4f217E052753614d6B019948824d0d8688B&#39;: {</span>
+<span class="go">          0: [&quot;0x2910543Af39abA0Cd09dBb2D50200b3E800A63D2: 1000000000000000000 wei + 50000 × 1171602790622 gas&quot;]</span>
+<span class="go">        },</span>
+<span class="go">        &#39;0xea674fdde714fd979de3edf0f56aa9716b898ec8&#39;: {</span>
+<span class="go">          70148: [&quot;0xe39c55ead9f997f7fa20ebe40fb4649943d7db66: 1000767667434026200 wei + 90000 × 20000000000 gas&quot;]</span>
+<span class="go">        }</span>
+<span class="go">      },</span>
+<span class="go">      &#39;queued&#39;: {</span>
+<span class="go">        &#39;0x0F6000De1578619320aBA5e392706b131FB1dE6f&#39;: {</span>
+<span class="go">          6: [&quot;0x8383534d0bcd0186d326C993031311c0Ac0D9B2d: 9000000000000000000 wei + 21000 × 20000000000 gas&quot;]</span>
+<span class="go">        },</span>
+<span class="go">        &#39;0x5b30608c678e1ac464A8994C3B33E5CdF3497112&#39;: {</span>
+<span class="go">          6: [&quot;0x9773547e27f8303C87089dc42D9288aa2B9d8F06: 50000000000000000000 wei + 90000 × 50000000000 gas&quot;]</span>
+<span class="go">        },</span>
+<span class="go">        &#39;0x976A3Fc5d6f7d259EBfb4cc2Ae75115475E9867C&#39;: {</span>
+<span class="go">          3: [&quot;0x346FB27dE7E7370008f5da379f74dd49F5f2F80F: 140000000000000000 wei + 90000 × 20000000000 gas&quot;]</span>
+<span class="go">        },</span>
+<span class="go">        &#39;0x9B11bF0459b0c4b2f87f8CEBca4cfc26f294B63A&#39;: {</span>
+<span class="go">          2: [&quot;0x24a461f25eE6a318BDef7F33De634A67bb67Ac9D: 17000000000000000000 wei + 90000 × 50000000000 gas&quot;],</span>
+<span class="go">          6: [&quot;0x6368f3f8c2B42435D6C136757382E4A59436a681: 17990000000000000000 wei + 90000 × 20000000000 gas&quot;, &quot;0x8db7b4e0ecb095fbd01dffa62010801296a9ac78: 16998950000000000000 wei + 90000 × 20000000000 gas&quot;],</span>
+<span class="go">          7: [&quot;0x6368f3f8c2B42435D6C136757382E4A59436a681: 17900000000000000000 wei + 90000 × 20000000000 gas&quot;]</span>
+<span class="go">        }</span>
+<span class="go">      }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.txpool.TxPool.status">
+<span class="sig-prename descclassname"><span class="pre">TxPool.</span></span><span class="sig-name descname"><span class="pre">status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.txpool.TxPool.status" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">txpool_status</span></code> RPC Method</p></li>
+</ul>
+<p>Returns a textual summary of all transactions currently pending for
+inclusion in the next block(s) as well as ones that are scheduled for
+future execution.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="n">pending</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">queued</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.txpool.TxPool.content">
+<span class="sig-prename descclassname"><span class="pre">TxPool.</span></span><span class="sig-name descname"><span class="pre">content</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.txpool.TxPool.content" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">txpool_content</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the exact details of all transactions that are pending or queued.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">txpool</span><span class="o">.</span><span class="n">content</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;pending&#39;: {</span>
+<span class="go">    &#39;0x0216D5032f356960Cd3749C31Ab34eEFF21B3395&#39;: {</span>
+<span class="go">      806: [{</span>
+<span class="go">        &#39;blockHash&#39;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,</span>
+<span class="go">        &#39;blockNumber&#39;: None,</span>
+<span class="go">        &#39;from&#39;: &quot;0x0216D5032f356960Cd3749C31Ab34eEFF21B3395&quot;,</span>
+<span class="go">        &#39;gas&#39;: &quot;0x5208&quot;,</span>
+<span class="go">        &#39;gasPrice&#39;: None,</span>
+<span class="go">        &#39;hash&#39;: &quot;0xaf953a2d01f55cfe080c0c94150a60105e8ac3d51153058a1f03dd239dd08586&quot;,</span>
+<span class="go">        &#39;input&#39;: &quot;0x&quot;,</span>
+<span class="go">        &#39;maxFeePerGas&#39;: &#39;0x77359400&#39;,</span>
+<span class="go">        &#39;maxPriorityFeePerGas&#39;: &#39;0x3b9aca00&#39;,</span>
+<span class="go">        &#39;nonce&#39;: &quot;0x326&quot;,</span>
+<span class="go">        &#39;to&#39;: &quot;0x7f69a91A3CF4bE60020fB58B893b7cbb65376db8&quot;,</span>
+<span class="go">        &#39;transactionIndex&#39;: None,</span>
+<span class="go">        &#39;value&#39;: &quot;0x19a99f0cf456000&quot;</span>
+<span class="go">      }]</span>
+<span class="go">    },</span>
+<span class="go">    &#39;0x24d407e5A0B506E1Cb2fae163100B5DE01F5193C&#39;: {</span>
+<span class="go">      34: [{</span>
+<span class="go">        &#39;blockHash&#39;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,</span>
+<span class="go">        &#39;blockNumber&#39;: None,</span>
+<span class="go">        &#39;from&#39;: &quot;0x24d407e5A0B506E1Cb2fae163100B5DE01F5193C&quot;,</span>
+<span class="go">        &#39;gas&#39;: &quot;0x44c72&quot;,</span>
+<span class="go">        &#39;gasPrice&#39;: None,</span>
+<span class="go">        &#39;hash&#39;: &quot;0xb5b8b853af32226755a65ba0602f7ed0e8be2211516153b75e9ed640a7d359fe&quot;,</span>
+<span class="go">        &#39;input&#39;: &quot;0xb61d27f600000000000000000000000024d407e5a0b506e1cb2fae163100b5de01f5193c00000000000000000000000000000000000000000000000053444835ec580000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000&quot;,</span>
+<span class="go">        &#39;maxFeePerGas&#39;: &#39;0x77359400&#39;,</span>
+<span class="go">        &#39;maxPriorityFeePerGas&#39;: &#39;0x3b9aca00&#39;,</span>
+<span class="go">        &#39;nonce&#39;: &quot;0x22&quot;,</span>
+<span class="go">        &#39;to&#39;: &quot;0x7320785200f74861B69C49e4ab32399a71b34f1a&quot;,</span>
+<span class="go">        &#39;transactionIndex&#39;: None,</span>
+<span class="go">        &#39;value&#39;: &quot;0x0&quot;</span>
+<span class="go">      }]</span>
+<span class="go">    }</span>
+<span class="go">  },</span>
+<span class="go">  &#39;queued&#39;: {</span>
+<span class="go">    &#39;0x976A3Fc5d6f7d259EBfb4cc2Ae75115475E9867C&#39;: {</span>
+<span class="go">      3: [{</span>
+<span class="go">        &#39;blockHash&#39;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,</span>
+<span class="go">        &#39;blockNumber&#39;: None,</span>
+<span class="go">        &#39;from&#39;: &quot;0x976A3Fc5d6f7d259EBfb4cc2Ae75115475E9867C&quot;,</span>
+<span class="go">        &#39;gas&#39;: &quot;0x15f90&quot;,</span>
+<span class="go">        &#39;gasPrice&#39;: None,</span>
+<span class="go">        &#39;hash&#39;: &quot;0x57b30c59fc39a50e1cba90e3099286dfa5aaf60294a629240b5bbec6e2e66576&quot;,</span>
+<span class="go">        &#39;input&#39;: &quot;0x&quot;,</span>
+<span class="go">        &#39;maxFeePerGas&#39;: &#39;0x77359400&#39;,</span>
+<span class="go">        &#39;maxPriorityFeePerGas&#39;: &#39;0x3b9aca00&#39;,</span>
+<span class="go">        &#39;nonce&#39;: &quot;0x3&quot;,</span>
+<span class="go">        &#39;to&#39;: &quot;0x346FB27dE7E7370008f5da379f74dd49F5f2F80F&quot;,</span>
+<span class="go">        &#39;transactionIndex&#39;: None,</span>
+<span class="go">        &#39;value&#39;: &quot;0x1f161421c8e0000&quot;</span>
+<span class="go">      }]</span>
+<span class="go">    },</span>
+<span class="go">    &#39;0x9B11bF0459b0c4b2f87f8CEBca4cfc26f294B63A&#39;: {</span>
+<span class="go">      2: [{</span>
+<span class="go">        &#39;blockHash&#39;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,</span>
+<span class="go">        &#39;blockNumber&#39;: None,</span>
+<span class="go">        &#39;from&#39;: &quot;0x9B11bF0459b0c4b2f87f8CEBca4cfc26f294B63A&quot;,</span>
+<span class="go">        &#39;gas&#39;: &quot;0x15f90&quot;,</span>
+<span class="go">        &#39;gasPrice&#39;: None,</span>
+<span class="go">        &#39;hash&#39;: &quot;0x3a3c0698552eec2455ed3190eac3996feccc806970a4a056106deaf6ceb1e5e3&quot;,</span>
+<span class="go">        &#39;input&#39;: &quot;0x&quot;,</span>
+<span class="go">        &#39;maxFeePerGas&#39;: &#39;0x77359400&#39;,</span>
+<span class="go">        &#39;maxPriorityFeePerGas&#39;: &#39;0x3b9aca00&#39;,</span>
+<span class="go">        &#39;nonce&#39;: &quot;0x2&quot;,</span>
+<span class="go">        &#39;to&#39;: &quot;0x24a461f25eE6a318BDef7F33De634A67bb67Ac9D&quot;,</span>
+<span class="go">        &#39;transactionIndex&#39;: None,</span>
+<span class="go">        &#39;value&#39;: &quot;0xebec21ee1da40000&quot;</span>
+<span class="go">      }],</span>
+<span class="go">      6: [{</span>
+<span class="go">        &#39;blockHash&#39;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,</span>
+<span class="go">        &#39;blockNumber&#39;: None,</span>
+<span class="go">        &#39;from&#39;: &quot;0x9B11bF0459b0c4b2f87f8CEBca4cfc26f294B63A&quot;,</span>
+<span class="go">        &#39;gas&#39;: &quot;0x15f90&quot;,</span>
+<span class="go">        &#39;gasPrice&#39;: None,</span>
+<span class="go">        &#39;hash&#39;: &quot;0xbbcd1e45eae3b859203a04be7d6e1d7b03b222ec1d66dfcc8011dd39794b147e&quot;,</span>
+<span class="go">        &#39;input&#39;: &quot;0x&quot;,</span>
+<span class="go">        &#39;maxFeePerGas&#39;: &#39;0x77359400&#39;,</span>
+<span class="go">        &#39;maxPriorityFeePerGas&#39;: &#39;0x3b9aca00&#39;,</span>
+<span class="go">        &#39;nonce&#39;: &quot;0x6&quot;,</span>
+<span class="go">        &#39;to&#39;: &quot;0x6368f3f8c2B42435D6C136757382E4A59436a681&quot;,</span>
+<span class="go">        &#39;transactionIndex&#39;: None,</span>
+<span class="go">        &#39;value&#39;: &quot;0xf9a951af55470000&quot;</span>
+<span class="go">      }, {</span>
+<span class="go">        &#39;blockHash&#39;: &quot;0x0000000000000000000000000000000000000000000000000000000000000000&quot;,</span>
+<span class="go">        &#39;blockNumber&#39;: None,</span>
+<span class="go">        &#39;from&#39;: &quot;0x9B11bF0459b0c4b2f87f8CEBca4cfc26f294B63A&quot;,</span>
+<span class="go">        &#39;gas&#39;: &quot;0x15f90&quot;,</span>
+<span class="go">        &#39;gasPrice&#39;: None,</span>
+<span class="go">        &#39;hash&#39;: &quot;0x60803251d43f072904dc3a2d6a084701cd35b4985790baaf8a8f76696041b272&quot;,</span>
+<span class="go">        &#39;input&#39;: &quot;0x&quot;,</span>
+<span class="go">        &#39;maxFeePerGas&#39;: &#39;0x77359400&#39;,</span>
+<span class="go">        &#39;maxPriorityFeePerGas&#39;: &#39;0x3b9aca00&#39;,</span>
+<span class="go">        &#39;nonce&#39;: &quot;0x6&quot;,</span>
+<span class="go">        &#39;to&#39;: &quot;0x8DB7b4e0ECB095FBD01Dffa62010801296a9ac78&quot;,</span>
+<span class="go">        &#39;transactionIndex&#39;: None,</span>
+<span class="go">        &#39;value&#39;: &quot;0xebe866f5f0a06000&quot;</span>
+<span class="go">      }],</span>
+<span class="go">    }</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="gethdebug-api">
+<span id="module-web3.geth.debug"></span><h2>GethDebug API<a class="headerlink" href="#gethdebug-api" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">web3.geth.debug</span></code> object exposes methods to interact with the RPC APIs under the
+<code class="docutils literal notranslate"><span class="pre">debug_</span></code> namespace. These methods are only exposed under the <code class="docutils literal notranslate"><span class="pre">geth</span></code> namespace.
+Full documentation around options can be found in the
+<a class="reference external" href="https://geth.ethereum.org/docs/developers/evm-tracing/built-in-tracers">Geth docs</a>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.geth.debug.Debug.trace_transaction">
+<span class="sig-prename descclassname"><span class="pre">Debug.</span></span><span class="sig-name descname"><span class="pre">trace_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_hash</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.geth.debug.Debug.trace_transaction" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">debug_traceTransaction</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the trace of the transaction with the given <code class="docutils literal notranslate"><span class="pre">transaction_hash</span></code> and <code class="docutils literal notranslate"><span class="pre">trace_config</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">trace_transaction</span><span class="p">(</span><span class="s1">&#39;0x96014f00980a25dc7275a5eb5ed25ce0dd79c9233628c421ae373601236949b3&#39;</span><span class="p">)</span>
+<span class="go">    AttributeDict({</span>
+<span class="go">      &#39;gas&#39;: 21000,</span>
+<span class="go">      &#39;failed&#39;: False,</span>
+<span class="go">      &#39;returnValue&#39;: &#39;&#39;,</span>
+<span class="go">      &#39;structLogs&#39;: []</span>
+<span class="go">    })</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">trace_transaction</span><span class="p">(</span><span class="s1">&#39;0x96014f00980a25dc7275a5eb5ed25ce0dd79c9233628c421ae373601236949b3&#39;</span><span class="p">,</span> <span class="p">{</span>
+<span class="go">        &quot;tracer&quot;: &quot;prestateTracer&quot;,</span>
+<span class="go">    })</span>
+<span class="go">    AttributeDict({</span>
+<span class="go">      &#39;0x0000000000000000000000000000000000000000&#39;: AttributeDict({&#39;balance&#39;: 0}),</span>
+<span class="go">      &#39;0x7fE3e4C21bDE162214B715AabcE05391301e9F5B&#39;: AttributeDict({&#39;balance&#39;: 115792089237316195423570985008687907853269984665640564039457584007913129639927}),</span>
+<span class="go">      &#39;0x91fe3039271d43d3f8479f60Cc5293Bc8A461b75&#39;: AttributeDict({&#39;balance&#39;: 0})</span>
+<span class="go">    })</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">trace_transaction</span><span class="p">(</span><span class="s1">&#39;0x96014f00980a25dc7275a5eb5ed25ce0dd79c9233628c421ae373601236949b3&#39;</span><span class="p">,</span> <span class="p">{</span>
+<span class="go">        &quot;tracer&quot;: &quot;prestateTracer&quot;,</span>
+<span class="go">        &quot;traceConfig&quot;: {&quot;diffMode&quot;: True}</span>
+<span class="go">    })</span>
+<span class="go">    AttributeDict({</span>
+<span class="go">      &#39;post&#39;: AttributeDict({</span>
+<span class="go">        &#39;0x0000000000000000000000000000000000000000&#39;: AttributeDict({&#39;balance&#39;: 63000}),</span>
+<span class="go">        &#39;0xcF888Cc4FAe8a3D774e574Ef8C6a261958287d04&#39;: AttributeDict({</span>
+<span class="go">          &#39;balance&#39;: 115792089237316195423570985008687907853269984665640564039457583959368602105927,</span>
+<span class="go">          &#39;nonce&#39;: 3</span>
+<span class="go">        }),</span>
+<span class="go">        &#39;0xD2593D3445a9F0f4c776715f5206FBf4CA6A0475&#39;: AttributeDict({&#39;balance&#39;: 100000})}),</span>
+<span class="go">      &#39;pre&#39;: AttributeDict({</span>
+<span class="go">        &#39;0x0000000000000000000000000000000000000000&#39;: AttributeDict({&#39;balance&#39;: 42000}),</span>
+<span class="go">        &#39;0xcF888Cc4FAe8a3D774e574Ef8C6a261958287d04&#39;: AttributeDict({</span>
+<span class="go">          &#39;balance&#39;: 115792089237316195423570985008687907853269984665640564039457583973451623990927,</span>
+<span class="go">          &#39;nonce&#39;: 2</span>
+<span class="go">        }),</span>
+<span class="go">        &#39;0xD2593D3445a9F0f4c776715f5206FBf4CA6A0475&#39;: AttributeDict({&#39;balance&#39;: 0})</span>
+<span class="go">      })</span>
+<span class="go">    })</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">geth</span><span class="o">.</span><span class="n">debug</span><span class="o">.</span><span class="n">trace_transaction</span><span class="p">(</span><span class="s1">&#39;0x96014f00980a25dc7275a5eb5ed25ce0dd79c9233628c421ae373601236949b3&#39;</span><span class="p">,</span> <span class="p">{</span>
+<span class="go">        &quot;tracer&quot;: &quot;callTracer&quot;,</span>
+<span class="go">        &quot;tracerConfig&quot;: {&quot;withLog&quot;: False},</span>
+<span class="go">    })</span>
+<span class="go">    AttributeDict({&#39;calls&#39;: [AttributeDict({&#39;from&#39;: &#39;0xa0457775a08b175Cbb444eD923556Dc67Ec5Dc11&#39;,</span>
+<span class="go">      &#39;gas&#39;: 154003,</span>
+<span class="go">      &#39;gasUsed&#39;: 275,</span>
+<span class="go">      &#39;input&#39;: HexBytes(&#39;0xad5c4648&#39;),</span>
+<span class="go">      &#39;output&#39;: HexBytes(&#39;0x000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&#39;),</span>
+<span class="go">      &#39;to&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">      &#39;type&#39;: &#39;STATICCALL&#39;}),</span>
+<span class="go">      AttributeDict({&#39;from&#39;: &#39;0xa0457775a08b175Cbb444eD923556Dc67Ec5Dc11&#39;,</span>
+<span class="go">      &#39;gas&#39;: 150633,</span>
+<span class="go">      &#39;gasUsed&#39;: 24678,</span>
+<span class="go">      &#39;input&#39;: HexBytes(&#39;0x095ea7b30000000000000000000000007a250d5630b4cf539739df2c5dacb4c659f2488d000000000000000000000000000000000000007e37be2022c0914b2680000000&#39;),</span>
+<span class="go">      &#39;output&#39;: HexBytes(&#39;0x0000000000000000000000000000000000000000000000000000000000000001&#39;),</span>
+<span class="go">      &#39;to&#39;: &#39;0xec4cF8dCB526080792bC98E1Ef41fB4775777b6B&#39;,</span>
+<span class="go">      &#39;type&#39;: &#39;CALL&#39;,</span>
+<span class="go">      &#39;value&#39;: 0}),</span>
+<span class="go">      AttributeDict({&#39;calls&#39;: [AttributeDict({&#39;from&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">        &#39;gas&#39;: 121167,</span>
+<span class="go">        &#39;gasUsed&#39;: 27504,</span>
+<span class="go">        &#39;input&#39;: HexBytes(&#39;0x23b872dd000000000000000000000000a0457775a08b175cbb444ed923556dc67ec5dc1100000000000000000000000036f0548a77bfb1d5935483d25cc40633b46e2f4d000000000000000000000000000000000000007e37be2022c0914b2680000000&#39;),</span>
+<span class="go">        &#39;output&#39;: HexBytes(&#39;0x0000000000000000000000000000000000000000000000000000000000000001&#39;),</span>
+<span class="go">        &#39;to&#39;: &#39;0xec4cF8dCB526080792bC98E1Ef41fB4775777b6B&#39;,</span>
+<span class="go">        &#39;type&#39;: &#39;CALL&#39;,</span>
+<span class="go">        &#39;value&#39;: 0}),</span>
+<span class="go">        AttributeDict({&#39;from&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">        &#39;gas&#39;: 89911,</span>
+<span class="go">        &#39;gasUsed&#39;: 2504,</span>
+<span class="go">        &#39;input&#39;: HexBytes(&#39;0x0902f1ac&#39;),</span>
+<span class="go">        &#39;output&#39;: HexBytes(&#39;0x00000000000000000000000000000000000000000000000053f54ccde429ceb70000000000000000000000000000000000000000001635eb93ecdb339a7dc022000000000000000000000000000000000000000000000000000000006641f6cf&#39;),</span>
+<span class="go">        &#39;to&#39;: &#39;0x36f0548a77BFb1d5935483D25cc40633b46e2f4d&#39;,</span>
+<span class="go">        &#39;type&#39;: &#39;STATICCALL&#39;}),</span>
+<span class="go">        AttributeDict({&#39;from&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">        &#39;gas&#39;: 86926,</span>
+<span class="go">        &#39;gasUsed&#39;: 621,</span>
+<span class="go">        &#39;input&#39;: HexBytes(&#39;0x70a0823100000000000000000000000036f0548a77bfb1d5935483d25cc40633b46e2f4d&#39;),</span>
+<span class="go">        &#39;output&#39;: HexBytes(&#39;0x000000000000000000000000000000000000007e37d4560e547e265a1a7dc022&#39;),</span>
+<span class="go">        &#39;to&#39;: &#39;0xec4cF8dCB526080792bC98E1Ef41fB4775777b6B&#39;,</span>
+<span class="go">        &#39;type&#39;: &#39;STATICCALL&#39;}),</span>
+<span class="go">        AttributeDict({&#39;calls&#39;: [AttributeDict({&#39;from&#39;: &#39;0x36f0548a77BFb1d5935483D25cc40633b46e2f4d&#39;,</span>
+<span class="go">          &#39;gas&#39;: 70279,</span>
+<span class="go">          &#39;gasUsed&#39;: 29962,</span>
+<span class="go">          &#39;input&#39;: HexBytes(&#39;0xa9059cbb0000000000000000000000007a250d5630b4cf539739df2c5dacb4c659f2488d00000000000000000000000000000000000000000000000053f53dfc545d56a6&#39;),</span>
+<span class="go">          &#39;output&#39;: HexBytes(&#39;0x0000000000000000000000000000000000000000000000000000000000000001&#39;),</span>
+<span class="go">          &#39;to&#39;: &#39;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&#39;,</span>
+<span class="go">          &#39;type&#39;: &#39;CALL&#39;,</span>
+<span class="go">          &#39;value&#39;: 0}),</span>
+<span class="go">          AttributeDict({&#39;from&#39;: &#39;0x36f0548a77BFb1d5935483D25cc40633b46e2f4d&#39;,</span>
+<span class="go">          &#39;gas&#39;: 40164,</span>
+<span class="go">          &#39;gasUsed&#39;: 534,</span>
+<span class="go">          &#39;input&#39;: HexBytes(&#39;0x70a0823100000000000000000000000036f0548a77bfb1d5935483d25cc40633b46e2f4d&#39;),</span>
+<span class="go">          &#39;output&#39;: HexBytes(&#39;0x00000000000000000000000000000000000000000000000000000ed18fcc7811&#39;),</span>
+<span class="go">          &#39;to&#39;: &#39;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&#39;,</span>
+<span class="go">          &#39;type&#39;: &#39;STATICCALL&#39;}),</span>
+<span class="go">          AttributeDict({&#39;from&#39;: &#39;0x36f0548a77BFb1d5935483D25cc40633b46e2f4d&#39;,</span>
+<span class="go">          &#39;gas&#39;: 39233,</span>
+<span class="go">          &#39;gasUsed&#39;: 621,</span>
+<span class="go">          &#39;input&#39;: HexBytes(&#39;0x70a0823100000000000000000000000036f0548a77bfb1d5935483d25cc40633b46e2f4d&#39;),</span>
+<span class="go">          &#39;output&#39;: HexBytes(&#39;0x000000000000000000000000000000000000007e37d4560e547e265a1a7dc022&#39;),</span>
+<span class="go">          &#39;to&#39;: &#39;0xec4cF8dCB526080792bC98E1Ef41fB4775777b6B&#39;,</span>
+<span class="go">          &#39;type&#39;: &#39;STATICCALL&#39;})],</span>
+<span class="go">        &#39;from&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">        &#39;gas&#39;: 84769,</span>
+<span class="go">        &#39;gasUsed&#39;: 64940,</span>
+<span class="go">        &#39;input&#39;: HexBytes(&#39;0x022c0d9f00000000000000000000000000000000000000000000000053f53dfc545d56a600000000000000000000000000000000000000000000000000000000000000000000000000000000000000007a250d5630b4cf539739df2c5dacb4c659f2488d00000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000&#39;),</span>
+<span class="go">        &#39;to&#39;: &#39;0x36f0548a77BFb1d5935483D25cc40633b46e2f4d&#39;,</span>
+<span class="go">        &#39;type&#39;: &#39;CALL&#39;,</span>
+<span class="go">        &#39;value&#39;: 0}),</span>
+<span class="go">        AttributeDict({&#39;from&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">        &#39;gas&#39;: 20382,</span>
+<span class="go">        &#39;gasUsed&#39;: 534,</span>
+<span class="go">        &#39;input&#39;: HexBytes(&#39;0x70a082310000000000000000000000007a250d5630b4cf539739df2c5dacb4c659f2488d&#39;),</span>
+<span class="go">        &#39;output&#39;: HexBytes(&#39;0x00000000000000000000000000000000000000000000000053f53dfc545d56a6&#39;),</span>
+<span class="go">        &#39;to&#39;: &#39;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&#39;,</span>
+<span class="go">        &#39;type&#39;: &#39;STATICCALL&#39;}),</span>
+<span class="go">        AttributeDict({&#39;calls&#39;: [AttributeDict({&#39;from&#39;: &#39;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&#39;,</span>
+<span class="go">          &#39;gas&#39;: 2300,</span>
+<span class="go">          &#39;gasUsed&#39;: 83,</span>
+<span class="go">          &#39;input&#39;: HexBytes(&#39;0x&#39;),</span>
+<span class="go">          &#39;to&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">          &#39;type&#39;: &#39;CALL&#39;,</span>
+<span class="go">          &#39;value&#39;: 6049809828398585510})],</span>
+<span class="go">        &#39;from&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">        &#39;gas&#39;: 19432,</span>
+<span class="go">        &#39;gasUsed&#39;: 9223,</span>
+<span class="go">        &#39;input&#39;: HexBytes(&#39;0x2e1a7d4d00000000000000000000000000000000000000000000000053f53dfc545d56a6&#39;),</span>
+<span class="go">        &#39;to&#39;: &#39;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&#39;,</span>
+<span class="go">        &#39;type&#39;: &#39;CALL&#39;,</span>
+<span class="go">        &#39;value&#39;: 0}),</span>
+<span class="go">        AttributeDict({&#39;from&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">        &#39;gas&#39;: 3353,</span>
+<span class="go">        &#39;gasUsed&#39;: 0,</span>
+<span class="go">        &#39;input&#39;: HexBytes(&#39;0x&#39;),</span>
+<span class="go">        &#39;to&#39;: &#39;0xE11418f9961248da36b1008b1090235f680AE8f5&#39;,</span>
+<span class="go">        &#39;type&#39;: &#39;CALL&#39;,</span>
+<span class="go">        &#39;value&#39;: 6049809828398585510})],</span>
+<span class="go">      &#39;from&#39;: &#39;0xa0457775a08b175Cbb444eD923556Dc67Ec5Dc11&#39;,</span>
+<span class="go">      &#39;gas&#39;: 125270,</span>
+<span class="go">      &#39;gasUsed&#39;: 122013,</span>
+<span class="go">      &#39;input&#39;: HexBytes(&#39;0x791ac947000000000000000000000000000000000000007e37be2022c0914b2680000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000e11418f9961248da36b1008b1090235f680ae8f5000000000000000000000000000000000000000000000000000000006641fe7f0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000ec4cf8dcb526080792bc98e1ef41fb4775777b6b000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2&#39;),</span>
+<span class="go">      &#39;to&#39;: &#39;0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D&#39;,</span>
+<span class="go">      &#39;type&#39;: &#39;CALL&#39;,</span>
+<span class="go">      &#39;value&#39;: 0})],</span>
+<span class="go">    &#39;from&#39;: &#39;0xE11418f9961248da36b1008b1090235f680AE8f5&#39;,</span>
+<span class="go">    &#39;gas&#39;: 185574,</span>
+<span class="go">    &#39;gasUsed&#39;: 144300,</span>
+<span class="go">    &#39;input&#39;: HexBytes(&#39;0x56feb11b000000000000000000000000ec4cf8dcb526080792bc98e1ef41fb4775777b6b000000000000000000000000000000000000007e37be2022c0914b2680000000&#39;),</span>
+<span class="go">    &#39;to&#39;: &#39;0xa0457775a08b175Cbb444eD923556Dc67Ec5Dc11&#39;,</span>
+<span class="go">    &#39;type&#39;: &#39;CALL&#39;,</span>
+<span class="go">    &#39;value&#39;: 0})</span>
+
+<span class="go">    &gt;&gt;&gt; w3.geth.debug.trace_transaction(tx_hash, {&#39;tracer&#39;: &#39;4byteTracer&#39;})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="web3.net.html" class="btn btn-neutral float-left" title="Net API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="web3.tracing.html" class="btn btn-neutral float-right" title="Tracing API" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

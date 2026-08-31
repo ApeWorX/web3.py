@@ -1,0 +1,355 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../web3.main.rst:4
+msgid "Web3 API"
+msgstr ""
+
+#: ../../web3.main.rst:14
+msgid "Each ``Web3`` instance exposes the following APIs."
+msgstr ""
+
+#: ../../web3.main.rst:17
+msgid "Providers"
+msgstr ""
+
+#: ../../web3.main.rst:21
+msgid "Convenience API to access :py:class:`web3.providers.rpc.HTTPProvider`"
+msgstr ""
+
+#: ../../web3.main.rst:25
+msgid "Convenience API to access :py:class:`web3.providers.ipc.IPCProvider`"
+msgstr ""
+
+#: ../../web3.main.rst:29
+msgid "Attributes"
+msgstr ""
+
+#: ../../web3.main.rst:33
+msgid "Returns the current Web3 version."
+msgstr ""
+
+#: ../../web3.main.rst:42
+msgid "Delegates to ``web3_clientVersion`` RPC Method"
+msgstr ""
+
+#: ../../web3.main.rst:44
+msgid "Returns the current client version."
+msgstr ""
+
+#: ../../web3.main.rst:55
+msgid "Batch Requests"
+msgstr ""
+
+#: ../../web3.main.rst:59
+msgid ""
+"The JSON-RPC API allows for batch requests, meaning you can send a single"
+" request that contains an array of request objects. Generally, this may "
+"be useful when you want to limit the number of requests you send to a "
+"node."
+msgstr ""
+
+#: ../../web3.main.rst:63
+msgid ""
+"You can choose to build a batch of requests within or outside of a "
+"context manager:"
+msgstr ""
+
+#: ../../web3.main.rst:77
+msgid ""
+"Within the batching context above, calls are suspended until "
+"``batch.execute()`` is called. Calling a method without passing it to "
+"``batch.add`` might result in unexpected behavior."
+msgstr ""
+
+#: ../../web3.main.rst:81
+msgid "Using the batch object directly:"
+msgstr ""
+
+#: ../../web3.main.rst:91
+msgid ""
+"Contract interactions can be included in batch requests by omitting the "
+"``call()`` method:"
+msgstr ""
+
+#: ../../web3.main.rst:97
+msgid ""
+"Additionally, if you need to make multiple calls of the same function, "
+"you can add a mapping of the function to its arguments:"
+msgstr ""
+
+#: ../../web3.main.rst:112
+msgid ""
+"The ``execute`` method returns a list of responses in the order they were"
+" included in the batch."
+msgstr ""
+
+#: ../../web3.main.rst:115
+msgid ""
+"If you need to abandon or rebuild a batch request, utilize the ``clear`` "
+"method:"
+msgstr ""
+
+#: ../../web3.main.rst:129
+msgid ""
+"Only read-only operations that exist within modules on the ``Web3`` class"
+" (e.g. ``w3.eth``, ``w3.net``) are supported by ``batch_requests``. "
+"Unsupported methods include:"
+msgstr ""
+
+#: ../../web3.main.rst:133
+msgid ":meth:`subscribe <web3.eth.Eth.subscribe>`"
+msgstr ""
+
+#: ../../web3.main.rst:134
+msgid ":meth:`unsubscribe <web3.eth.Eth.unsubscribe>`"
+msgstr ""
+
+#: ../../web3.main.rst:135
+msgid ":meth:`send_raw_transaction <web3.eth.Eth.send_raw_transaction>`"
+msgstr ""
+
+#: ../../web3.main.rst:136
+msgid ":meth:`send_transaction <web3.eth.Eth.send_transaction>`"
+msgstr ""
+
+#: ../../web3.main.rst:137
+msgid ":meth:`sign_transaction <web3.eth.Eth.sign_transaction>`"
+msgstr ""
+
+#: ../../web3.main.rst:138
+msgid ":meth:`sign <web3.eth.Eth.sign>`"
+msgstr ""
+
+#: ../../web3.main.rst:139
+msgid ":meth:`sign_typed_data <web3.eth.Eth.sign_typed_data>`"
+msgstr ""
+
+#: ../../web3.main.rst:140
+msgid "``w3.provider.make_request()``."
+msgstr ""
+
+#: ../../web3.main.rst:143
+msgid "Async Batch Requests"
+msgstr ""
+
+#: ../../web3.main.rst:145
+msgid ""
+"If using one of the asynchronous providers, you'll need to make use of "
+"the ``async_execute`` method and the ``async`` and ``await`` keywords as "
+"appropriate."
+msgstr ""
+
+#: ../../web3.main.rst:150
+msgid ""
+"If performance is a concern, consider using ``asyncio.gather()`` with "
+"single concurrent requests instead of an asynchronous batch request. It "
+"will generally be the faster option due to the overhead of batching."
+msgstr ""
+
+#: ../../web3.main.rst:176
+msgid "Encoding and Decoding Helpers"
+msgstr ""
+
+#: ../../web3.main.rst:180
+msgid ""
+"Takes a variety of inputs and returns it in its hexadecimal "
+"representation. It follows the rules for converting to hex in the `JSON-"
+"RPC spec`_"
+msgstr ""
+
+#: ../../web3.main.rst:215
+msgid ""
+"Takes a variety of inputs and returns its string equivalent. Text gets "
+"decoded as UTF-8."
+msgstr ""
+
+#: ../../web3.main.rst:235
+msgid ""
+"Takes a variety of inputs and returns its bytes equivalent. Text gets "
+"encoded as UTF-8."
+msgstr ""
+
+#: ../../web3.main.rst:265
+msgid "Takes a variety of inputs and returns its integer equivalent."
+msgstr ""
+
+#: ../../web3.main.rst:287
+msgid "Takes a variety of inputs and returns its JSON equivalent."
+msgstr ""
+
+#: ../../web3.main.rst:301
+msgid "Currency Conversions"
+msgstr ""
+
+#: ../../web3.main.rst:305
+msgid ""
+"Returns the value in the denomination specified by the ``currency`` "
+"argument converted to wei."
+msgstr ""
+
+#: ../../web3.main.rst:317
+msgid ""
+"Returns the value in wei converted to the given currency. The value is "
+"returned as a ``Decimal`` to ensure precision down to the wei."
+msgstr ""
+
+#: ../../web3.main.rst:330
+msgid "Addresses"
+msgstr ""
+
+#: ../../web3.main.rst:334
+msgid "Returns ``True`` if the value is one of the recognized address formats."
+msgstr ""
+
+#: ../../web3.main.rst:336
+msgid "Allows for both ``0x`` prefixed and non-prefixed values."
+msgstr ""
+
+#: ../../web3.main.rst:337
+msgid ""
+"If the address contains mixed upper and lower cased characters this "
+"function also checks if the address checksum is valid according to "
+"`EIP55`_"
+msgstr ""
+
+#: ../../web3.main.rst:348
+msgid "Returns ``True`` if the value is a valid `EIP55`_ checksummed address"
+msgstr ""
+
+#: ../../web3.main.rst:361
+msgid "Returns the given address with an `EIP55`_ checksum."
+msgstr ""
+
+#: ../../web3.main.rst:375
+msgid "Cryptographic Hashing"
+msgstr ""
+
+#: ../../web3.main.rst:379
+msgid ""
+"Returns the Keccak-256 of the given value. Text is encoded to UTF-8 "
+"before computing the hash, just like Solidity. Any of the following are "
+"valid and equivalent:"
+msgstr ""
+
+#: ../../web3.main.rst:394
+msgid ""
+"Returns the Keccak-256 as it would be computed by the solidity ``keccak``"
+" function on a *packed* ABI encoding of the ``value`` list contents.  The"
+" ``abi_types`` argument should be a list of solidity type strings which "
+"correspond to each of the provided values."
+msgstr ""
+
+#: ../../web3.main.rst:418
+msgid "Comparable solidity usage:"
+msgstr ""
+
+#: ../../web3.main.rst:429
+msgid "Check Encodability"
+msgstr ""
+
+#: ../../web3.main.rst:433
+msgid ""
+"Returns ``True`` if a value can be encoded as the given type. Otherwise "
+"returns ``False``."
+msgstr ""
+
+#: ../../web3.main.rst:451
+msgid ""
+"Disable the stricter bytes type checking that is loaded by default. For "
+"more examples, see :ref:`disable-strict-byte-check`"
+msgstr ""
+
+#: ../../web3.main.rst:478
+msgid "RPC API Modules"
+msgstr ""
+
+#: ../../web3.main.rst:480
+msgid "Each ``Web3`` instance also exposes these namespaced API modules."
+msgstr ""
+
+#: ../../web3.main.rst:485
+msgid "See :doc:`./web3.eth`"
+msgstr ""
+
+#: ../../web3.main.rst:489
+msgid "See :doc:`./web3.geth`"
+msgstr ""
+
+#: ../../web3.main.rst:492
+msgid ""
+"These internal modules inherit from the ``web3.module.Module`` class "
+"which give them some configurations internal to the web3.py library."
+msgstr ""
+
+#: ../../web3.main.rst:497
+msgid "Custom Methods"
+msgstr ""
+
+#: ../../web3.main.rst:499
+msgid ""
+"You may add or overwrite methods within any module using the "
+"``attach_methods`` function. To create a property instead, set "
+"``is_property`` to ``True``."
+msgstr ""
+
+#: ../../web3.main.rst:517
+msgid "External Modules"
+msgstr ""
+
+#: ../../web3.main.rst:519
+msgid ""
+"External modules can be used to introduce custom or third-party APIs to "
+"your ``Web3`` instance. External modules are simply classes whose methods"
+" and properties can be made available within the ``Web3`` instance. "
+"Optionally, the external module may make use of the parent ``Web3`` "
+"instance by accepting it as the first argument within the ``__init__`` "
+"function:"
+msgstr ""
+
+#: ../../web3.main.rst:533
+msgid ""
+"Given the flexibility of external modules, use caution and only import "
+"modules from trusted third parties and open source code you've vetted!"
+msgstr ""
+
+#: ../../web3.main.rst:536
+msgid ""
+"Configuring external modules can occur either at instantiation of the "
+"``Web3`` instance or by making use of the ``attach_modules()`` method. To"
+" instantiate the ``Web3`` instance with external modules use the "
+"``external_modules`` keyword argument:"
+msgstr ""
+
+#: ../../web3.main.rst:574
+msgid ""
+"The ``attach_modules()`` method can be used to attach external modules "
+"after the ``Web3`` instance has been instantiated."
+msgstr ""
+
+#: ../../web3.main.rst:577
+msgid ""
+"Modules are attached via a `dict` with module names as the keys. The "
+"values can either be the module classes themselves, if there are no "
+"submodules, or two-item tuples with the module class as the 0th index and"
+" a similarly built `dict` containing the submodule information as the 1st"
+" index. This pattern may be repeated as necessary."
+msgstr ""

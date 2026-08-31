@@ -1,0 +1,1290 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>事件和日志 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="事件订阅" href="subscriptions.html" />
+    <link rel="prev" title="Contracts" href="web3.contract.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">事件和日志</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#filter-class">Filter Class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.Filter"><code class="docutils literal notranslate"><span class="pre">Filter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.Filter.filter_id"><code class="docutils literal notranslate"><span class="pre">Filter.filter_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.Filter.get_new_entries"><code class="docutils literal notranslate"><span class="pre">Filter.get_new_entries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.Filter.get_all_entries"><code class="docutils literal notranslate"><span class="pre">Filter.get_all_entries()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.Filter.format_entry"><code class="docutils literal notranslate"><span class="pre">Filter.format_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.Filter.is_valid_entry"><code class="docutils literal notranslate"><span class="pre">Filter.is_valid_entry()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#block-and-transaction-filter-classes">Block and Transaction Filter Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.BlockFilter"><code class="docutils literal notranslate"><span class="pre">BlockFilter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.TransactionFilter"><code class="docutils literal notranslate"><span class="pre">TransactionFilter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#event-log-filters">Event Log Filters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.LogFilter"><code class="docutils literal notranslate"><span class="pre">LogFilter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.utils.filters.LogFilter.set_data_filters"><code class="docutils literal notranslate"><span class="pre">LogFilter.set_data_filters()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#examples-listening-for-events">Examples: Listening For Events</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#synchronous">Synchronous</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asynchronous-filter-polling">Asynchronous Filter Polling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#single-threaded-concurrency-with-async-and-await">Single threaded concurrency with <code class="docutils literal notranslate"><span class="pre">async</span></code> and <code class="docutils literal notranslate"><span class="pre">await</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#running-the-event-loop-in-a-separate-thread">Running the event loop in a separate thread</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#advanced-example-fetching-all-token-transfer-events">Advanced example: Fetching all token transfer events</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eth-getlogs-limitations">eth_getLogs limitations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-code">Example code</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">事件和日志</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/filters.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="events-and-logs">
+<span id="filtering"></span><h1>事件和日志<a class="headerlink" href="#events-and-logs" title="Link to this heading"></a></h1>
+<p>If you're on this page, you're likely looking for an answer to this question:
+<strong>How do I know when a specific contract is used?</strong> You have several options:</p>
+<ol class="arabic simple">
+<li><p>Query blocks for transactions that include the contract address in the <code class="docutils literal notranslate"><span class="pre">&quot;to&quot;</span></code> field.
+This contrived example is searching the latest block for any transactions sent to the
+<a class="reference external" href="https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2#code">WETH</a> contract.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">WETH_ADDRESS</span> <span class="o">=</span> <span class="s1">&#39;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&#39;</span>
+
+<span class="n">block</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">tx_hash</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">transactions</span><span class="p">:</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tx</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">WETH_ADDRESS</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Found interaction with WETH contract! </span><span class="si">{</span><span class="n">tx</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Query for logs emitted by a contract. After instantiating a web3.py Contract object,
+you can <a class="reference internal" href="web3.contract.html#contract-get-logs"><span class="std std-ref">fetch logs</span></a> for any event listed in the ABI.  In this
+example, we query for <code class="docutils literal notranslate"><span class="pre">Transfer</span></code> events in the latest block and log out the results.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">WETH_ADDRESS</span> <span class="o">=</span> <span class="s1">&#39;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&#39;</span>
+<span class="n">WETH_ABI</span> <span class="o">=</span> <span class="s1">&#39;[{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;name&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;view&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;guy&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;wad&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;approve&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;bool&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;nonpayable&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;totalSupply&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;view&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;src&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;dst&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;wad&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;transferFrom&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;bool&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;nonpayable&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;wad&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;withdraw&quot;,&quot;outputs&quot;:[],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;nonpayable&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;decimals&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint8&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;view&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;balanceOf&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;view&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[],&quot;name&quot;:&quot;symbol&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;string&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;view&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[{&quot;name&quot;:&quot;dst&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;wad&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;transfer&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;bool&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;nonpayable&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:false,&quot;inputs&quot;:[],&quot;name&quot;:&quot;deposit&quot;,&quot;outputs&quot;:[],&quot;payable&quot;:true,&quot;stateMutability&quot;:&quot;payable&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;constant&quot;:true,&quot;inputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;address&quot;}],&quot;name&quot;:&quot;allowance&quot;,&quot;outputs&quot;:[{&quot;name&quot;:&quot;&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;payable&quot;:false,&quot;stateMutability&quot;:&quot;view&quot;,&quot;type&quot;:&quot;function&quot;},{&quot;payable&quot;:true,&quot;stateMutability&quot;:&quot;payable&quot;,&quot;type&quot;:&quot;fallback&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:true,&quot;name&quot;:&quot;src&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:true,&quot;name&quot;:&quot;guy&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;wad&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;Approval&quot;,&quot;type&quot;:&quot;event&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:true,&quot;name&quot;:&quot;src&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:true,&quot;name&quot;:&quot;dst&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;wad&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;Transfer&quot;,&quot;type&quot;:&quot;event&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:true,&quot;name&quot;:&quot;dst&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;wad&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;Deposit&quot;,&quot;type&quot;:&quot;event&quot;},{&quot;anonymous&quot;:false,&quot;inputs&quot;:[{&quot;indexed&quot;:true,&quot;name&quot;:&quot;src&quot;,&quot;type&quot;:&quot;address&quot;},{&quot;indexed&quot;:false,&quot;name&quot;:&quot;wad&quot;,&quot;type&quot;:&quot;uint256&quot;}],&quot;name&quot;:&quot;Withdrawal&quot;,&quot;type&quot;:&quot;event&quot;}]&#39;</span>
+
+<span class="n">weth_contract</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">WETH_ADDRESS</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="n">WETH_ABI</span><span class="p">)</span>
+
+<span class="c1"># fetch transfer events in the last block</span>
+<span class="n">logs</span> <span class="o">=</span> <span class="n">weth_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Transfer</span><span class="p">()</span><span class="o">.</span><span class="n">get_logs</span><span class="p">(</span><span class="n">from_block</span><span class="o">=</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">block_number</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">logs</span><span class="p">:</span>
+   <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Transfer of </span><span class="si">{</span><span class="n">w3</span><span class="o">.</span><span class="n">from_wei</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">wad</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ether&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> WETH from </span><span class="si">{</span><span class="n">log</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">src</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">log</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See an advanced example of fetching log history <a class="reference internal" href="#advanced-token-fetch"><span class="std std-ref">here</span></a>.</p>
+<ol class="arabic simple" start="3">
+<li><p>Subscribe to events for real-time updates. When using a persistent connection provider
+(<a class="reference internal" href="providers.html#web3.providers.persistent.WebSocketProvider" title="web3.providers.persistent.WebSocketProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProvider</span></code></a> or
+<a class="reference internal" href="providers.html#web3.providers.persistent.AsyncIPCProvider" title="web3.providers.persistent.AsyncIPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code></a>), the
+<a class="reference internal" href="web3.eth.html#web3.eth.Eth.subscribe" title="web3.eth.Eth.subscribe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">subscribe()</span></code></a> method can be used to establish a new
+event subscription. This example subscribes to <code class="docutils literal notranslate"><span class="pre">Transfer</span></code> events of the WETH contract.</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncWeb3</span><span class="p">,</span> <span class="n">WebSocketProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eth_abi.abi</span><span class="w"> </span><span class="kn">import</span> <span class="n">decode</span>
+
+<span class="n">WETH_ADDRESS</span> <span class="o">=</span> <span class="s2">&quot;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&quot;</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">subscribe_to_transfer_events</span><span class="p">():</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">w3</span><span class="p">:</span>
+        <span class="n">transfer_event_topic</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">keccak</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Transfer(address,address,uint256)&quot;</span><span class="p">)</span>
+        <span class="n">filter_params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="n">WETH_ADDRESS</span><span class="p">,</span>
+            <span class="s2">&quot;topics&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">transfer_event_topic</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="n">subscription_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">filter_params</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Subscribing to transfer events for WETH at </span><span class="si">{</span><span class="n">subscription_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">payload</span> <span class="ow">in</span> <span class="n">w3</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">process_subscriptions</span><span class="p">():</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;result&quot;</span><span class="p">]</span>
+
+            <span class="n">from_addr</span> <span class="o">=</span> <span class="n">decode</span><span class="p">([</span><span class="s2">&quot;address&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;topics&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">to_addr</span> <span class="o">=</span> <span class="n">decode</span><span class="p">([</span><span class="s2">&quot;address&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;topics&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">amount</span> <span class="o">=</span> <span class="n">decode</span><span class="p">([</span><span class="s2">&quot;uint256&quot;</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">w3</span><span class="o">.</span><span class="n">from_wei</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ether&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> WETH from </span><span class="si">{</span><span class="n">from_addr</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">to_addr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">subscribe_to_transfer_events</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>For more usage examples see the docs on <a class="reference internal" href="providers.html#subscription-examples"><span class="std std-ref">Using Persistent Connection Providers</span></a>.</p>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>Use a filter.</p></li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>While filters can be a very convenient way to monitor for blocks, transactions, or
+events, they are notoriously unreliable. Both remote and locally hosted nodes have
+a reputation for occasionally dropping filters, and some remote node providers don't
+support filter-related RPC calls at all.</p>
+</div>
+<p id="module-web3.utils.filters">The <a class="reference internal" href="web3.eth.html#web3.eth.Eth.filter" title="web3.eth.Eth.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.Eth.filter()</span></code></a> method can be used to set up filters for:</p>
+<ul>
+<li><p>Pending Transactions: <code class="docutils literal notranslate"><span class="pre">w3.eth.filter(&quot;pending&quot;)</span></code></p></li>
+<li><p>New Blocks <code class="docutils literal notranslate"><span class="pre">w3.eth.filter(&quot;latest&quot;)</span></code></p></li>
+<li><p>Event Logs</p>
+<blockquote>
+<div><p>Through the contract instance api:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">event_filter</span> <span class="o">=</span> <span class="n">my_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">myEvent</span><span class="o">.</span><span class="n">create_filter</span><span class="p">(</span><span class="n">from_block</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">,</span> <span class="n">argument_filters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;arg1&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Or built manually by supplying <a class="reference external" href="https://github.com/ethereum/execution-apis/blob/bea0266c42919a2fb3ee524fb91e624a23bc17c5/src/schemas/filter.json#L28">valid filter params</a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">event_filter</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">({</span><span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="n">contract_address</span><span class="p">})</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Attaching to an existing filter</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">existing_filter</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">filter_id</span><span class="o">=</span><span class="s2">&quot;0x0&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Creating event filters requires that your Ethereum node has an API support enabled for filters.
+Note that Infura support for filters does not offer access to <cite>pending</cite> filters.
+To get event logs on other stateless nodes please see <code class="xref py py-class docutils literal notranslate"><span class="pre">web3.contract.ContractEvents</span></code>.</p>
+</div>
+<section id="filter-class">
+<h2>Filter Class<a class="headerlink" href="#filter-class" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.utils.filters.Filter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.utils.filters.</span></span><span class="sig-name descname"><span class="pre">Filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">web3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.utils.filters.Filter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.utils.filters.Filter.filter_id">
+<span class="sig-prename descclassname"><span class="pre">Filter.</span></span><span class="sig-name descname"><span class="pre">filter_id</span></span><a class="headerlink" href="#web3.utils.filters.Filter.filter_id" title="Link to this definition"></a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">filter_id</span></code> for this filter as returned by the <code class="docutils literal notranslate"><span class="pre">eth_newFilter</span></code> RPC
+method when this filter was created.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.utils.filters.Filter.get_new_entries">
+<span class="sig-prename descclassname"><span class="pre">Filter.</span></span><span class="sig-name descname"><span class="pre">get_new_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.utils.filters.Filter.get_new_entries" title="Link to this definition"></a></dt>
+<dd><p>Retrieve new entries for this filter.</p>
+<p>Logs will be retrieved using the
+<a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_filter_changes" title="web3.eth.Eth.get_filter_changes"><code class="xref py py-func docutils literal notranslate"><span class="pre">web3.eth.Eth.get_filter_changes()</span></code></a> which returns only new entries since the last
+poll.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.utils.filters.Filter.get_all_entries">
+<span class="sig-prename descclassname"><span class="pre">Filter.</span></span><span class="sig-name descname"><span class="pre">get_all_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.utils.filters.Filter.get_all_entries" title="Link to this definition"></a></dt>
+<dd><p>Retrieve all entries for this filter.</p>
+<p>Logs will be retrieved using the
+<a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_filter_logs" title="web3.eth.Eth.get_filter_logs"><code class="xref py py-func docutils literal notranslate"><span class="pre">web3.eth.Eth.get_filter_logs()</span></code></a> which returns all entries that match the given
+filter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.utils.filters.Filter.format_entry">
+<span class="sig-prename descclassname"><span class="pre">Filter.</span></span><span class="sig-name descname"><span class="pre">format_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.utils.filters.Filter.format_entry" title="Link to this definition"></a></dt>
+<dd><p>Hook for subclasses to modify the format of the log entries this filter
+returns, or passes to its callback functions.</p>
+<p>By default this returns the <code class="docutils literal notranslate"><span class="pre">entry</span></code> parameter unmodified.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.utils.filters.Filter.is_valid_entry">
+<span class="sig-prename descclassname"><span class="pre">Filter.</span></span><span class="sig-name descname"><span class="pre">is_valid_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.utils.filters.Filter.is_valid_entry" title="Link to this definition"></a></dt>
+<dd><p>Hook for subclasses to add additional programmatic filtering.  The default
+implementation always returns <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd></dl>
+
+</section>
+<section id="block-and-transaction-filter-classes">
+<h2>Block and Transaction Filter Classes<a class="headerlink" href="#block-and-transaction-filter-classes" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.utils.filters.BlockFilter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.utils.filters.</span></span><span class="sig-name descname"><span class="pre">BlockFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.utils.filters.BlockFilter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p><code class="docutils literal notranslate"><span class="pre">BlockFilter</span></code> is a subclass of <a class="reference internal" href="#web3.utils.filters.Filter" title="web3.utils.filters.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a>.</p>
+<p>You can setup a filter for new blocks using <code class="docutils literal notranslate"><span class="pre">web3.eth.filter('latest')</span></code> which
+will return a new <a class="reference internal" href="#web3.utils.filters.BlockFilter" title="web3.utils.filters.BlockFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">BlockFilter</span></code></a> object.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">new_block_filter</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+<span class="n">new_block_filter</span><span class="o">.</span><span class="n">get_new_entries</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;safe&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;finalized&quot;</span></code> block identifiers are not yet supported for
+<code class="docutils literal notranslate"><span class="pre">eth_newBlockFilter</span></code>.</p>
+</div>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.utils.filters.TransactionFilter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.utils.filters.</span></span><span class="sig-name descname"><span class="pre">TransactionFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">...</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.utils.filters.TransactionFilter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p><code class="docutils literal notranslate"><span class="pre">TransactionFilter</span></code> is a subclass of <a class="reference internal" href="#web3.utils.filters.Filter" title="web3.utils.filters.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a>.</p>
+<p>You can setup a filter for new blocks using <code class="docutils literal notranslate"><span class="pre">web3.eth.filter('pending')</span></code> which
+will return a new <a class="reference internal" href="#web3.utils.filters.TransactionFilter" title="web3.utils.filters.TransactionFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransactionFilter</span></code></a> object.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">new_transaction_filter</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">)</span>
+<span class="n">new_transaction_filter</span><span class="o">.</span><span class="n">get_new_entries</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="event-log-filters">
+<h2>Event Log Filters<a class="headerlink" href="#event-log-filters" title="Link to this heading"></a></h2>
+<p>You can set up a filter for event logs using the web3.py contract api:
+<a class="reference internal" href="web3.contract.html#web3.contract.Contract.events.your_event_name.create_filter" title="web3.contract.Contract.events.your_event_name.create_filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.contract.Contract.events.your_event_name.create_filter()</span></code></a>, which provides some conveniences for
+creating event log filters. Refer to the following example:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">event_filter</span> <span class="o">=</span> <span class="n">my_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.&lt;</span><span class="n">event_name</span><span class="o">&gt;.</span><span class="n">create_filter</span><span class="p">(</span><span class="n">from_block</span><span class="o">=</span><span class="s2">&quot;latest&quot;</span><span class="p">,</span> <span class="n">argument_filters</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;arg1&#39;</span><span class="p">:</span><span class="mi">10</span><span class="p">})</span>
+<span class="n">event_filter</span><span class="o">.</span><span class="n">get_new_entries</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>See <a class="reference internal" href="web3.contract.html#web3.contract.Contract.events.your_event_name.create_filter" title="web3.contract.Contract.events.your_event_name.create_filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.contract.Contract.events.your_event_name.create_filter()</span></code></a> documentation for more information.</p>
+<p>You can set up an event log filter like the one above with <code class="docutils literal notranslate"><span class="pre">web3.eth.filter</span></code> by supplying a
+dictionary containing the standard filter parameters. Assuming that <code class="docutils literal notranslate"><span class="pre">arg1</span></code> is indexed, the
+equivalent filter creation would look like:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">event_signature_hash</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">keccak</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;eventName(uint32)&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>
+<span class="n">event_filter</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">({</span>
+    <span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="n">myContract_address</span><span class="p">,</span>
+    <span class="s2">&quot;topics&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">event_signature_hash</span><span class="p">,</span>
+               <span class="s2">&quot;0x000000000000000000000000000000000000000000000000000000000000000a&quot;</span><span class="p">],</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">topics</span></code> argument is order-dependent. For non-anonymous events, the first item in the topic list is always the keccack hash of the event signature. Subsequent topic items are the hex encoded values for indexed event arguments. In the above example, the second item is the <code class="docutils literal notranslate"><span class="pre">arg1</span></code> value <code class="docutils literal notranslate"><span class="pre">10</span></code> encoded to its hex string representation.</p>
+<p>In addition to being order-dependent, there are a few more points to recognize when specifying topic filters:</p>
+<blockquote>
+<div><p>Given a transaction log with topics [A, B], the following topic filters will yield a match:</p>
+<ul class="simple">
+<li><p>[] &quot;anything&quot;</p></li>
+<li><p>[A] &quot;A in first position (and anything after)&quot;</p></li>
+<li><p>[None, B] &quot;anything in first position AND B in second position (and anything after)&quot;</p></li>
+<li><p>[A, B] &quot;A in first position AND B in second position (and anything after)&quot;</p></li>
+<li><p>[[A, B], [A, B]] &quot;(A OR B) in first position AND (A OR B) in second position (and anything after)&quot;</p></li>
+</ul>
+</div></blockquote>
+<p>See the JSON-RPC documentation for <a class="reference external" href="https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_newfilter">eth_newFilter</a> more information on the standard filter parameters.</p>
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Though <code class="docutils literal notranslate"><span class="pre">&quot;finalized&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;safe&quot;</span></code> block identifiers are not yet part of the
+specifications for <code class="docutils literal notranslate"><span class="pre">eth_newFilter</span></code>, they are supported by web3.py and may or
+may not yield expected results depending on the node being accessed.</p>
+</div>
+</div></blockquote>
+<p>Creating a log filter by either of the above methods will return a <a class="reference internal" href="#web3.utils.filters.LogFilter" title="web3.utils.filters.LogFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogFilter</span></code></a> instance.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.utils.filters.LogFilter">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.utils.filters.</span></span><span class="sig-name descname"><span class="pre">LogFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">web3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_entry_formatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_filter_set</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.utils.filters.LogFilter" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>The <a class="reference internal" href="#web3.utils.filters.LogFilter" title="web3.utils.filters.LogFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogFilter</span></code></a> class is a subclass of <a class="reference internal" href="#web3.utils.filters.Filter" title="web3.utils.filters.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a>.  See the <a class="reference internal" href="#web3.utils.filters.Filter" title="web3.utils.filters.Filter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></a>
+documentation for inherited methods.</p>
+<p><a class="reference internal" href="#web3.utils.filters.LogFilter" title="web3.utils.filters.LogFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">LogFilter</span></code></a> provides the following additional
+methods:</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.utils.filters.LogFilter.set_data_filters">
+<span class="sig-prename descclassname"><span class="pre">LogFilter.</span></span><span class="sig-name descname"><span class="pre">set_data_filters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_filter_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.utils.filters.LogFilter.set_data_filters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>Provides a means to filter on the log data, in other words the ability to filter on values from
+un-indexed event arguments. The parameter <code class="docutils literal notranslate"><span class="pre">data_filter_set</span></code> should be a list or set of 32-byte hex encoded values.</p>
+</section>
+<section id="examples-listening-for-events">
+<h2>Examples: Listening For Events<a class="headerlink" href="#examples-listening-for-events" title="Link to this heading"></a></h2>
+<section id="synchronous">
+<h3>Synchronous<a class="headerlink" href="#synchronous" title="Link to this heading"></a></h3>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">IPCProvider</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="c1"># instantiate Web3 instance</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">IPCProvider</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">log_loop</span><span class="p">(</span><span class="n">event_filter</span><span class="p">,</span> <span class="n">poll_interval</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">event_filter</span><span class="o">.</span><span class="n">get_new_entries</span><span class="p">():</span>
+            <span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">poll_interval</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">block_filter</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+    <span class="n">log_loop</span><span class="p">(</span><span class="n">block_filter</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="asynchronous-filter-polling">
+<span id="asynchronous-filters"></span><h3>Asynchronous Filter Polling<a class="headerlink" href="#asynchronous-filter-polling" title="Link to this heading"></a></h3>
+<p>Starting with web3 version 4, the <code class="docutils literal notranslate"><span class="pre">watch</span></code> method was taken out of the web3 filter objects.
+There are many decisions to be made when designing a system regarding threading and concurrency.
+Rather than force a decision, web3 leaves these choices up to the user. Below are some example
+implementations of asynchronous filter-event handling that can serve as starting points.</p>
+<section id="single-threaded-concurrency-with-async-and-await">
+<h4>Single threaded concurrency with <code class="docutils literal notranslate"><span class="pre">async</span></code> and <code class="docutils literal notranslate"><span class="pre">await</span></code><a class="headerlink" href="#single-threaded-concurrency-with-async-and-await" title="Link to this heading"></a></h4>
+<p>Beginning in python 3.5, the <code class="docutils literal notranslate"><span class="pre">async</span></code> and <code class="docutils literal notranslate"><span class="pre">await</span></code> built-in keywords were added.  These provide a
+shared api for coroutines that can be utilized by modules such as the built-in <a class="reference external" href="https://docs.python.org/3/library/asyncio.html">asyncio</a>.  Below is
+an example event loop using <a class="reference external" href="https://docs.python.org/3/library/asyncio.html">asyncio</a>, that polls multiple web3 filter object, and passes new
+entries to a handler.</p>
+<blockquote>
+<div><blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">IPCProvider</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="c1"># instantiate Web3 instance</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">IPCProvider</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+    <span class="c1"># and whatever</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">log_loop</span><span class="p">(</span><span class="n">event_filter</span><span class="p">,</span> <span class="n">poll_interval</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">event_filter</span><span class="o">.</span><span class="n">get_new_entries</span><span class="p">():</span>
+            <span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">poll_interval</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">block_filter</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+    <span class="n">tx_filter</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">)</span>
+    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">loop</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+                <span class="n">log_loop</span><span class="p">(</span><span class="n">block_filter</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">log_loop</span><span class="p">(</span><span class="n">tx_filter</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">loop</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Read the <a class="reference external" href="https://docs.python.org/3/library/asyncio.html">asyncio</a> documentation for more information.</p>
+</div></blockquote>
+</section>
+<section id="running-the-event-loop-in-a-separate-thread">
+<h4>Running the event loop in a separate thread<a class="headerlink" href="#running-the-event-loop-in-a-separate-thread" title="Link to this heading"></a></h4>
+<p>Here is an extended version of above example, where the event loop is run in a separate thread,
+releasing the <code class="docutils literal notranslate"><span class="pre">main</span></code> function for other tasks.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">IPCProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">threading</span><span class="w"> </span><span class="kn">import</span> <span class="n">Thread</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="c1"># instantiate Web3 instance</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">IPCProvider</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+    <span class="c1"># and whatever</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">log_loop</span><span class="p">(</span><span class="n">event_filter</span><span class="p">,</span> <span class="n">poll_interval</span><span class="p">):</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">event_filter</span><span class="o">.</span><span class="n">get_new_entries</span><span class="p">():</span>
+            <span class="n">handle_event</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">poll_interval</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">block_filter</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+    <span class="n">worker</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">log_loop</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">block_filter</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">worker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="c1"># .. do some other stuff</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Here are some other libraries that provide frameworks for writing asynchronous python:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://www.gevent.org/">gevent</a></p></li>
+<li><p><a class="reference external" href="https://twistedmatrix.com/">twisted</a></p></li>
+<li><p><a class="reference external" href="https://www.celeryproject.org/">celery</a></p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<section id="advanced-example-fetching-all-token-transfer-events">
+<span id="advanced-token-fetch"></span><h3>Advanced example: Fetching all token transfer events<a class="headerlink" href="#advanced-example-fetching-all-token-transfer-events" title="Link to this heading"></a></h3>
+<p>In this example, we show how to fetch all events of a certain event type from the Ethereum blockchain. There are three challenges when working with a large set of events:</p>
+<ul class="simple">
+<li><p>How to incrementally update an existing database of fetched events</p></li>
+<li><p>How to deal with interruptions in long running processes</p></li>
+<li><p>How to deal with <cite>eth_getLogs</cite> JSON-RPC call query limitations</p></li>
+<li><p>How to handle Ethereum minor chain reorganisations in (near) real-time data</p></li>
+</ul>
+<section id="eth-getlogs-limitations">
+<h4>eth_getLogs limitations<a class="headerlink" href="#eth-getlogs-limitations" title="Link to this heading"></a></h4>
+<p>Ethereum JSON-RPC API servers, like Geth, do not provide an easy way to paginate over events, only over blocks. There's no request that can find the first block with an event or how many events occur within a range of blocks. The only feedback the JSON-RPC service will give you is whether the <code class="docutils literal notranslate"><span class="pre">eth_getLogs</span></code> call failed.</p>
+<p>In this example script, we provide two kinds of heuristics to deal with this issue. The script scans events in a chunk of blocks (start block number - end block number). Then it uses two methods to find how many events there are likely to be in a block window:</p>
+<ul class="simple">
+<li><p>Dynamically set the block range window size, while never exceeding a threshold (e.g., 10,000 blocks).</p></li>
+<li><p>In the case of <code class="docutils literal notranslate"><span class="pre">eth_getLogs</span></code>, the JSON-RPC call gives a timeout error, decrease the end block number and tries again with a smaller block range window.</p></li>
+</ul>
+</section>
+<section id="example-code">
+<h4>Example code<a class="headerlink" href="#example-code" title="Link to this heading"></a></h4>
+<p>The following example code is divided into a reusable <code class="docutils literal notranslate"><span class="pre">EventScanner</span></code> class and then a demo script that:</p>
+<ul class="simple">
+<li><p>fetches all transfer events for <a class="reference external" href="https://etherscan.io/token/0x9b6443b0fb9c241a7fdac375595cea13e6b7807a">RCC token</a>,</p></li>
+<li><p>can incrementally run again to check if there are new events,</p></li>
+<li><p>handles interruptions (e.g., CTRL+C abort) gracefully,</p></li>
+<li><p>writes all <code class="docutils literal notranslate"><span class="pre">Transfer</span></code> events in a single file JSON database, so that other process can consume them,</p></li>
+<li><p>uses the <a class="reference external" href="https://pypi.org/project/tqdm/">tqdm</a> library for progress bar output in a console,</p></li>
+<li><p>only supports <code class="docutils literal notranslate"><span class="pre">HTTPS</span></code> providers, because JSON-RPC retry logic depends on the implementation details of the underlying protocol,</p></li>
+<li><p>disables the default exception retry configuration because it does not know how to handle the shrinking block range window for <code class="docutils literal notranslate"><span class="pre">eth_getLogs</span></code>, and</p></li>
+<li><p>consumes around 20k JSON-RPC API calls.</p></li>
+</ul>
+<p>The script can be run with: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">./eventscanner.py</span> <span class="pre">&lt;your</span> <span class="pre">JSON-RPC</span> <span class="pre">API</span> <span class="pre">URL&gt;</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;A stateful event scanner for Ethereum-based blockchains using web3.py.</span>
+
+<span class="sd">With the stateful mechanism, you can do one batch scan or incremental scans,</span>
+<span class="sd">where events are added wherever the scanner left off.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.contract</span><span class="w"> </span><span class="kn">import</span> <span class="n">Contract</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.datastructures</span><span class="w"> </span><span class="kn">import</span> <span class="n">AttributeDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">BlockNotFound</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">eth_abi.codec</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABICodec</span>
+
+<span class="c1"># Currently this method is not exposed over official web3 API,</span>
+<span class="c1"># but we need it to construct eth_getLogs parameters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3._utils.filters</span><span class="w"> </span><span class="kn">import</span> <span class="n">construct_event_filter_params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3._utils.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_event_data</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EventScannerState</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Application state that remembers what blocks we have scanned in the case of crash.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_last_scanned_block</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of the last block we have scanned on the previous cycle.</span>
+
+<span class="sd">        :return: 0 if no blocks scanned yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scanner is about to ask data of multiple blocks over JSON-RPC.</span>
+
+<span class="sd">        Start a database session if needed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">end_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Scanner finished a number of blocks.</span>
+
+<span class="sd">        Persistent any data in your state now.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_when</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">AttributeDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process incoming events.</span>
+
+<span class="sd">        This function takes raw events from Web3, transforms them to your application internal</span>
+<span class="sd">        format, then saves them in a database or some other state.</span>
+
+<span class="sd">        :param block_when: When this block was mined</span>
+
+<span class="sd">        :param event: Symbolic dictionary of the event data</span>
+
+<span class="sd">        :return: Internal state structure that is the result of event transformation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">since_block</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete any data since this block was scanned.</span>
+
+<span class="sd">        Purges any potential minor reorg data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EventScanner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scan blockchain for events and try not to abuse JSON-RPC API too much.</span>
+
+<span class="sd">    Can be used for real-time scans, as it detects minor chain reorganisation and rescans.</span>
+<span class="sd">    Unlike the easy web3.contract.Contract, this scanner can scan events from multiple contracts at once.</span>
+<span class="sd">    For example, you can get all transfers from all tokens in the same scan.</span>
+
+<span class="sd">    You *should* disable the default ``exception_retry_configuration`` on your provider for Web3,</span>
+<span class="sd">    because it cannot correctly throttle and decrease the `eth_getLogs` block number range.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w3</span><span class="p">:</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">contract</span><span class="p">:</span> <span class="n">Contract</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">EventScannerState</span><span class="p">,</span> <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">filters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+                 <span class="n">max_chunk_scan_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">max_request_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">request_retry_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param contract: Contract</span>
+<span class="sd">        :param events: List of web3 Event we scan</span>
+<span class="sd">        :param filters: Filters passed to get_logs</span>
+<span class="sd">        :param max_chunk_scan_size: JSON-RPC API limit in the number of blocks we query. (Recommendation: 10,000 for mainnet, 500,000 for testnets)</span>
+<span class="sd">        :param max_request_retries: How many times we try to reattempt a failed JSON-RPC call</span>
+<span class="sd">        :param request_retry_seconds: Delay between failed requests to let JSON-RPC server to recover</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">contract</span> <span class="o">=</span> <span class="n">contract</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w3</span> <span class="o">=</span> <span class="n">w3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filters</span> <span class="o">=</span> <span class="n">filters</span>
+
+        <span class="c1"># Our JSON-RPC throttling parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_scan_chunk_size</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># 12 s/block = 120 seconds period</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_scan_chunk_size</span> <span class="o">=</span> <span class="n">max_chunk_scan_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_request_retries</span> <span class="o">=</span> <span class="n">max_request_retries</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_retry_seconds</span> <span class="o">=</span> <span class="n">request_retry_seconds</span>
+
+        <span class="c1"># Factor how fast we increase the chunk size if results are found</span>
+        <span class="c1"># # (slow down scan after starting to get hits)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size_decrease</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+        <span class="c1"># Factor how fast we increase chunk size if no results are found</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size_increase</span> <span class="o">=</span> <span class="mf">2.0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_address</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_block_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_num</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get Ethereum block timestamp&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">block_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="n">block_num</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">BlockNotFound</span><span class="p">:</span>
+            <span class="c1"># Block was not mined yet,</span>
+            <span class="c1"># minor chain reorganisation?</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">last_time</span> <span class="o">=</span> <span class="n">block_info</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="n">last_time</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_suggested_scan_start_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get where we should start to scan for new token events.</span>
+
+<span class="sd">        If there are no prior scans, start from block 1.</span>
+<span class="sd">        Otherwise, start from the last end block minus ten blocks.</span>
+<span class="sd">        We rescan the last ten scanned blocks in the case there were forks to avoid</span>
+<span class="sd">        misaccounting due to minor single block works (happens once in an hour in Ethereum).</span>
+<span class="sd">        These heuristics could be made more robust, but this is for the sake of simple reference implementation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">end_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_last_scanned_block</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">end_block</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">end_block</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">NUM_BLOCKS_RESCAN_FOR_FORKS</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_suggested_scan_end_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the last mined block on Ethereum chain we are following.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Do not scan all the way to the final block, as this</span>
+        <span class="c1"># block might not be mined yet</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">block_number</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_last_scanned_block</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">get_last_scanned_block</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_potentially_forked_block_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">after_block</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Purge old data in the case of blockchain reorganisation.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">delete_data</span><span class="p">(</span><span class="n">after_block</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">scan_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_block</span><span class="p">,</span> <span class="n">end_block</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read and process events between to block numbers.</span>
+
+<span class="sd">        Dynamically decrease the size of the chunk if the case JSON-RPC server pukes out.</span>
+
+<span class="sd">        :return: tuple(actual end block number, when this block was mined, processed events)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">block_timestamps</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">get_block_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_block_timestamp</span>
+
+        <span class="c1"># Cache block timestamps to reduce some RPC overhead</span>
+        <span class="c1"># Real solution might include smarter models around block</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_block_when</span><span class="p">(</span><span class="n">block_num</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">block_num</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">block_timestamps</span><span class="p">:</span>
+                <span class="n">block_timestamps</span><span class="p">[</span><span class="n">block_num</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_block_timestamp</span><span class="p">(</span><span class="n">block_num</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">block_timestamps</span><span class="p">[</span><span class="n">block_num</span><span class="p">]</span>
+
+        <span class="n">all_processed</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">event_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+
+            <span class="c1"># Callable that takes care of the underlying web3 call</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_fetch_events</span><span class="p">(</span><span class="n">_start_block</span><span class="p">,</span> <span class="n">_end_block</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">_fetch_events_for_all_contracts</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w3</span><span class="p">,</span>
+                                                       <span class="n">event_type</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">filters</span><span class="p">,</span>
+                                                       <span class="n">from_block</span><span class="o">=</span><span class="n">_start_block</span><span class="p">,</span>
+                                                       <span class="n">to_block</span><span class="o">=</span><span class="n">_end_block</span><span class="p">)</span>
+
+            <span class="c1"># Do `n` retries on `eth_getLogs`,</span>
+            <span class="c1"># throttle down block range if needed</span>
+            <span class="n">end_block</span><span class="p">,</span> <span class="n">events</span> <span class="o">=</span> <span class="n">_retry_web3_call</span><span class="p">(</span>
+                <span class="n">_fetch_events</span><span class="p">,</span>
+                <span class="n">start_block</span><span class="o">=</span><span class="n">start_block</span><span class="p">,</span>
+                <span class="n">end_block</span><span class="o">=</span><span class="n">end_block</span><span class="p">,</span>
+                <span class="n">retries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_request_retries</span><span class="p">,</span>
+                <span class="n">delay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request_retry_seconds</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">evt</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">evt</span><span class="p">[</span><span class="s2">&quot;logIndex&quot;</span><span class="p">]</span>  <span class="c1"># Integer of the log index position in the block, null when its pending</span>
+
+                <span class="c1"># We cannot avoid minor chain reorganisations, but</span>
+                <span class="c1"># at least we must avoid blocks that are not mined yet</span>
+                <span class="k">assert</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Somehow tried to scan a pending block&quot;</span>
+
+                <span class="n">block_number</span> <span class="o">=</span> <span class="n">evt</span><span class="p">[</span><span class="s2">&quot;blockNumber&quot;</span><span class="p">]</span>
+
+                <span class="c1"># Get UTC time when this event happened (block mined timestamp)</span>
+                <span class="c1"># from our in-memory cache</span>
+                <span class="n">block_when</span> <span class="o">=</span> <span class="n">get_block_when</span><span class="p">(</span><span class="n">block_number</span><span class="p">)</span>
+
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Processing event </span><span class="si">%s</span><span class="s2">, block: </span><span class="si">%s</span><span class="s2"> count: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">evt</span><span class="p">[</span><span class="s1">&#39;event&#39;</span><span class="p">],</span> <span class="n">block_number</span><span class="p">,</span> <span class="n">block_number</span><span class="p">)</span>
+                <span class="n">processed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">process_event</span><span class="p">(</span><span class="n">block_when</span><span class="p">,</span> <span class="n">evt</span><span class="p">)</span>
+                <span class="n">all_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">processed</span><span class="p">)</span>
+
+        <span class="n">end_block_timestamp</span> <span class="o">=</span> <span class="n">get_block_when</span><span class="p">(</span><span class="n">end_block</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">end_block</span><span class="p">,</span> <span class="n">end_block_timestamp</span><span class="p">,</span> <span class="n">all_processed</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">estimate_next_chunk_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_chuck_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">event_found_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Try to figure out optimal chunk size</span>
+
+<span class="sd">        Our scanner might need to scan the whole blockchain for all events</span>
+
+<span class="sd">        * We want to minimize API calls over empty blocks</span>
+
+<span class="sd">        * We want to make sure that one scan chunk does not try to process too many entries once, as we try to control commit buffer size and potentially asynchronous busy loop</span>
+
+<span class="sd">        * Do not overload node serving JSON-RPC API by asking data for too many events at a time</span>
+
+<span class="sd">        Currently Ethereum JSON-API does not have an API to tell when a first event occurred in a blockchain</span>
+<span class="sd">        and our heuristics try to accelerate block fetching (chunk size) until we see the first event.</span>
+
+<span class="sd">        These heuristics exponentially increase the scan chunk size depending on if we are seeing events or not.</span>
+<span class="sd">        When any transfers are encountered, we are back to scanning only a few blocks at a time.</span>
+<span class="sd">        It does not make sense to do a full chain scan starting from block 1, doing one JSON-RPC call per 20 blocks.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">event_found_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># When we encounter first events, reset the chunk size window</span>
+            <span class="n">current_chuck_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_scan_chunk_size</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_chuck_size</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size_increase</span>
+
+        <span class="n">current_chuck_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_scan_chunk_size</span><span class="p">,</span> <span class="n">current_chuck_size</span><span class="p">)</span>
+        <span class="n">current_chuck_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_scan_chunk_size</span><span class="p">,</span> <span class="n">current_chuck_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">current_chuck_size</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_block</span><span class="p">,</span> <span class="n">end_block</span><span class="p">,</span> <span class="n">start_chunk_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
+        <span class="nb">list</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Perform a token balances scan.</span>
+
+<span class="sd">        Assumes all balances in the database are valid before start_block (no forks sneaked in).</span>
+
+<span class="sd">        :param start_block: The first block included in the scan</span>
+
+<span class="sd">        :param end_block: The last block included in the scan</span>
+
+<span class="sd">        :param start_chunk_size: How many blocks we try to fetch over JSON-RPC on the first attempt</span>
+
+<span class="sd">        :param progress_callback: If this is an UI application, update the progress of the scan</span>
+
+<span class="sd">        :return: [All processed events, number of chunks used]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">start_block</span> <span class="o">&lt;=</span> <span class="n">end_block</span>
+
+        <span class="n">current_block</span> <span class="o">=</span> <span class="n">start_block</span>
+
+        <span class="c1"># Scan in chunks, commit between</span>
+        <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">start_chunk_size</span>
+        <span class="n">last_scan_duration</span> <span class="o">=</span> <span class="n">last_logs_found</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_chunks_scanned</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># All processed entries we got on this scan cycle</span>
+        <span class="n">all_processed</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">while</span> <span class="n">current_block</span> <span class="o">&lt;=</span> <span class="n">end_block</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">start_chunk</span><span class="p">(</span><span class="n">current_block</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">)</span>
+
+            <span class="c1"># Print some diagnostics to logs to try to fiddle with real world JSON-RPC API performance</span>
+            <span class="n">estimated_end_block</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">current_block</span> <span class="o">+</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">end_block</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;Scanning token transfers for blocks: </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">, chunk size </span><span class="si">%s</span><span class="s2">, last chunk scan took </span><span class="si">%s</span><span class="s2">, last logs found </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">current_block</span><span class="p">,</span> <span class="n">estimated_end_block</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">last_scan_duration</span><span class="p">,</span> <span class="n">last_logs_found</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">actual_end_block</span><span class="p">,</span> <span class="n">end_block_timestamp</span><span class="p">,</span> <span class="n">new_entries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_chunk</span><span class="p">(</span><span class="n">current_block</span><span class="p">,</span> <span class="n">estimated_end_block</span><span class="p">)</span>
+
+            <span class="c1"># Where does our current chunk scan ends - are we out of chain yet?</span>
+            <span class="n">current_end</span> <span class="o">=</span> <span class="n">actual_end_block</span>
+
+            <span class="n">last_scan_duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+            <span class="n">all_processed</span> <span class="o">+=</span> <span class="n">new_entries</span>
+
+            <span class="c1"># Print progress bar</span>
+            <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
+                <span class="n">progress_callback</span><span class="p">(</span><span class="n">start_block</span><span class="p">,</span> <span class="n">end_block</span><span class="p">,</span> <span class="n">current_block</span><span class="p">,</span> <span class="n">end_block_timestamp</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_entries</span><span class="p">))</span>
+
+            <span class="c1"># Try to guess how many blocks to fetch over `eth_getLogs` API next time</span>
+            <span class="n">chunk_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimate_next_chunk_size</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_entries</span><span class="p">))</span>
+
+            <span class="c1"># Set where the next chunk starts</span>
+            <span class="n">current_block</span> <span class="o">=</span> <span class="n">current_end</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">total_chunks_scanned</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">end_chunk</span><span class="p">(</span><span class="n">current_end</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">all_processed</span><span class="p">,</span> <span class="n">total_chunks_scanned</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_retry_web3_call</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">start_block</span><span class="p">,</span> <span class="n">end_block</span><span class="p">,</span> <span class="n">retries</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A custom retry loop to throttle down block range.</span>
+
+<span class="sd">    If our JSON-RPC server cannot serve all incoming `eth_getLogs` in a single request,</span>
+<span class="sd">    we retry and throttle down block range for every retry.</span>
+
+<span class="sd">    For example, Go Ethereum does not indicate what is an acceptable response size.</span>
+<span class="sd">    It just fails on the server-side with a &quot;context was cancelled&quot; warning.</span>
+
+<span class="sd">    :param func: A callable that triggers Ethereum JSON-RPC, as func(start_block, end_block)</span>
+<span class="sd">    :param start_block: The initial start block of the block range</span>
+<span class="sd">    :param end_block: The initial start block of the block range</span>
+<span class="sd">    :param retries: How many times we retry</span>
+<span class="sd">    :param delay: Time to sleep between retries</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">retries</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">end_block</span><span class="p">,</span> <span class="n">func</span><span class="p">(</span><span class="n">start_block</span><span class="p">,</span> <span class="n">end_block</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Assume this is HTTPConnectionPool(host=&#39;localhost&#39;, port=8545): Read timed out. (read timeout=10)</span>
+            <span class="c1"># from Go Ethereum. This translates to the error &quot;context was cancelled&quot; on the server side:</span>
+            <span class="c1"># https://github.com/ethereum/go-ethereum/issues/20426</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">retries</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Give some more verbose info than the default middleware</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;Retrying events for block range </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) failed with </span><span class="si">%s</span><span class="s2"> , retrying in </span><span class="si">%s</span><span class="s2"> seconds&quot;</span><span class="p">,</span>
+                    <span class="n">start_block</span><span class="p">,</span> <span class="n">end_block</span><span class="p">,</span> <span class="n">end_block</span><span class="o">-</span><span class="n">start_block</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># Decrease the `eth_getBlocks` range</span>
+                <span class="n">end_block</span> <span class="o">=</span> <span class="n">start_block</span> <span class="o">+</span> <span class="p">((</span><span class="n">end_block</span> <span class="o">-</span> <span class="n">start_block</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="c1"># Let the JSON-RPC to recover e.g. from restart</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Out of retries&quot;</span><span class="p">)</span>
+                <span class="k">raise</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fetch_events_for_all_contracts</span><span class="p">(</span>
+        <span class="n">w3</span><span class="p">,</span>
+        <span class="n">event</span><span class="p">,</span>
+        <span class="n">argument_filters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">from_block</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">to_block</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get events using eth_getLogs API.</span>
+
+<span class="sd">    This method is detached from any contract instance.</span>
+
+<span class="sd">    This is a stateless method, as opposed to create_filter.</span>
+<span class="sd">    It can be safely called against nodes which do not provide `eth_newFilter` API, like Infura.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">from_block</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">Web3TypeError</span><span class="p">(</span><span class="s2">&quot;Missing mandatory keyword argument to get_logs: from_block&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Currently no way to poke this using a public web3.py API.</span>
+    <span class="c1"># This will return raw underlying ABI JSON object for the event</span>
+    <span class="n">abi</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">_get_event_abi</span><span class="p">()</span>
+
+    <span class="c1"># Depending on the Solidity version used to compile</span>
+    <span class="c1"># the contract that uses the ABI,</span>
+    <span class="c1"># it might have Solidity ABI encoding v1 or v2.</span>
+    <span class="c1"># We just assume the default that you set on Web3 object here.</span>
+    <span class="c1"># More information here https://eth-abi.readthedocs.io/en/latest/index.html</span>
+    <span class="n">codec</span><span class="p">:</span> <span class="n">ABICodec</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">codec</span>
+
+    <span class="c1"># Here we need to poke a bit into Web3 internals, as this</span>
+    <span class="c1"># functionality is not exposed by default.</span>
+    <span class="c1"># Construct JSON-RPC raw filter presentation based on human readable Python descriptions</span>
+    <span class="c1"># Namely, convert event names to their keccak signatures</span>
+    <span class="c1"># More information here:</span>
+    <span class="c1"># https://github.com/ethereum/web3.py/blob/e176ce0793dafdd0573acc8d4b76425b6eb604ca/web3/_utils/filters.py#L71</span>
+    <span class="n">data_filter_set</span><span class="p">,</span> <span class="n">event_filter_params</span> <span class="o">=</span> <span class="n">construct_event_filter_params</span><span class="p">(</span>
+        <span class="n">abi</span><span class="p">,</span>
+        <span class="n">codec</span><span class="p">,</span>
+        <span class="n">address</span><span class="o">=</span><span class="n">argument_filters</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;address&quot;</span><span class="p">),</span>
+        <span class="n">argument_filters</span><span class="o">=</span><span class="n">argument_filters</span><span class="p">,</span>
+        <span class="n">from_block</span><span class="o">=</span><span class="n">from_block</span><span class="p">,</span>
+        <span class="n">to_block</span><span class="o">=</span><span class="n">to_block</span>
+    <span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Querying eth_getLogs with the following parameters: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">event_filter_params</span><span class="p">)</span>
+
+    <span class="c1"># Call JSON-RPC API on your Ethereum node.</span>
+    <span class="c1"># get_logs() returns raw AttributedDict entries</span>
+    <span class="n">logs</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_logs</span><span class="p">(</span><span class="n">event_filter_params</span><span class="p">)</span>
+
+    <span class="c1"># Convert raw binary data to Python proxy objects as described by ABI</span>
+    <span class="n">all_events</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">log</span> <span class="ow">in</span> <span class="n">logs</span><span class="p">:</span>
+        <span class="c1"># Convert raw JSON-RPC log result to human readable event by using ABI data</span>
+        <span class="c1"># More information how process_log works here</span>
+        <span class="c1"># https://github.com/ethereum/web3.py/blob/fbaf1ad11b0c7fac09ba34baff2c256cffe0a148/web3/_utils/events.py#L200</span>
+        <span class="n">evt</span> <span class="o">=</span> <span class="n">get_event_data</span><span class="p">(</span><span class="n">codec</span><span class="p">,</span> <span class="n">abi</span><span class="p">,</span> <span class="n">log</span><span class="p">)</span>
+        <span class="c1"># Note: This was originally yield,</span>
+        <span class="c1"># but deferring the timeout exception caused the throttle logic not to work</span>
+        <span class="n">all_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">all_events</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Simple demo that scans all the token transfers of RCC token (11k).</span>
+    <span class="c1"># The demo supports persistent state by using a JSON file.</span>
+    <span class="c1"># You will need an Ethereum node for this.</span>
+    <span class="c1"># Running this script will consume around 20k JSON-RPC calls.</span>
+    <span class="c1"># With locally running Geth, the script takes 10 minutes.</span>
+    <span class="c1"># The resulting JSON state file is 2.9 MB.</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">web3.providers.rpc</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTTPProvider</span>
+
+    <span class="c1"># We use tqdm library to render a nice progress bar in the console</span>
+    <span class="c1"># https://pypi.org/project/tqdm/</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+
+    <span class="c1"># RCC has around 11k Transfer events</span>
+    <span class="c1"># https://etherscan.io/token/0x9b6443b0fb9c241a7fdac375595cea13e6b7807a</span>
+    <span class="n">RCC_ADDRESS</span> <span class="o">=</span> <span class="s2">&quot;0x9b6443b0fb9c241a7fdac375595cea13e6b7807a&quot;</span>
+
+    <span class="c1"># Reduced ERC-20 ABI, only Transfer event</span>
+    <span class="n">ABI</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;[</span>
+<span class="s2">        {</span>
+<span class="s2">            &quot;anonymous&quot;: false,</span>
+<span class="s2">            &quot;inputs&quot;: [</span>
+<span class="s2">                {</span>
+<span class="s2">                    &quot;indexed&quot;: true,</span>
+<span class="s2">                    &quot;name&quot;: &quot;from&quot;,</span>
+<span class="s2">                    &quot;type&quot;: &quot;address&quot;</span>
+<span class="s2">                },</span>
+<span class="s2">                {</span>
+<span class="s2">                    &quot;indexed&quot;: true,</span>
+<span class="s2">                    &quot;name&quot;: &quot;to&quot;,</span>
+<span class="s2">                    &quot;type&quot;: &quot;address&quot;</span>
+<span class="s2">                },</span>
+<span class="s2">                {</span>
+<span class="s2">                    &quot;indexed&quot;: false,</span>
+<span class="s2">                    &quot;name&quot;: &quot;value&quot;,</span>
+<span class="s2">                    &quot;type&quot;: &quot;uint256&quot;</span>
+<span class="s2">                }</span>
+<span class="s2">            ],</span>
+<span class="s2">            &quot;name&quot;: &quot;Transfer&quot;,</span>
+<span class="s2">            &quot;type&quot;: &quot;event&quot;</span>
+<span class="s2">        }</span>
+<span class="s2">    ]</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">JSONifiedState</span><span class="p">(</span><span class="n">EventScannerState</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store the state of scanned blocks and all events.</span>
+
+<span class="sd">        All state is an in-memory dict.</span>
+<span class="sd">        Simple load/store massive JSON on start up.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fname</span> <span class="o">=</span> <span class="s2">&quot;test-state.json&quot;</span>
+            <span class="c1"># How many second ago we saved the JSON file</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_save</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Create initial state of nothing scanned.&quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;last_scanned_block&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="p">}</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">restore</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Restore the last scan state from a file.&quot;&quot;&quot;</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;rt&quot;</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Restored the state, previously </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;last_scanned_block&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> blocks have been scanned&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">IOError</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;State starting from scratch&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Save everything we have scanned so far in a file.&quot;&quot;&quot;</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;wt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_save</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="c1">#</span>
+        <span class="c1"># EventScannerState methods implemented below</span>
+        <span class="c1">#</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_last_scanned_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The number of the last block we have stored.&quot;&quot;&quot;</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;last_scanned_block&quot;</span><span class="p">]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">delete_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">since_block</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Remove potentially reorganised blocks from the scan data.&quot;&quot;&quot;</span>
+            <span class="k">for</span> <span class="n">block_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">since_block</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_last_scanned_block</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">block_num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]:</span>
+                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">][</span><span class="n">block_num</span><span class="p">]</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">start_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_number</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">end_chunk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_number</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Save at the end of each block, so we can resume in the case of a crash or CTRL+C&quot;&quot;&quot;</span>
+            <span class="c1"># Next time the scanner is started we will resume from this block</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;last_scanned_block&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">block_number</span>
+
+            <span class="c1"># Save the database file for every minute</span>
+            <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_save</span> <span class="o">&gt;</span> <span class="mi">60</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">process_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_when</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">AttributeDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Record a ERC-20 transfer in our database.&quot;&quot;&quot;</span>
+            <span class="c1"># Events are keyed by their transaction hash and log index</span>
+            <span class="c1"># One transaction may contain multiple events</span>
+            <span class="c1"># and each one of those gets their own log index</span>
+
+            <span class="c1"># event_name = event.event # &quot;Transfer&quot;</span>
+            <span class="n">log_index</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">logIndex</span>  <span class="c1"># Log index within the block</span>
+            <span class="c1"># transaction_index = event.transactionIndex  # Transaction index within the block</span>
+            <span class="n">txhash</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">transactionHash</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span>  <span class="c1"># Transaction hash</span>
+            <span class="n">block_number</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">blockNumber</span>
+
+            <span class="c1"># Convert ERC-20 Transfer event to our internal format</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span>
+            <span class="n">transfer</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;from&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">to</span><span class="p">,</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">block_when</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Create empty dict as the block that contains all transactions by txhash</span>
+            <span class="k">if</span> <span class="n">block_number</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">][</span><span class="n">block_number</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">][</span><span class="n">block_number</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">txhash</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">block</span><span class="p">:</span>
+                <span class="c1"># We have not yet recorded any transfers in this transaction</span>
+                <span class="c1"># (One transaction may contain multiple events if executed by a smart contract).</span>
+                <span class="c1"># Create a tx entry that contains all events by a log index</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">][</span><span class="n">block_number</span><span class="p">][</span><span class="n">txhash</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="c1"># Record ERC-20 transfer in our database</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">][</span><span class="n">block_number</span><span class="p">][</span><span class="n">txhash</span><span class="p">][</span><span class="n">log_index</span><span class="p">]</span> <span class="o">=</span> <span class="n">transfer</span>
+
+            <span class="c1"># Return a pointer that allows us to look up this event later if needed</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">block_number</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">txhash</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">log_index</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">():</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Usage: eventscanner.py http://your-node-url&quot;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">api_url</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Enable logs to the stdout.</span>
+        <span class="c1"># DEBUG is very verbose level</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+        <span class="n">provider</span> <span class="o">=</span> <span class="n">HTTPProvider</span><span class="p">(</span><span class="n">api_url</span><span class="p">)</span>
+
+        <span class="c1"># Disable the default JSON-RPC retry configuration</span>
+        <span class="c1"># as it correctly cannot handle eth_getLogs block range</span>
+        <span class="n">provider</span><span class="o">.</span><span class="n">exception_retry_configuration</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+
+        <span class="c1"># Prepare stub ERC-20 contract object</span>
+        <span class="n">abi</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">ABI</span><span class="p">)</span>
+        <span class="n">ERC20</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span>
+
+        <span class="c1"># Restore/create our persistent state</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">JSONifiedState</span><span class="p">()</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">restore</span><span class="p">()</span>
+
+        <span class="c1"># chain_id: int, w3: Web3, abi: Dict, state: EventScannerState, events: List, filters: Dict, max_chunk_scan_size: int=10000</span>
+        <span class="n">scanner</span> <span class="o">=</span> <span class="n">EventScanner</span><span class="p">(</span>
+            <span class="n">w3</span><span class="o">=</span><span class="n">w3</span><span class="p">,</span>
+            <span class="n">contract</span><span class="o">=</span><span class="n">ERC20</span><span class="p">,</span>
+            <span class="n">state</span><span class="o">=</span><span class="n">state</span><span class="p">,</span>
+            <span class="n">events</span><span class="o">=</span><span class="p">[</span><span class="n">ERC20</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Transfer</span><span class="p">],</span>
+            <span class="n">filters</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;address&quot;</span><span class="p">:</span> <span class="n">RCC_ADDRESS</span><span class="p">},</span>
+            <span class="c1"># How many maximum blocks at the time we request from JSON-RPC</span>
+            <span class="c1"># and we are unlikely to exceed the response size limit of the JSON-RPC server</span>
+            <span class="n">max_chunk_scan_size</span><span class="o">=</span><span class="mi">10000</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Assume we might have scanned the blocks all the way to the last Ethereum block</span>
+        <span class="c1"># that mined a few seconds before the previous scan run ended.</span>
+        <span class="c1"># Because there might have been a minor Ethereum chain reorganisations</span>
+        <span class="c1"># since the last scan ended, we need to discard</span>
+        <span class="c1"># the last few blocks from the previous scan results.</span>
+        <span class="n">chain_reorg_safety_blocks</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">scanner</span><span class="o">.</span><span class="n">delete_potentially_forked_block_data</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get_last_scanned_block</span><span class="p">()</span> <span class="o">-</span> <span class="n">chain_reorg_safety_blocks</span><span class="p">)</span>
+
+        <span class="c1"># Scan from [last block scanned] - [latest ethereum block]</span>
+        <span class="c1"># Note that our chain reorg safety blocks cannot go negative</span>
+        <span class="n">start_block</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">get_last_scanned_block</span><span class="p">()</span> <span class="o">-</span> <span class="n">chain_reorg_safety_blocks</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">end_block</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="n">get_suggested_scan_end_block</span><span class="p">()</span>
+        <span class="n">blocks_to_scan</span> <span class="o">=</span> <span class="n">end_block</span> <span class="o">-</span> <span class="n">start_block</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Scanning events from blocks </span><span class="si">{</span><span class="n">start_block</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">end_block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Render a progress bar in the console</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">blocks_to_scan</span><span class="p">)</span> <span class="k">as</span> <span class="n">progress_bar</span><span class="p">:</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_update_progress</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">current_block_timestamp</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">,</span> <span class="n">events_count</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">current_block_timestamp</span><span class="p">:</span>
+                    <span class="n">formatted_time</span> <span class="o">=</span> <span class="n">current_block_timestamp</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-%m-%Y&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">formatted_time</span> <span class="o">=</span> <span class="s2">&quot;no block time available&quot;</span>
+                <span class="n">progress_bar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current block: </span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}</span><span class="s2">), blocks in a scan batch: </span><span class="si">{</span><span class="n">chunk_size</span><span class="si">}</span><span class="s2">, events processed in a batch </span><span class="si">{</span><span class="n">events_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">progress_bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">chunk_size</span><span class="p">)</span>
+
+            <span class="c1"># Run the scan</span>
+            <span class="n">result</span><span class="p">,</span> <span class="n">total_chunks_scanned</span> <span class="o">=</span> <span class="n">scanner</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">start_block</span><span class="p">,</span> <span class="n">end_block</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="n">_update_progress</span><span class="p">)</span>
+
+        <span class="n">state</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">duration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Scanned total </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> Transfer events, in </span><span class="si">{</span><span class="n">duration</span><span class="si">}</span><span class="s2"> seconds, total </span><span class="si">{</span><span class="n">total_chunks_scanned</span><span class="si">}</span><span class="s2"> chunk scans performed&quot;</span><span class="p">)</span>
+
+    <span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="web3.contract.html" class="btn btn-neutral float-left" title="Contracts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="subscriptions.html" class="btn btn-neutral float-right" title="事件订阅" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../web3.beacon.rst:2
+msgid "Beacon API"
+msgstr ""
+
+#: ../../web3.beacon.rst:4
+msgid ""
+"This API Is experimental. Client support is incomplete and the API itself"
+" is still evolving."
+msgstr ""
+
+#: ../../web3.beacon.rst:6
+msgid ""
+"To use this API, you'll need a beacon node running locally or remotely. "
+"To set that up, refer to the documentation of your specific client."
+msgstr ""
+
+#: ../../web3.beacon.rst:8
+msgid ""
+"Once you have a running beacon node, import and configure your beacon "
+"instance:"
+msgstr ""
+
+#: ../../web3.beacon.rst:16
+msgid "Methods"
+msgstr ""

@@ -1,0 +1,1368 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../web3.contract.rst:4
+msgid "Contracts"
+msgstr "合约"
+
+#: ../../web3.contract.rst:8
+msgid ""
+"Smart contracts are programs deployed to the Ethereum network. See the "
+"`ethereum.org docs <https://ethereum.org/en/developers/docs/smart-"
+"contracts>`_ for a proper introduction."
+msgstr ""
+
+#: ../../web3.contract.rst:13
+msgid "Interacting with deployed contracts"
+msgstr ""
+
+#: ../../web3.contract.rst:15
+msgid ""
+"In order to use an existing contract, you'll need its deployed address "
+"and its ABI. Both can be found using block explorers, like Etherscan. "
+"Once you instantiate a contract instance, you can read data and execute "
+"transactions."
+msgstr ""
+
+#: ../../web3.contract.rst:36
+msgid "Contract Deployment Example"
+msgstr ""
+
+#: ../../web3.contract.rst:38
+msgid "To run this example, you will need to install a few extra features:"
+msgstr ""
+
+#: ../../web3.contract.rst:40
+msgid "The sandbox node provided by eth-tester. You can install it with:"
+msgstr ""
+
+#: ../../web3.contract.rst:46
+msgid ""
+"``py-solc-x``. This is the supported route to installing the solidity "
+"compiler ``solc``. You can install it with:"
+msgstr ""
+
+#: ../../web3.contract.rst:52
+msgid ""
+"After ``py-solc-x`` is installed, you will need to install a version of "
+"``solc``. You can install the latest version via a new REPL with:"
+msgstr ""
+
+#: ../../web3.contract.rst:59
+msgid "You should now be set up to compile and deploy a contract."
+msgstr ""
+
+#: ../../web3.contract.rst:61
+msgid "The following example runs through these steps:"
+msgstr ""
+
+#: ../../web3.contract.rst:63
+msgid "Compile Solidity contract into bytecode and an ABI"
+msgstr ""
+
+#: ../../web3.contract.rst:64
+msgid "Initialize a Contract instance"
+msgstr ""
+
+#: ../../web3.contract.rst:65
+msgid "Deploy the contract using the Contract instance to initiate a transaction"
+msgstr ""
+
+#: ../../web3.contract.rst:66
+msgid "Interact with the contract functions using the Contract instance"
+msgstr ""
+
+#: ../../web3.contract.rst:135
+msgid "Contract Factories"
+msgstr ""
+
+#: ../../web3.contract.rst:137
+msgid ""
+"These factories are not intended to be initialized directly. Instead, "
+"create contract objects using the :meth:`w3.eth.contract() "
+"<web3.eth.Eth.contract>` method. By default, the contract factory is "
+":class:`Contract`."
+msgstr ""
+
+#: ../../web3.contract.rst:143
+msgid ""
+"Contract provides a default interface for deploying and interacting with "
+"Ethereum smart contracts."
+msgstr ""
+
+#: ../../web3.contract.rst:146
+msgid ""
+"The address parameter can be a hex address or an ENS name, like "
+"``mycontract.eth``."
+msgstr ""
+
+#: ../../web3.contract.rst:150
+msgid "Properties"
+msgstr ""
+
+#: ../../web3.contract.rst:152
+msgid "Each Contract Factory exposes the following properties."
+msgstr ""
+
+#: ../../web3.contract.rst:157
+msgid ""
+"The hexadecimal encoded 20-byte address of the contract, or an ENS name. "
+"May be ``None`` if not provided during factory creation."
+msgstr ""
+
+#: ../../web3.contract.rst:163
+msgid ""
+"The contract ``abi``, or Application Binary Interface, specifies how a "
+"contract can be interacted with. Without an ``abi``, the contract cannot "
+"be decoded. The ``abi`` enables the Contract instance to expose functions"
+" and events as object properties."
+msgstr ""
+
+#: ../../web3.contract.rst:167
+msgid ""
+"For further details, see the `Solidity ABI specification "
+"<https://docs.soliditylang.org/en/develop/abi-spec.html>`_."
+msgstr ""
+
+#: ../../web3.contract.rst:172
+msgid ""
+"The contract bytecode string.  May be ``None`` if not provided during "
+"factory creation."
+msgstr ""
+
+#: ../../web3.contract.rst:178
+msgid ""
+"The runtime part of the contract bytecode string.  May be ``None`` if not"
+" provided during factory creation."
+msgstr ""
+
+#: ../../web3.contract.rst:184
+msgid ""
+"If a Tuple/Struct is returned by a contract function, this flag defines "
+"whether to apply the field names from the ABI to the returned data. If "
+"False, the returned value will be a normal Python ``Tuple``. If True, the"
+" returned value will be a Python ``NamedTuple`` of the class "
+"``ABIDecodedNamedTuple``."
+msgstr ""
+
+#: ../../web3.contract.rst:189
+msgid ""
+"NamedTuples have some restrictions regarding field names. web3.py sets "
+"``NamedTuple``'s ``rename=True``, so disallowed field names may be "
+"different than expected. See the `Python docs "
+"<https://docs.python.org/3/library/collections.html#collections.namedtuple>`_"
+" for more information."
+msgstr ""
+
+#: ../../web3.contract.rst:194
+msgid "Defaults to ``False`` if not provided during factory creation."
+msgstr ""
+
+#: ../../web3.contract.rst:199
+msgid ""
+"This provides access to contract functions as attributes.  For example: "
+"``myContract.functions.MyMethod()``.  The exposed contract functions are "
+"classes of the type :py:class:`ContractFunction`."
+msgstr ""
+
+#: ../../web3.contract.rst:206
+msgid ""
+"This provides access to contract events as attributes.  For example: "
+"``myContract.events.MyEvent()``.  The exposed contract events are classes"
+" of the type :py:class:`ContractEvent`."
+msgstr ""
+
+#: ../../web3.contract.rst:211 ../../web3.contract.rst:870
+#: ../../web3.contract.rst:1153
+msgid "Methods"
+msgstr ""
+
+#: ../../web3.contract.rst:213
+msgid "Method doctests use the following ABI and bytecode."
+msgstr ""
+
+#: ../../web3.contract.rst:221
+msgid "Each Contract Factory exposes the following methods."
+msgstr ""
+
+#: ../../web3.contract.rst:233
+msgid "Construct and deploy a contract by sending a new public transaction."
+msgstr ""
+
+#: ../../web3.contract.rst:235
+msgid ""
+"If provided ``transaction`` should be a dictionary conforming to the "
+"``web3.eth.send_transaction(transaction)`` method.  This value may not "
+"contain the keys ``data`` or ``to``."
+msgstr ""
+
+#: ../../web3.contract.rst:239 ../../web3.contract.rst:287
+msgid ""
+"If the contract takes constructor parameters they should be provided as "
+"positional arguments or keyword arguments."
+msgstr ""
+
+#: ../../web3.contract.rst:242
+msgid ""
+"If any of the arguments specified in the ABI are an ``address`` type, "
+"they will accept ENS names."
+msgstr ""
+
+#: ../../web3.contract.rst:245
+msgid ""
+"If a ``gas`` value is not provided, then the ``gas`` value for the "
+"deployment transaction will be created using the "
+"``web3.eth.estimate_gas()`` method."
+msgstr ""
+
+#: ../../web3.contract.rst:249
+msgid "Returns the transaction hash for the deploy transaction."
+msgstr ""
+
+#: ../../web3.contract.rst:262
+msgid "Estimate gas for constructing and deploying the contract."
+msgstr ""
+
+#: ../../web3.contract.rst:264
+msgid ""
+"This method behaves the same as the :py:meth:`Contract.constructor(*args,"
+" **kwargs).transact` method, with transaction details being passed into "
+"the end portion of the function call, and function arguments being passed"
+" into the first portion."
+msgstr ""
+
+#: ../../web3.contract.rst:269
+msgid ""
+"The ``block_identifier`` parameter is passed directly to the call at the "
+"end portion of the function call."
+msgstr ""
+
+#: ../../web3.contract.rst:272 ../../web3.contract.rst:1012
+msgid ""
+"Returns the amount of gas consumed which can be used as a gas estimate "
+"for executing this transaction publicly."
+msgstr ""
+
+#: ../../web3.contract.rst:275
+msgid "Returns the gas needed to deploy the contract."
+msgstr ""
+
+#: ../../web3.contract.rst:285
+msgid "Construct the contract deploy transaction bytecode data."
+msgstr ""
+
+#: ../../web3.contract.rst:290
+msgid ""
+"If any of the ``args`` specified in the ABI are an ``address`` type, they"
+" will accept ENS names."
+msgstr ""
+
+#: ../../web3.contract.rst:293
+msgid ""
+"Returns the transaction dictionary that you can pass to send_transaction "
+"method."
+msgstr ""
+
+#: ../../web3.contract.rst:309
+msgid ""
+"Creates a new event filter, an instance of "
+":py:class:`web3.utils.filters.LogFilter`."
+msgstr ""
+
+#: ../../web3.contract.rst:311
+msgid ""
+"``from_block`` is a mandatory field. Defines the starting block "
+"(exclusive) filter block range. It can be either the starting block "
+"number, or 'latest' for the last mined block, or 'pending' for unmined "
+"transactions. In the case of ``from_block``, 'latest' and 'pending' set "
+"the 'latest' or 'pending' block as a static value for the starting filter"
+" block."
+msgstr ""
+
+#: ../../web3.contract.rst:312
+msgid ""
+"``to_block`` optional. Defaults to 'latest'. Defines the ending block "
+"(inclusive) in the filter block range.  Special values 'latest' and "
+"'pending' set a dynamic range that always includes the 'latest' or "
+"'pending' blocks for the filter's upper block range."
+msgstr ""
+
+#: ../../web3.contract.rst:313
+msgid ""
+"``address`` optional. Defaults to the contract address. The filter "
+"matches the event logs emanating from ``address``."
+msgstr ""
+
+#: ../../web3.contract.rst:314
+msgid ""
+"``argument_filters``, optional. Expects a dictionary of argument names "
+"and values. When provided event logs are filtered for the event argument "
+"values. Event arguments can be both indexed or unindexed. Indexed values "
+"will be translated to their corresponding topic arguments. Unindexed "
+"arguments will be filtered using a regular expression."
+msgstr ""
+
+#: ../../web3.contract.rst:315
+msgid ""
+"``topics`` optional, accepts the standard JSON-RPC topics argument.  See "
+"the JSON-RPC documentation for `eth_newFilter "
+"<https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter>`_ more "
+"information on the ``topics`` parameters."
+msgstr ""
+
+#: ../../web3.contract.rst:323
+msgid ""
+"Creates a EventFilterBuilder instance with the event abi, and the "
+"contract address if called from a deployed contract instance.  The "
+"EventFilterBuilder provides a convenient way to construct the filter "
+"parameters with value checking against the event abi. It allows for "
+"defining multiple match values or of single values through the match_any "
+"and match_single methods."
+msgstr ""
+
+#: ../../web3.contract.rst:334
+msgid ""
+"The ``deploy`` method returns a :py:class:`web3.utils.filters.LogFilter` "
+"instance from the filter parameters generated by the filter builder. "
+"Defining multiple match values for array arguments can be accomplished "
+"easily with the filter builder:"
+msgstr ""
+
+#: ../../web3.contract.rst:341
+msgid ""
+"The filter builder blocks already defined filter parameters from being "
+"changed."
+msgstr ""
+
+#: ../../web3.contract.rst:353
+msgid ""
+"Encodes the arguments using the Ethereum ABI for the contract function "
+"that matches the given ``abi_element_identifier`` and arguments ``args``."
+" The ``data`` parameter defaults to the function selector."
+msgstr ""
+
+#: ../../web3.contract.rst:364
+msgid ""
+"Returns a list of all the events present in a Contract where every event "
+"is an instance of :py:class:`ContractEvent`."
+msgstr ""
+
+#: ../../web3.contract.rst:375
+msgid ""
+"Searches for a distinct event with matching signature. Returns an "
+"instance of :py:class:`ContractEvent` upon finding a match. Raises "
+"``Web3ValueError`` if no match is found."
+msgstr ""
+
+#: ../../web3.contract.rst:387
+msgid ""
+"Searches for all events matching the provided name. Returns a list of "
+"matching events where every event is an instance of "
+":py:class:`ContractEvent`. Returns an empty list when no match is found."
+msgstr ""
+
+#: ../../web3.contract.rst:399
+msgid ""
+"Searches for a distinct event matching the name. Returns an instance of "
+":py:class:`ContractEvent` upon finding a match. Raises ``Web3ValueError``"
+" if no match is found or if multiple matches are found."
+msgstr ""
+
+#: ../../web3.contract.rst:410
+msgid ""
+"Searches for all events matching the provided selector. Returns a list of"
+" matching events where every event is an instance of "
+":py:class:`ContractEvent`. Returns an empty list when no match is found."
+msgstr ""
+
+#: ../../web3.contract.rst:421
+msgid ""
+"Searches for a distinct event with matching selector. The selector can be"
+" a hexadecimal string, bytes or int. Returns an instance of "
+":py:class:`ContractEvent` upon finding a match. Raises ``Web3ValueError``"
+" if no match is found."
+msgstr ""
+
+#: ../../web3.contract.rst:437
+msgid ""
+"Searches for all events matching the provided topic. Returns a list of "
+"matching events where every event is an instance of "
+":py:class:`ContractEvent`. Returns an empty list when no match is found."
+msgstr ""
+
+#: ../../web3.contract.rst:448
+msgid ""
+"Searches for a distinct event with matching topic. The topic is a "
+"hexadecimal string. Returns an instance of :py:class:`ContractEvent` upon"
+" finding a match. Raises ``Web3ValueError`` if no match is found."
+msgstr ""
+
+#: ../../web3.contract.rst:460
+msgid ""
+"Returns a list of all the functions present in a Contract where every "
+"function is an instance of :py:class:`ContractFunction`."
+msgstr ""
+
+#: ../../web3.contract.rst:471
+msgid ""
+"Searches for a distinct function with matching signature. Returns an "
+"instance of :py:class:`ContractFunction` upon finding a match. Raises "
+"``Web3ValueError`` if no match is found."
+msgstr ""
+
+#: ../../web3.contract.rst:483
+msgid ""
+"Searches for all functions matching the name. Returns a list of matching "
+"functions where every function is an instance of "
+":py:class:`ContractFunction`. Returns an empty list when no match is "
+"found."
+msgstr ""
+
+#: ../../web3.contract.rst:495
+msgid ""
+"Searches for a distinct function with matching name. Returns an instance "
+"of :py:class:`ContractFunction` upon finding a match. Raises "
+"``Web3ValueError`` if no match is found or if multiple matches are found."
+msgstr ""
+
+#: ../../web3.contract.rst:507
+msgid ""
+"Searches for a distinct function with matching selector. The selector can"
+" be a hexadecimal string, bytes or int. Returns an instance of "
+":py:class:`ContractFunction` upon finding a match. Raises "
+"``Web3ValueError`` if no match is found."
+msgstr ""
+
+#: ../../web3.contract.rst:524
+msgid ""
+"Searches for all function with matching args. Returns a list of matching "
+"functions where every function is an instance of "
+":py:class:`ContractFunction`. Returns an empty list when no match is "
+"found."
+msgstr ""
+
+#: ../../web3.contract.rst:536
+msgid ""
+"Searches for a distinct function with matching args. Returns an instance "
+"of :py:class:`ContractFunction` upon finding a match. Raises "
+"``ValueError`` if no match is found or if multiple matches are found."
+msgstr ""
+
+#: ../../web3.contract.rst:547
+msgid ""
+"``Contract`` methods ``all_functions``, ``get_function_by_signature``, "
+"``find_functions_by_name``, ``get_function_by_name``, "
+"``get_function_by_selector``, ``find_functions_by_args`` and "
+"``get_function_by_args`` can only be used when abi is provided to the "
+"contract."
+msgstr ""
+
+#: ../../web3.contract.rst:553
+msgid ""
+"web3.py rejects the initialization of contracts that have more than one "
+"function with the same selector or signature. eg. "
+"``blockHashAddendsInexpansible(uint256)`` and "
+"``blockHashAskewLimitary(uint256)`` have the same selector value equal to"
+" ``0x00000000``. A contract containing both of these functions will be "
+"rejected."
+msgstr ""
+
+#: ../../web3.contract.rst:563
+msgid "Disabling Strict Checks for Bytes Types"
+msgstr ""
+
+#: ../../web3.contract.rst:565
+msgid ""
+"By default, web3 is strict when it comes to hex and bytes values, as of "
+"``v6``. If an abi specifies a byte size, but the value that gets passed "
+"in is not the specified size, web3 will invalidate the value. For "
+"example, if an abi specifies a type of ``bytes4``, web3 will invalidate "
+"the following values:"
+msgstr ""
+
+#: ../../web3.contract.rst:570
+msgid "Invalid byte and hex strings with strict (default) bytes4 type checking"
+msgstr ""
+
+#: ../../web3.contract.rst:574 ../../web3.contract.rst:610
+msgid "Input"
+msgstr ""
+
+#: ../../web3.contract.rst:575
+msgid "Reason"
+msgstr ""
+
+#: ../../web3.contract.rst:576 ../../web3.contract.rst:612
+msgid "``''``"
+msgstr ""
+
+#: ../../web3.contract.rst:577
+msgid ""
+"Needs to be prefixed with a \"0x\" to be interpreted as an empty hex "
+"string"
+msgstr ""
+
+#: ../../web3.contract.rst:578
+msgid "``2``"
+msgstr ""
+
+#: ../../web3.contract.rst:579
+msgid "Wrong type"
+msgstr ""
+
+#: ../../web3.contract.rst:580
+msgid "``'ah'``"
+msgstr ""
+
+#: ../../web3.contract.rst:581
+msgid "String is not valid hex"
+msgstr ""
+
+#: ../../web3.contract.rst:582 ../../web3.contract.rst:622
+#: ../../web3.contract.rst:626
+msgid "``'1234'``"
+msgstr ""
+
+#: ../../web3.contract.rst:583
+msgid ""
+"Needs to either be a bytestring (b'1234') or be a hex value of the right "
+"size, prefixed with 0x (in this case: '0x31323334')"
+msgstr ""
+
+#: ../../web3.contract.rst:584 ../../web3.contract.rst:616
+msgid "``b''``"
+msgstr ""
+
+#: ../../web3.contract.rst:585 ../../web3.contract.rst:587
+#: ../../web3.contract.rst:589 ../../web3.contract.rst:591
+msgid "Needs to have exactly 4 bytes"
+msgstr ""
+
+#: ../../web3.contract.rst:586 ../../web3.contract.rst:618
+msgid "``b'ab'``"
+msgstr ""
+
+#: ../../web3.contract.rst:588 ../../web3.contract.rst:620
+msgid "``'0xab'``"
+msgstr ""
+
+#: ../../web3.contract.rst:590
+msgid "``'0x6162636464'``"
+msgstr ""
+
+#: ../../web3.contract.rst:593
+msgid ""
+"However, you may want to be less strict with acceptable values for bytes "
+"types. This may prove useful if you trust that values coming through are "
+"what they are meant to be with respect to the ABI. In this case, the "
+"automatic padding might be convenient for inferred types. For this, you "
+"can set the :meth:`w3.strict_bytes_type_checking` flag to ``False``, "
+"which is available on the Web3 instance. A Web3 instance which has this "
+"flag set to ``False`` will have a less strict set of rules on which "
+"values are accepted. A ``bytes`` type will allow values as a hex string, "
+"a bytestring, or a regular Python string that can be decoded as a hex. "
+"0x-prefixed hex strings are also not required."
+msgstr ""
+
+#: ../../web3.contract.rst:603
+msgid "A Python string that is not prefixed with ``0x`` is valid."
+msgstr ""
+
+#: ../../web3.contract.rst:604
+msgid "A bytestring whose length is less than the specified byte size is valid."
+msgstr ""
+
+#: ../../web3.contract.rst:606
+msgid "Valid byte and hex strings for a non-strict bytes4 type"
+msgstr ""
+
+#: ../../web3.contract.rst:611
+msgid "Normalizes to"
+msgstr ""
+
+#: ../../web3.contract.rst:613 ../../web3.contract.rst:615
+#: ../../web3.contract.rst:617
+msgid "``b'\\x00\\x00\\x00\\x00'``"
+msgstr ""
+
+#: ../../web3.contract.rst:614
+msgid "``'0x'``"
+msgstr ""
+
+#: ../../web3.contract.rst:619
+msgid "``b'ab\\x00\\x00'``"
+msgstr ""
+
+#: ../../web3.contract.rst:621
+msgid "``b'\\xab\\x00\\x00\\x00'``"
+msgstr ""
+
+#: ../../web3.contract.rst:623
+msgid "``b'\\x124\\x00\\x00'``"
+msgstr ""
+
+#: ../../web3.contract.rst:624
+msgid "``'0x61626364'``"
+msgstr ""
+
+#: ../../web3.contract.rst:625
+msgid "``b'abcd'``"
+msgstr ""
+
+#: ../../web3.contract.rst:627
+msgid "``b'1234'``"
+msgstr ""
+
+#: ../../web3.contract.rst:630
+msgid "Taking the following contract code as an example:"
+msgstr ""
+
+#: ../../web3.contract.rst:778
+msgid "Contract Functions"
+msgstr ""
+
+#: ../../web3.contract.rst:780
+msgid ""
+"The named functions exposed through the :py:attr:`Contract.functions` "
+"property are of the ContractFunction type. This class is not to be used "
+"directly, but instead through :py:attr:`Contract.functions`."
+msgstr ""
+
+#: ../../web3.contract.rst:784 ../../web3.contract.rst:1104
+#: ../../web3.contract.rst:1408
+msgid "For example:"
+msgstr ""
+
+#: ../../web3.contract.rst:791
+msgid ""
+"If you have the function name in a variable, you might prefer this "
+"alternative:"
+msgstr ""
+
+#: ../../web3.contract.rst:799
+msgid ""
+"You can also interact with contract functions without parentheses if the "
+"function doesn't take any arguments. For example:"
+msgstr ""
+
+#: ../../web3.contract.rst:809
+msgid ""
+"In cases where functions are overloaded and use arguments of similar "
+"types, a function may resolve to an undesired function when using the "
+"method syntax. For example, given two functions with the same name that "
+"take a single argument of differing types of ``bytes`` and ``bytes32``. "
+"When a reference to :meth:`contract.functions.setBytes(b'1')` is used, "
+"the function will resolve as the one that takes ``bytes``. If a value is "
+"passed that was meant to be 32 bytes but the given argument was off by "
+"one, the function reference will still use the one that takes ``bytes``."
+msgstr ""
+
+#: ../../web3.contract.rst:817
+msgid ""
+"When in doubt, use explicit function references to the signature. Use "
+"bracket notation (:meth:`contract.functions[\"setBytes(bytes32)\"](b'')`)"
+" or the contract API "
+"`contract.get_function_by_signature(\"setBytes(bytes32)\")` to retrieve "
+"the desired function. This will ensure an exception is raised if the "
+"argument is not strictly 32 bytes in length."
+msgstr ""
+
+#: ../../web3.contract.rst:826 ../../web3.contract.rst:1116
+msgid "Attributes"
+msgstr ""
+
+#: ../../web3.contract.rst:828
+msgid ""
+"The :py:class:`ContractFunction` class provides attributes for each "
+"function. Access the function attributes through "
+"`Contract.functions.myMethod`."
+msgstr ""
+
+#: ../../web3.contract.rst:832
+msgid ""
+"The signature of the function assigned to the class ``__name__`` during "
+"initialization. Fallback and Receive functions will be assigned as "
+"classes :py:class:`FallbackFn` or :py:class:`ReceiveFn` respectively."
+msgstr ""
+
+#: ../../web3.contract.rst:838
+msgid "A string representing the function, receive or fallback name."
+msgstr ""
+
+#: ../../web3.contract.rst:840
+msgid ""
+"Use :py:attr:`ContractFunction.signature` when the function arguments are"
+" needed."
+msgstr ""
+
+#: ../../web3.contract.rst:842
+msgid "This is an alias of :py:attr:`ContractFunction.fn_name`."
+msgstr ""
+
+#: ../../web3.contract.rst:846
+msgid "A string representing the function, receive or fallback signature."
+msgstr ""
+
+#: ../../web3.contract.rst:850
+msgid "A HexStr encoded from the first four bytes of the function signature."
+msgstr ""
+
+#: ../../web3.contract.rst:854
+msgid "The function ABI with the type, name, inputs and outputs."
+msgstr ""
+
+#: ../../web3.contract.rst:858
+msgid ""
+"A tuple of all function inputs, normalized so that `kwargs` themselves "
+"are flattened into a tuple as returned by "
+":py:meth:`eth_utils.abi.get_normalized_abi_inputs`."
+msgstr ""
+
+#: ../../web3.contract.rst:863
+msgid "The function input names."
+msgstr ""
+
+#: ../../web3.contract.rst:867
+msgid "The function input types."
+msgstr ""
+
+#: ../../web3.contract.rst:872
+msgid ""
+":py:class:`ContractFunction` provides methods to interact with contract "
+"functions. Positional and keyword arguments supplied to the contract "
+"function subclass will be used to find the contract function by "
+"signature, and forwarded to the contract function when applicable."
+msgstr ""
+
+#: ../../web3.contract.rst:877
+msgid ""
+"`EIP-3668 <https://eips.ethereum.org/EIPS/eip-3668>`_ introduced support "
+"for the ``OffchainLookup`` revert / CCIP Read support. CCIP Read is set "
+"to ``True`` for calls by default, as recommended in EIP-3668. This is "
+"done via a global ``global_ccip_read_enabled`` flag on the provider. If "
+"raising the ``OffchainLookup`` revert is preferred for a specific call, "
+"the ``ccip_read_enabled`` flag on the call may be set to ``False``."
+msgstr ""
+
+#: ../../web3.contract.rst:888
+msgid ""
+"Disabling CCIP Read support can be useful if a transaction needs to be "
+"sent to the callback function. In such cases, \"preflighting\" with an "
+"``eth_call``, handling the ``OffchainLookup``, and sending the data via a"
+" transaction may be necessary. See :ref:`ccip-read-example` in the "
+"examples section for how to preflight a transaction with a contract call."
+msgstr ""
+
+#: ../../web3.contract.rst:892
+msgid ""
+"Similarly, if CCIP Read is globally set to ``False`` via the "
+"``global_ccip_read_enabled`` flag on the provider, it may be enabled on a"
+" per-call basis - overriding the global flag. This ensures only "
+"explicitly enabled calls will handle the ``OffchainLookup`` revert "
+"appropriately."
+msgstr ""
+
+#: ../../web3.contract.rst:904
+msgid ""
+"If the function called results in a ``revert`` error, a "
+"``ContractLogicError`` will be raised. If there is an error message with "
+"the error, web3.py attempts to parse the message that comes back and "
+"return it to the user as the error string. As of v6.3.0, the raw data is "
+"also returned and can be accessed via the ``data`` attribute on "
+"``ContractLogicError``."
+msgstr ""
+
+#: ../../web3.contract.rst:912
+msgid "Execute the specified function by sending a new public transaction."
+msgstr ""
+
+#: ../../web3.contract.rst:914 ../../web3.contract.rst:950
+#: ../../web3.contract.rst:1002 ../../web3.contract.rst:1029
+msgid "Refer to the following invocation:"
+msgstr ""
+
+#: ../../web3.contract.rst:920
+msgid ""
+"The first portion of the function call ``myMethod(*args, **kwargs)`` "
+"selects the appropriate contract function based on the name and provided "
+"argument.  Arguments can be provided as positional arguments, keyword "
+"arguments, or a mix of the two."
+msgstr ""
+
+#: ../../web3.contract.rst:925
+msgid ""
+"The end portion of this function call ``transact(transaction)`` takes a "
+"single parameter which should be a python dictionary conforming to the "
+"same format as the ``web3.eth.send_transaction(transaction)`` method. "
+"This dictionary may not contain the keys ``data``."
+msgstr ""
+
+#: ../../web3.contract.rst:930
+msgid ""
+"If any of the ``args`` or ``kwargs`` specified in the ABI are an "
+"``address`` type, they will accept ENS names."
+msgstr ""
+
+#: ../../web3.contract.rst:933
+msgid ""
+"If a ``gas`` value is not provided, then the ``gas`` value for the method"
+" transaction will be created using the ``web3.eth.estimate_gas()`` "
+"method."
+msgstr ""
+
+#: ../../web3.contract.rst:937
+msgid "Returns the transaction hash."
+msgstr ""
+
+#: ../../web3.contract.rst:947 ../../web3.contract.rst:999
+msgid ""
+"Call a contract function, executing the transaction locally using the "
+"``eth_call`` API.  This will not create a new public transaction."
+msgstr ""
+
+#: ../../web3.contract.rst:956 ../../web3.contract.rst:1008
+msgid ""
+"This method behaves the same as the :py:meth:`ContractFunction.transact` "
+"method, with transaction details being passed into the end portion of the"
+" function call, and function arguments being passed into the first "
+"portion."
+msgstr ""
+
+#: ../../web3.contract.rst:960
+msgid "Returns the return value of the executed function."
+msgstr ""
+
+#: ../../web3.contract.rst:971
+msgid ""
+"You can call the method at a historical block using ``block_identifier``."
+" Some examples:"
+msgstr ""
+
+#: ../../web3.contract.rst:992
+msgid ""
+"Passing the ``block_identifier`` parameter for past block numbers "
+"requires that your Ethereum API node is running in the more expensive "
+"archive node mode. Normally synced Ethereum nodes will fail with a "
+"\"missing trie node\" error, because Ethereum node may have purged the "
+"past state from its database. `More information about archival nodes here"
+" <https://ethereum.stackexchange.com/a/84200/620>`_."
+msgstr ""
+
+#: ../../web3.contract.rst:1021
+#, python-brace-format
+msgid ""
+"The parameter ``block_identifier`` is not enabled in geth nodes, hence "
+"passing a value of ``block_identifier`` when connected to a geth nodes "
+"would result in an error like:  ``ValueError: {'code': -32602, 'message':"
+" 'too many arguments, want at most 1'}``"
+msgstr ""
+
+#: ../../web3.contract.rst:1027
+msgid ""
+"Builds a transaction dictionary based on the contract function call "
+"specified."
+msgstr ""
+
+#: ../../web3.contract.rst:1035
+msgid ""
+"This method behaves the same as the :py:meth:`Contract.transact` method, "
+"with transaction details being passed into the end portion of the "
+"function call, and function arguments being passed into the first "
+"portion."
+msgstr ""
+
+#: ../../web3.contract.rst:1040
+msgid ""
+"`nonce` is not returned as part of the transaction dictionary unless it "
+"is specified in the first portion of the function call:"
+msgstr ""
+
+#: ../../web3.contract.rst:1047
+msgid ""
+"You may use :meth:`~web3.eth.Eth.getTransactionCount` to get the current "
+"nonce for an account. Therefore a shortcut for producing a transaction "
+"dictionary with nonce included looks like:"
+msgstr ""
+
+#: ../../web3.contract.rst:1055
+msgid ""
+"Returns a transaction dictionary. This transaction dictionary can then be"
+" sent using :meth:`~web3.eth.Eth.send_transaction`."
+msgstr ""
+
+#: ../../web3.contract.rst:1058
+msgid ""
+"Additionally, the dictionary may be used for offline transaction signing "
+"using :meth:`~web3.eth.account.Account.sign_transaction`."
+msgstr ""
+
+#: ../../web3.contract.rst:1077
+msgid "Fallback Function"
+msgstr ""
+
+#: ../../web3.contract.rst:1079
+msgid ""
+"The Contract Factory also offers an API to interact with the fallback "
+"function, which supports four methods like normal functions:"
+msgstr ""
+
+#: ../../web3.contract.rst:1084
+msgid ""
+"Call fallback function, executing the transaction locally using the "
+"``eth_call`` API.  This will not create a new public transaction."
+msgstr ""
+
+#: ../../web3.contract.rst:1089
+msgid "Call fallback function and return the gas estimation."
+msgstr ""
+
+#: ../../web3.contract.rst:1093
+msgid "Execute fallback function by sending a new public transaction."
+msgstr ""
+
+#: ../../web3.contract.rst:1097
+msgid ""
+"Builds a transaction dictionary based on the contract fallback function "
+"call."
+msgstr ""
+
+#: ../../web3.contract.rst:1100
+msgid "Contract Events"
+msgstr ""
+
+#: ../../web3.contract.rst:1102
+msgid ""
+"The named events exposed through the :py:attr:`Contract.events` property "
+"are of the ContractEvent type. This class is not to be used directly, but"
+" instead through :py:attr:`Contract.events`."
+msgstr ""
+
+#: ../../web3.contract.rst:1118
+msgid ""
+"The :py:class:`ContractEvent` class provides attributes for each event. "
+"Access the event attributes through `Contract.events.MyEvent`."
+msgstr ""
+
+#: ../../web3.contract.rst:1122
+msgid ""
+"The signature of the event assigned to the class ``__name__`` during "
+"initialization."
+msgstr ""
+
+#: ../../web3.contract.rst:1126
+msgid "A string representing the event, receive or fallback name."
+msgstr ""
+
+#: ../../web3.contract.rst:1128
+msgid ""
+"Use :py:attr:`ContractEvent.MyEvent(*args, **kwargs).signature` when the "
+"event arguments are needed."
+msgstr ""
+
+#: ../../web3.contract.rst:1130
+msgid ""
+"This is an alias of :py:attr:`ContractEvent.MyEvent(*args, "
+"**kwargs).event_name`."
+msgstr ""
+
+#: ../../web3.contract.rst:1134
+msgid "A string representing the event signature."
+msgstr ""
+
+#: ../../web3.contract.rst:1138
+msgid "The event ABI with the type, name, inputs."
+msgstr ""
+
+#: ../../web3.contract.rst:1142
+msgid "The event input names."
+msgstr ""
+
+#: ../../web3.contract.rst:1146
+msgid "The event input types."
+msgstr ""
+
+#: ../../web3.contract.rst:1150
+msgid ""
+"The event topic represented by a hex encoded string from the keccak "
+"signature."
+msgstr ""
+
+#: ../../web3.contract.rst:1155
+msgid ""
+":py:class:`ContractEvent` provides methods to interact with contract "
+"events. Positional and keyword arguments supplied to the contract event "
+"subclass will be used to find the contract event by signature."
+msgstr ""
+
+#: ../../web3.contract.rst:1162
+msgid ""
+"Fetches all logs for a given event within the specified block range or "
+"block hash."
+msgstr ""
+
+#: ../../web3.contract.rst:1164
+msgid "Returns a list of decoded event logs sorted by ``logIndex``."
+msgstr ""
+
+#: ../../web3.contract.rst:1166
+msgid ""
+"``argument_filters`` is an optional dictionary argument that can be used "
+"to filter for logs where the event's argument values match the values "
+"provided in the dictionary. The keys must match the event argument names "
+"as they exist in the ABI. The values can either be a single value or a "
+"list of values to match against. If a list is provided, the logs will be "
+"filtered for any logs that match any of the values in the list. Indexed "
+"arguments are filtered pre-call by building specific ``topics`` to filter"
+" for. Non-indexed arguments are filtered by the library after the logs "
+"are fetched from the node."
+msgstr ""
+
+#: ../../web3.contract.rst:1192
+msgid "Extracts the pertinent logs from a transaction receipt."
+msgstr ""
+
+#: ../../web3.contract.rst:1194
+msgid ""
+"If there are no errors, ``process_receipt`` returns a tuple of "
+":ref:`Event Log Objects <event-log-object>`, emitted from the event (e.g."
+" ``MyEvent``), with decoded output."
+msgstr ""
+
+#: ../../web3.contract.rst:1205
+msgid ""
+"If there are errors, the logs will be handled differently depending on "
+"the flag that is passed in:"
+msgstr ""
+
+#: ../../web3.contract.rst:1207
+msgid ""
+"``WARN`` (default) - logs a warning to the console for the log that has "
+"an error, and discards the log. Returns any logs that are able to be "
+"processed."
+msgstr ""
+
+#: ../../web3.contract.rst:1208
+msgid "``STRICT`` - stops all processing and raises the error encountered."
+msgstr ""
+
+#: ../../web3.contract.rst:1209
+msgid ""
+"``IGNORE`` - returns any raw logs that raised an error with an added "
+"\"errors\" field, along with any other logs were able to be processed."
+msgstr ""
+
+#: ../../web3.contract.rst:1210
+msgid ""
+"``DISCARD`` - silently discards any logs that have errors, and returns "
+"processed logs that don't have errors."
+msgstr ""
+
+#: ../../web3.contract.rst:1212
+msgid "An event log error flag needs to be imported from ``web3/logs.py``."
+msgstr ""
+
+#: ../../web3.contract.rst:1260
+msgid ""
+"Similar to process_receipt_, but only processes one log at a time, "
+"instead of a whole transaction receipt. Will return a single :ref:`Event "
+"Log Object <event-log-object>` if there are no errors encountered during "
+"processing. If an error is encountered during processing, it will be "
+"raised."
+msgstr ""
+
+#: ../../web3.contract.rst:1285
+msgid "Event Log Object"
+msgstr ""
+
+#: ../../web3.contract.rst:1287
+msgid "The Event Log Object is a python dictionary with the following keys:"
+msgstr ""
+
+#: ../../web3.contract.rst:1289
+msgid "``args``: Dictionary - The arguments coming from the event."
+msgstr ""
+
+#: ../../web3.contract.rst:1290
+msgid "``event``: String - The event name."
+msgstr ""
+
+#: ../../web3.contract.rst:1291
+msgid "``logIndex``: Number - integer of the log index position in the block."
+msgstr ""
+
+#: ../../web3.contract.rst:1292
+msgid ""
+"``transactionIndex``: Number - integer of the transactions index position"
+" log was created from."
+msgstr ""
+
+#: ../../web3.contract.rst:1294
+msgid ""
+"``transactionHash``: String, 32 Bytes - hash of the transactions this log"
+" was created from."
+msgstr ""
+
+#: ../../web3.contract.rst:1296
+msgid "``address``: String, 32 Bytes - address from which this log originated."
+msgstr ""
+
+#: ../../web3.contract.rst:1297
+msgid ""
+"``blockHash``: String, 32 Bytes - hash of the block where this log was "
+"in. null when it's pending."
+msgstr ""
+
+#: ../../web3.contract.rst:1299
+msgid ""
+"``blockNumber``: Number - the block number where this log was in. null "
+"when it's pending."
+msgstr ""
+
+#: ../../web3.contract.rst:1377
+msgid "Utils"
+msgstr ""
+
+#: ../../web3.contract.rst:1381
+msgid ""
+"Decodes the transaction data used to invoke a smart contract function, "
+"and returns :py:class:`ContractFunction` and decoded parameters as "
+":py:class:`dict`."
+msgstr ""
+
+#: ../../web3.contract.rst:1399
+msgid "ContractCaller"
+msgstr ""
+
+#: ../../web3.contract.rst:1403
+msgid ""
+"The ``ContractCaller`` class provides an API to call functions in a "
+"contract. This class is not to be used directly, but instead through "
+"``Contract.caller``."
+msgstr ""
+
+#: ../../web3.contract.rst:1406
+msgid "There are a number of different ways to invoke the ``ContractCaller``."
+msgstr ""
+
+#: ../../web3.contract.rst:1429
+msgid "It can also be invoked using parentheses:"
+msgstr ""
+
+#: ../../web3.contract.rst:1437
+msgid ""
+"And a transaction dictionary, with or without the ``transaction`` "
+"keyword. You can also optionally include a block identifier. For example:"
+msgstr ""
+
+#: ../../web3.contract.rst:1453
+msgid ""
+"Like :py:class:`ContractFunction`, :py:class:`ContractCaller` provides "
+"methods to interact with contract functions. Positional and keyword "
+"arguments supplied to the contract caller subclass will be used to find "
+"the contract function by signature, and forwarded to the contract "
+"function when applicable."
+msgstr ""
+
+#: ../../web3.contract.rst:1461
+msgid "Examples"
+msgstr ""
+
+#: ../../web3.contract.rst:1464
+msgid "Working with an ERC-20 Token Contract"
+msgstr ""
+
+#: ../../web3.contract.rst:1466
+msgid ""
+"Most fungible tokens on the Ethereum blockchain conform to the `ERC-20`_ "
+"standard.  This section of the guide covers interacting with an existing "
+"token contract which conforms to this standard."
+msgstr ""
+
+#: ../../web3.contract.rst:1492
+msgid ""
+"In this guide we will interact with an existing token contract that we "
+"have already deployed to a local testing chain.  This guide assumes:"
+msgstr ""
+
+#: ../../web3.contract.rst:1495
+msgid "An existing token contract at a known address."
+msgstr ""
+
+#: ../../web3.contract.rst:1496
+msgid "Access to the proper ``ABI`` for the given contract."
+msgstr ""
+
+#: ../../web3.contract.rst:1497
+msgid ""
+"A ``web3.main.Web3`` instance connected to a provider with an unlocked "
+"account which can send transactions."
+msgstr ""
+
+#: ../../web3.contract.rst:1501
+msgid "Creating the contract factory"
+msgstr ""
+
+#: ../../web3.contract.rst:1503
+msgid ""
+"First we need to create a contract instance with the address of our token"
+" contract and the ``ERC-20`` ABI."
+msgstr ""
+
+#: ../../web3.contract.rst:1514
+msgid "Querying token metadata"
+msgstr ""
+
+#: ../../web3.contract.rst:1516
+msgid ""
+"Each token will have a total supply which represents the total number of "
+"tokens in circulation.  In this example we've initialized the token "
+"contract to have 1 million tokens.  Since this token contract is setup to"
+" have 18 decimal places, the raw total supply returned by the contract is"
+" going to have 18 additional decimal places."
+msgstr ""
+
+#: ../../web3.contract.rst:1537
+msgid "Query account balances"
+msgstr ""
+
+#: ../../web3.contract.rst:1539
+msgid ""
+"Next we can query some account balances using the contract's "
+"``balanceOf`` function.  The token contract we are using starts with a "
+"single account which we'll refer to as ``alice`` holding all of the "
+"tokens."
+msgstr ""
+
+#: ../../web3.contract.rst:1557
+msgid "Sending tokens"
+msgstr ""
+
+#: ../../web3.contract.rst:1559
+msgid ""
+"Next we can transfer some tokens from ``alice`` to ``bob`` using the "
+"contract's ``transfer`` function."
+msgstr ""
+
+#: ../../web3.contract.rst:1574
+msgid "Creating an approval for external transfers"
+msgstr ""
+
+#: ../../web3.contract.rst:1576
+msgid ""
+"Alice could also *approve* someone else to spend tokens from her account "
+"using the ``approve`` function.  We can also query how many tokens we're "
+"approved to spend using the ``allowance`` function."
+msgstr ""
+
+#: ../../web3.contract.rst:1591
+msgid "Performing an external transfer"
+msgstr ""
+
+#: ../../web3.contract.rst:1593
+msgid ""
+"When someone has an allowance they can transfer those tokens using the "
+"``transferFrom`` function."
+msgstr ""
+
+#: ../../web3.contract.rst:1614
+msgid "Using a struct as a function argument"
+msgstr ""
+
+#: ../../web3.contract.rst:1616
+msgid ""
+"web3.py accepts struct arguments as dictionaries. This format also "
+"supports nested structs. Let's take a look at a quick example. Given the "
+"following Solidity contract:"
+msgstr ""
+
+#: ../../web3.contract.rst:1649
+msgid "You can interact with the web3.py contract API as follows:"
+msgstr ""
+
+#: ../../web3.contract.rst:1667
+msgid "Invoke Ambiguous Contract Functions"
+msgstr ""
+
+#: ../../web3.contract.rst:1669
+msgid ""
+"Calling overloaded functions can be done as you would expect. Passing "
+"arguments will disambiguate which function you want to call."
+msgstr ""
+
+#: ../../web3.contract.rst:1672
+msgid ""
+"For example, if you have a contract with two functions with the name "
+"``identity`` that accept different types of arguments, you can call them "
+"like this:"
+msgstr ""
+
+#: ../../web3.contract.rst:1683
+msgid ""
+"If there is a need to first retrieve the function, you can use the "
+"contract instance's ``get_function_by_signature`` method to get the "
+"function you want to call."
+msgstr ""
+
+#: ../../web3.contract.rst:1686
+msgid ""
+"Below is an example of a contract that has multiple functions of the same"
+" name, and the arguments are ambiguous. You can use the "
+":meth:`Contract.get_function_by_signature` method to reference the "
+"intended function and call it with the correct arguments."
+msgstr ""
+
+#: ../../web3.contract.rst:1715
+msgid "CCIP Read support for offchain lookup"
+msgstr ""
+
+#: ../../web3.contract.rst:1717
+msgid ""
+"Contract calls support CCIP Read by default, via a ``ccip_read_enabled`` "
+"flag on the call and, more globally, a ``global_ccip_read_enabled`` flag "
+"on the provider. The following should work by default without raising an "
+"``OffchainLookup`` and instead handling it appropriately as per the "
+"specification outlined in `EIP-3668 "
+"<https://eips.ethereum.org/EIPS/eip-3668>`_."
+msgstr ""
+
+#: ../../web3.contract.rst:1726
+msgid ""
+"If the offchain lookup requires the user to send a transaction rather "
+"than make a call, this may be handled appropriately in the following way:"
+msgstr ""
+
+#: ../../web3.contract.rst:1751
+msgid "Contract Unit Tests in Python"
+msgstr ""
+
+#: ../../web3.contract.rst:1753
+msgid ""
+"Here is an example of how one can use the `pytest`_ framework in python, "
+"web3.py, eth-tester, and PyEVM to perform unit tests entirely in python "
+"without any additional need for a full featured ethereum node/client. To "
+"install needed dependencies you can use the pinned extra for testing:"
+msgstr ""
+
+#: ../../web3.contract.rst:1764
+msgid ""
+"Once you have an environment set up for testing, you can then write your "
+"tests like so:"
+msgstr ""

@@ -1,0 +1,11 @@
+/**
+ * Styles to display banner under the search box.
+ */
+
+.search-banner-wrapper img {
+    width: auto;
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    margin: 12px 0 0 0;
+}

@@ -1,0 +1,834 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web3 API &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="web3.eth API" href="web3.eth.html" />
+    <link rel="prev" title="Migration Guide" href="migration.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Events and Logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">Event Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">Ethereum Name Service (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Web3 API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#web3.Web3"><code class="docutils literal notranslate"><span class="pre">Web3</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#providers">Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.HTTPProvider"><code class="docutils literal notranslate"><span class="pre">Web3.HTTPProvider</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.IPCProvider"><code class="docutils literal notranslate"><span class="pre">Web3.IPCProvider</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#attributes">Attributes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.api"><code class="docutils literal notranslate"><span class="pre">Web3.api</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.client_version"><code class="docutils literal notranslate"><span class="pre">Web3.client_version</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#batch-requests">Batch Requests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.batch_requests"><code class="docutils literal notranslate"><span class="pre">Web3.batch_requests()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#encoding-and-decoding-helpers">Encoding and Decoding Helpers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.to_hex"><code class="docutils literal notranslate"><span class="pre">Web3.to_hex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.to_text"><code class="docutils literal notranslate"><span class="pre">Web3.to_text()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.to_bytes"><code class="docutils literal notranslate"><span class="pre">Web3.to_bytes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.to_int"><code class="docutils literal notranslate"><span class="pre">Web3.to_int()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.to_json"><code class="docutils literal notranslate"><span class="pre">Web3.to_json()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#currency-conversions">Currency Conversions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.to_wei"><code class="docutils literal notranslate"><span class="pre">Web3.to_wei()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.from_wei"><code class="docutils literal notranslate"><span class="pre">Web3.from_wei()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#addresses">Addresses</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.is_address"><code class="docutils literal notranslate"><span class="pre">Web3.is_address()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.is_checksum_address"><code class="docutils literal notranslate"><span class="pre">Web3.is_checksum_address()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.to_checksum_address"><code class="docutils literal notranslate"><span class="pre">Web3.to_checksum_address()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cryptographic-hashing">Cryptographic Hashing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.keccak"><code class="docutils literal notranslate"><span class="pre">Web3.keccak()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.solidity_keccak"><code class="docutils literal notranslate"><span class="pre">Web3.solidity_keccak()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#check-encodability">Check Encodability</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.w3.is_encodable"><code class="docutils literal notranslate"><span class="pre">w3.is_encodable()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.w3.strict_bytes_type_checking"><code class="docutils literal notranslate"><span class="pre">w3.strict_bytes_type_checking</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#rpc-api-modules">RPC API Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.eth"><code class="docutils literal notranslate"><span class="pre">Web3.eth</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.Web3.geth"><code class="docutils literal notranslate"><span class="pre">Web3.geth</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-methods">Custom Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#external-modules">External Modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.w3.attach_modules"><code class="docutils literal notranslate"><span class="pre">w3.attach_modules()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas Price API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resources and Learning Material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">Code of Conduct</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Web3 API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/web3.main.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="web3-api">
+<span id="web3-base"></span><h1>Web3 API<a class="headerlink" href="#web3-api" title="Link to this heading"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#providers" id="id3">Providers</a></p></li>
+<li><p><a class="reference internal" href="#attributes" id="id4">Attributes</a></p></li>
+<li><p><a class="reference internal" href="#batch-requests" id="id5">Batch Requests</a></p></li>
+<li><p><a class="reference internal" href="#encoding-and-decoding-helpers" id="id6">Encoding and Decoding Helpers</a></p></li>
+<li><p><a class="reference internal" href="#currency-conversions" id="id7">Currency Conversions</a></p></li>
+<li><p><a class="reference internal" href="#addresses" id="id8">Addresses</a></p></li>
+<li><p><a class="reference internal" href="#cryptographic-hashing" id="id9">Cryptographic Hashing</a></p></li>
+<li><p><a class="reference internal" href="#check-encodability" id="id10">Check Encodability</a></p></li>
+<li><p><a class="reference internal" href="#rpc-api-modules" id="id11">RPC API Modules</a></p></li>
+<li><p><a class="reference internal" href="#custom-methods" id="id12">Custom Methods</a></p></li>
+<li><p><a class="reference internal" href="#external-modules" id="id13">External Modules</a></p></li>
+</ul>
+</nav>
+<dl class="py class" id="module-web3">
+<dt class="sig sig-object py" id="web3.Web3">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.</span></span><span class="sig-name descname"><span class="pre">Web3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>Each <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance exposes the following APIs.</p>
+<section id="providers">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Providers</a><a class="headerlink" href="#providers" title="Link to this heading"></a></h2>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.Web3.HTTPProvider">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">HTTPProvider</span></span><a class="headerlink" href="#web3.Web3.HTTPProvider" title="Link to this definition"></a></dt>
+<dd><p>Convenience API to access <a class="reference internal" href="providers.html#web3.providers.rpc.HTTPProvider" title="web3.providers.rpc.HTTPProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">web3.providers.rpc.HTTPProvider</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.Web3.IPCProvider">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">IPCProvider</span></span><a class="headerlink" href="#web3.Web3.IPCProvider" title="Link to this definition"></a></dt>
+<dd><p>Convenience API to access <a class="reference internal" href="providers.html#web3.providers.ipc.IPCProvider" title="web3.providers.ipc.IPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">web3.providers.ipc.IPCProvider</span></code></a></p>
+</dd></dl>
+
+</section>
+<section id="attributes">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Attributes</a><a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.Web3.api">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">api</span></span><a class="headerlink" href="#web3.Web3.api" title="Link to this definition"></a></dt>
+<dd><p>Returns the current Web3 version.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">api</span>
+<span class="go">&quot;4.7.0&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.Web3.client_version">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">client_version</span></span><a class="headerlink" href="#web3.Web3.client_version" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">web3_clientVersion</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the current client version.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">client_version</span>
+<span class="go">&#39;Geth/v1.4.11-stable-fed692f6/darwin/go1.7&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="batch-requests">
+<span id="id2"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">Batch Requests</a><a class="headerlink" href="#batch-requests" title="Link to this heading"></a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.batch_requests">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">batch_requests</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.batch_requests" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>The JSON-RPC API allows for batch requests, meaning you can send a single request
+that contains an array of request objects. Generally, this may be useful when you want
+to limit the number of requests you send to a node.</p>
+<p>You can choose to build a batch of requests within or outside of a context manager:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">w3</span><span class="o">.</span><span class="n">batch_requests</span><span class="p">()</span> <span class="k">as</span> <span class="n">batch</span><span class="p">:</span>
+    <span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+    <span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="n">responses</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Within the batching context above, calls are suspended until
+<code class="docutils literal notranslate"><span class="pre">batch.execute()</span></code> is called. Calling a method without
+passing it to <code class="docutils literal notranslate"><span class="pre">batch.add</span></code> might result in unexpected behavior.</p>
+</div>
+<p>Using the batch object directly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">batch</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">batch_requests</span><span class="p">()</span>
+<span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">responses</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>Contract interactions can be included in batch requests by omitting the <code class="docutils literal notranslate"><span class="pre">call()</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">math_contract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">multiply7</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Additionally, if you need to make multiple calls of the same function, you can add
+a mapping of the function to its arguments:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">batch</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">batch_requests</span><span class="p">()</span>
+<span class="n">batch</span><span class="o">.</span><span class="n">add_mapping</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="n">math_contract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">multiply7</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+<span class="n">responses</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">execute</span></code> method returns a list of responses in the order they were included in
+the batch.</p>
+<p>If you need to abandon or rebuild a batch request, utilize the <code class="docutils literal notranslate"><span class="pre">clear</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">batch</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">batch_requests</span><span class="p">()</span>
+<span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">_requests_info</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+
+<span class="n">batch</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">batch</span><span class="o">.</span><span class="n">_requests_info</span> <span class="o">==</span> <span class="p">[]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Only read-only operations that exist within modules on the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> class
+(e.g. <code class="docutils literal notranslate"><span class="pre">w3.eth</span></code>, <code class="docutils literal notranslate"><span class="pre">w3.net</span></code>) are supported by <code class="docutils literal notranslate"><span class="pre">batch_requests</span></code>.
+Unsupported methods include:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.subscribe" title="web3.eth.Eth.subscribe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">subscribe</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.unsubscribe" title="web3.eth.Eth.unsubscribe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">unsubscribe</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_raw_transaction" title="web3.eth.Eth.send_raw_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_raw_transaction</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.sign_transaction" title="web3.eth.Eth.sign_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_transaction</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.sign" title="web3.eth.Eth.sign"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.sign_typed_data" title="web3.eth.Eth.sign_typed_data"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_typed_data</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">w3.provider.make_request()</span></code>.</p></li>
+</ul>
+</div>
+</div></blockquote>
+<section id="async-batch-requests">
+<h3>Async Batch Requests<a class="headerlink" href="#async-batch-requests" title="Link to this heading"></a></h3>
+<p>If using one of the asynchronous providers, you'll need to make use of
+the <code class="docutils literal notranslate"><span class="pre">async_execute</span></code> method and the <code class="docutils literal notranslate"><span class="pre">async</span></code> and <code class="docutils literal notranslate"><span class="pre">await</span></code> keywords as appropriate.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>If performance is a concern, consider using <code class="docutils literal notranslate"><span class="pre">asyncio.gather()</span></code> with single
+concurrent requests instead of an asynchronous batch request. It will generally be
+the faster option due to the overhead of batching.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># context manager:</span>
+<span class="k">async</span> <span class="k">with</span> <span class="n">w3</span><span class="o">.</span><span class="n">batch_requests</span><span class="p">()</span> <span class="k">as</span> <span class="n">batch</span><span class="p">:</span>
+    <span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+    <span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+    <span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="n">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="n">batch</span><span class="o">.</span><span class="n">async_execute</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+
+<span class="c1"># object:</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">batch_requests</span><span class="p">()</span>
+<span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">batch</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">responses</span> <span class="o">=</span> <span class="k">await</span> <span class="n">batch</span><span class="o">.</span><span class="n">async_execute</span><span class="p">()</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+<section id="encoding-and-decoding-helpers">
+<span id="overview-type-conversions"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">Encoding and Decoding Helpers</a><a class="headerlink" href="#encoding-and-decoding-helpers" title="Link to this heading"></a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.to_hex">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">to_hex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hexstr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.to_hex" title="Link to this definition"></a></dt>
+<dd><p>Takes a variety of inputs and returns it in its hexadecimal representation.
+It follows the rules for converting to hex in the
+<a class="reference external" href="https://github.com/ethereum/wiki/wiki/JSON-RPC#hex-value-encoding">JSON-RPC spec</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">&#39;0x0&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">&#39;0x1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="mh">0x0</span><span class="p">)</span>
+<span class="go">&#39;0x0&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="mh">0x000F</span><span class="p">)</span>
+<span class="go">&#39;0xf&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="go">&#39;0x&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x0F</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="go">&#39;0x000f&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&#39;0x0&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&#39;0x1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;0x000F&#39;</span><span class="p">)</span>
+<span class="go">&#39;0x000f&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;000F&#39;</span><span class="p">)</span>
+<span class="go">&#39;0x000f&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="go">&#39;0x&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_hex</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;cowmö&#39;</span><span class="p">)</span>
+<span class="go">&#39;0x636f776dc3b6&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.to_text">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">to_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hexstr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.to_text" title="Link to this definition"></a></dt>
+<dd><p>Takes a variety of inputs and returns its string equivalent.
+Text gets decoded as UTF-8.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_text</span><span class="p">(</span><span class="mh">0x636f776dc3b6</span><span class="p">)</span>
+<span class="go">&#39;cowmö&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_text</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;cowm</span><span class="se">\xc3\xb6</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="go">&#39;cowmö&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_text</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;0x636f776dc3b6&#39;</span><span class="p">)</span>
+<span class="go">&#39;cowmö&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_text</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;636f776dc3b6&#39;</span><span class="p">)</span>
+<span class="go">&#39;cowmö&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_text</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;cowmö&#39;</span><span class="p">)</span>
+<span class="go">&#39;cowmö&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.to_bytes">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">to_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hexstr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.to_bytes" title="Link to this definition"></a></dt>
+<dd><p>Takes a variety of inputs and returns its bytes equivalent.
+Text gets encoded as UTF-8.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">b&#39;\x00&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mh">0x000F</span><span class="p">)</span>
+<span class="go">b&#39;\x0f&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="go">b&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x0F</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="go">b&#39;\x00\x0f&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">b&#39;\x00&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">b&#39;\x01&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;0x000F&#39;</span><span class="p">)</span>
+<span class="go">b&#39;\x00\x0f&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;000F&#39;</span><span class="p">)</span>
+<span class="go">b&#39;\x00\x0f&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="go">b&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;cowmö&#39;</span><span class="p">)</span>
+<span class="go">b&#39;cowm\xc3\xb6&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.to_int">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">to_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hexstr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.to_int" title="Link to this definition"></a></dt>
+<dd><p>Takes a variety of inputs and returns its integer equivalent.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_int</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_int</span><span class="p">(</span><span class="mh">0x000F</span><span class="p">)</span>
+<span class="go">15</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_int</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x0F</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="go">15</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_int</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_int</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_int</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;0x000F&#39;</span><span class="p">)</span>
+<span class="go">15</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_int</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;000F&#39;</span><span class="p">)</span>
+<span class="go">15</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.to_json">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.to_json" title="Link to this definition"></a></dt>
+<dd><p>Takes a variety of inputs and returns its JSON equivalent.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">&#39;3&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_json</span><span class="p">({</span><span class="s1">&#39;one&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="go">&#39;{&quot;one&quot;: 1}&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="currency-conversions">
+<span id="overview-currency-conversions"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">Currency Conversions</a><a class="headerlink" href="#currency-conversions" title="Link to this heading"></a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.to_wei">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">to_wei</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currency</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.to_wei" title="Link to this definition"></a></dt>
+<dd><p>Returns the value in the denomination specified by the <code class="docutils literal notranslate"><span class="pre">currency</span></code> argument
+converted to wei.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_wei</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">)</span>
+<span class="go">1000000000000000000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.from_wei">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">from_wei</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">currency</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.from_wei" title="Link to this definition"></a></dt>
+<dd><p>Returns the value in wei converted to the given currency. The value is returned
+as a <code class="docutils literal notranslate"><span class="pre">Decimal</span></code> to ensure precision down to the wei.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">from_wei</span><span class="p">(</span><span class="mi">1000000000000000000</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">)</span>
+<span class="go">Decimal(&#39;1&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="addresses">
+<span id="overview-addresses"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">Addresses</a><a class="headerlink" href="#addresses" title="Link to this heading"></a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.is_address">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">is_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.is_address" title="Link to this definition"></a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the value is one of the recognized address formats.</p>
+<ul class="simple">
+<li><p>Allows for both <code class="docutils literal notranslate"><span class="pre">0x</span></code> prefixed and non-prefixed values.</p></li>
+<li><p>If the address contains mixed upper and lower cased characters this function also
+checks if the address checksum is valid according to <a class="reference external" href="https://github.com/ethereum/EIPs/issues/55">EIP55</a></p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">is_address</span><span class="p">(</span><span class="s1">&#39;0xd3CdA913deB6f67967B99D67aCDFa1712C293601&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.is_checksum_address">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">is_checksum_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.is_checksum_address" title="Link to this definition"></a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if the value is a valid <a class="reference external" href="https://github.com/ethereum/EIPs/issues/55">EIP55</a> checksummed address</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">is_checksum_address</span><span class="p">(</span><span class="s1">&#39;0xd3CdA913deB6f67967B99D67aCDFa1712C293601&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">is_checksum_address</span><span class="p">(</span><span class="s1">&#39;0xd3cda913deb6f67967b99d67acdfa1712c293601&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.to_checksum_address">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">to_checksum_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.to_checksum_address" title="Link to this definition"></a></dt>
+<dd><p>Returns the given address with an <a class="reference external" href="https://github.com/ethereum/EIPs/issues/55">EIP55</a> checksum.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">to_checksum_address</span><span class="p">(</span><span class="s1">&#39;0xd3cda913deb6f67967b99d67acdfa1712c293601&#39;</span><span class="p">)</span>
+<span class="go">&#39;0xd3CdA913deB6f67967B99D67aCDFa1712C293601&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="cryptographic-hashing">
+<span id="overview-hashing"></span><h2><a class="toc-backref" href="#id9" role="doc-backlink">Cryptographic Hashing</a><a class="headerlink" href="#cryptographic-hashing" title="Link to this heading"></a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.keccak">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">keccak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">primitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hexstr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.keccak" title="Link to this definition"></a></dt>
+<dd><p>Returns the Keccak-256 of the given value. Text is encoded to UTF-8 before
+computing the hash, just like Solidity. Any of the following are
+valid and equivalent:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">keccak</span><span class="p">(</span><span class="mh">0x747874</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">keccak</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x74\x78\x74</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">keccak</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;0x747874&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">keccak</span><span class="p">(</span><span class="n">hexstr</span><span class="o">=</span><span class="s1">&#39;747874&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">keccak</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;txt&#39;</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0xd7278090a36507640ea6b7a0034b69b0d240766fa3f98e3722be93c613b29d2e&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.Web3.solidity_keccak">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">solidity_keccak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">abi_types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.Web3.solidity_keccak" title="Link to this definition"></a></dt>
+<dd><p>Returns the Keccak-256 as it would be computed by the solidity <code class="docutils literal notranslate"><span class="pre">keccak</span></code>
+function on a <em>packed</em> ABI encoding of the <code class="docutils literal notranslate"><span class="pre">value</span></code> list contents.  The <code class="docutils literal notranslate"><span class="pre">abi_types</span></code>
+argument should be a list of solidity type strings which correspond to each
+of the provided values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">solidity_keccak</span><span class="p">([</span><span class="s1">&#39;bool&#39;</span><span class="p">],</span> <span class="p">[</span><span class="kc">True</span><span class="p">])</span>
+<span class="go">HexBytes(&quot;0x5fe7f977e71dba2ea1a68e21057beebb9be2ac30c6410aa38d4f3fbe41dcffd2&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">solidity_keccak</span><span class="p">([</span><span class="s1">&#39;uint8&#39;</span><span class="p">,</span> <span class="s1">&#39;uint8&#39;</span><span class="p">,</span> <span class="s1">&#39;uint8&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">97</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">99</span><span class="p">])</span>
+<span class="go">HexBytes(&quot;0x4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">solidity_keccak</span><span class="p">([</span><span class="s1">&#39;uint8[]&#39;</span><span class="p">],</span> <span class="p">[[</span><span class="mi">97</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">99</span><span class="p">]])</span>
+<span class="go">HexBytes(&quot;0x233002c671295529bcc50b76a2ef2b0de2dac2d93945fca745255de1a9e4017e&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">solidity_keccak</span><span class="p">([</span><span class="s1">&#39;address&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;0x49EdDD3769c0712032808D86597B84ac5c2F5614&quot;</span><span class="p">])</span>
+<span class="go">HexBytes(&quot;0x2ff37b5607484cd4eecf6d13292e22bd6e5401eaffcc07e279583bc742c68882&quot;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">solidity_keccak</span><span class="p">([</span><span class="s1">&#39;address&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;ethereumfoundation.eth&quot;</span><span class="p">])</span>
+<span class="go">HexBytes(&quot;0x913c99ea930c78868f1535d34cd705ab85929b2eaaf70fcd09677ecd6e5d75e9&quot;)</span>
+</pre></div>
+</div>
+<p>Comparable solidity usage:</p>
+<div class="highlight-solidity notranslate"><div class="highlight"><pre><span></span><span class="kt">bytes32</span><span class="w"> </span><span class="nv">data1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">keccak256</span><span class="p">(</span>abi<span class="p">.</span>encodePacked<span class="p">(</span><span class="kt">true</span><span class="p">));</span>
+assert<span class="p">(</span>data1<span class="w"> </span><span class="o">==</span><span class="w"> </span>hex<span class="s2">&quot;5fe7f977e71dba2ea1a68e21057beebb9be2ac30c6410aa38d4f3fbe41dcffd2&quot;</span><span class="p">);</span>
+<span class="kt">bytes32</span><span class="w"> </span><span class="nv">data2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">keccak256</span><span class="p">(</span>abi<span class="p">.</span>encodePacked<span class="p">(</span><span class="kt">uint8</span><span class="p">(</span><span class="m m-Decimal">97</span><span class="p">),</span><span class="w"> </span><span class="kt">uint8</span><span class="p">(</span><span class="m m-Decimal">98</span><span class="p">),</span><span class="w"> </span><span class="kt">uint8</span><span class="p">(</span><span class="m m-Decimal">99</span><span class="p">)));</span>
+assert<span class="p">(</span>data2<span class="w"> </span><span class="o">==</span><span class="w"> </span>hex<span class="s2">&quot;4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="check-encodability">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Check Encodability</a><a class="headerlink" href="#check-encodability" title="Link to this heading"></a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.w3.is_encodable">
+<span class="sig-prename descclassname"><span class="pre">w3.</span></span><span class="sig-name descname"><span class="pre">is_encodable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.w3.is_encodable" title="Link to this definition"></a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if a value can be encoded as the given type. Otherwise returns <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.auto.gethdev</span><span class="w"> </span><span class="kn">import</span> <span class="n">w3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;12&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="s1">&#39;0x1234&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="s1">&#39;1234&#39;</span><span class="p">)</span>  <span class="c1"># not 0x-prefixed, no assumptions will be made</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>  <span class="c1"># does not match specified bytes size</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;123&#39;</span><span class="p">)</span>  <span class="c1"># does not match specified bytes size</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.w3.strict_bytes_type_checking">
+<span class="sig-prename descclassname"><span class="pre">w3.</span></span><span class="sig-name descname"><span class="pre">strict_bytes_type_checking</span></span><a class="headerlink" href="#web3.w3.strict_bytes_type_checking" title="Link to this definition"></a></dt>
+<dd><p>Disable the stricter bytes type checking that is loaded by default. For more
+examples, see <a class="reference internal" href="web3.contract.html#disable-strict-byte-check"><span class="std std-ref">Disabling Strict Checks for Bytes Types</span></a></p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.auto.gethdev</span><span class="w"> </span><span class="kn">import</span> <span class="n">w3</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;12&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span> <span class="c1"># not of exact size bytes2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># zero-padded, so encoded to: b&#39;1\x00&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># re-enable it</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="rpc-api-modules">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">RPC API Modules</a><a class="headerlink" href="#rpc-api-modules" title="Link to this heading"></a></h2>
+<p>Each <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance also exposes these namespaced API modules.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.Web3.eth">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">eth</span></span><a class="headerlink" href="#web3.Web3.eth" title="Link to this definition"></a></dt>
+<dd><p>See <a class="reference internal" href="web3.eth.html"><span class="doc">web3.eth API</span></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.Web3.geth">
+<span class="sig-prename descclassname"><span class="pre">Web3.</span></span><span class="sig-name descname"><span class="pre">geth</span></span><a class="headerlink" href="#web3.Web3.geth" title="Link to this definition"></a></dt>
+<dd><p>See <a class="reference internal" href="web3.geth.html"><span class="doc">Geth API</span></a></p>
+</dd></dl>
+
+<p>These internal modules inherit from the <code class="docutils literal notranslate"><span class="pre">web3.module.Module</span></code> class which give them some configurations internal to the
+web3.py library.</p>
+</section>
+<section id="custom-methods">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Custom Methods</a><a class="headerlink" href="#custom-methods" title="Link to this heading"></a></h2>
+<p>You may add or overwrite methods within any module using the <code class="docutils literal notranslate"><span class="pre">attach_methods</span></code> function.
+To create a property instead, set <code class="docutils literal notranslate"><span class="pre">is_property</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">attach_methods</span><span class="p">({</span>
+<span class="gp">... </span>   <span class="s1">&#39;example_method&#39;</span><span class="p">:</span> <span class="n">Method</span><span class="p">(</span>
+<span class="gp">... </span>     <span class="s1">&#39;eth_example&#39;</span><span class="p">,</span>
+<span class="gp">... </span>      <span class="n">mungers</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span>
+<span class="gp">... </span>      <span class="n">request_formatters</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span>
+<span class="gp">... </span>      <span class="n">result_formatters</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span>
+<span class="gp">... </span>      <span class="n">is_property</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>   <span class="p">),</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">example_method</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="external-modules">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">External Modules</a><a class="headerlink" href="#external-modules" title="Link to this heading"></a></h2>
+<p>External modules can be used to introduce custom or third-party APIs to your <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance. External modules are simply
+classes whose methods and properties can be made available within the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance. Optionally, the external module may
+make use of the parent <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance by accepting it as the first argument within the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">ExampleModule</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w3</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">w3</span> <span class="o">=</span> <span class="n">w3</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="k">def</span><span class="w"> </span><span class="nf">print_balance_of_shaq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_balance</span><span class="p">(</span><span class="s1">&#39;shaq.eth&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>Given the flexibility of external modules, use caution and only import modules from trusted third parties
+and open source code you've vetted!</p>
+</div>
+<p>Configuring external modules can occur either at instantiation of the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance or by making use of the
+<code class="docutils literal notranslate"><span class="pre">attach_modules()</span></code> method. To instantiate the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance with external modules use the <code class="docutils literal notranslate"><span class="pre">external_modules</span></code>
+keyword argument:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">HTTPProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">external_module_library</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">ModuleClass1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ModuleClass2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ModuleClass3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ModuleClass4</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ModuleClass5</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">HTTPProvider</span><span class="p">(</span><span class="n">provider_uri</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="n">external_modules</span><span class="o">=</span><span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;module1&#39;</span><span class="p">:</span> <span class="n">ModuleClass1</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;module2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">ModuleClass2</span><span class="p">,</span> <span class="p">{</span>
+<span class="gp">... </span>            <span class="s1">&#39;submodule1&#39;</span><span class="p">:</span> <span class="n">ModuleClass3</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s1">&#39;submodule2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">ModuleClass4</span><span class="p">,</span> <span class="p">{</span>
+<span class="gp">... </span>                <span class="s1">&#39;submodule2a&#39;</span><span class="p">:</span> <span class="n">ModuleClass5</span><span class="p">,</span>  <span class="c1"># submodule children may be nested further if necessary</span>
+<span class="gp">... </span>            <span class="p">})</span>
+<span class="gp">... </span>        <span class="p">})</span>
+<span class="gp">... </span>    <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+
+<span class="go"># `return_zero`, in this case, is an example attribute of the `ModuleClass1` object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">module1</span><span class="o">.</span><span class="n">return_zero</span><span class="p">()</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">module2</span><span class="o">.</span><span class="n">submodule1</span><span class="o">.</span><span class="n">return_one</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">module2</span><span class="o">.</span><span class="n">submodule2</span><span class="o">.</span><span class="n">submodule2a</span><span class="o">.</span><span class="n">return_two</span><span class="p">()</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.w3.attach_modules">
+<span class="sig-prename descclassname"><span class="pre">w3.</span></span><span class="sig-name descname"><span class="pre">attach_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.w3.attach_modules" title="Link to this definition"></a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">attach_modules()</span></code> method can be used to attach external modules after the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance has been
+instantiated.</p>
+<p>Modules are attached via a <cite>dict</cite> with module names as the keys. The values can either be the module classes
+themselves, if there are no submodules, or two-item tuples with the module class as the 0th index and a similarly
+built <cite>dict</cite> containing the submodule information as the 1st index. This pattern may be repeated as necessary.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">HTTPProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">external_module_library</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">ModuleClass1</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ModuleClass2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ModuleClass3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ModuleClass4</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">ModuleClass5</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="n">provider_uri</span><span class="p">))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">attach_modules</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;module1&#39;</span><span class="p">:</span> <span class="n">ModuleClass1</span><span class="p">,</span>  <span class="c1"># the module class itself may be used for a single module with no submodules</span>
+<span class="gp">... </span>    <span class="s1">&#39;module2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">ModuleClass2</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># a tuple with module class and corresponding submodule dict may be used for modules with submodules</span>
+<span class="gp">... </span>        <span class="s1">&#39;submodule1&#39;</span><span class="p">:</span> <span class="n">ModuleClass3</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s1">&#39;submodule2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">ModuleClass4</span><span class="p">,</span> <span class="p">{</span>  <span class="c1"># this pattern may be repeated as necessary</span>
+<span class="gp">... </span>            <span class="s1">&#39;submodule2a&#39;</span><span class="p">:</span> <span class="n">ModuleClass5</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="p">})</span>
+<span class="gp">... </span>    <span class="p">})</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">module1</span><span class="o">.</span><span class="n">return_zero</span><span class="p">()</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">module2</span><span class="o">.</span><span class="n">submodule1</span><span class="o">.</span><span class="n">return_one</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">module2</span><span class="o">.</span><span class="n">submodule2</span><span class="o">.</span><span class="n">submodule2a</span><span class="o">.</span><span class="n">return_two</span><span class="p">()</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="migration.html" class="btn btn-neutral float-left" title="Migration Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="web3.eth.html" class="btn btn-neutral float-right" title="web3.eth API" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

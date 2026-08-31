@@ -1,0 +1,501 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../filters.rst:4
+msgid "Events and Logs"
+msgstr "事件和日志"
+
+#: ../../filters.rst:6
+msgid ""
+"If you're on this page, you're likely looking for an answer to this "
+"question: **How do I know when a specific contract is used?** You have "
+"several options:"
+msgstr ""
+
+#: ../../filters.rst:9
+msgid ""
+"Query blocks for transactions that include the contract address in the "
+"``\"to\"`` field. This contrived example is searching the latest block "
+"for any transactions sent to the WETH_ contract."
+msgstr ""
+
+#: ../../filters.rst:23
+msgid ""
+"Query for logs emitted by a contract. After instantiating a web3.py "
+"Contract object, you can :ref:`fetch logs <contract_get_logs>` for any "
+"event listed in the ABI.  In this example, we query for ``Transfer`` "
+"events in the latest block and log out the results."
+msgstr ""
+
+#: ../../filters.rst:40
+msgid ""
+"See an advanced example of fetching log history :ref:`here "
+"<advanced_token_fetch>`."
+msgstr ""
+
+#: ../../filters.rst:42
+msgid ""
+"Subscribe to events for real-time updates. When using a persistent "
+"connection provider "
+"(:class:`~web3.providers.persistent.WebSocketProvider` or "
+":class:`~web3.providers.persistent.AsyncIPCProvider`), the "
+":meth:`subscribe() <web3.eth.Eth.subscribe>` method can be used to "
+"establish a new event subscription. This example subscribes to "
+"``Transfer`` events of the WETH contract."
+msgstr ""
+
+#: ../../filters.rst:78
+msgid "For more usage examples see the docs on :ref:`subscription-examples`."
+msgstr ""
+
+#: ../../filters.rst:80
+msgid "Use a filter."
+msgstr ""
+
+#: ../../filters.rst:84
+msgid ""
+"While filters can be a very convenient way to monitor for blocks, "
+"transactions, or events, they are notoriously unreliable. Both remote and"
+" locally hosted nodes have a reputation for occasionally dropping "
+"filters, and some remote node providers don't support filter-related RPC "
+"calls at all."
+msgstr ""
+
+#: ../../filters.rst:91
+msgid "The :meth:`web3.eth.Eth.filter` method can be used to set up filters for:"
+msgstr ""
+
+#: ../../filters.rst:93
+msgid "Pending Transactions: ``w3.eth.filter(\"pending\")``"
+msgstr ""
+
+#: ../../filters.rst:95
+msgid "New Blocks ``w3.eth.filter(\"latest\")``"
+msgstr ""
+
+#: ../../filters.rst:97
+msgid "Event Logs"
+msgstr ""
+
+#: ../../filters.rst:99
+msgid "Through the contract instance api:"
+msgstr ""
+
+#: ../../filters.rst:105
+msgid ""
+"Or built manually by supplying `valid filter params "
+"<https://github.com/ethereum/execution-"
+"apis/blob/bea0266c42919a2fb3ee524fb91e624a23bc17c5/src/schemas/filter.json#L28>`_:"
+msgstr ""
+
+#: ../../filters.rst:111
+msgid "Attaching to an existing filter"
+msgstr ""
+
+#: ../../filters.rst:119
+msgid ""
+"Creating event filters requires that your Ethereum node has an API "
+"support enabled for filters. Note that Infura support for filters does "
+"not offer access to `pending` filters. To get event logs on other "
+"stateless nodes please see :class:`web3.contract.ContractEvents`."
+msgstr ""
+
+#: ../../filters.rst:126
+msgid "Filter Class"
+msgstr ""
+
+#: ../../filters.rst:132
+msgid ""
+"The ``filter_id`` for this filter as returned by the ``eth_newFilter`` "
+"RPC method when this filter was created."
+msgstr ""
+
+#: ../../filters.rst:138
+msgid "Retrieve new entries for this filter."
+msgstr ""
+
+#: ../../filters.rst:140
+msgid ""
+"Logs will be retrieved using the :func:`web3.eth.Eth.get_filter_changes` "
+"which returns only new entries since the last poll."
+msgstr ""
+
+#: ../../filters.rst:147
+msgid "Retrieve all entries for this filter."
+msgstr ""
+
+#: ../../filters.rst:149
+msgid ""
+"Logs will be retrieved using the :func:`web3.eth.Eth.get_filter_logs` "
+"which returns all entries that match the given filter."
+msgstr ""
+
+#: ../../filters.rst:156
+msgid ""
+"Hook for subclasses to modify the format of the log entries this filter "
+"returns, or passes to its callback functions."
+msgstr ""
+
+#: ../../filters.rst:159
+msgid "By default this returns the ``entry`` parameter unmodified."
+msgstr ""
+
+#: ../../filters.rst:164
+msgid ""
+"Hook for subclasses to add additional programmatic filtering.  The "
+"default implementation always returns ``True``."
+msgstr ""
+
+#: ../../filters.rst:169
+msgid "Block and Transaction Filter Classes"
+msgstr ""
+
+#: ../../filters.rst:173
+msgid "``BlockFilter`` is a subclass of :class:`Filter`."
+msgstr ""
+
+#: ../../filters.rst:175
+msgid ""
+"You can setup a filter for new blocks using ``web3.eth.filter('latest')``"
+" which will return a new :class:`BlockFilter` object."
+msgstr ""
+
+#: ../../filters.rst:185
+msgid ""
+"``\"safe\"`` and ``\"finalized\"`` block identifiers are not yet "
+"supported for ``eth_newBlockFilter``."
+msgstr ""
+
+#: ../../filters.rst:190
+msgid "``TransactionFilter`` is a subclass of :class:`Filter`."
+msgstr ""
+
+#: ../../filters.rst:192
+msgid ""
+"You can setup a filter for new blocks using "
+"``web3.eth.filter('pending')`` which will return a new "
+":class:`TransactionFilter` object."
+msgstr ""
+
+#: ../../filters.rst:202
+msgid "Event Log Filters"
+msgstr ""
+
+#: ../../filters.rst:204
+msgid ""
+"You can set up a filter for event logs using the web3.py contract api: "
+":meth:`web3.contract.Contract.events.your_event_name.create_filter`, "
+"which provides some conveniences for creating event log filters. Refer to"
+" the following example:"
+msgstr ""
+
+#: ../../filters.rst:213
+msgid ""
+"See :meth:`web3.contract.Contract.events.your_event_name.create_filter()`"
+" documentation for more information."
+msgstr ""
+
+#: ../../filters.rst:215
+msgid ""
+"You can set up an event log filter like the one above with "
+"``web3.eth.filter`` by supplying a dictionary containing the standard "
+"filter parameters. Assuming that ``arg1`` is indexed, the equivalent "
+"filter creation would look like:"
+msgstr ""
+
+#: ../../filters.rst:228
+msgid ""
+"The ``topics`` argument is order-dependent. For non-anonymous events, the"
+" first item in the topic list is always the keccack hash of the event "
+"signature. Subsequent topic items are the hex encoded values for indexed "
+"event arguments. In the above example, the second item is the ``arg1`` "
+"value ``10`` encoded to its hex string representation."
+msgstr ""
+
+#: ../../filters.rst:230
+msgid ""
+"In addition to being order-dependent, there are a few more points to "
+"recognize when specifying topic filters:"
+msgstr ""
+
+#: ../../filters.rst:232
+msgid ""
+"Given a transaction log with topics [A, B], the following topic filters "
+"will yield a match:"
+msgstr ""
+
+#: ../../filters.rst:234
+msgid "[] \"anything\""
+msgstr ""
+
+#: ../../filters.rst:235
+msgid "[A] \"A in first position (and anything after)\""
+msgstr ""
+
+#: ../../filters.rst:236
+msgid ""
+"[None, B] \"anything in first position AND B in second position (and "
+"anything after)\""
+msgstr ""
+
+#: ../../filters.rst:237
+msgid ""
+"[A, B] \"A in first position AND B in second position (and anything "
+"after)\""
+msgstr ""
+
+#: ../../filters.rst:238
+msgid ""
+"[[A, B], [A, B]] \"(A OR B) in first position AND (A OR B) in second "
+"position (and anything after)\""
+msgstr ""
+
+#: ../../filters.rst:240
+msgid ""
+"See the JSON-RPC documentation for `eth_newFilter "
+"<https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_newfilter>`_ "
+"more information on the standard filter parameters."
+msgstr ""
+
+#: ../../filters.rst:244
+msgid ""
+"Though ``\"finalized\"`` and ``\"safe\"`` block identifiers are not yet "
+"part of the specifications for ``eth_newFilter``, they are supported by "
+"web3.py and may or may not yield expected results depending on the node "
+"being accessed."
+msgstr ""
+
+#: ../../filters.rst:248
+msgid ""
+"Creating a log filter by either of the above methods will return a "
+":class:`LogFilter` instance."
+msgstr ""
+
+#: ../../filters.rst:252
+msgid ""
+"The :py:class:`LogFilter` class is a subclass of :class:`Filter`.  See "
+"the :class:`Filter` documentation for inherited methods."
+msgstr ""
+
+#: ../../filters.rst:255
+msgid ":class:`LogFilter` provides the following additional methods:"
+msgstr ""
+
+#: ../../filters.rst:260
+msgid ""
+"Provides a means to filter on the log data, in other words the ability to"
+" filter on values from un-indexed event arguments. The parameter "
+"``data_filter_set`` should be a list or set of 32-byte hex encoded "
+"values."
+msgstr ""
+
+#: ../../filters.rst:264
+msgid "Examples: Listening For Events"
+msgstr ""
+
+#: ../../filters.rst:267
+msgid "Synchronous"
+msgstr ""
+
+#: ../../filters.rst:296
+msgid "Asynchronous Filter Polling"
+msgstr ""
+
+#: ../../filters.rst:298
+msgid ""
+"Starting with web3 version 4, the ``watch`` method was taken out of the "
+"web3 filter objects. There are many decisions to be made when designing a"
+" system regarding threading and concurrency. Rather than force a "
+"decision, web3 leaves these choices up to the user. Below are some "
+"example implementations of asynchronous filter-event handling that can "
+"serve as starting points."
+msgstr ""
+
+#: ../../filters.rst:304
+msgid "Single threaded concurrency with ``async`` and ``await``"
+msgstr ""
+
+#: ../../filters.rst:306
+msgid ""
+"Beginning in python 3.5, the ``async`` and ``await`` built-in keywords "
+"were added.  These provide a shared api for coroutines that can be "
+"utilized by modules such as the built-in asyncio_.  Below is an example "
+"event loop using asyncio_, that polls multiple web3 filter object, and "
+"passes new entries to a handler."
+msgstr ""
+
+#: ../../filters.rst:344
+msgid "Read the asyncio_ documentation for more information."
+msgstr ""
+
+#: ../../filters.rst:347
+msgid "Running the event loop in a separate thread"
+msgstr ""
+
+#: ../../filters.rst:349
+msgid ""
+"Here is an extended version of above example, where the event loop is run"
+" in a separate thread, releasing the ``main`` function for other tasks."
+msgstr ""
+
+#: ../../filters.rst:382
+msgid ""
+"Here are some other libraries that provide frameworks for writing "
+"asynchronous python:"
+msgstr ""
+
+#: ../../filters.rst:384
+msgid "gevent_"
+msgstr ""
+
+#: ../../filters.rst:385
+msgid "twisted_"
+msgstr ""
+
+#: ../../filters.rst:386
+msgid "celery_"
+msgstr ""
+
+#: ../../filters.rst:390
+msgid "Examples"
+msgstr ""
+
+#: ../../filters.rst:395
+msgid "Advanced example: Fetching all token transfer events"
+msgstr ""
+
+#: ../../filters.rst:397
+msgid ""
+"In this example, we show how to fetch all events of a certain event type "
+"from the Ethereum blockchain. There are three challenges when working "
+"with a large set of events:"
+msgstr ""
+
+#: ../../filters.rst:399
+msgid "How to incrementally update an existing database of fetched events"
+msgstr ""
+
+#: ../../filters.rst:401
+msgid "How to deal with interruptions in long running processes"
+msgstr ""
+
+#: ../../filters.rst:403
+msgid "How to deal with `eth_getLogs` JSON-RPC call query limitations"
+msgstr ""
+
+#: ../../filters.rst:405
+msgid ""
+"How to handle Ethereum minor chain reorganisations in (near) real-time "
+"data"
+msgstr ""
+
+#: ../../filters.rst:409
+msgid "eth_getLogs limitations"
+msgstr ""
+
+#: ../../filters.rst:411
+msgid ""
+"Ethereum JSON-RPC API servers, like Geth, do not provide an easy way to "
+"paginate over events, only over blocks. There's no request that can find "
+"the first block with an event or how many events occur within a range of "
+"blocks. The only feedback the JSON-RPC service will give you is whether "
+"the ``eth_getLogs`` call failed."
+msgstr ""
+
+#: ../../filters.rst:413
+msgid ""
+"In this example script, we provide two kinds of heuristics to deal with "
+"this issue. The script scans events in a chunk of blocks (start block "
+"number - end block number). Then it uses two methods to find how many "
+"events there are likely to be in a block window:"
+msgstr ""
+
+#: ../../filters.rst:415
+msgid ""
+"Dynamically set the block range window size, while never exceeding a "
+"threshold (e.g., 10,000 blocks)."
+msgstr ""
+
+#: ../../filters.rst:417
+msgid ""
+"In the case of ``eth_getLogs``, the JSON-RPC call gives a timeout error, "
+"decrease the end block number and tries again with a smaller block range "
+"window."
+msgstr ""
+
+#: ../../filters.rst:421
+msgid "Example code"
+msgstr ""
+
+#: ../../filters.rst:423
+msgid ""
+"The following example code is divided into a reusable ``EventScanner`` "
+"class and then a demo script that:"
+msgstr ""
+
+#: ../../filters.rst:425
+msgid ""
+"fetches all transfer events for `RCC token "
+"<https://etherscan.io/token/0x9b6443b0fb9c241a7fdac375595cea13e6b7807a>`_,"
+msgstr ""
+
+#: ../../filters.rst:427
+msgid "can incrementally run again to check if there are new events,"
+msgstr ""
+
+#: ../../filters.rst:429
+msgid "handles interruptions (e.g., CTRL+C abort) gracefully,"
+msgstr ""
+
+#: ../../filters.rst:431
+msgid ""
+"writes all ``Transfer`` events in a single file JSON database, so that "
+"other process can consume them,"
+msgstr ""
+
+#: ../../filters.rst:433
+msgid ""
+"uses the `tqdm <https://pypi.org/project/tqdm/>`_ library for progress "
+"bar output in a console,"
+msgstr ""
+
+#: ../../filters.rst:435
+msgid ""
+"only supports ``HTTPS`` providers, because JSON-RPC retry logic depends "
+"on the implementation details of the underlying protocol,"
+msgstr ""
+
+#: ../../filters.rst:437
+msgid ""
+"disables the default exception retry configuration because it does not "
+"know how to handle the shrinking block range window for ``eth_getLogs``, "
+"and"
+msgstr ""
+
+#: ../../filters.rst:439
+msgid "consumes around 20k JSON-RPC API calls."
+msgstr ""
+
+#: ../../filters.rst:441
+msgid ""
+"The script can be run with: ``python ./eventscanner.py <your JSON-RPC API"
+" URL>``."
+msgstr ""

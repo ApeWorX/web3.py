@@ -1,0 +1,506 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>概览 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="发布说明" href="release_notes.html" />
+    <link rel="prev" title="快速开始" href="quickstart.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">概览</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#providers">Providers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#middleware">Middleware</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#accounts-and-private-keys">Accounts and Private Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#base-api">Base API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#encoding-and-decoding-helpers">Encoding and Decoding Helpers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#address-helpers">Address Helpers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#currency-conversions">Currency Conversions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cryptographic-hashing">Cryptographic Hashing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#web3-eth-api">web3.eth API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#fetching-data">Fetching Data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sending-transactions">Sending Transactions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contracts">Contracts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#events-logs-and-filters">Events, Logs, and Filters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#net-api">Net API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ens">ENS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">概览</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/overview.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="overview">
+<span id="id1"></span><h1>概览<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
+<p>The purpose of this page is to give you a sense of everything web3.py can do
+and to serve as a quick reference guide. You'll find a summary of each feature
+with links to learn more.</p>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>After installing web3.py (via <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">web3</span></code>), you'll need to configure
+a provider endpoint and any middleware you want to use beyond the defaults.</p>
+<section id="providers">
+<h3>Providers<a class="headerlink" href="#providers" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="providers.html"><span class="doc">提供者</span></a> are how web3.py connects to a blockchain. The library comes with the
+following built-in providers:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="providers.html#web3.providers.rpc.HTTPProvider" title="web3.providers.rpc.HTTPProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPProvider</span></code></a> for connecting to http and https based JSON-RPC servers.</p></li>
+<li><p><a class="reference internal" href="providers.html#web3.providers.ipc.IPCProvider" title="web3.providers.ipc.IPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">IPCProvider</span></code></a> for connecting to ipc socket based JSON-RPC servers.</p></li>
+<li><p><a class="reference internal" href="providers.html#web3.providers.legacy_websocket.LegacyWebSocketProvider" title="web3.providers.legacy_websocket.LegacyWebSocketProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">LegacyWebSocketProvider</span></code></a> (deprecated) for connecting to websocket based JSON-RPC servers.</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncHTTPProvider</span></code> for connecting to http and https based JSON-RPC servers asynchronously.</p></li>
+<li><p><a class="reference internal" href="providers.html#web3.providers.persistent.AsyncIPCProvider" title="web3.providers.persistent.AsyncIPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code></a> for connecting to ipc socket based JSON-RPC servers asynchronously via a persistent connection.</p></li>
+<li><p><a class="reference internal" href="providers.html#web3.providers.persistent.WebSocketProvider" title="web3.providers.persistent.WebSocketProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProvider</span></code></a> for connecting to websocket based JSON-RPC servers asynchronously via a persistent connection.</p></li>
+</ul>
+<section id="examples">
+<h4>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">AsyncWeb3</span>
+
+<span class="go"># IPCProvider:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">IPCProvider</span><span class="p">(</span><span class="s1">&#39;./path/to/filename.ipc&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+
+<span class="go"># HTTPProvider:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s1">&#39;http://127.0.0.1:8545&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+
+<span class="go"># AsyncHTTPProvider:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">AsyncHTTPProvider</span><span class="p">(</span><span class="s1">&#39;http://127.0.0.1:8545&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+
+<span class="go"># -- Persistent Connection Providers -- #</span>
+
+<span class="go"># WebSocketProvider:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="s1">&#39;ws://127.0.0.1:8546&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+
+<span class="go"># AsyncIPCProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">AsyncIPCProvider</span><span class="p">(</span><span class="s1">&#39;./path/to/filename.ipc&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>For more context, see the <a class="reference internal" href="providers.html"><span class="doc">提供者</span></a> documentation.</p>
+</section>
+</section>
+<section id="middleware">
+<h3>Middleware<a class="headerlink" href="#middleware" title="Link to this heading"></a></h3>
+<p>Your web3.py instance may be further configured via <a class="reference internal" href="middleware.html"><span class="doc">中间件</span></a>.</p>
+<p>web3.py middleware is described using an onion metaphor, where each layer of
+middleware may affect both the incoming request and outgoing response from your
+provider. The documentation includes a <a class="reference internal" href="middleware.html#modifying-middleware"><span class="std std-ref">visualization</span></a>
+of this idea.</p>
+<p>Several middleware are <a class="reference internal" href="middleware.html#default-middleware"><span class="std std-ref">included by default</span></a>. You may add to
+(<a class="reference internal" href="middleware.html#Web3.middleware_onion.add" title="Web3.middleware_onion.add"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add</span></code></a>, <a class="reference internal" href="middleware.html#Web3.middleware_onion.inject" title="Web3.middleware_onion.inject"><code class="xref py py-meth docutils literal notranslate"><span class="pre">inject</span></code></a>,
+<a class="reference internal" href="middleware.html#Web3.middleware_onion.replace" title="Web3.middleware_onion.replace"><code class="xref py py-meth docutils literal notranslate"><span class="pre">replace</span></code></a>) or disable
+(<a class="reference internal" href="middleware.html#Web3.middleware_onion.remove" title="Web3.middleware_onion.remove"><code class="xref py py-meth docutils literal notranslate"><span class="pre">remove</span></code></a>,
+<a class="reference internal" href="middleware.html#Web3.middleware_onion.clear" title="Web3.middleware_onion.clear"><code class="xref py py-meth docutils literal notranslate"><span class="pre">clear</span></code></a>) any of these middleware.</p>
+</section>
+</section>
+<section id="accounts-and-private-keys">
+<h2>Accounts and Private Keys<a class="headerlink" href="#accounts-and-private-keys" title="Link to this heading"></a></h2>
+<p>Private keys are required to approve any transaction made on your behalf. The manner in
+which your key is secured will determine how you create and send transactions in web3.py.</p>
+<p>A local node, like <a class="reference external" href="https://geth.ethereum.org/">Geth</a>, may manage your keys for you.
+You can reference those keys using the <a class="reference internal" href="web3.eth.html#web3.eth.Eth.accounts" title="web3.eth.Eth.accounts"><code class="xref py py-attr docutils literal notranslate"><span class="pre">web3.eth.accounts</span></code></a>
+property.</p>
+<p>A hosted node, like <a class="reference external" href="https://infura.io/">Infura</a>, will have no knowledge of your keys.
+In this case, you'll need to have your private key available locally for signing
+transactions.</p>
+<p>Full documentation on the distinction between keys can be found <a class="reference internal" href="web3.eth.account.html#eth-account"><span class="std std-ref">here</span></a>.
+The separate guide to <a class="reference internal" href="transactions.html"><span class="doc">交易</span></a> may also help clarify how to manage keys.</p>
+</section>
+<section id="base-api">
+<h2>Base API<a class="headerlink" href="#base-api" title="Link to this heading"></a></h2>
+<p>The <a class="reference internal" href="web3.main.html#web3-base"><span class="std std-ref">Web3</span></a> class includes a number of convenient utility functions:</p>
+<section id="encoding-and-decoding-helpers">
+<h3>Encoding and Decoding Helpers<a class="headerlink" href="#encoding-and-decoding-helpers" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.main.html#web3.w3.is_encodable" title="web3.w3.is_encodable"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.is_encodable()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.to_bytes" title="web3.Web3.to_bytes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.to_bytes()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.to_hex" title="web3.Web3.to_hex"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.to_hex()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.to_int" title="web3.Web3.to_int"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.to_int()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.to_json" title="web3.Web3.to_json"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.to_json()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.to_text" title="web3.Web3.to_text"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.to_text()</span></code></a></p></li>
+</ul>
+</section>
+<section id="address-helpers">
+<h3>Address Helpers<a class="headerlink" href="#address-helpers" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.is_address" title="web3.Web3.is_address"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.is_address()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.is_checksum_address" title="web3.Web3.is_checksum_address"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.is_checksum_address()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.to_checksum_address" title="web3.Web3.to_checksum_address"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.to_checksum_address()</span></code></a></p></li>
+</ul>
+</section>
+<section id="currency-conversions">
+<h3>Currency Conversions<a class="headerlink" href="#currency-conversions" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.from_wei" title="web3.Web3.from_wei"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.from_wei()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.to_wei" title="web3.Web3.to_wei"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.to_wei()</span></code></a></p></li>
+</ul>
+</section>
+<section id="cryptographic-hashing">
+<h3>Cryptographic Hashing<a class="headerlink" href="#cryptographic-hashing" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.keccak" title="web3.Web3.keccak"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.keccak()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.main.html#web3.Web3.solidity_keccak" title="web3.Web3.solidity_keccak"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.solidity_keccak()</span></code></a></p></li>
+</ul>
+</section>
+</section>
+<section id="web3-eth-api">
+<h2>web3.eth API<a class="headerlink" href="#web3-eth-api" title="Link to this heading"></a></h2>
+<p>The most commonly used APIs for interacting with Ethereum can be found under the
+<a class="reference internal" href="web3.eth.html#web3-eth"><span class="std std-ref">web3.eth API</span></a> namespace.</p>
+<section id="fetching-data">
+<h3>Fetching Data<a class="headerlink" href="#fetching-data" title="Link to this heading"></a></h3>
+<p>Viewing account balances (<a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_balance" title="web3.eth.Eth.get_balance"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_balance</span></code></a>), transactions
+(<a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_transaction" title="web3.eth.Eth.get_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_transaction</span></code></a>), and block data
+(<a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_block" title="web3.eth.Eth.get_block"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_block</span></code></a>) are some of the most common starting
+points in web3.py.</p>
+<section id="api">
+<h4>API<a class="headerlink" href="#api" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_balance" title="web3.eth.Eth.get_balance"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_balance()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_block" title="web3.eth.Eth.get_block"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_block()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_block_transaction_count" title="web3.eth.Eth.get_block_transaction_count"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_block_transaction_count()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_code" title="web3.eth.Eth.get_code"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_code()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_proof" title="web3.eth.Eth.get_proof"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_proof()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_storage_at" title="web3.eth.Eth.get_storage_at"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_storage_at()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_transaction" title="web3.eth.Eth.get_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_transaction()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_transaction_by_block" title="web3.eth.Eth.get_transaction_by_block"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_transaction_by_block()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_transaction_count" title="web3.eth.Eth.get_transaction_count"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_transaction_count()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_uncle_by_block" title="web3.eth.Eth.get_uncle_by_block"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_uncle_by_block()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_uncle_count" title="web3.eth.Eth.get_uncle_count"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_uncle_count()</span></code></a></p></li>
+</ul>
+</section>
+</section>
+<section id="sending-transactions">
+<h3>Sending Transactions<a class="headerlink" href="#sending-transactions" title="Link to this heading"></a></h3>
+<p>The most common use cases will be satisfied with
+<a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction</span></code></a> or the combination of
+<a class="reference internal" href="web3.eth.html#web3.eth.Eth.sign_transaction" title="web3.eth.Eth.sign_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_transaction</span></code></a> and
+<a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_raw_transaction" title="web3.eth.Eth.send_raw_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_raw_transaction</span></code></a>. For more context,
+see the full guide to <a class="reference internal" href="transactions.html"><span class="doc">交易</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>If interacting with a smart contract, a dedicated API exists. See the next
+section, <a class="reference internal" href="#overview-contracts"><span class="std std-ref">Contracts</span></a>.</p>
+</div>
+<section id="id2">
+<h4>API<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.send_transaction()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.sign_transaction" title="web3.eth.Eth.sign_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.sign_transaction()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_raw_transaction" title="web3.eth.Eth.send_raw_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.send_raw_transaction()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.replace_transaction" title="web3.eth.Eth.replace_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.replace_transaction()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.modify_transaction" title="web3.eth.Eth.modify_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.modify_transaction()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.wait_for_transaction_receipt" title="web3.eth.Eth.wait_for_transaction_receipt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.wait_for_transaction_receipt()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_transaction_receipt" title="web3.eth.Eth.get_transaction_receipt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_transaction_receipt()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.sign" title="web3.eth.Eth.sign"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.sign()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.sign_typed_data" title="web3.eth.Eth.sign_typed_data"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.sign_typed_data()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.estimate_gas" title="web3.eth.Eth.estimate_gas"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.estimate_gas()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.generate_gas_price" title="web3.eth.Eth.generate_gas_price"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.generate_gas_price()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.set_gas_price_strategy" title="web3.eth.Eth.set_gas_price_strategy"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.set_gas_price_strategy()</span></code></a></p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="contracts">
+<span id="overview-contracts"></span><h2>Contracts<a class="headerlink" href="#contracts" title="Link to this heading"></a></h2>
+<p>web3.py can help you deploy, read from, or execute functions on a deployed contract.</p>
+<p>Deployment requires that the contract already be compiled, with its bytecode and ABI
+available. This compilation step can be done within
+<a class="reference external" href="http://remix.ethereum.org/">Remix</a> or one of the many contract development
+frameworks, such as <a class="reference external" href="https://docs.apeworx.io/ape/stable/index.html">Ape</a>.</p>
+<p>Once the contract object is instantiated, calling <code class="docutils literal notranslate"><span class="pre">transact</span></code> on the
+<a class="reference internal" href="web3.contract.html#web3.contract.Contract.constructor" title="web3.contract.Contract.constructor"><code class="xref py py-meth docutils literal notranslate"><span class="pre">constructor</span></code></a> method will deploy an
+instance of the contract:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ExampleContract</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">,</span> <span class="n">bytecode</span><span class="o">=</span><span class="n">bytecode</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tx_hash</span> <span class="o">=</span> <span class="n">ExampleContract</span><span class="o">.</span><span class="n">constructor</span><span class="p">()</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tx_receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tx_receipt</span><span class="o">.</span><span class="n">contractAddress</span>
+<span class="go">&#39;0x8a22225eD7eD460D7ee3842bce2402B9deaD23D3&#39;</span>
+</pre></div>
+</div>
+<p>Once a deployed contract is loaded into a Contract object, the functions of that
+contract are available on the <code class="docutils literal notranslate"><span class="pre">functions</span></code> namespace:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">deployed_contract</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">tx_receipt</span><span class="o">.</span><span class="n">contractAddress</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">deployed_contract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">myFunction</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If you want to read data from a contract (or see the result of transaction locally,
+without executing it on the network), you can use the
+<a class="reference internal" href="web3.contract.html#web3.contract.ContractFunction.call" title="web3.contract.ContractFunction.call"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ContractFunction.call</span></code></a> method, or the
+more concise <a class="reference internal" href="web3.contract.html#web3.contract.ContractCaller" title="web3.contract.ContractCaller"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ContractCaller</span></code></a> syntax:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Using ContractFunction.call</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">deployed_contract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">getMyValue</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span>
+<span class="mi">42</span>
+
+<span class="c1"># Using ContractCaller</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">deployed_contract</span><span class="o">.</span><span class="n">caller</span><span class="p">()</span><span class="o">.</span><span class="n">getMyValue</span><span class="p">()</span>
+<span class="mi">42</span>
+</pre></div>
+</div>
+<p>For more, see the full <a class="reference internal" href="web3.contract.html#contracts"><span class="std std-ref">Contracts</span></a> documentation.</p>
+<section id="id3">
+<h3>API<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.contract" title="web3.eth.Eth.contract"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.contract()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.address" title="web3.contract.Contract.address"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Contract.address</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.abi" title="web3.contract.Contract.abi"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Contract.abi</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.bytecode" title="web3.contract.Contract.bytecode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Contract.bytecode</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.bytecode_runtime" title="web3.contract.Contract.bytecode_runtime"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Contract.bytecode_runtime</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.functions" title="web3.contract.Contract.functions"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Contract.functions</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.events" title="web3.contract.Contract.events"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Contract.events</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.fallback.call" title="web3.contract.Contract.fallback.call"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Contract.fallback</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.constructor" title="web3.contract.Contract.constructor"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Contract.constructor()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.encode_abi" title="web3.contract.Contract.encode_abi"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Contract.encode_abi()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.ContractFunction" title="web3.contract.ContractFunction"><code class="xref py py-attr docutils literal notranslate"><span class="pre">web3.contract.ContractFunction</span></code></a></p></li>
+<li><p><code class="xref py py-attr docutils literal notranslate"><span class="pre">web3.contract.ContractEvents</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="events-logs-and-filters">
+<h2>Events, Logs, and Filters<a class="headerlink" href="#events-logs-and-filters" title="Link to this heading"></a></h2>
+<p>If you want to react to new blocks being mined or specific events being emitted by
+a contract, you can leverage <code class="docutils literal notranslate"><span class="pre">get_logs</span></code>, subscriptions, or filters.</p>
+<p>See the <a class="reference internal" href="filters.html"><span class="doc">事件和日志</span></a> guide for more information.</p>
+<section id="id4">
+<h3>API<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.subscribe" title="web3.eth.Eth.subscribe"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.subscribe()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.filter" title="web3.eth.Eth.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.filter()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_filter_changes" title="web3.eth.Eth.get_filter_changes"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_filter_changes()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_filter_logs" title="web3.eth.Eth.get_filter_logs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_filter_logs()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.uninstall_filter" title="web3.eth.Eth.uninstall_filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.uninstall_filter()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.eth.html#web3.eth.Eth.get_logs" title="web3.eth.Eth.get_logs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">web3.eth.get_logs()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.events.your_event_name.create_filter" title="web3.contract.Contract.events.your_event_name.create_filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Contract.events.your_event_name.create_filter()</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract.events.your_event_name.build_filter" title="web3.contract.Contract.events.your_event_name.build_filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Contract.events.your_event_name.build_filter()</span></code></a></p></li>
+<li><p><a class="reference internal" href="filters.html#web3.utils.filters.Filter.get_new_entries" title="web3.utils.filters.Filter.get_new_entries"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Filter.get_new_entries()</span></code></a></p></li>
+<li><p><a class="reference internal" href="filters.html#web3.utils.filters.Filter.get_all_entries" title="web3.utils.filters.Filter.get_all_entries"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Filter.get_all_entries()</span></code></a></p></li>
+<li><p><a class="reference internal" href="filters.html#web3.utils.filters.Filter.format_entry" title="web3.utils.filters.Filter.format_entry"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Filter.format_entry()</span></code></a></p></li>
+<li><p><a class="reference internal" href="filters.html#web3.utils.filters.Filter.is_valid_entry" title="web3.utils.filters.Filter.is_valid_entry"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Filter.is_valid_entry()</span></code></a></p></li>
+</ul>
+</section>
+</section>
+<section id="net-api">
+<h2>Net API<a class="headerlink" href="#net-api" title="Link to this heading"></a></h2>
+<p>Some basic network properties are available on the <code class="docutils literal notranslate"><span class="pre">web3.net</span></code> object:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="web3.net.html#web3.net.listening" title="web3.net.listening"><code class="xref py py-attr docutils literal notranslate"><span class="pre">web3.net.listening</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.net.html#web3.net.peer_count" title="web3.net.peer_count"><code class="xref py py-attr docutils literal notranslate"><span class="pre">web3.net.peer_count</span></code></a></p></li>
+<li><p><a class="reference internal" href="web3.net.html#web3.net.version" title="web3.net.version"><code class="xref py py-attr docutils literal notranslate"><span class="pre">web3.net.version</span></code></a></p></li>
+</ul>
+</section>
+<section id="ens">
+<h2>ENS<a class="headerlink" href="#ens" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://ens.domains/">Ethereum Name Service (ENS)</a> provides the infrastructure
+for human-readable addresses. If an address is registered with the ENS registry,
+the domain name can be used in place of the address itself. For example, the registered domain
+name <code class="docutils literal notranslate"><span class="pre">ethereum.eth</span></code> will resolve to the address
+<code class="docutils literal notranslate"><span class="pre">0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe</span></code>. web3.py has support for ENS, documented
+<a class="reference internal" href="ens_overview.html#ens-overview"><span class="std std-ref">here</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="快速开始" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="release_notes.html" class="btn btn-neutral float-right" title="发布说明" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

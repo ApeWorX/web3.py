@@ -1,0 +1,145 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: 2025-08-06 11:51+0800\n"
+"Last-Translator: FULL NAME <shevloader@gmail.com>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <https://github.com/darkiss7>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../toc.rst:4
+msgid "Intro"
+msgstr "介绍"
+
+#: ../../toc.rst:12
+msgid "Guides"
+msgstr "指南"
+
+#: ../../toc.rst:28
+msgid "API"
+msgstr "API"
+
+#: ../../toc.rst:43
+msgid "Community"
+msgstr "社区"
+
+#: ../../index.rst:-1
+msgid "Python Web3 SDK for Ethereum and EVM blockchains"
+msgstr "适用于以太坊和EVM区块链的Python Web3 SDK"
+
+#: ../../index.rst:5
+msgid "gm"
+msgstr "gm（早安）"
+
+#: ../../index.rst:7
+msgid "Banner Image"
+msgstr "横幅图片"
+
+#: ../../index.rst:10
+msgid "**web3.py** is a Python library for interacting with Ethereum."
+msgstr "**web3.py** 是一个用于与以太坊交互的Python库。"
+
+#: ../../index.rst:12
+msgid ""
+"It's commonly found in `decentralized apps (dapps)`_ to help with sending"
+" transactions, interacting with smart contracts, reading block data, and "
+"a variety of other use cases."
+msgstr ""
+"它常用于 `去中心化应用（dapps）`_，帮助发送交易、与智能合约交互、读取区块数据，以及其他多种用例。"
+
+#: ../../index.rst:16
+msgid ""
+"For project updates, follow `@EthereumPython`_ and sign up for new post "
+"notifications on the `blog`_."
+msgstr ""
+"获取项目更新，请关注 `@EthereumPython`_ 并在 `博客`_ 订阅新文章通知。"
+
+
+#: ../../index.rst:21
+msgid "Getting Started"
+msgstr "快速开始"
+
+#: ../../index.rst:24
+msgid "👋 Brand new to Ethereum?"
+msgstr "👋 以太坊新手？"
+
+#: ../../index.rst:26
+msgid "Don't travel alone! Join the Ethereum Python Community `Discord`_."
+msgstr "不要独自前行！加入以太坊Python社区"
+
+#: ../../index.rst:27
+msgid ""
+"Read this `blog post series`_ for a gentle introduction to Ethereum "
+"blockchain concepts."
+msgstr "阅读这个 `博客系列`_，轻松了解以太坊区块链的相关概念。"
+
+#: ../../index.rst:28
+msgid ""
+"The :ref:`Overview` page will give you a quick idea of what else web3.py "
+"can do."
+msgstr ""
+":ref:`Overview` 页面将帮助你快速了解 web3.py 的更多功能。"
+
+#: ../../index.rst:29
+msgid "Try building a little something!"
+msgstr "试着构建一些小项目吧！"
+
+#: ../../index.rst:31
+msgid "Ready to code? → :ref:`quickstart`"
+msgstr "准备好编写代码了吗？→ :ref:`quickstart`"
+
+#: ../../index.rst:32
+msgid "Quick tour? → :ref:`overview`"
+msgstr "快速浏览？→ :ref:`overview`"
+
+#: ../../index.rst:33
+msgid "Synchronous help? → `Discord`_"
+msgstr "要实时帮助？→ `Discord`_"
+
+#: ../../index.rst:34
+msgid "Asynchronous help? → `StackExchange`_"
+msgstr "要异步帮助？→ `StackExchange`_"
+
+#: ../../index.rst:35
+msgid "Report a bug? → `Github`_"
+msgstr "现Bug？→ `Github`_"
+
+#: ../../index.rst:36
+msgid "Want to help us? → :ref:`Contribute <contributing>`"
+msgstr "想要帮助我们？→ :ref:`Contribute <contributing>`"
+
+#: ../../index.rst:37
+msgid "Looking for inspiration? → :ref:`resources`"
+msgstr "寻找灵感？→ :ref:`resources`"
+
+#: ../../toc.rst:2
+msgid "Table of Contents"
+msgstr "目录"
+
+#: ../../toc.rst:52
+msgid "Indices and tables"
+msgstr "索引和表格"
+
+#: ../../toc.rst:54
+msgid ":ref:`genindex`"
+msgstr ":ref:`genindex`"
+
+#: ../../toc.rst:55
+msgid ":ref:`modindex`"
+msgstr ":ref:`modindex`"
+
+#: ../../toc.rst:56
+msgid ":ref:`search`"
+msgstr ":ref:`search`"

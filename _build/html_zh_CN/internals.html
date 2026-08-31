@@ -1,0 +1,826 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web3 内部实现 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="以太坊名称服务 (ENS)" href="ens_overview.html" />
+    <link rel="prev" title="中间件" href="middleware.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Web3 内部实现</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#request-lifecycle">Request Lifecycle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#providers">Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#writing-your-own-provider">Writing your own Provider</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#BaseProvider.make_request"><code class="docutils literal notranslate"><span class="pre">BaseProvider.make_request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#BaseProvider.is_connected"><code class="docutils literal notranslate"><span class="pre">BaseProvider.is_connected()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#BaseProvider.middleware"><code class="docutils literal notranslate"><span class="pre">BaseProvider.middleware</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#provider-configurations">Provider Configurations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#request-caching">Request Caching</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#retry-requests-for-http-providers">Retry Requests for HTTP Providers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#managers">Managers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#request-processing-for-persistent-connection-providers">Request Processing for Persistent Connection Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.providers.persistent.request_processor.RequestProcessor"><code class="docutils literal notranslate"><span class="pre">web3.providers.persistent.request_processor.RequestProcessor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#listening-for-responses">Listening for Responses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#one-to-one-requests">One-To-One Requests</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3._utils.caching.RequestInformation"><code class="docutils literal notranslate"><span class="pre">web3._utils.caching.RequestInformation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#one-to-many-requests">One-To-Many Requests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Web3 内部实现</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/internals.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="web3-internals">
+<h1>Web3 内部实现<a class="headerlink" href="#web3-internals" title="Link to this heading"></a></h1>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>This section of the documentation is for advanced users.  You should probably stay away from these APIs if you don't know what you are doing.</p>
+</div>
+<p>The Web3 library has multiple layers of abstraction between the public api
+exposed by the web3 object and the backend or node that web3 is connecting to.</p>
+<ul class="simple">
+<li><p><strong>Providers</strong> are responsible for the actual communication with the
+blockchain such as sending JSON-RPC requests over HTTP or an IPC socket.</p></li>
+<li><p><strong>Middleware</strong> provide hooks for monitoring and modifying requests and
+responses to and from the provider.</p></li>
+<li><p><strong>Managers</strong> provide thread safety and primitives to allow for asynchronous usage of web3.</p></li>
+</ul>
+<p>Here are some common things you might want to do with these APIs.</p>
+<ul class="simple">
+<li><p>Redirect certain RPC requests to different providers such as sending all
+<em>read</em> operations to a provider backed by a remote node and all <em>write</em> operations
+to a local node that you control.</p></li>
+<li><p>Transparently intercept transactions sent over <code class="docutils literal notranslate"><span class="pre">eth_sendTransaction</span></code>, sign
+them locally, and then send them through <code class="docutils literal notranslate"><span class="pre">eth_sendRawTransaction</span></code>.</p></li>
+<li><p>Modify the response from an RPC request so that it is returned in different
+format such as converting all integer values to their hexadecimal
+representation.</p></li>
+<li><p>Validate the inputs to RPC requests</p></li>
+</ul>
+<section id="request-lifecycle">
+<h2>Request Lifecycle<a class="headerlink" href="#request-lifecycle" title="Link to this heading"></a></h2>
+<p>Each web3 RPC call passes through these layers in the following manner.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  ***********    ************
+  | Request |    | Response |
+  ***********    ************
+      |                ^
+      v                |
++-----------------------------+
+|           Manager           |
++-----------------------------+
+      |                ^
+      v                |
++-----------------------------+
+|         Middleware          |
++-----------------------------+
+      |                ^
+      v                |
++-----------------------------+
+|          Provider           |
++-----------------------------+
+</pre></div>
+</div>
+<p>You can visualize this relationship like an onion, with the Provider at the
+center. The request originates from the <code class="docutils literal notranslate"><span class="pre">Manager</span></code>, outside of the onion, passing
+down through each layer of the onion until it reaches the <code class="docutils literal notranslate"><span class="pre">Provider</span></code> at the
+center. The <code class="docutils literal notranslate"><span class="pre">Provider</span></code> then handles the request, producing a response which will
+then pass back out from the center of the onion, through each layer until it is
+finally returned by the <code class="docutils literal notranslate"><span class="pre">Manager</span></code>.</p>
+</section>
+<section id="providers">
+<h2>Providers<a class="headerlink" href="#providers" title="Link to this heading"></a></h2>
+<p>A provider is responsible for all direct blockchain interactions.  In most
+cases this means interacting with the JSON-RPC server for an ethereum node over
+HTTP or an IPC socket.  There is however nothing which requires providers to be
+RPC based, allowing for providers designed for testing purposes which use an
+in-memory EVM to fulfill requests.</p>
+<section id="writing-your-own-provider">
+<h3>Writing your own Provider<a class="headerlink" href="#writing-your-own-provider" title="Link to this heading"></a></h3>
+<p>Writing your own provider requires implementing two required methods as well as
+setting the middleware the provider should use.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="BaseProvider.make_request">
+<span class="sig-prename descclassname"><span class="pre">BaseProvider.</span></span><span class="sig-name descname"><span class="pre">make_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BaseProvider.make_request" title="Link to this definition"></a></dt>
+<dd><p>Each provider class <strong>must</strong> implement this method.  This method <strong>should</strong>
+return a JSON object with either a <code class="docutils literal notranslate"><span class="pre">'result'</span></code> key in the case of success,
+or an <code class="docutils literal notranslate"><span class="pre">'error'</span></code> key in the case of failure.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">method</span></code>  This will be a string representing the JSON-RPC method that
+is being called such as <code class="docutils literal notranslate"><span class="pre">'eth_sendTransaction'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">params</span></code>  This will be a list or other iterable of the parameters for
+the JSON-RPC method being called.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="BaseProvider.is_connected">
+<span class="sig-prename descclassname"><span class="pre">BaseProvider.</span></span><span class="sig-name descname"><span class="pre">is_connected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">show_traceback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BaseProvider.is_connected" title="Link to this definition"></a></dt>
+<dd><p>This function should return <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code> depending on whether the
+provider should be considered <em>connected</em>.  For example, an IPC socket
+based provider should return <code class="docutils literal notranslate"><span class="pre">True</span></code> if the socket is open and <code class="docutils literal notranslate"><span class="pre">False</span></code>
+if the socket is closed.</p>
+<p>If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the optional <code class="docutils literal notranslate"><span class="pre">show_traceback</span></code> boolean will raise a
+<code class="docutils literal notranslate"><span class="pre">ProviderConnectionError</span></code> and provide information on why the provider should
+not be considered <em>connected</em>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="BaseProvider.middleware">
+<span class="sig-prename descclassname"><span class="pre">BaseProvider.</span></span><span class="sig-name descname"><span class="pre">middleware</span></span><a class="headerlink" href="#BaseProvider.middleware" title="Link to this definition"></a></dt>
+<dd><p>This should be an iterable of middleware.</p>
+</dd></dl>
+
+<p>You can set a new list of middleware by assigning to <code class="docutils literal notranslate"><span class="pre">provider.middleware</span></code>,
+with the first middleware that processes the request at the beginning of the list.</p>
+</section>
+<section id="provider-configurations">
+<h3>Provider Configurations<a class="headerlink" href="#provider-configurations" title="Link to this heading"></a></h3>
+<section id="request-caching">
+<span id="id1"></span><h4>Request Caching<a class="headerlink" href="#request-caching" title="Link to this heading"></a></h4>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>Familiarize yourself with the validation logic for request caching before
+enabling it. Since this feature often requires making additional requests under the
+hood to try to guarantee the validity of the data, it may create unnecessary
+overhead for your use case. Validation can be turned off by setting the
+<code class="docutils literal notranslate"><span class="pre">request_cache_validation_threshold</span></code> option to <code class="docutils literal notranslate"><span class="pre">None</span></code>, caching all allowed
+requests, or configured for adjusting performance to your needs.</p>
+</div>
+<p>Request caching can be configured at the provider level via the following configuration
+options on the provider instance:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cache_allowed_requests:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cacheable_requests:</span> <span class="pre">Optional[Set[RPCEndpoint]]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">request_cache_validation_threshold:</span> <span class="pre">Optional[Union[RequestCacheValidationThreshold,</span> <span class="pre">int]]</span></code></p></li>
+</ul>
+<p>For requests that don't rely on block data (e.g., <code class="docutils literal notranslate"><span class="pre">eth_chainId</span></code>), enabling request
+caching by setting the <code class="docutils literal notranslate"><span class="pre">cache_allowed_requests</span></code> option to <code class="docutils literal notranslate"><span class="pre">True</span></code> will cache all
+responses. This is safe to do.</p>
+<p>However, for requests that rely on block data (e.g., <code class="docutils literal notranslate"><span class="pre">eth_getBlockByNumber</span></code>), it is
+not safe to always cache their responses because block data can change - during a
+chain reorganization or while finality has not been reached, for example. The
+<code class="docutils literal notranslate"><span class="pre">request_cache_validation_threshold</span></code> option allows configuring a safe threshold for
+caching responses that depend on block data. By default, this option is configured
+to internal values deemed &quot;safe&quot; for the chain id you are connected to. If you are
+connected to mainnet Ethereum, this value is set to the <code class="docutils literal notranslate"><span class="pre">finalized</span></code> block number.
+If you are connected to another chain, this value is set to a time interval in seconds,
+from the current time, that is deemed &quot;safe&quot; for that chain's finality mechanism.</p>
+<p><strong>It's important to understand that, in order to perform these validations, extra
+requests are sometimes made to the node to get the appropriate information. For a
+transaction request, for example, it is necessary to get the block information to
+validate the transaction is beyond the safe threshold. This can create overhead,
+especially for high-frequency requests. For this reason, it is important to understand
+when to turn on caching and how to configure the validation appropriately for your
+use case in order to avoid unnecessary overhead.</strong></p>
+<p>We keep a list of some reasonable values for bigger chains and
+use the time interval of 1 hour for everything else. Below is a list of the default
+values for internally configured chains:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>ETH: RequestCacheValidationThreshold.FINALIZED (&quot;finalized&quot; block)</p></li>
+<li><p>ARB1: 7 days</p></li>
+<li><p>ZKSYNC: 1 hour</p></li>
+<li><p>OETH: 3 minutes</p></li>
+<li><p>MATIC: 30 minutes</p></li>
+<li><p>ZKEVM: 1 hour</p></li>
+<li><p>BASE: 7 days</p></li>
+<li><p>SCR: 1 hour</p></li>
+<li><p>GNO: 5 minutes</p></li>
+<li><p>AVAX: 2 minutes</p></li>
+<li><p>BNB: 2 minutes</p></li>
+<li><p>FTM: 1 minute</p></li>
+</ul>
+</div></blockquote>
+<p>For Ethereum mainnet, for example, this means that a request's response will be cached
+if the block number the request relies on is less than or equal to the <code class="docutils literal notranslate"><span class="pre">finalized</span></code>
+block number. If the block number exceeds the <code class="docutils literal notranslate"><span class="pre">finalized</span></code> block number, the response
+won't be cached. For all others, the response will be cached if the block timestamp
+related to the data that is being requested is older than or equal to the time interval
+configured for that chain. For any chain not on this list, the default value is set to
+1 hour (this includes all testnets).</p>
+<p>This behavior can be modified by setting the <code class="docutils literal notranslate"><span class="pre">request_cache_validation_threshold</span></code>
+option to <code class="docutils literal notranslate"><span class="pre">RequestCacheValidationThreshold.SAFE</span></code>, which uses the <code class="docutils literal notranslate"><span class="pre">safe</span></code> block as
+the threshold (Ethereum mainnet only), to your own time interval in seconds (for any
+chain, including mainnet Ethereum), or to <code class="docutils literal notranslate"><span class="pre">None</span></code>, which disables any validation and
+caches all requests (this is not recommended for non testnet chains). The
+<code class="docutils literal notranslate"><span class="pre">RequestCacheValidationThreshold</span></code> enum, for mainnet <code class="docutils literal notranslate"><span class="pre">finalized</span></code> and <code class="docutils literal notranslate"><span class="pre">safe</span></code> values,
+is imported from the <code class="docutils literal notranslate"><span class="pre">web3.utils</span></code> module.</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">cacheable_requests</span></code> option can be used to specify a set of RPC
+endpoints that are allowed to be cached. By default, this option is set to an internal
+list of deemed-safe-to-cache endpoints, excluding endpoints such as <code class="docutils literal notranslate"><span class="pre">eth_call</span></code>, whose
+responses can vary and are not safe to cache. The default list of cacheable requests is
+below, with requests validated by the <code class="docutils literal notranslate"><span class="pre">request_cache_validation_threshold</span></code> option in
+bold:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>eth_chainId</p></li>
+<li><p>web3_clientVersion</p></li>
+<li><p>net_version</p></li>
+<li><p><strong>eth_getBlockByNumber</strong></p></li>
+<li><p><strong>eth_getRawTransactionByBlockNumberAndIndex</strong></p></li>
+<li><p><strong>eth_getBlockTransactionCountByNumber</strong></p></li>
+<li><p><strong>eth_getUncleByBlockNumberAndIndex</strong></p></li>
+<li><p><strong>eth_getUncleCountByBlockNumber</strong></p></li>
+<li><p><strong>eth_getBlockByHash</strong></p></li>
+<li><p><strong>eth_getTransactionByHash</strong></p></li>
+<li><p><strong>eth_getTransactionByBlockNumberAndIndex</strong></p></li>
+<li><p><strong>eth_getTransactionByBlockHashAndIndex</strong></p></li>
+<li><p><strong>eth_getBlockTransactionCountByHash</strong></p></li>
+<li><p><strong>eth_getRawTransactionByBlockHashAndIndex</strong></p></li>
+<li><p><strong>eth_getUncleByBlockHashAndIndex</strong></p></li>
+<li><p><strong>eth_getUncleCountByBlockHash</strong></p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">HTTPProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">RequestCacheValidationThreshold</span>
+
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">HTTPProvider</span><span class="p">(</span>
+    <span class="n">endpoint_uri</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+
+    <span class="c1"># optional flag to turn on cached requests, defaults to ``False``</span>
+    <span class="n">cache_allowed_requests</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+
+    <span class="c1"># optional, defaults to an internal list of deemed-safe-to-cache endpoints (see above)</span>
+    <span class="n">cacheable_requests</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;eth_chainId&quot;</span><span class="p">,</span> <span class="s2">&quot;eth_getBlockByNumber&quot;</span><span class="p">},</span>
+
+    <span class="c1"># optional, defaults to a value that is based on the chain id (see above)</span>
+    <span class="n">request_cache_validation_threshold</span><span class="o">=</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span>  <span class="c1"># 1 hour</span>
+    <span class="c1"># request_cache_validation_threshold=RequestCacheValidationThreshold.SAFE,  # Ethereum mainnet only</span>
+<span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="retry-requests-for-http-providers">
+<span id="http-retry-requests"></span><h4>Retry Requests for HTTP Providers<a class="headerlink" href="#retry-requests-for-http-providers" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">HTTPProvider</span></code> and <code class="docutils literal notranslate"><span class="pre">AsyncHTTPProvider</span></code> instances retry certain requests by default
+on exceptions. This can be configured via the <code class="docutils literal notranslate"><span class="pre">exception_retry_configuration</span></code>
+property on the provider instance, which takes a
+<a class="reference internal" href="#web3.providers.rpc.utils.ExceptionRetryConfiguration" title="web3.providers.rpc.utils.ExceptionRetryConfiguration"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionRetryConfiguration</span></code></a> class as its value. The
+retry mechanism employs an exponential backoff strategy, starting from the initial
+value determined by the <code class="docutils literal notranslate"><span class="pre">backoff_factor</span></code>, and doubling the delay with each attempt,
+up to the <code class="docutils literal notranslate"><span class="pre">retries</span></code> value. Below is an example showing the default options for the
+retry configuration and how to override them.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.rpc.utils.ExceptionRetryConfiguration">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.rpc.utils.</span></span><span class="sig-name descname"><span class="pre">ExceptionRetryConfiguration</span></span><a class="headerlink" href="#web3.providers.rpc.utils.ExceptionRetryConfiguration" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="web3.providers.rpc.utils.ExceptionRetryConfiguration.errors">
+<span class="sig-name descname"><span class="pre">errors</span></span><a class="headerlink" href="#web3.providers.rpc.utils.ExceptionRetryConfiguration.errors" title="Link to this definition"></a></dt>
+<dd><p>A tuple of exceptions that the provider should retry on. The default is
+<code class="docutils literal notranslate"><span class="pre">HTTPProvider</span></code>: <code class="docutils literal notranslate"><span class="pre">(ConnectionError,</span> <span class="pre">requests.HTTPError,</span> <span class="pre">requests.Timeout)</span></code>
+and <code class="docutils literal notranslate"><span class="pre">AsyncHTTPProvider</span></code>: <code class="docutils literal notranslate"><span class="pre">(aiohttp.ClientError,</span> <span class="pre">asyncio.TimeoutError)</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.providers.rpc.utils.ExceptionRetryConfiguration.retries">
+<span class="sig-name descname"><span class="pre">retries</span></span><a class="headerlink" href="#web3.providers.rpc.utils.ExceptionRetryConfiguration.retries" title="Link to this definition"></a></dt>
+<dd><p>The number of retries to attempt. The default is 5.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.providers.rpc.utils.ExceptionRetryConfiguration.backoff_factor">
+<span class="sig-name descname"><span class="pre">backoff_factor</span></span><a class="headerlink" href="#web3.providers.rpc.utils.ExceptionRetryConfiguration.backoff_factor" title="Link to this definition"></a></dt>
+<dd><p>The initial delay multiplier, which doubles with each retry attempt. The default
+is 0.125.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.providers.rpc.utils.ExceptionRetryConfiguration.method_allowlist">
+<span class="sig-name descname"><span class="pre">method_allowlist</span></span><a class="headerlink" href="#web3.providers.rpc.utils.ExceptionRetryConfiguration.method_allowlist" title="Link to this definition"></a></dt>
+<dd><p>A list of retryable methods. The default is an in-house list of deemed-safe-to-
+retry methods.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">HTTPProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.providers.rpc.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">REQUEST_RETRY_ALLOWLIST</span><span class="p">,</span>
+    <span class="n">ExceptionRetryConfiguration</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">HTTPProvider</span><span class="p">(</span>
+    <span class="n">endpoint_uri</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+    <span class="n">exception_retry_configuration</span><span class="o">=</span><span class="n">ExceptionRetryConfiguration</span><span class="p">(</span>
+        <span class="n">errors</span><span class="o">=</span><span class="n">DEFAULT_EXCEPTIONS</span><span class="p">,</span>
+
+        <span class="c1"># number of retries to attempt</span>
+        <span class="n">retries</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+
+        <span class="c1"># initial delay multiplier, doubles with each retry attempt</span>
+        <span class="n">backoff_factor</span><span class="o">=</span><span class="mf">0.125</span><span class="p">,</span>
+
+        <span class="c1"># an in-house default list of retryable methods</span>
+        <span class="n">method_allowlist</span><span class="o">=</span><span class="n">REQUEST_RETRY_ALLOWLIST</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">))</span>
+</pre></div>
+</div>
+<p>For the different http providers, <code class="docutils literal notranslate"><span class="pre">DEFAULT_EXCEPTIONS</span></code> is defined as:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">HTTPProvider</span></code>: <code class="docutils literal notranslate"><span class="pre">(ConnectionError,</span> <span class="pre">requests.HTTPError,</span> <span class="pre">requests.Timeout)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AsyncHTTPProvider</span></code>: <code class="docutils literal notranslate"><span class="pre">(ConnectionError,</span> <span class="pre">aiohttp.ClientError,</span> <span class="pre">asyncio.TimeoutError)</span></code></p></li>
+</ul>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">retry_configuration</span></code> to <code class="docutils literal notranslate"><span class="pre">None</span></code> will disable retries on exceptions for the
+provider instance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">HTTPProvider</span>
+
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="n">endpoint_uri</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span> <span class="n">retry_configuration</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="managers">
+<h2>Managers<a class="headerlink" href="#managers" title="Link to this heading"></a></h2>
+<p>The Manager acts as a gatekeeper for the request/response lifecycle.  It is
+unlikely that you will need to change the Manager as most functionality can be
+implemented in the Middleware layer.</p>
+</section>
+<section id="request-processing-for-persistent-connection-providers">
+<span id="internals-persistent-connection-providers"></span><h2>Request Processing for Persistent Connection Providers<a class="headerlink" href="#request-processing-for-persistent-connection-providers" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.persistent.request_processor.RequestProcessor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.persistent.request_processor.</span></span><span class="sig-name descname"><span class="pre">RequestProcessor</span></span><a class="headerlink" href="#web3.providers.persistent.request_processor.RequestProcessor" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">RequestProcessor</span></code> class is responsible for the storing and syncing up of
+asynchronous requests to responses for a <code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code>. The
+<a class="reference internal" href="providers.html#web3.providers.persistent.WebSocketProvider" title="web3.providers.persistent.WebSocketProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProvider</span></code></a> and the
+<a class="reference internal" href="providers.html#web3.providers.persistent.AsyncIPCProvider" title="web3.providers.persistent.AsyncIPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code></a> are two persistent connection
+providers. In order to send a request and receive a response to that same request,
+<code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code> instances have to match request <em>id</em> values to
+response <em>id</em> values coming back from the socket connection. Any provider that does
+not adhere to the <a class="reference external" href="https://www.jsonrpc.org/specification">JSON-RPC 2.0 specification</a>
+in this way will not work with <code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code> instances. The specifics
+of how the request processor handles this are outlined below.</p>
+<section id="listening-for-responses">
+<h3>Listening for Responses<a class="headerlink" href="#listening-for-responses" title="Link to this heading"></a></h3>
+<p>Implementations of the <code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code> class have a message listener
+background task that is called when the socket connection is established. This task
+is responsible for listening for any and all messages coming in over the socket
+connection and storing them in the <code class="docutils literal notranslate"><span class="pre">RequestProcessor</span></code> instance internal to the
+<code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code> instance. The <code class="docutils literal notranslate"><span class="pre">RequestProcessor</span></code> instance is
+responsible for storing the messages in the correct cache, either the one-to-one cache
+or the one-to-many (subscriptions) queue, depending on whether the message has a
+JSON-RPC <em>id</em> value or not.</p>
+</section>
+<section id="one-to-one-requests">
+<h3>One-To-One Requests<a class="headerlink" href="#one-to-one-requests" title="Link to this heading"></a></h3>
+<p>One-to-one requests can be summarized as any request that expects only one response
+back. An example is using the <code class="docutils literal notranslate"><span class="pre">eth</span></code> module API to request the latest block number.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ws_one_to_one_example</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ws://127.0.0.1:8546&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">w3</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="c1"># make a request and expect a single response returned on the same line</span>
+<span class="gp">... </span>        <span class="n">latest_block_num</span> <span class="o">=</span> <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">block_number</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">ws_one_to_one_example</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>With persistent socket connections, we have to call <code class="docutils literal notranslate"><span class="pre">send()</span></code> and asynchronously
+receive responses via another means, generally by calling <code class="docutils literal notranslate"><span class="pre">recv()</span></code> or by iterating
+on the socket connection for messages. As outlined above, the
+<code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code> class has a message listener background task that
+handles the receiving of messages.</p>
+<p>Due to this asynchronous nature of sending and receiving, in order to make one-to-one
+request-to-response calls work, we have to save the request information somewhere so
+that, when the response is received, we can match it to the original request that was
+made (i.e. the request with a matching <em>id</em> to the response that was received). The
+stored request information is then used to process the response when it is received,
+piping it through the response formatters and middleware internal to the <em>web3.py</em>
+library.</p>
+<p>In order to store the request information, the <code class="docutils literal notranslate"><span class="pre">RequestProcessor</span></code> class has an
+internal <code class="docutils literal notranslate"><span class="pre">RequestInformation</span></code> cache. The <code class="docutils literal notranslate"><span class="pre">RequestInformation</span></code> class saves important
+information about a request.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3._utils.caching.RequestInformation">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3._utils.caching.</span></span><span class="sig-name descname"><span class="pre">RequestInformation</span></span><a class="headerlink" href="#web3._utils.caching.RequestInformation" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="web3._utils.caching.RequestInformation.method">
+<span class="sig-name descname"><span class="pre">method</span></span><a class="headerlink" href="#web3._utils.caching.RequestInformation.method" title="Link to this definition"></a></dt>
+<dd><p>The name of the method - e.g. &quot;eth_subscribe&quot;.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3._utils.caching.RequestInformation.params">
+<span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#web3._utils.caching.RequestInformation.params" title="Link to this definition"></a></dt>
+<dd><p>The params used when the call was made - e.g. (&quot;newPendingTransactions&quot;, True).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3._utils.caching.RequestInformation.response_formatters">
+<span class="sig-name descname"><span class="pre">response_formatters</span></span><a class="headerlink" href="#web3._utils.caching.RequestInformation.response_formatters" title="Link to this definition"></a></dt>
+<dd><p>The formatters that will be used to process the response.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3._utils.caching.RequestInformation.middleware_response_processors">
+<span class="sig-name descname"><span class="pre">middleware_response_processors</span></span><a class="headerlink" href="#web3._utils.caching.RequestInformation.middleware_response_processors" title="Link to this definition"></a></dt>
+<dd><p>Any middleware that processes responses that is present on the instance at the
+time of the request is appended here, in order, so the response may be piped
+through that logic when it comes in.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3._utils.caching.RequestInformation.subscription_id">
+<span class="sig-name descname"><span class="pre">subscription_id</span></span><a class="headerlink" href="#web3._utils.caching.RequestInformation.subscription_id" title="Link to this definition"></a></dt>
+<dd><p>If the request is an <code class="docutils literal notranslate"><span class="pre">eth_subscribe</span></code> request, rather than
+popping this information from the cache when the response to the subscription call
+comes in (i.e. the subscription <em>id</em>), we save the subscription id with the
+request information so that we can correctly process all subscription messages
+that come in with that subscription <em>id</em>. For one-to-one request-to-response
+calls, this value is always <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>One-to-one responses, those that include a JSON-RPC <em>id</em> in the response object, are
+stored in an internal <code class="docutils literal notranslate"><span class="pre">SimpleCache</span></code> class, isolated from any one-to-many responses.
+When the <code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code> is looking for a response internally, it will
+expect the message listener task to store the response in this cache. Since the request
+<em>id</em> is used in the cache key generation, it will then look for a cache key that matches
+the response <em>id</em> with that of the request <em>id</em>. If the cache key is found, the response
+is processed and returned to the user. If the cache key is not found, the operation will
+time out and raise a <code class="docutils literal notranslate"><span class="pre">TimeExhausted</span></code> exception. This timeout can be configured by the
+user when instantiating the <code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code> instance via the
+<code class="docutils literal notranslate"><span class="pre">response_timeout</span></code> keyword argument.</p>
+</section>
+<section id="one-to-many-requests">
+<h3>One-To-Many Requests<a class="headerlink" href="#one-to-many-requests" title="Link to this heading"></a></h3>
+<p>One-to-many requests can be summarized by any request that expects many responses as a
+result of the initial request. The only current example is the <code class="docutils literal notranslate"><span class="pre">eth_subscribe</span></code>
+request. The initial <code class="docutils literal notranslate"><span class="pre">eth_subscribe</span></code> request expects only one response, the
+subscription <em>id</em> value, but it also expects to receive many <code class="docutils literal notranslate"><span class="pre">eth_subscription</span></code>
+messages if and when the request is successful. For this reason, the original request
+is considered a one-to-one request so that a subscription <em>id</em> can be returned to the
+user on the same line. The many responses this call will produce can be handled in one
+of a few ways.</p>
+<p>The recommended way to handle one-to-many responses is to use the subscription manager
+API. The subscription manager API is a public API on the <code class="docutils literal notranslate"><span class="pre">AsyncWeb3</span></code> class, when
+connected to a <code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code> instance, that allows the user to
+subscribe to a subscription and handle the many responses asynchronously. The
+<code class="docutils literal notranslate"><span class="pre">subscription_manager</span></code> instance is responsible for handling the many responses that
+come in over the socket connection, as long as handlers are passed to each subscription
+call. The subscription manager can also be used to unsubscribe from a subscription when
+the user is done with it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">new_heads_handler</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">handler_context</span><span class="p">:</span> <span class="n">NewHeadsSubscriptionContext</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">result</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">result</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;New block header: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1234567</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">await</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ws_subscription_example</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ws://127.0.0.1:8546&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">w3</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="c1"># Subscribe to new block headers and receive the subscription_id.</span>
+<span class="gp">... </span>        <span class="c1"># A one-to-one call with a trigger for many responses</span>
+<span class="gp">... </span>        <span class="n">subscription_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">&quot;newHeads&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">new_heads_handler</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="c1"># Handle the subscription messages asynchronously using the subscription</span>
+<span class="gp">... </span>        <span class="c1"># manager. This will continue until no more subscriptions are present in</span>
+<span class="gp">... </span>        <span class="c1"># the subscription manager, or indefinitely if the `run_forever` flag</span>
+<span class="gp">... </span>        <span class="c1"># is set to `True`.</span>
+<span class="gp">... </span>        <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">handle_subscriptions</span><span class="p">(</span><span class="n">run_forever</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">ws_subscription_example</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The manager can also subscribe to many subscriptions at one time. The
+<code class="docutils literal notranslate"><span class="pre">EthSubscription</span></code> classes, available via <code class="docutils literal notranslate"><span class="pre">web3.utils.subscriptions</span></code>, provide a
+friendly API for managing subscriptions. Since each connection and provider instance
+has its own message listener task and subscription manager instance, you can subscribe
+to many subscriptions at once and handle the many responses that come in over the socket
+connections via handlers. The handlers contain:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">async_w3</span></code>: The <code class="docutils literal notranslate"><span class="pre">AsyncWeb3</span></code> instance that the subscription was made on.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">subscription</span></code>: The subscription instance that the handler is attached to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">result</span></code>: The response that came in over the socket connection for the subscription.</p></li>
+</ul>
+<p>Subscriptions also accept a <code class="docutils literal notranslate"><span class="pre">handler_context</span></code> argument that can be used to pass
+additional information to the handler when subscribing to a subscription. This can be
+used to pass in an event object, for example, that can be used to parse a log event
+when it comes in.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">AsyncWeb3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">WebSocketProvider</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">AsyncIPCProvider</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.utils.subscriptions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">EthSubscription</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">NewHeadsSubscription</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">NewHeadsSubscriptionContext</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">PendingTxSubscription</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">PendingTxSubscriptionContext</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">LogsSubscription</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">LogsSubscriptionContext</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">new_heads_handler</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">handler_context</span><span class="p">:</span> <span class="n">NewHeadsSubscriptionContext</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">header</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">result</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;New block header: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1234567</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="k">await</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">pending_txs_handler</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">handler_context</span><span class="p">:</span> <span class="n">PendingTxSubscriptionContext</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="o">...</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">log_handler</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">handler_context</span><span class="p">:</span> <span class="n">LogsSubscriptionContext</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">log_receipt</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">result</span>
+<span class="gp">... </span>    <span class="c1"># event is now available in the handler context, because we pass it to in the</span>
+<span class="gp">... </span>    <span class="c1"># ``handler_context`` when subscribing to the log</span>
+<span class="gp">... </span>    <span class="n">event_data</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">transfer_event</span><span class="o">.</span><span class="n">process_log</span><span class="p">(</span><span class="n">log_receipt</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Log event data: </span><span class="si">{</span><span class="n">event_data</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">sub_manager</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="n">local_w3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncIPCProvider</span><span class="p">(</span><span class="n">LOCAL_IPC</span><span class="p">))</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="c1"># subscribe to many subscriptions via the subscription manager with handlers</span>
+<span class="gp">... </span>    <span class="n">weth_contract</span> <span class="o">=</span> <span class="n">local_w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">address</span><span class="o">=</span><span class="n">local_w3</span><span class="o">.</span><span class="n">to_checksum_address</span><span class="p">(</span><span class="s2">&quot;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&quot;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="n">abi</span><span class="o">=</span><span class="n">WETH_ABI</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="n">transfer_event</span> <span class="o">=</span> <span class="n">weth_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Transfer</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="k">await</span> <span class="n">local_w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="p">[</span>
+<span class="gp">... </span>            <span class="n">NewHeadsSubscription</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;new-heads-mainnet&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">new_heads_handler</span><span class="p">),</span>
+<span class="gp">... </span>            <span class="n">PendingTxSubscription</span><span class="p">(</span>
+<span class="gp">... </span>                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;pending-tx-mainnet&quot;</span><span class="p">,</span>  <span class="c1"># optional label</span>
+<span class="gp">... </span>                <span class="n">full_transactions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">handler</span><span class="o">=</span><span class="n">pending_tx_handler</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="p">),</span>
+<span class="gp">... </span>            <span class="n">LogsSubscription</span><span class="p">(</span>
+<span class="gp">... </span>                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;WETH transfers&quot;</span><span class="p">,</span>  <span class="c1"># optional label</span>
+<span class="gp">... </span>                <span class="n">address</span><span class="o">=</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="n">transfer_event</span><span class="o">.</span><span class="n">topic</span><span class="p">],</span>
+<span class="gp">... </span>                <span class="n">handler</span><span class="o">=</span><span class="n">log_handler</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="c1"># optional ``handler_context`` args to help parse a response</span>
+<span class="gp">... </span>                <span class="n">handler_context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;transfer_event&quot;</span><span class="p">:</span> <span class="n">transfer_event</span><span class="p">},</span>
+<span class="gp">... </span>            <span class="p">),</span>
+<span class="gp">... </span>        <span class="p">]</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">public_w3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="n">PUBLIC_PROVIDER_WS</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="c1"># subscribe via eth_subscribe, with handler and label (optional)</span>
+<span class="gp">... </span>    <span class="k">await</span> <span class="n">public_w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">&quot;public_newHeads&quot;</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">pending_tx_handler</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;new-heads-public-ws&quot;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># This will handle all subscriptions until no more subscriptions are present</span>
+<span class="gp">... </span>    <span class="c1"># in either subscription manager instance. If the `run_forever` flag is set</span>
+<span class="gp">... </span>    <span class="c1"># to `True` on any manager instance, this will run indefinitely.</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">public_w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">handle_subscriptions</span><span class="p">(),</span>
+<span class="gp">... </span>        <span class="n">local_w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">handle_subscriptions</span><span class="p">(),</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="c1"># close the connections</span>
+<span class="gp">... </span>    <span class="k">await</span> <span class="n">local_w3</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="k">await</span> <span class="n">public_w3</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sub_manager</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">process_subscriptions()</span></code> method on the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnection</span></code> class, the public API for
+interacting with the active persistent socket connection, is also set up to receive
+<code class="docutils literal notranslate"><span class="pre">eth_subscription</span></code> responses over an asynchronous iterator pattern. You can use this
+method to listen for raw messages and process them as they come in.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ws_subscription_example</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ws://127.0.0.1:8546&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">w3</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="c1"># Subscribe to new block headers and receive the subscription_id.</span>
+<span class="gp">... </span>        <span class="c1"># A one-to-one call with a trigger for many responses</span>
+<span class="gp">... </span>        <span class="n">subscription_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">&quot;newHeads&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="c1"># Listen to the socket for the many responses utilizing the</span>
+<span class="gp">... </span>        <span class="c1"># ``w3.socket`` ``PersistentConnection`` public API method</span>
+<span class="gp">... </span>        <span class="c1"># ``process_subscriptions()``</span>
+<span class="gp">... </span>        <span class="k">async</span> <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">w3</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">process_subscriptions</span><span class="p">():</span>
+<span class="gp">... </span>            <span class="c1"># Receive only one-to-many responses here so that we don&#39;t</span>
+<span class="gp">... </span>            <span class="c1"># accidentally return the response for a one-to-one request in this</span>
+<span class="gp">... </span>            <span class="c1"># block</span>
+<span class="gp">...</span>
+<span class="gp">... </span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>            <span class="k">if</span> <span class="n">some_condition</span><span class="p">:</span>
+<span class="gp">... </span>                <span class="c1"># unsubscribe from new block headers, another one-to-one request</span>
+<span class="gp">... </span>                <span class="n">is_unsubscribed</span> <span class="o">=</span> <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">subscription_id</span><span class="p">)</span>
+<span class="gp">... </span>                <span class="k">if</span> <span class="n">is_unsubscribed</span><span class="p">:</span>
+<span class="gp">... </span>                    <span class="k">break</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">ws_subscription_example</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>One-to-many responses, those that do not include a JSON-RPC <em>id</em> in the response object,
+are stored in an internal <code class="docutils literal notranslate"><span class="pre">asyncio.Queue</span></code> instance, isolated from any one-to-one
+responses. When the <code class="docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code> is looking for one-to-many
+responses internally, it will expect the message listener task to store these messages
+in this queue. Since the order of the messages is important, the queue is a FIFO queue.
+The <code class="docutils literal notranslate"><span class="pre">process_subscriptions()</span></code> method on the <code class="docutils literal notranslate"><span class="pre">PersistentConnection</span></code> class is set up
+to pop messages from this queue as FIFO over an asynchronous iterator pattern.</p>
+<p>If the stream of messages from the socket is not being interrupted by any other
+tasks, the queue will generally be in sync with the messages coming in over the
+socket. That is, the message listener will put a message in the queue and the
+<code class="docutils literal notranslate"><span class="pre">process_subscriptions()</span></code> method will pop that message from the queue and yield
+control of the loop back to the listener. This will continue until the socket
+connection is closed or the user unsubscribes from the subscription. If the stream of
+messages lags a bit, or the provider is not consuming messages but has subscribed to
+a subscription, this internal queue may fill up with messages until it reaches its max
+size and then trigger a waiting <code class="docutils literal notranslate"><span class="pre">asyncio.Event</span></code> until the provider begins consuming
+messages from the queue again. For this reason, it's important to begin consuming
+messages from the queue, via the <code class="docutils literal notranslate"><span class="pre">process_subscriptions()</span></code> method, as soon as a
+subscription is made.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="middleware.html" class="btn btn-neutral float-left" title="中间件" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="ens_overview.html" class="btn btn-neutral float-right" title="以太坊名称服务 (ENS)" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

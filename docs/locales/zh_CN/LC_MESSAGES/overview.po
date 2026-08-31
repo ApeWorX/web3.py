@@ -1,0 +1,588 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../overview.rst:4
+msgid "Overview"
+msgstr "概览"
+
+#: ../../overview.rst:6
+msgid ""
+"The purpose of this page is to give you a sense of everything web3.py can"
+" do and to serve as a quick reference guide. You'll find a summary of "
+"each feature with links to learn more."
+msgstr ""
+
+#: ../../overview.rst:11
+msgid "Configuration"
+msgstr ""
+
+#: ../../overview.rst:13
+msgid ""
+"After installing web3.py (via ``pip install web3``), you'll need to "
+"configure a provider endpoint and any middleware you want to use beyond "
+"the defaults."
+msgstr ""
+
+#: ../../overview.rst:18
+msgid "Providers"
+msgstr ""
+
+#: ../../overview.rst:20
+msgid ""
+":doc:`providers` are how web3.py connects to a blockchain. The library "
+"comes with the following built-in providers:"
+msgstr ""
+
+#: ../../overview.rst:23
+msgid ""
+":class:`~web3.providers.rpc.HTTPProvider` for connecting to http and "
+"https based JSON-RPC servers."
+msgstr ""
+
+#: ../../overview.rst:24
+msgid ""
+":class:`~web3.providers.ipc.IPCProvider` for connecting to ipc socket "
+"based JSON-RPC servers."
+msgstr ""
+
+#: ../../overview.rst:25
+msgid ""
+":class:`~web3.providers.legacy_websocket.LegacyWebSocketProvider` "
+"(deprecated) for connecting to websocket based JSON-RPC servers."
+msgstr ""
+
+#: ../../overview.rst:26
+msgid ""
+":class:`~web3.providers.async_rpc.AsyncHTTPProvider` for connecting to "
+"http and https based JSON-RPC servers asynchronously."
+msgstr ""
+
+#: ../../overview.rst:27
+msgid ""
+":class:`~web3.providers.persistent.AsyncIPCProvider` for connecting to "
+"ipc socket based JSON-RPC servers asynchronously via a persistent "
+"connection."
+msgstr ""
+
+#: ../../overview.rst:28
+msgid ""
+":class:`~web3.providers.persistent.WebSocketProvider` for connecting to "
+"websocket based JSON-RPC servers asynchronously via a persistent "
+"connection."
+msgstr ""
+
+#: ../../overview.rst:31
+msgid "Examples"
+msgstr ""
+
+#: ../../overview.rst:65
+msgid "For more context, see the :doc:`providers` documentation."
+msgstr ""
+
+#: ../../overview.rst:69
+msgid "Middleware"
+msgstr ""
+
+#: ../../overview.rst:71
+msgid "Your web3.py instance may be further configured via :doc:`middleware`."
+msgstr ""
+
+#: ../../overview.rst:73
+msgid ""
+"web3.py middleware is described using an onion metaphor, where each layer"
+" of middleware may affect both the incoming request and outgoing response"
+" from your provider. The documentation includes a :ref:`visualization "
+"<Modifying_Middleware>` of this idea."
+msgstr ""
+
+#: ../../overview.rst:78
+msgid ""
+"Several middleware are :ref:`included by default <default_middleware>`. "
+"You may add to (:meth:`add <Web3.middleware_onion.add>`, :meth:`inject "
+"<Web3.middleware_onion.inject>`, :meth:`replace "
+"<Web3.middleware_onion.replace>`) or disable (:meth:`remove "
+"<Web3.middleware_onion.remove>`, :meth:`clear "
+"<Web3.middleware_onion.clear>`) any of these middleware."
+msgstr ""
+
+#: ../../overview.rst:86
+msgid "Accounts and Private Keys"
+msgstr ""
+
+#: ../../overview.rst:88
+msgid ""
+"Private keys are required to approve any transaction made on your behalf."
+" The manner in which your key is secured will determine how you create "
+"and send transactions in web3.py."
+msgstr ""
+
+#: ../../overview.rst:91
+msgid ""
+"A local node, like `Geth <https://geth.ethereum.org/>`_, may manage your "
+"keys for you. You can reference those keys using the "
+":attr:`web3.eth.accounts <web3.eth.Eth.accounts>` property."
+msgstr ""
+
+#: ../../overview.rst:95
+msgid ""
+"A hosted node, like `Infura <https://infura.io/>`_, will have no "
+"knowledge of your keys. In this case, you'll need to have your private "
+"key available locally for signing transactions."
+msgstr ""
+
+#: ../../overview.rst:99
+msgid ""
+"Full documentation on the distinction between keys can be found "
+":ref:`here <eth-account>`. The separate guide to :doc:`transactions` may "
+"also help clarify how to manage keys."
+msgstr ""
+
+#: ../../overview.rst:104
+msgid "Base API"
+msgstr ""
+
+#: ../../overview.rst:106
+msgid ""
+"The :ref:`Web3 <web3_base>` class includes a number of convenient utility"
+" functions:"
+msgstr ""
+
+#: ../../overview.rst:110
+msgid "Encoding and Decoding Helpers"
+msgstr ""
+
+#: ../../overview.rst:112
+msgid ":meth:`Web3.is_encodable() <web3.w3.is_encodable>`"
+msgstr ""
+
+#: ../../overview.rst:113
+msgid ":meth:`Web3.to_bytes() <web3.Web3.to_bytes>`"
+msgstr ""
+
+#: ../../overview.rst:114
+msgid ":meth:`Web3.to_hex() <web3.Web3.to_hex>`"
+msgstr ""
+
+#: ../../overview.rst:115
+msgid ":meth:`Web3.to_int() <web3.Web3.to_int>`"
+msgstr ""
+
+#: ../../overview.rst:116
+msgid ":meth:`Web3.to_json() <web3.Web3.to_json>`"
+msgstr ""
+
+#: ../../overview.rst:117
+msgid ":meth:`Web3.to_text() <web3.Web3.to_text>`"
+msgstr ""
+
+#: ../../overview.rst:121
+msgid "Address Helpers"
+msgstr ""
+
+#: ../../overview.rst:123
+msgid ":meth:`Web3.is_address() <web3.Web3.is_address>`"
+msgstr ""
+
+#: ../../overview.rst:124
+msgid ":meth:`Web3.is_checksum_address() <web3.Web3.is_checksum_address>`"
+msgstr ""
+
+#: ../../overview.rst:125
+msgid ":meth:`Web3.to_checksum_address() <web3.Web3.to_checksum_address>`"
+msgstr ""
+
+#: ../../overview.rst:129
+msgid "Currency Conversions"
+msgstr ""
+
+#: ../../overview.rst:131
+msgid ":meth:`Web3.from_wei() <web3.Web3.from_wei>`"
+msgstr ""
+
+#: ../../overview.rst:132
+msgid ":meth:`Web3.to_wei() <web3.Web3.to_wei>`"
+msgstr ""
+
+#: ../../overview.rst:136
+msgid "Cryptographic Hashing"
+msgstr ""
+
+#: ../../overview.rst:138
+msgid ":meth:`Web3.keccak() <web3.Web3.keccak>`"
+msgstr ""
+
+#: ../../overview.rst:139
+msgid ":meth:`Web3.solidity_keccak() <web3.Web3.solidity_keccak>`"
+msgstr ""
+
+#: ../../overview.rst:143
+msgid "web3.eth API"
+msgstr ""
+
+#: ../../overview.rst:145
+msgid ""
+"The most commonly used APIs for interacting with Ethereum can be found "
+"under the :ref:`web3-eth` namespace."
+msgstr ""
+
+#: ../../overview.rst:150
+msgid "Fetching Data"
+msgstr ""
+
+#: ../../overview.rst:152
+msgid ""
+"Viewing account balances (:meth:`get_balance "
+"<web3.eth.Eth.get_balance>`), transactions (:meth:`get_transaction "
+"<web3.eth.Eth.get_transaction>`), and block data (:meth:`get_block "
+"<web3.eth.Eth.get_block>`) are some of the most common starting points in"
+" web3.py."
+msgstr ""
+
+#: ../../overview.rst:159 ../../overview.rst:190 ../../overview.rst:257
+#: ../../overview.rst:283
+msgid "API"
+msgstr ""
+
+#: ../../overview.rst:161
+msgid ":meth:`web3.eth.get_balance() <web3.eth.Eth.get_balance>`"
+msgstr ""
+
+#: ../../overview.rst:162
+msgid ":meth:`web3.eth.get_block() <web3.eth.Eth.get_block>`"
+msgstr ""
+
+#: ../../overview.rst:163
+msgid ""
+":meth:`web3.eth.get_block_transaction_count() "
+"<web3.eth.Eth.get_block_transaction_count>`"
+msgstr ""
+
+#: ../../overview.rst:164
+msgid ":meth:`web3.eth.get_code() <web3.eth.Eth.get_code>`"
+msgstr ""
+
+#: ../../overview.rst:165
+msgid ":meth:`web3.eth.get_proof() <web3.eth.Eth.get_proof>`"
+msgstr ""
+
+#: ../../overview.rst:166
+msgid ":meth:`web3.eth.get_storage_at() <web3.eth.Eth.get_storage_at>`"
+msgstr ""
+
+#: ../../overview.rst:167
+msgid ":meth:`web3.eth.get_transaction() <web3.eth.Eth.get_transaction>`"
+msgstr ""
+
+#: ../../overview.rst:168
+msgid ""
+":meth:`web3.eth.get_transaction_by_block() "
+"<web3.eth.Eth.get_transaction_by_block>`"
+msgstr ""
+
+#: ../../overview.rst:169
+msgid ""
+":meth:`web3.eth.get_transaction_count() "
+"<web3.eth.Eth.get_transaction_count>`"
+msgstr ""
+
+#: ../../overview.rst:170
+msgid ":meth:`web3.eth.get_uncle_by_block() <web3.eth.Eth.get_uncle_by_block>`"
+msgstr ""
+
+#: ../../overview.rst:171
+msgid ":meth:`web3.eth.get_uncle_count() <web3.eth.Eth.get_uncle_count>`"
+msgstr ""
+
+#: ../../overview.rst:175
+msgid "Sending Transactions"
+msgstr ""
+
+#: ../../overview.rst:177
+msgid ""
+"The most common use cases will be satisfied with :meth:`send_transaction "
+"<web3.eth.Eth.send_transaction>` or the combination of "
+":meth:`sign_transaction <web3.eth.Eth.sign_transaction>` and "
+":meth:`send_raw_transaction <web3.eth.Eth.send_raw_transaction>`. For "
+"more context, see the full guide to :doc:`transactions`."
+msgstr ""
+
+#: ../../overview.rst:185
+msgid ""
+"If interacting with a smart contract, a dedicated API exists. See the "
+"next section, :ref:`Contracts <overview_contracts>`."
+msgstr ""
+
+#: ../../overview.rst:192
+msgid ":meth:`web3.eth.send_transaction() <web3.eth.Eth.send_transaction>`"
+msgstr ""
+
+#: ../../overview.rst:193
+msgid ":meth:`web3.eth.sign_transaction() <web3.eth.Eth.sign_transaction>`"
+msgstr ""
+
+#: ../../overview.rst:194
+msgid ""
+":meth:`web3.eth.send_raw_transaction() "
+"<web3.eth.Eth.send_raw_transaction>`"
+msgstr ""
+
+#: ../../overview.rst:195
+msgid ":meth:`web3.eth.replace_transaction() <web3.eth.Eth.replace_transaction>`"
+msgstr ""
+
+#: ../../overview.rst:196
+msgid ":meth:`web3.eth.modify_transaction() <web3.eth.Eth.modify_transaction>`"
+msgstr ""
+
+#: ../../overview.rst:197
+msgid ""
+":meth:`web3.eth.wait_for_transaction_receipt() "
+"<web3.eth.Eth.wait_for_transaction_receipt>`"
+msgstr ""
+
+#: ../../overview.rst:198
+msgid ""
+":meth:`web3.eth.get_transaction_receipt() "
+"<web3.eth.Eth.get_transaction_receipt>`"
+msgstr ""
+
+#: ../../overview.rst:199
+msgid ":meth:`web3.eth.sign() <web3.eth.Eth.sign>`"
+msgstr ""
+
+#: ../../overview.rst:200
+msgid ":meth:`web3.eth.sign_typed_data() <web3.eth.Eth.sign_typed_data>`"
+msgstr ""
+
+#: ../../overview.rst:201
+msgid ":meth:`web3.eth.estimate_gas() <web3.eth.Eth.estimate_gas>`"
+msgstr ""
+
+#: ../../overview.rst:202
+msgid ":meth:`web3.eth.generate_gas_price() <web3.eth.Eth.generate_gas_price>`"
+msgstr ""
+
+#: ../../overview.rst:203
+msgid ""
+":meth:`web3.eth.set_gas_price_strategy() "
+"<web3.eth.Eth.set_gas_price_strategy>`"
+msgstr ""
+
+#: ../../overview.rst:209
+msgid "Contracts"
+msgstr ""
+
+#: ../../overview.rst:211
+msgid ""
+"web3.py can help you deploy, read from, or execute functions on a "
+"deployed contract."
+msgstr ""
+
+#: ../../overview.rst:213
+msgid ""
+"Deployment requires that the contract already be compiled, with its "
+"bytecode and ABI available. This compilation step can be done within "
+"`Remix <http://remix.ethereum.org/>`_ or one of the many contract "
+"development frameworks, such as `Ape "
+"<https://docs.apeworx.io/ape/stable/index.html>`_."
+msgstr ""
+
+#: ../../overview.rst:218
+msgid ""
+"Once the contract object is instantiated, calling ``transact`` on the "
+":meth:`constructor <web3.contract.Contract.constructor>` method will "
+"deploy an instance of the contract:"
+msgstr ""
+
+#: ../../overview.rst:230
+msgid ""
+"Once a deployed contract is loaded into a Contract object, the functions "
+"of that contract are available on the ``functions`` namespace:"
+msgstr ""
+
+#: ../../overview.rst:238
+msgid ""
+"If you want to read data from a contract (or see the result of "
+"transaction locally, without executing it on the network), you can use "
+"the :meth:`ContractFunction.call <web3.contract.ContractFunction.call>` "
+"method, or the more concise :attr:`ContractCaller "
+"<web3.contract.ContractCaller>` syntax:"
+msgstr ""
+
+#: ../../overview.rst:253
+msgid "For more, see the full :ref:`Contracts` documentation."
+msgstr ""
+
+#: ../../overview.rst:259
+msgid ":meth:`web3.eth.contract() <web3.eth.Eth.contract>`"
+msgstr ""
+
+#: ../../overview.rst:260
+msgid ":attr:`Contract.address <web3.contract.Contract.address>`"
+msgstr ""
+
+#: ../../overview.rst:261
+msgid ":attr:`Contract.abi <web3.contract.Contract.abi>`"
+msgstr ""
+
+#: ../../overview.rst:262
+msgid ":attr:`Contract.bytecode <web3.contract.Contract.bytecode>`"
+msgstr ""
+
+#: ../../overview.rst:263
+msgid ""
+":attr:`Contract.bytecode_runtime "
+"<web3.contract.Contract.bytecode_runtime>`"
+msgstr ""
+
+#: ../../overview.rst:264
+msgid ":attr:`Contract.functions <web3.contract.Contract.functions>`"
+msgstr ""
+
+#: ../../overview.rst:265
+msgid ":attr:`Contract.events <web3.contract.Contract.events>`"
+msgstr ""
+
+#: ../../overview.rst:266
+msgid ":attr:`Contract.fallback <web3.contract.Contract.fallback.call>`"
+msgstr ""
+
+#: ../../overview.rst:267
+msgid ":meth:`Contract.constructor() <web3.contract.Contract.constructor>`"
+msgstr ""
+
+#: ../../overview.rst:268
+msgid ":meth:`Contract.encode_abi() <web3.contract.Contract.encode_abi>`"
+msgstr ""
+
+#: ../../overview.rst:269
+msgid ":attr:`web3.contract.ContractFunction <web3.contract.ContractFunction>`"
+msgstr ""
+
+#: ../../overview.rst:270
+msgid ":attr:`web3.contract.ContractEvents <web3.contract.ContractEvents>`"
+msgstr ""
+
+#: ../../overview.rst:274
+msgid "Events, Logs, and Filters"
+msgstr ""
+
+#: ../../overview.rst:276
+msgid ""
+"If you want to react to new blocks being mined or specific events being "
+"emitted by a contract, you can leverage ``get_logs``, subscriptions, or "
+"filters."
+msgstr ""
+
+#: ../../overview.rst:279
+msgid "See the :doc:`filters` guide for more information."
+msgstr ""
+
+#: ../../overview.rst:285
+msgid ":meth:`web3.eth.subscribe() <web3.eth.Eth.subscribe>`"
+msgstr ""
+
+#: ../../overview.rst:286
+msgid ":meth:`web3.eth.filter() <web3.eth.Eth.filter>`"
+msgstr ""
+
+#: ../../overview.rst:287
+msgid ":meth:`web3.eth.get_filter_changes() <web3.eth.Eth.get_filter_changes>`"
+msgstr ""
+
+#: ../../overview.rst:288
+msgid ":meth:`web3.eth.get_filter_logs() <web3.eth.Eth.get_filter_logs>`"
+msgstr ""
+
+#: ../../overview.rst:289
+msgid ":meth:`web3.eth.uninstall_filter() <web3.eth.Eth.uninstall_filter>`"
+msgstr ""
+
+#: ../../overview.rst:290
+msgid ":meth:`web3.eth.get_logs() <web3.eth.Eth.get_logs>`"
+msgstr ""
+
+#: ../../overview.rst:291
+msgid ""
+":meth:`Contract.events.your_event_name.create_filter() "
+"<web3.contract.Contract.events.your_event_name.create_filter>`"
+msgstr ""
+
+#: ../../overview.rst:292
+msgid ""
+":meth:`Contract.events.your_event_name.build_filter() "
+"<web3.contract.Contract.events.your_event_name.build_filter>`"
+msgstr ""
+
+#: ../../overview.rst:293
+msgid ""
+":meth:`Filter.get_new_entries() "
+"<web3.utils.filters.Filter.get_new_entries>`"
+msgstr ""
+
+#: ../../overview.rst:294
+msgid ""
+":meth:`Filter.get_all_entries() "
+"<web3.utils.filters.Filter.get_all_entries>`"
+msgstr ""
+
+#: ../../overview.rst:295
+msgid ":meth:`Filter.format_entry() <web3.utils.filters.Filter.format_entry>`"
+msgstr ""
+
+#: ../../overview.rst:296
+msgid ":meth:`Filter.is_valid_entry() <web3.utils.filters.Filter.is_valid_entry>`"
+msgstr ""
+
+#: ../../overview.rst:300
+msgid "Net API"
+msgstr ""
+
+#: ../../overview.rst:302
+msgid "Some basic network properties are available on the ``web3.net`` object:"
+msgstr ""
+
+#: ../../overview.rst:304
+msgid ":attr:`web3.net.listening`"
+msgstr ""
+
+#: ../../overview.rst:305
+msgid ":attr:`web3.net.peer_count`"
+msgstr ""
+
+#: ../../overview.rst:306
+msgid ":attr:`web3.net.version`"
+msgstr ""
+
+#: ../../overview.rst:310
+msgid "ENS"
+msgstr ""
+
+#: ../../overview.rst:312
+msgid ""
+"`Ethereum Name Service (ENS) <https://ens.domains/>`_ provides the "
+"infrastructure for human-readable addresses. If an address is registered "
+"with the ENS registry, the domain name can be used in place of the "
+"address itself. For example, the registered domain name ``ethereum.eth`` "
+"will resolve to the address "
+"``0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe``. web3.py has support for "
+"ENS, documented :ref:`here <ens_overview>`."
+msgstr ""

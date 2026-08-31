@@ -1,0 +1,391 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../web3.eth.account.rst:4
+msgid "Accounts"
+msgstr "账户"
+
+#: ../../web3.eth.account.rst:9
+msgid "Local vs Hosted Nodes"
+msgstr ""
+
+#: ../../web3.eth.account.rst:11
+msgid "Hosted Node"
+msgstr ""
+
+#: ../../web3.eth.account.rst:12
+msgid ""
+"A **hosted** node is controlled by someone else. You may also see these "
+"referred to as **remote** nodes. View a list of commercial `node "
+"providers <https://ethereum.org/en/developers/docs/nodes-and-clients"
+"/nodes-as-a-service/>`_."
+msgstr ""
+
+#: ../../web3.eth.account.rst:15
+msgid "Local Node"
+msgstr ""
+
+#: ../../web3.eth.account.rst:16
+msgid ""
+"A **local** node is started and controlled by you on your computer. For "
+"several reasons (e.g., privacy, security), this is the recommended path, "
+"but it requires more resources and work to set up and maintain. See "
+"`ethereum.org <https://ethereum.org/en/developers/docs/nodes-and-"
+"clients/>`_ for a guided tour."
+msgstr ""
+
+#: ../../web3.eth.account.rst:21
+msgid "Local vs Hosted Keys"
+msgstr ""
+
+#: ../../web3.eth.account.rst:23
+msgid ""
+"An Ethereum private key is a 256-bit (32 bytes) random integer. For each "
+"private key, you get one Ethereum address, also known as an Externally "
+"Owned Account (EOA)."
+msgstr ""
+
+#: ../../web3.eth.account.rst:27
+msgid ""
+"In Python, the private key is expressed as a 32-byte long Python "
+"``bytes`` object. When a private key is presented to users in a "
+"hexadecimal format, it may or may not contain a starting ``0x`` "
+"hexadecimal prefix."
+msgstr ""
+
+#: ../../web3.eth.account.rst:31
+msgid "Local Private Key"
+msgstr ""
+
+#: ../../web3.eth.account.rst:32
+msgid ""
+"A local private key is a locally stored secret you import to your Python "
+"application. Please read below how you can create and import a local "
+"private key and use it to sign transactions."
+msgstr ""
+
+#: ../../web3.eth.account.rst:36
+msgid "Hosted Private Key"
+msgstr ""
+
+#: ../../web3.eth.account.rst:37
+msgid ""
+"This is a legacy way to use accounts when working with unit test backends"
+" like ``EthereumTesterProvider`` or `Anvil "
+"<https://book.getfoundry.sh/reference/anvil/>`_. Calling "
+"``web3.eth.accounts`` gives you a predefined list of accounts that have "
+"been funded with test ETH. You can use "
+":meth:`~web3.eth.Eth.send_transaction` on any of these accounts without "
+"further configuration."
+msgstr ""
+
+#: ../../web3.eth.account.rst:44
+msgid ""
+"In the past, around 2015, this was also a way to use private keys in a "
+"locally hosted node, but this practice is now discouraged."
+msgstr ""
+
+#: ../../web3.eth.account.rst:49
+msgid ""
+"``web3.eth.send_transaction`` does not work with modern node providers, "
+"because they relied on a node state and all modern nodes are stateless. "
+"You must always use local private keys when working with nodes hosted by "
+"someone else."
+msgstr ""
+
+#: ../../web3.eth.account.rst:56
+msgid "Some Common Uses for Local Private Keys"
+msgstr ""
+
+#: ../../web3.eth.account.rst:58
+msgid ""
+"A very common reason to work with local private keys is to interact with "
+"a hosted node."
+msgstr ""
+
+#: ../../web3.eth.account.rst:61
+msgid "Some common things you might want to do with a `Local Private Key` are:"
+msgstr ""
+
+#: ../../web3.eth.account.rst:63
+msgid "`Sign a Transaction`_"
+msgstr ""
+
+#: ../../web3.eth.account.rst:64
+msgid "`Sign a Contract Transaction`_"
+msgstr ""
+
+#: ../../web3.eth.account.rst:65
+msgid "`Sign a Message`_"
+msgstr ""
+
+#: ../../web3.eth.account.rst:66
+msgid "`Verify a Message`_"
+msgstr ""
+
+#: ../../web3.eth.account.rst:68
+msgid ""
+"Using private keys usually involves ``w3.eth.account`` in one way or "
+"another. Read on for more, or see a full list of things you can do in the"
+" docs for :class:`eth_account.Account <eth_account.account.Account>`."
+msgstr ""
+
+#: ../../web3.eth.account.rst:74
+msgid "Creating a Private Key"
+msgstr ""
+
+#: ../../web3.eth.account.rst:76
+msgid ""
+"Each Ethereum address has a matching private key. To create a new "
+"Ethereum account you can just generate a random number that acts as a "
+"private key."
+msgstr ""
+
+#: ../../web3.eth.account.rst:79
+msgid ""
+"A private key is just a random unguessable, or cryptographically safe, "
+"256-bit integer number"
+msgstr ""
+
+#: ../../web3.eth.account.rst:81
+msgid ""
+"A valid private key is > 0 and < max private key value (a number above "
+"the elliptic curve order FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 "
+"AF48A03B BFD25E8C D0364141)"
+msgstr ""
+
+#: ../../web3.eth.account.rst:83
+msgid "Private keys do not have checksums."
+msgstr ""
+
+#: ../../web3.eth.account.rst:85
+msgid "To create a private key using web3.py and command line you can do:"
+msgstr ""
+
+#: ../../web3.eth.account.rst:91
+msgid "Which outputs a new private key and an account pair::"
+msgstr ""
+
+#: ../../web3.eth.account.rst:95
+msgid ""
+"*Never store private key with your source*. Use environment variables to "
+"store the key. Read more below."
+msgstr ""
+
+#: ../../web3.eth.account.rst:98
+msgid ""
+"You can also import the raw hex private key to MetaMask and any other "
+"wallet - the private key can be shared between your Python code and any "
+"number of wallets."
+msgstr ""
+
+#: ../../web3.eth.account.rst:104
+msgid "Funding a New Account"
+msgstr ""
+
+#: ../../web3.eth.account.rst:106
+msgid ""
+"If you create a private key, it comes with its own Ethereum address. By "
+"default, the balance of this address is zero. Before you can send any "
+"transactions with your account, you need to top up."
+msgstr ""
+
+#: ../../web3.eth.account.rst:111
+msgid ""
+"For a local test environment (e.g., ``EthereumTesterProvider``), any "
+"environment is bootstrapped with accounts that have test ETH in them. "
+"Move ETH from default accounts to your newly created account."
+msgstr ""
+
+#: ../../web3.eth.account.rst:115
+msgid ""
+"For public mainnet, you need to buy ETH in a cryptocurrency exchange and "
+"send it to your privately controlled account."
+msgstr ""
+
+#: ../../web3.eth.account.rst:118
+msgid "For a testnet, find a relevant testnet :ref:`faucet <faucets>`."
+msgstr ""
+
+#: ../../web3.eth.account.rst:122
+msgid "Reading a Private Key from an Environment Variable"
+msgstr ""
+
+#: ../../web3.eth.account.rst:124
+msgid ""
+"In this example we pass the private key to our Python application in an "
+"`environment variable "
+"<https://en.wikipedia.org/wiki/Environment_variable>`_. This private key "
+"is then added to the transaction signing keychain with ``Signing`` "
+"middleware."
+msgstr ""
+
+#: ../../web3.eth.account.rst:129
+msgid ""
+"If unfamiliar, note that you can `export your private keys from Metamask "
+"and other wallets <https://metamask.zendesk.com/hc/en-"
+"us/articles/360015289632-How-to-Export-an-Account-Private-Key>`_."
+msgstr ""
+
+#: ../../web3.eth.account.rst:133
+msgid "**Never** share your private keys."
+msgstr ""
+
+#: ../../web3.eth.account.rst:134
+msgid "**Never** put your private keys in source code."
+msgstr ""
+
+#: ../../web3.eth.account.rst:135
+msgid "**Never** commit private keys to a Git repository."
+msgstr ""
+
+#: ../../web3.eth.account.rst:137
+msgid "Example ``account_test_script.py``"
+msgstr ""
+
+#: ../../web3.eth.account.rst:162
+msgid "Example how to run this in UNIX shell:"
+msgstr ""
+
+#: ../../web3.eth.account.rst:176
+msgid "This will print::"
+msgstr ""
+
+#: ../../web3.eth.account.rst:184
+msgid "Extract private key from geth keyfile"
+msgstr ""
+
+#: ../../web3.eth.account.rst:187
+msgid "The amount of available ram should be greater than 1GB."
+msgstr ""
+
+#: ../../web3.eth.account.rst:198
+msgid "Sign a Message"
+msgstr ""
+
+#: ../../web3.eth.account.rst:200
+msgid ""
+"There is no single message format that is broadly adopted with community "
+"consensus. Keep an eye on several options, like `EIP-683 "
+"<https://github.com/ethereum/EIPs/pull/683>`_, `EIP-712 "
+"<https://github.com/ethereum/EIPs/pull/712>`_, and `EIP-719 "
+"<https://github.com/ethereum/EIPs/pull/719>`_. Consider the "
+":meth:`w3.eth.sign() <web3.eth.Eth.sign>` approach be deprecated."
+msgstr ""
+
+#: ../../web3.eth.account.rst:207
+msgid ""
+"For this example, we will use the same message hashing mechanism that is "
+"provided by :meth:`w3.eth.sign() <web3.eth.Eth.sign>`."
+msgstr ""
+
+#: ../../web3.eth.account.rst:229
+msgid "Verify a Message"
+msgstr ""
+
+#: ../../web3.eth.account.rst:231
+msgid "With the original message text and a signature:"
+msgstr ""
+
+#: ../../web3.eth.account.rst:241
+msgid "Prepare message for ecrecover in Solidity"
+msgstr ""
+
+#: ../../web3.eth.account.rst:243
+msgid ""
+"Let's say you want a contract to validate a signed message, like if "
+"you're making payment channels, and you want to validate the value in "
+"Remix or web3.js."
+msgstr ""
+
+#: ../../web3.eth.account.rst:247
+msgid ""
+"You might have produced the signed_message locally, as in `Sign a "
+"Message`_. If so, this will prepare it for Solidity:"
+msgstr ""
+
+#: ../../web3.eth.account.rst:272
+msgid ""
+"Instead, you might have received a message and a signature encoded to "
+"hex. Then this will prepare it for Solidity:"
+msgstr ""
+
+#: ../../web3.eth.account.rst:310
+msgid "Verify a message with ecrecover in Solidity"
+msgstr ""
+
+#: ../../web3.eth.account.rst:312
+msgid ""
+"Create a simple ecrecover contract in `Remix "
+"<https://remix.ethereum.org/>`_:"
+msgstr ""
+
+#: ../../web3.eth.account.rst:325
+msgid ""
+"Then call ecr with these arguments from `Prepare message for ecrecover in"
+" Solidity`_ in Remix, "
+"``\"0x1476abb745d423bf09273f1afd887d951181d25adc66c4834a70491911b7f750\","
+" 28, "
+"\"0xe6ca9bba58c88611fad66a6ce8f996908195593807c4b38bd528d2cff09d4eb3\", "
+"\"0x3e5bfbbf4d3e39b1a2fd816a7680c19ebebaf3a141b239934ad43cb33fcec8ce\"``"
+msgstr ""
+
+#: ../../web3.eth.account.rst:328
+msgid ""
+"The message is verified, because we get the correct sender of the message"
+" back in response: ``0x5ce9454909639d2d17a3f753ce7d93fa0b9ab12e``."
+msgstr ""
+
+#: ../../web3.eth.account.rst:335
+msgid "Sign a Transaction"
+msgstr ""
+
+#: ../../web3.eth.account.rst:337
+msgid ""
+"Create a transaction, sign it locally, and then send it to your node for "
+"broadcasting, with :meth:`~web3.eth.Eth.send_raw_transaction`."
+msgstr ""
+
+#: ../../web3.eth.account.rst:384
+msgid "Sign a Contract Transaction"
+msgstr ""
+
+#: ../../web3.eth.account.rst:386
+msgid "To sign a transaction locally that will invoke a smart contract:"
+msgstr ""
+
+#: ../../web3.eth.account.rst:388
+msgid "Initialize your :meth:`Contract <web3.eth.Eth.contract>` object"
+msgstr ""
+
+#: ../../web3.eth.account.rst:389
+msgid "Build the transaction"
+msgstr ""
+
+#: ../../web3.eth.account.rst:390
+msgid ""
+"Sign the transaction, with :meth:`w3.eth.account.sign_transaction() "
+"<eth_account.account.Account.sign_transaction>`"
+msgstr ""
+
+#: ../../web3.eth.account.rst:392
+msgid "Broadcast the transaction with :meth:`~web3.eth.Eth.send_raw_transaction`"
+msgstr ""

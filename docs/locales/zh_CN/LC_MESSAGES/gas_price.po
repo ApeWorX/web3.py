@@ -1,0 +1,161 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../gas_price.rst:4
+msgid "Gas Price API"
+msgstr ""
+
+#: ../../gas_price.rst:7
+msgid ""
+"Gas price strategy is only supported for legacy transactions. The London "
+"fork introduced ``maxFeePerGas`` and ``maxPriorityFeePerGas`` transaction"
+" parameters which should be used over ``gasPrice`` whenever possible."
+msgstr ""
+
+#: ../../gas_price.rst:11
+msgid ""
+"For Ethereum (legacy) transactions, gas price is a delicate property. For"
+" this reason, Web3 includes an API for configuring it."
+msgstr ""
+
+#: ../../gas_price.rst:14
+msgid ""
+"The Gas Price API allows you to define Web3's behaviour for populating "
+"the gas price. This is done using a \"Gas Price Strategy\" - a method "
+"which takes the Web3 object and a transaction dictionary and returns a "
+"gas price (denominated in wei)."
+msgstr ""
+
+#: ../../gas_price.rst:19
+msgid "Retrieving gas price"
+msgstr ""
+
+#: ../../gas_price.rst:21
+msgid ""
+"To retrieve the gas price using the selected strategy simply call "
+":meth:`~web3.eth.Eth.generate_gas_price`"
+msgstr ""
+
+#: ../../gas_price.rst:30
+msgid "Creating a gas price strategy"
+msgstr ""
+
+#: ../../gas_price.rst:32
+msgid ""
+"A gas price strategy is implemented as a python method with the following"
+" signature:"
+msgstr ""
+
+#: ../../gas_price.rst:40
+msgid ""
+"The method must return a positive integer representing the gas price in "
+"wei."
+msgstr ""
+
+#: ../../gas_price.rst:42
+msgid ""
+"To demonstrate, here is a rudimentary example of a gas price strategy "
+"that returns a higher gas price when the value of the transaction is "
+"higher than 1 Ether."
+msgstr ""
+
+#: ../../gas_price.rst:57
+msgid "Selecting the gas price strategy"
+msgstr ""
+
+#: ../../gas_price.rst:59
+msgid ""
+"The gas price strategy can be set by calling "
+":meth:`~web3.eth.Eth.set_gas_price_strategy`."
+msgstr ""
+
+#: ../../gas_price.rst:72
+msgid "Available gas price strategies"
+msgstr ""
+
+#: ../../gas_price.rst:78
+msgid ""
+"Makes a call to the `JSON-RPC eth_gasPrice method "
+"<https://ethereum.org/en/developers/docs/apis/json-rpc#eth_gasprice>`_ "
+"which returns the gas price configured by the connected Ethereum node."
+msgstr ""
+
+#: ../../gas_price.rst:86
+msgid ""
+"Constructs a strategy which will compute a gas price such that the "
+"transaction will be mined within a number of seconds defined by "
+"``max_wait_seconds`` with a probability defined by ``probability``.  The "
+"gas price is computed by sampling ``sample_size`` of the most recently "
+"mined blocks. If ``weighted=True``, the block time will be weighted "
+"towards more recently mined blocks."
+msgstr ""
+
+#: ../../gas_price.rst:93
+msgid ""
+"``max_wait_seconds`` The desired maximum number of seconds the "
+"transaction should take to mine."
+msgstr ""
+
+#: ../../gas_price.rst:95
+msgid "``sample_size`` The number of recent blocks to sample"
+msgstr ""
+
+#: ../../gas_price.rst:96
+msgid ""
+"``probability`` An integer representation of the desired probability that"
+" the transaction will be mined within ``max_wait_seconds``.  0 means 0% "
+"and 100 means 100%."
+msgstr ""
+
+#: ../../gas_price.rst:100
+msgid "The following ready to use versions of this strategy are available."
+msgstr ""
+
+#: ../../gas_price.rst:102
+msgid ""
+"``web3.gas_strategies.time_based.fast_gas_price_strategy``: Transaction "
+"mined within 60 seconds."
+msgstr ""
+
+#: ../../gas_price.rst:103
+msgid ""
+"``web3.gas_strategies.time_based.medium_gas_price_strategy``: Transaction"
+" mined within 5 minutes."
+msgstr ""
+
+#: ../../gas_price.rst:104
+msgid ""
+"``web3.gas_strategies.time_based.slow_gas_price_strategy``: Transaction "
+"mined within 1 hour."
+msgstr ""
+
+#: ../../gas_price.rst:105
+msgid ""
+"``web3.gas_strategies.time_based.glacial_gas_price_strategy``: "
+"Transaction mined within 24 hours."
+msgstr ""
+
+#: ../../gas_price.rst:107
+msgid ""
+"Due to the overhead of sampling the recent blocks it is recommended that "
+"a caching solution be used to reduce the amount of chain data that needs "
+"to be re-fetched for each request."
+msgstr ""

@@ -1,0 +1,184 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../transactions.rst:2
+msgid "Transactions"
+msgstr "交易"
+
+#: ../../transactions.rst:4
+msgid ""
+"There are a handful of ways to interact with transactions in web3.py. See"
+" the :ref:`Web3.eth module <web3-eth-methods>` for a full list of "
+"transaction-related methods. Note that you may also :ref:`batch requests "
+"<batch_requests>` that read transaction data, but not send new "
+"transactions in a batch request."
+msgstr ""
+
+#: ../../transactions.rst:7
+msgid ""
+"The rest of this guide covers the decision tree for how to send a "
+"transaction."
+msgstr ""
+
+#: ../../transactions.rst:11
+msgid ""
+"Prefer to view this code in a Jupyter Notebook? View the repo `here "
+"<https://github.com/wolovim/ethereum-"
+"notebooks/blob/master/Sending%20Transactions.ipynb>`_."
+msgstr ""
+
+#: ../../transactions.rst:13
+msgid ""
+"There are two methods for sending transactions using web3.py: "
+":meth:`~web3.eth.Eth.send_transaction` and "
+":meth:`~web3.eth.Eth.send_raw_transaction`. A brief guide:"
+msgstr ""
+
+#: ../../transactions.rst:15
+msgid "Want to sign a transaction offline or send pre-signed transactions?"
+msgstr ""
+
+#: ../../transactions.rst:17
+msgid ""
+"use :meth:`sign_transaction "
+"<eth_account.account.Account.sign_transaction>` + "
+":meth:`~web3.eth.Eth.send_raw_transaction`"
+msgstr ""
+
+#: ../../transactions.rst:19
+msgid ""
+"Are you primarily using the same account for all transactions and would "
+"you prefer to save a few lines of code?"
+msgstr ""
+
+#: ../../transactions.rst:21
+msgid ""
+"configure the ``build`` method for "
+":class:`~web3.middleware.SignAndSendRawMiddlewareBuilder`, then"
+msgstr ""
+
+#: ../../transactions.rst:22 ../../transactions.rst:27
+msgid "use :meth:`~web3.eth.Eth.send_transaction`"
+msgstr ""
+
+#: ../../transactions.rst:24
+msgid "Otherwise:"
+msgstr ""
+
+#: ../../transactions.rst:26
+msgid ""
+"load account via eth-account (:meth:`w3.eth.account.from_key(pk) "
+"<eth_account.account.Account.from_key>`), then"
+msgstr ""
+
+#: ../../transactions.rst:29
+msgid "Interacting with or deploying a contract?"
+msgstr ""
+
+#: ../../transactions.rst:31
+msgid ""
+"Option 1: :meth:`~web3.contract.ContractFunction.transact` uses "
+":meth:`~web3.eth.Eth.send_transaction` under the hood"
+msgstr ""
+
+#: ../../transactions.rst:32
+msgid ""
+"Option 2: :meth:`~web3.contract.ContractFunction.build_transaction` + "
+":meth:`sign_transaction <eth_account.account.Account.sign_transaction>` +"
+" :meth:`~web3.eth.Eth.send_raw_transaction`"
+msgstr ""
+
+#: ../../transactions.rst:34
+msgid "An example for each can be found below."
+msgstr ""
+
+#: ../../transactions.rst:38
+msgid "Chapter 0: ``w3.eth.send_transaction`` with ``eth-tester``"
+msgstr ""
+
+#: ../../transactions.rst:40
+msgid ""
+"Many tutorials use ``eth-tester`` (via EthereumTesterProvider) for "
+"convenience and speed of conveying ideas/building a proof of concept. "
+"Transactions sent by test accounts are auto-signed."
+msgstr ""
+
+#: ../../transactions.rst:68
+msgid "Chapter 1: ``w3.eth.send_transaction`` + signer middleware"
+msgstr ""
+
+#: ../../transactions.rst:70
+msgid ""
+"The :meth:`~web3.eth.Eth.send_transaction` method is convenient and to-"
+"the-point. If you want to continue using the pattern after graduating "
+"from ``eth-tester``, you can utilize web3.py middleware to sign "
+"transactions from a particular account:"
+msgstr ""
+
+#: ../../transactions.rst:112
+msgid "Chapter 2: ``w3.eth.send_raw_transaction``"
+msgstr ""
+
+#: ../../transactions.rst:114
+msgid "if you don't opt for the middleware, you'll need to:"
+msgstr ""
+
+#: ../../transactions.rst:116
+msgid "build each transaction,"
+msgstr ""
+
+#: ../../transactions.rst:117
+msgid ""
+":meth:`sign_transaction <eth_account.account.Account.sign_transaction>`, "
+"and"
+msgstr ""
+
+#: ../../transactions.rst:118
+msgid "then use :meth:`~web3.eth.Eth.send_raw_transaction`."
+msgstr ""
+
+#: ../../transactions.rst:143
+msgid "Chapter 3: Contract transactions"
+msgstr ""
+
+#: ../../transactions.rst:145
+msgid ""
+"The same concepts apply for contract interactions, at least under the "
+"hood."
+msgstr ""
+
+#: ../../transactions.rst:147
+msgid ""
+"Executing a function on a smart contract requires sending a transaction, "
+"which is typically done in one of two ways:"
+msgstr ""
+
+#: ../../transactions.rst:149
+msgid ""
+"executing the :meth:`~web3.contract.ContractFunction.transact` function, "
+"or"
+msgstr ""
+
+#: ../../transactions.rst:150
+msgid ""
+":meth:`~web3.contract.ContractFunction.build_transaction`, then signing "
+"and sending the raw transaction."
+msgstr ""
