@@ -57,23 +57,25 @@ MISSING_DATA = "no data"
 
 def _parse_error_with_reverted_prefix(data: str) -> str:
     """
-    Parse errors from the data string which begin with the "Reverted" prefix.
+    Parse errors from the data string which begin with the "Reverted" prefix or the Reverted function selector.
     "Reverted", function selector and offset are always the same for revert errors
     """
-    prefix = f"Reverted {SOLIDITY_ERROR_FUNC_SELECTOR}"
-    data_offset = ("00" * 31) + "20"  # 0x0000...0020 (32 bytes)
-    revert_pattern = prefix + data_offset
-    error = data
+    if data.startswith("Reverted "):
+        data = data.replace("Reverted ", "")
 
+    data_offset = ("00" * 31) + "20"  # 0x0000...0020 (32 bytes)
+    revert_pattern = SOLIDITY_ERROR_FUNC_SELECTOR + data_offset
+
+    error = data
     if data.startswith(revert_pattern):
         # if common revert pattern
         string_length = int(data[len(revert_pattern) : len(revert_pattern) + 64], 16)
         error = data[
             len(revert_pattern) + 64 : len(revert_pattern) + 64 + string_length * 2
         ]
-    elif data.startswith("Reverted 0x"):
-        # Special case for this form: 'Reverted 0x...'
-        error = data.split(" ")[1][2:]
+    elif data.startswith("0x"):
+        # Special case for this form: '0x...'
+        error = data.split(" ")[0][2:]
 
     try:
         error = bytes.fromhex(error).decode("utf8")
@@ -96,7 +98,7 @@ def _raise_contract_error(response_error_data: str) -> None:
         String length (32 bytes)
         Reason string (padded, use string length from above to get meaningful part)
     """
-    if response_error_data.startswith("Reverted "):
+    if response_error_data.startswith("Reverted ") or response_error_data[:10] == SOLIDITY_ERROR_FUNC_SELECTOR:
         reason_string = _parse_error_with_reverted_prefix(response_error_data)
         raise ContractLogicError(
             f"execution reverted: {reason_string}", data=response_error_data
@@ -123,10 +125,7 @@ def _raise_contract_error(response_error_data: str) -> None:
     # Solidity 0.8.4 introduced custom error messages that allow args to
     # be passed in (or not). See:
     # https://blog.soliditylang.org/2021/04/21/custom-errors/
-    elif (
-        len(response_error_data) >= 10
-        and not response_error_data[:10] == SOLIDITY_ERROR_FUNC_SELECTOR
-    ):
+    elif (len(response_error_data) >= 10):
         # Raise with data as both the message and the data for backwards
         # compatibility and so that data can be accessed via 'data' attribute
         # on the ContractCustomError exception
@@ -148,13 +147,13 @@ def raise_contract_logic_error_on_revert(response: RPCResponse) -> RPCResponse:
 
     message = error.get("message")
     message_present = message is not None and message != ""
-    data = error.get("data", MISSING_DATA)
+    data = error.get("data")
 
     if data is None:
         if message_present:
-            raise ContractLogicError(message, data=data)
+            raise ContractLogicError(message, data=MISSING_DATA)
         elif not message_present:
-            raise ContractLogicError("execution reverted", data=data)
+            raise ContractLogicError("execution reverted", data=MISSING_DATA)
     elif isinstance(data, dict) and message_present:
         raise ContractLogicError(f"execution reverted: {message}", data=data)
     elif isinstance(data, str):
@@ -176,6 +175,7 @@ def raise_transaction_indexing_error_if_indexing(response: RPCResponse) -> RPCRe
     Raise an error if ``eth_getTransactionReceipt`` returns an error indicating that
     transactions are still being indexed.
     """
+
     error = response.get("error")
     if not isinstance(error, str) and error is not None:
         message = error.get("message")
