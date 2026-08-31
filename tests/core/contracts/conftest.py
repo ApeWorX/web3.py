@@ -63,7 +63,10 @@ from web3._utils.contract_sources.contract_data.string_contract import (
 )
 from web3._utils.contract_sources.contract_data.tuple_contracts import (
     NESTED_TUPLE_CONTRACT_DATA,
+    TUPLE_CONTRACT_ABI,
+    TUPLE_CONTRACT_BYTECODE,
     TUPLE_CONTRACT_DATA,
+    TUPLE_CONTRACT_RUNTIME,
 )
 from web3.exceptions import (
     Web3ValueError,
@@ -115,6 +118,34 @@ def math_contract_factory(w3):
 @pytest.fixture
 def math_contract(w3, math_contract_factory, address_conversion_func):
     return deploy(w3, math_contract_factory, address_conversion_func)
+
+
+# --- tuple contract --- #
+
+
+@pytest.fixture(scope="session")
+def tuple_contract_bytecode():
+    return TUPLE_CONTRACT_BYTECODE
+
+
+@pytest.fixture(scope="session")
+def tuple_contract_runtime():
+    return TUPLE_CONTRACT_RUNTIME
+
+
+@pytest.fixture(scope="session")
+def tuple_contract_abi():
+    return TUPLE_CONTRACT_ABI
+
+
+@pytest.fixture
+def tuple_contract_factory(w3):
+    return w3.eth.contract(**TUPLE_CONTRACT_DATA)
+
+
+@pytest.fixture
+def tuple_contract(w3, tuple_contract_factory, address_conversion_func):
+    return deploy(w3, tuple_contract_factory, address_conversion_func)
 
 
 # --- constructor contracts --- #
@@ -469,12 +500,6 @@ def contract_caller_tester_contract(w3, address_conversion_func):
 def revert_contract(w3, address_conversion_func):
     revert_contract_factory = w3.eth.contract(**REVERT_CONTRACT_DATA)
     return deploy(w3, revert_contract_factory, address_conversion_func)
-
-
-@pytest.fixture
-def tuple_contract(w3, address_conversion_func):
-    tuple_contract_factory = w3.eth.contract(**TUPLE_CONTRACT_DATA)
-    return deploy(w3, tuple_contract_factory, address_conversion_func)
 
 
 @pytest.fixture

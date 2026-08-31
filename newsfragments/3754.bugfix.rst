@@ -1,0 +1,1 @@
+Fix decoding of `argument_types` for `tuple` types in `base_contract.py`.
