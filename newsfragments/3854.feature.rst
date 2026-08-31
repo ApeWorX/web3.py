@@ -1,0 +1,1 @@
+Add ``address_bytes()`` to ``ENS`` and ``AsyncENS`` for raw multichain ``addr`` resolution per ENSIP-9, without EIP-55 encoding.

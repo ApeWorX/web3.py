@@ -266,6 +266,25 @@ def is_none_or_zero_address(addr: Address | ChecksumAddress | HexAddress) -> boo
     return not addr or addr == EMPTY_ADDR_HEX or addr == b"\x00" * 20
 
 
+def resolved_address_to_bytes(
+    value: Address | ChecksumAddress | HexAddress | bytes | str | None,
+) -> bytes | None:
+    """
+    Convert a resolver ``addr`` return value to raw bytes (ENSIP-9 on-chain form).
+    """
+    if value is None or is_none_or_zero_address(value):
+        return None
+    if isinstance(value, bytes):
+        return value
+    if isinstance(value, str):
+        if value.startswith(("0x", "0X")):
+            return bytes.fromhex(value[2:])
+        return bytes.fromhex(value)
+    raise ENSValueError(
+        f"Cannot convert resolved address of type {type(value)!r} to bytes"
+    )
+
+
 def is_empty_name(name: str) -> bool:
     return name is None or name.strip() in {"", "."}
 
