@@ -14,6 +14,7 @@ from eth_utils import (
     add_0x_prefix,
     apply_to_return_value,
     from_wei,
+    from_wei_decimals,
     is_address,
     is_checksum_address,
     keccak as eth_utils_keccak,
@@ -23,6 +24,7 @@ from eth_utils import (
     to_int,
     to_text,
     to_wei,
+    to_wei_decimals,
 )
 from functools import (
     wraps,
@@ -258,6 +260,18 @@ class BaseWeb3:
     @wraps(from_wei)
     def from_wei(number: int, unit: str) -> int | decimal.Decimal:
         return from_wei(number, unit)
+
+    @staticmethod
+    @wraps(to_wei_decimals)
+    def to_wei_decimals(
+        number: Union[int, float, str, decimal.Decimal], decimals: int
+    ) -> Wei:
+        return cast(Wei, to_wei_decimals(number, decimals))
+
+    @staticmethod
+    @wraps(from_wei_decimals)
+    def from_wei_decimals(number: int, decimals: int) -> Union[int, decimal.Decimal]:
+        return from_wei_decimals(number, decimals)
 
     # Address Utility
     @staticmethod

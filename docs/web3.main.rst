@@ -324,6 +324,30 @@ Currency Conversions
         Decimal('1')
 
 
+.. py:method:: Web3.to_wei_decimals(value, decimals)
+
+    Returns the value in the denomination specified by the ``decimals`` argument
+    converted to wei.
+
+
+    .. code-block:: python
+
+        >>> Web3.to_wei_decimals(1, 18)
+        1000000000000000000
+
+
+.. py:method:: Web3.from_wei_decimals(value, decimals)
+
+    Returns the value in wei converted to the given number of decimals. The value is returned
+    as a ``Decimal`` to ensure precision down to the wei.
+
+
+    .. code-block:: python
+
+        >>> Web3.from_wei_decimals(1000000000000000000, 18)
+        Decimal('1')
+
+
 .. _overview_addresses:
 
 Addresses
