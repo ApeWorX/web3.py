@@ -8,7 +8,6 @@ from typing import (
     Any,
     cast,
 )
-import warnings
 
 from eth_typing import (
     Address,
