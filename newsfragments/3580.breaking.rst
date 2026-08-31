@@ -1,1 +1,0 @@
-``abi_ens_resolver`` now lets ``NameNotFound`` propagate when an ENS name fails to resolve, instead of catching it and re-raising as ``InvalidAddress`` for non-``StaticENS`` resolvers. This aligns the sync resolver with the existing async behavior. Callers that previously caught ``InvalidAddress`` on ENS lookup failures must catch ``NameNotFound`` instead.
