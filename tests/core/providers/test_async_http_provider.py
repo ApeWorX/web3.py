@@ -114,6 +114,49 @@ def test_get_request_headers(provider):
     )
 
 
+def test_async_request_kwargs_headers_extend_defaults():
+    provider = AsyncHTTPProvider(
+        endpoint_uri=URI,
+        request_kwargs={"headers": {"Authorization": "Bearer token"}},
+    )
+    request_kwargs = provider.get_request_kwargs()
+
+    assert "headers" in request_kwargs
+    headers = request_kwargs["headers"]
+    assert headers["Content-Type"] == "application/json"
+    assert headers["User-Agent"] == (
+        f"web3.py/{web3py_version}/"
+        f"{AsyncHTTPProvider.__module__}.{AsyncHTTPProvider.__qualname__}"
+    )
+    assert headers["Authorization"] == "Bearer token"
+
+
+def test_async_request_kwargs_headers_override_default_keys():
+    provider = AsyncHTTPProvider(
+        endpoint_uri=URI,
+        request_kwargs={"headers": {"User-Agent": "custom-agent/1.0"}},
+    )
+    headers = provider.get_request_kwargs()["headers"]
+
+    assert headers["Content-Type"] == "application/json"
+    assert headers["User-Agent"] == "custom-agent/1.0"
+
+
+def test_async_request_kwargs_preserves_other_kwargs():
+    provider = AsyncHTTPProvider(
+        endpoint_uri=URI,
+        request_kwargs={
+            "timeout": 42,
+            "headers": {"X-Custom": "yes"},
+        },
+    )
+    request_kwargs = provider.get_request_kwargs()
+
+    assert request_kwargs["timeout"] == 42
+    assert request_kwargs["headers"]["X-Custom"] == "yes"
+    assert request_kwargs["headers"]["Content-Type"] == "application/json"
+
+
 @patch(
     "web3._utils.http_session_manager.HTTPSessionManager.async_make_post_request",
     new_callable=AsyncMock,

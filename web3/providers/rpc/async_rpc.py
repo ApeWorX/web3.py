@@ -99,9 +99,16 @@ class AsyncHTTPProvider(AsyncJSONBaseProvider):
 
     @to_dict
     def get_request_kwargs(self) -> Iterable[tuple[str, Any]]:
-        if "headers" not in self._request_kwargs:
-            yield "headers", self.get_request_headers()
-        yield from self._request_kwargs.items()
+        # Merge default headers with any user-provided ``request_kwargs["headers"]``
+        # so callers can extend (e.g. add an ``Authorization`` header) without
+        # losing required defaults like ``Content-Type``. User-supplied keys win
+        # on conflict.
+        user_headers = self._request_kwargs.get("headers") or {}
+        yield "headers", {**self.get_request_headers(), **user_headers}
+        for key, value in self._request_kwargs.items():
+            if key == "headers":
+                continue
+            yield key, value
 
     @combomethod
     def get_request_headers(cls) -> dict[str, str]:

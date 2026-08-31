@@ -119,6 +119,54 @@ def test_get_request_headers(provider):
     )
 
 
+def test_request_kwargs_headers_extend_defaults():
+    # User-supplied headers should be merged on top of the defaults so that
+    # callers can add headers (e.g. ``Authorization``) without dropping the
+    # required ``Content-Type`` / ``User-Agent`` defaults.
+    provider = HTTPProvider(
+        endpoint_uri=URI,
+        request_kwargs={"headers": {"Authorization": "Bearer token"}},
+    )
+    request_kwargs = provider.get_request_kwargs()
+
+    assert "headers" in request_kwargs
+    headers = request_kwargs["headers"]
+    assert headers["Content-Type"] == "application/json"
+    assert headers["User-Agent"] == (
+        f"web3.py/{web3py_version}/"
+        f"{HTTPProvider.__module__}.{HTTPProvider.__qualname__}"
+    )
+    assert headers["Authorization"] == "Bearer token"
+
+
+def test_request_kwargs_headers_override_default_keys():
+    # When a user-supplied header collides with a default header, the user
+    # value wins.
+    provider = HTTPProvider(
+        endpoint_uri=URI,
+        request_kwargs={"headers": {"User-Agent": "custom-agent/1.0"}},
+    )
+    headers = provider.get_request_kwargs()["headers"]
+
+    assert headers["Content-Type"] == "application/json"
+    assert headers["User-Agent"] == "custom-agent/1.0"
+
+
+def test_request_kwargs_preserves_other_kwargs():
+    provider = HTTPProvider(
+        endpoint_uri=URI,
+        request_kwargs={
+            "timeout": 42,
+            "headers": {"X-Custom": "yes"},
+        },
+    )
+    request_kwargs = provider.get_request_kwargs()
+
+    assert request_kwargs["timeout"] == 42
+    assert request_kwargs["headers"]["X-Custom"] == "yes"
+    assert request_kwargs["headers"]["Content-Type"] == "application/json"
+
+
 @patch(
     "web3._utils.http_session_manager.HTTPSessionManager.make_post_request",
     new_callable=Mock,
