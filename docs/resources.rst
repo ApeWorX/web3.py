@@ -73,7 +73,7 @@ Libraries
 ---------
 
 - `Web3 Ethereum DeFi <https://github.com/tradingstrategy-ai/web3-ethereum-defi>`__ - Library for DeFi trading and protocols (Uniswap, PancakeSwap, Sushi, Aave, Chainlink)
-- `lighter-v1-python <https://github.com/elliottech/lighter-v1-python>`__ - Lighter.xyz DEX client for Python
+- `lighter-python <https://github.com/elliottech/lighter-python>`__ - Lighter.xyz DEX client for Python
 - `uniswap-python <https://uniswap-python.com/>`__ - Library lets you easily retrieve prices and make trades on all Uniswap versions.
 - `pyWalletConnect <https://github.com/bitlogik/pyWalletConnect>`__ - WalletConnect implementation for wallets in Python
 - `dydx-v3-python <https://github.com/dydxprotocol/dydx-v3-python>`__ - Python client for dYdX v3
