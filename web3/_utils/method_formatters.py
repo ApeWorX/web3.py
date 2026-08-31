@@ -241,14 +241,17 @@ AUTH_LIST_RESULT_FORMATTER = apply_formatter_if(
     is_not_null,
     apply_formatter_to_array(
         type_aware_apply_formatters_to_dict(
-            {
-                "chainId": to_integer_if_hex,
-                "address": to_checksum_address,
-                "nonce": to_integer_if_hex,
-                "yParity": to_integer_if_hex,
-                "r": to_integer_if_hex,
-                "s": to_integer_if_hex,
-            }
+            cast(
+                Formatters,
+                {
+                    "chainId": to_integer_if_hex,
+                    "address": to_checksum_address,
+                    "nonce": to_integer_if_hex,
+                    "yParity": to_integer_if_hex,
+                    "r": to_integer_if_hex,
+                    "s": to_integer_if_hex,
+                }
+            )
         ),
     ),
 )
