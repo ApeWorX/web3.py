@@ -33,7 +33,8 @@ When you subscribe to an event – new block headers, for example – you'll rec
                 print(response)
 
                 # unsubscribe:
-                if response["number"] > 42012345:
+                new_head = response["result"]
+                if new_head["number"] > 42012345:
                     await w3.eth.unsubscribe(subscription_id)
                     break
 
