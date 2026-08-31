@@ -49,6 +49,9 @@ from .exception_handling import (
 from .subscriptions import (
     EthSubscription,
 )
+from .transaction import (
+    Web3Transaction,
+)
 
 __all__ = [
     "abi_to_signature",
@@ -81,4 +84,5 @@ __all__ = [
     "CcipUrlValidator",
     "EthSubscription",
     "handle_offchain_lookup",
+    "Web3Transaction",
 ]
