@@ -438,8 +438,8 @@ def test_send_set_code_transaction(w3, math_contract):
     assert get_auth["address"].lower() == math_contract.address.lower()
     assert get_auth["nonce"] == nonce + 1
     assert isinstance(get_auth["yParity"], int)
-    assert isinstance(get_auth["r"], HexBytes)
-    assert isinstance(get_auth["s"], HexBytes)
+    assert isinstance(get_auth["r"], int)
+    assert isinstance(get_auth["s"], int)
 
     # reset code
     reset_auth = {
