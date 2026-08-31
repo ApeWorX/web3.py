@@ -302,7 +302,7 @@ WebSocketProvider
 
 .. py:class:: web3.providers.persistent.WebSocketProvider(endpoint_uri: str, websocket_kwargs: Dict[str, Any] = {}, use_text_frames: bool = False)
 
-    This provider handles interactions with an WS or WSS based JSON-RPC server.
+    This provider handles interactions with a WS or WSS based JSON-RPC server.
 
     * ``endpoint_uri`` should be the full URI to the RPC endpoint such as
       ``'ws://localhost:8546'``.

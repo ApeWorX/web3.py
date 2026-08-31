@@ -39,7 +39,7 @@ Test Provider
 
 If you're just learning the ropes or doing some quick prototyping, you can use a test
 provider, `eth-tester <https://github.com/ethereum/eth-tester>`_. This provider includes
-some accounts prepopulated with test ether and instantly includes each transaction into a block.
+some accounts prepopulated with test ether and instantly includes each transaction in a block.
 web3.py makes this test provider available via ``EthereumTesterProvider``.
 
 .. note::
