@@ -51,6 +51,7 @@ class HTTPSessionManager:
         self.session_cache = SimpleCache(cache_size)
         self.session_pool = ThreadPoolExecutor(max_workers=session_pool_max_workers)
         self._explicit_session = explicit_session
+        self.aiohttp_evicted_sessions: set[ClientSession] = set()
 
     @staticmethod
     def get_default_http_endpoint() -> URI:
@@ -252,6 +253,7 @@ class HTTPSessionManager:
             # just stored in the `evicted_sessions` dict. So we can kick off a future
             # task to close them and it should be safe to pop out of the lock here.
             evicted_sessions = list(evicted_items.values())
+            self.aiohttp_evicted_sessions.update(evicted_sessions)
             for evicted_session in evicted_sessions:
                 self.logger.debug(
                     "Async session cache full. Session evicted from cache: %s",
@@ -329,6 +331,7 @@ class HTTPSessionManager:
 
         for evicted_session in evicted_sessions:
             await evicted_session.close()
+            self.aiohttp_evicted_sessions.remove(evicted_session)
             self.logger.debug("Closed evicted async session: %s", evicted_session)
 
         if any(not evicted_session.closed for evicted_session in evicted_sessions):
