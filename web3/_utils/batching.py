@@ -58,6 +58,7 @@ RPC_METHODS_UNSUPPORTED_DURING_BATCH = {
     "eth_subscribe",
     "eth_unsubscribe",
     "eth_sendRawTransaction",
+    "eth_sendRawTransactionSync",
     "eth_sendTransaction",
     "eth_signTransaction",
     "eth_sign",

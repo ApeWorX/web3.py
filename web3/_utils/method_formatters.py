@@ -1030,6 +1030,10 @@ PYTHONIC_RESULT_FORMATTERS: dict[RPCEndpoint, Callable[..., Any]] = {
         apply_formatter_if(is_integer, str),
     ),
     RPC.eth_sendRawTransaction: to_hexbytes(32),
+    RPC.eth_sendRawTransactionSync: apply_formatter_if(
+        is_not_null,
+        receipt_formatter,
+    ),
     RPC.eth_sendTransaction: to_hexbytes(32),
     RPC.eth_sign: HexBytes,
     RPC.eth_signTransaction: apply_formatter_if(is_not_null, signed_tx_formatter),
