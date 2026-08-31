@@ -250,7 +250,7 @@ AUTH_LIST_RESULT_FORMATTER = apply_formatter_if(
                     "yParity": to_integer_if_hex,
                     "r": to_integer_if_hex,
                     "s": to_integer_if_hex,
-                }
+                },
             )
         ),
     ),
