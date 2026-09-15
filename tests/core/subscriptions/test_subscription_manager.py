@@ -529,3 +529,71 @@ async def test_eth_subscribe_api_call_with_all_kwargs(subscription_manager):
 
     assert subscription_manager.total_handler_calls == 1
     assert len(async_w3.subscription_manager._tasks) == 0
+
+
+@pytest.mark.asyncio
+async def test_message_listener_does_not_stall_when_handler_queue_is_full(
+    subscription_manager,
+) -> None:
+    """
+    Regression test: when the response queue has cleared ``_listen_event`` and
+    the handler queue is the slow consumer, ``cache_raw_response`` must not
+    wait on ``_listen_event`` for a reset that only the response-queue consumer
+    can perform. The listener must keep draining as the handler consumer
+    processes messages.
+    """
+    provider = subscription_manager._w3.provider
+
+    class Counter:
+        val: int = 0
+
+    counter = Counter()
+    tiny_queue_size = 2
+
+    async def slow_handler(handler_context) -> None:
+        await asyncio.sleep(0.01)
+        handler_context.counter.val += 1
+
+    sub_id = await subscription_manager.subscribe(
+        NewHeadsSubscription(handler=slow_handler, handler_context={"counter": counter}),
+    )
+    provider._request_processor.cache_request_information(
+        request_id=sub_id,
+        method="eth_subscribe",
+        params=[],
+        response_formatters=((), (), ()),
+    )
+
+    # shrink the handler queue so it fills quickly with a slow consumer
+    provider._request_processor._handler_subscription_queue = TaskReliantQueue(
+        maxsize=tiny_queue_size
+    )
+
+    # simulate a prior response-queue backpressure clearing the listen event:
+    # with only handler subscriptions routed, only the handler consumer can
+    # free capacity, and it never resets _listen_event.
+    provider._listen_event.clear()
+
+    num_msgs = 6
+    rp = provider._request_processor
+    msg = create_subscription_message(sub_id)
+
+    async def drain_handler_queue() -> None:
+        for _ in range(num_msgs):
+            await rp.cache_raw_response(msg, subscription=True)
+
+    caching_task = asyncio.ensure_future(drain_handler_queue())
+
+    async def consume_handler_queue() -> None:
+        queue = rp._handler_subscription_queue
+        processed = 0
+        while processed < num_msgs:
+            response = await asyncio.wait_for(queue.get(), timeout=5)
+            processed += 1
+
+    await asyncio.wait_for(
+        asyncio.gather(caching_task, consume_handler_queue()), timeout=10
+    )
+
+    # the listener never waited forever: all messages were queued and drained
+    assert rp._handler_subscription_queue.qsize() == 0
