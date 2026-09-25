@@ -1,6 +1,8 @@
+import binascii
 from collections.abc import Callable
 import itertools
 import logging
+import re
 from typing import (
     Any,
     NoReturn,
@@ -31,6 +33,7 @@ from eth_utils.curried import (
     apply_formatter_to_array,
 )
 from eth_utils.hexadecimal import (
+    decode_hex,
     encode_hex,
 )
 from eth_utils.toolz import (
@@ -53,6 +56,7 @@ from web3._utils.abi import (
     is_string_type,
     is_uint_type,
     length_of_array_type,
+    size_of_type,
     sub_type_of_array_type,
 )
 from web3._utils.formatters import (
@@ -141,23 +145,38 @@ def validate_abi_value(abi_type: TypeStr, value: Any) -> None:
     elif is_bool_type(abi_type) and is_boolean(value):
         return
     elif is_uint_type(abi_type) and is_integer(value) and value >= 0:
-        return
+        if value < 2 ** size_of_type(abi_type):
+            return
     elif is_int_type(abi_type) and is_integer(value):
-        return
+        bits = size_of_type(abi_type)
+        if -(2 ** (bits - 1)) <= value < 2 ** (bits - 1):
+            return
     elif is_address_type(abi_type):
         validate_address(value)
         return
     elif is_bytes_type(abi_type):
-        if is_bytes(value):
-            return
-        elif is_string(value):
-            if is_0x_prefixed(value):
-                return
+        sized = re.fullmatch(r"bytes(\d+)", abi_type)
+        if abi_type == "bytes" or sized is not None:
+            if is_bytes(value):
+                raw = value
+            elif is_string(value) and is_0x_prefixed(value):
+                try:
+                    raw = decode_hex(value)
+                except binascii.Error:
+                    raw = None
             else:
-                raise Web3TypeError(
-                    "ABI values of abi-type 'bytes' must be either"
-                    "a python3 'bytes' object or an '0x' prefixed string."
-                )
+                raw = None
+            if raw is not None and (sized is None or len(raw) == int(sized.group(1))):
+                return
+        elif is_bytes(value):
+            return
+        elif is_string(value) and is_0x_prefixed(value):
+            return
+        else:
+            raise Web3TypeError(
+                "ABI values of abi-type 'bytes' must be either"
+                "a python3 'bytes' object or an '0x' prefixed string."
+            )
     elif is_string_type(abi_type) and is_string(value):
         return
 
