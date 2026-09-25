@@ -15,6 +15,9 @@ from eth_utils.toolz import (
 from web3._utils.events import (
     get_event_data,
 )
+from web3.contract.contract import (
+    ContractEvent,
+)
 from web3.exceptions import (
     LogTopicError,
     MismatchedABI,
@@ -1332,3 +1335,88 @@ def test_receipt_processing_catches_insufficientdatabytes_error_by_default(
     with pytest.raises(InsufficientDataBytes):
         returned_log = event_instance.process_receipt(txn_receipt_dict, errors=STRICT)
         assert len(returned_log) == 0
+
+
+@pytest.mark.parametrize(
+    "contract_fn,event_name,call_args,expected_args",
+    (
+        ("logNoArgs", "LogNoArguments", [], {}),
+        ("logSingle", "LogSingleArg", [12345], {"arg0": 12345}),
+        ("logDouble", "LogDoubleArg", [12345, 54321], {"arg0": 12345, "arg1": 54321}),
+    ),
+)
+def test_event_process_log_as_classmethod(
+    w3,
+    emitter,
+    emitter_contract_event_ids,
+    wait_for_transaction,
+    contract_fn,
+    event_name,
+    call_args,
+    expected_args,
+):
+    emitter_fn = emitter.functions[contract_fn]
+    if hasattr(emitter_contract_event_ids, event_name):
+        event_id = getattr(emitter_contract_event_ids, event_name)
+        txn_hash = emitter_fn(event_id, *call_args).transact()
+    else:
+        txn_hash = emitter_fn(*call_args).transact()
+    txn_receipt = wait_for_transaction(w3, txn_hash)
+
+    event_class = type(
+        event_name,
+        (ContractEvent,),
+        {
+            "w3": w3,
+            "contract_abi": emitter.abi,
+            "abi_element_identifier": event_name,
+        },
+    )
+    assert event_class.abi is None
+
+    rich_log = event_class.process_log(txn_receipt["logs"][0])
+    assert rich_log["args"] == expected_args
+    assert rich_log.args == expected_args
+    assert rich_log["event"] == event_name
+
+
+@pytest.mark.parametrize(
+    "contract_fn,event_name,call_args,expected_args",
+    (
+        ("logNoArgs", "LogNoArguments", [], {}),
+        ("logSingle", "LogSingleArg", [12345], {"arg0": 12345}),
+    ),
+)
+def test_event_process_receipt_as_classmethod(
+    w3,
+    emitter,
+    emitter_contract_event_ids,
+    wait_for_transaction,
+    contract_fn,
+    event_name,
+    call_args,
+    expected_args,
+):
+    emitter_fn = emitter.functions[contract_fn]
+    if hasattr(emitter_contract_event_ids, event_name):
+        event_id = getattr(emitter_contract_event_ids, event_name)
+        txn_hash = emitter_fn(event_id, *call_args).transact()
+    else:
+        txn_hash = emitter_fn(*call_args).transact()
+    txn_receipt = wait_for_transaction(w3, txn_hash)
+
+    event_class = type(
+        event_name,
+        (ContractEvent,),
+        {
+            "w3": w3,
+            "contract_abi": emitter.abi,
+            "abi_element_identifier": event_name,
+        },
+    )
+    assert event_class.abi is None
+
+    processed_logs = event_class.process_receipt(txn_receipt)
+    assert len(processed_logs) == 1
+    assert processed_logs[0]["args"] == expected_args
+    assert processed_logs[0]["event"] == event_name

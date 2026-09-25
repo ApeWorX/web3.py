@@ -18,6 +18,7 @@ Bugfixes
 
 - Fixed ``ens.utils.is_none_or_zero_address`` not detecting bytes-form zero addresses (``b"\x00" * 20``) — the function compared against the hex string ``EMPTY_ADDR_HEX`` only, even though its signature accepts ``Address`` (which is ``bytes``). This caused ``ens.address(name, coin_type=N)`` to return the zero-address checksum string instead of ``None`` when the resolver recorded a zero address. (`#3822 <https://github.com/ethereum/web3.py/issues/3822>`__)
 - Fix a bug where request caching was not properly working for persistent connection providers (``WebSocketProvider`` and ``AsyncIPCProvider``). (`#3825 <https://github.com/ethereum/web3.py/issues/3825>`__)
+- Fix ``BaseContractEvent.process_log``, ``process_receipt``, and filter builder setup to retrieve the event ABI via ``_get_event_abi()`` so they work when called as classmethods on uninstantiated event classes. (`#1648 <https://github.com/ApeWorX/web3.py/issues/1648>`__)
 
 
 Features
