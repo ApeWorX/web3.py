@@ -1,0 +1,1 @@
+Fix potential deadlock and lock release race in `async_lock` when requests or tasks are cancelled during lock acquisition.
