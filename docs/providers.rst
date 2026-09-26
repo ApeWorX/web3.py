@@ -65,7 +65,26 @@ Valid formats for this environment variable are:
 - ``file:///path/to/node/rpc-json/file.ipc``
 - ``http://192.168.1.2:8545``
 - ``https://node.ontheweb.com``
-- ``ws://127.0.0.1:8546``
+- ``ws://127.0.0.1:8546`` (requires ``AsyncWeb3``)
+- ``wss://mainnet.infura.io/ws/v3/YOUR_KEY`` (requires ``AsyncWeb3``)
+
+For WebSocket connections (``ws://`` or ``wss://``), you can also use the
+``WEB3_WS_PROVIDER_URI`` environment variable. Note that WebSocket providers
+are asynchronous and require ``AsyncWeb3`` with ``AsyncAutoProvider``:
+
+.. code-block:: python
+
+    >>> import asyncio
+    >>> from web3 import AsyncWeb3, AsyncAutoProvider
+
+    >>> async def main():
+    ...     # AsyncAutoProvider will automatically detect WEB3_PROVIDER_URI
+    ...     # or WEB3_WS_PROVIDER_URI and use the appropriate async provider
+    ...     w3 = AsyncWeb3(AsyncAutoProvider())
+    ...     if await w3.is_connected():
+    ...         print(await w3.eth.block_number)
+
+    >>> asyncio.run(main())
 
 
 Auto-initialization Provider Shortcuts
@@ -530,9 +549,85 @@ Interacting with the Persistent Connection
 AutoProvider
 ~~~~~~~~~~~~
 
-:class:`~web3.providers.auto.AutoProvider` is the default used when initializing
-:class:`web3.Web3` without any providers. There's rarely a reason to use it
-explicitly.
+.. py:class:: web3.providers.auto.AutoProvider(potential_providers=None)
+
+    :class:`~web3.providers.auto.AutoProvider` is the default used when initializing
+    :class:`web3.Web3` without any providers. It automatically detects and connects
+    to available synchronous providers.
+
+    * ``potential_providers`` is an optional ordered sequence of provider classes
+      or functions to attempt connection with. If not specified, defaults to
+      ``(load_provider_from_environment, IPCProvider, HTTPProvider)``.
+
+    ``AutoProvider`` will iterate through the list of potential providers and use
+    the first one that successfully connects to a node.
+
+    .. code-block:: python
+
+        >>> from web3 import Web3
+
+        # These are equivalent - AutoProvider is used by default
+        >>> w3 = Web3()
+        >>> w3 = Web3(Web3.AutoProvider())
+
+    .. note::
+
+        ``AutoProvider`` only supports synchronous providers (HTTP, IPC). For
+        WebSocket connections, use ``AsyncAutoProvider`` with ``AsyncWeb3``.
+
+
+AsyncAutoProvider
+~~~~~~~~~~~~~~~~~
+
+.. py:class:: web3.providers.auto.AsyncAutoProvider(potential_providers=None)
+
+    :class:`~web3.providers.auto.AsyncAutoProvider` is the asynchronous equivalent
+    of ``AutoProvider``. It automatically detects and connects to available
+    asynchronous providers, including WebSocket.
+
+    * ``potential_providers`` is an optional ordered sequence of async provider
+      classes or functions to attempt connection with. If not specified, defaults to
+      ``(load_async_provider_from_environment, AsyncHTTPProvider)``.
+
+    ``AsyncAutoProvider`` checks the ``WEB3_PROVIDER_URI`` and ``WEB3_WS_PROVIDER_URI``
+    environment variables and automatically selects the appropriate async provider
+    based on the URI scheme:
+
+    - ``http://`` or ``https://`` → ``AsyncHTTPProvider``
+    - ``ws://`` or ``wss://`` → ``WebSocketProvider``
+    - ``file://`` → ``AsyncIPCProvider``
+
+    .. code-block:: python
+
+        >>> import asyncio
+        >>> from web3 import AsyncWeb3, AsyncAutoProvider
+
+        >>> async def main():
+        ...     w3 = AsyncWeb3(AsyncAutoProvider())
+        ...     if await w3.is_connected():
+        ...         block = await w3.eth.block_number
+        ...         print(f"Current block: {block}")
+
+        >>> asyncio.run(main())
+
+    For WebSocket connections that require explicit connection management, you can
+    combine ``AsyncAutoProvider`` with the context manager pattern:
+
+    .. code-block:: python
+
+        >>> import os
+        >>> import asyncio
+        >>> from web3 import AsyncWeb3, AsyncAutoProvider
+
+        >>> os.environ["WEB3_PROVIDER_URI"] = "wss://mainnet.infura.io/ws/v3/YOUR_KEY"
+
+        >>> async def main():
+        ...     # Note: For WebSocket URIs, AsyncAutoProvider returns a WebSocketProvider
+        ...     # which requires explicit connection. Use AsyncWeb3 context manager:
+        ...     async with AsyncWeb3(AsyncAutoProvider()) as w3:
+        ...         print(await w3.eth.block_number)
+
+        >>> asyncio.run(main())
 
 .. py:currentmodule:: web3.providers.eth_tester
 
