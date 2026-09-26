@@ -1143,6 +1143,37 @@ class AsyncEthModuleTest:
         assert transaction["hash"] == async_block_with_txn["transactions"][0]
 
     @pytest.mark.asyncio
+    async def test_eth_get_block_by_hash_full_transactions(
+        self, async_w3: "AsyncWeb3[Any]", async_block_with_txn: BlockData
+    ) -> None:
+        # Mirror of test_eth_get_block_by_number_full_transactions but keyed
+        # by block hash. The sync suite covered the number-keyed path but
+        # neither suite previously exercised the hash-keyed variant with
+        # full_transactions=True.
+        block = await async_w3.eth.get_block(async_block_with_txn["hash"], True)
+        transaction = cast(TxData, block["transactions"][0])
+        assert transaction["hash"] == async_block_with_txn["transactions"][0]
+
+    @pytest.mark.asyncio
+    async def test_eth_get_block_invalid_identifier_raises_error(
+        self, async_w3: "AsyncWeb3[Any]"
+    ) -> None:
+        # The sync `get_raw_transaction_by_block` path had this coverage but
+        # the more commonly used `get_block` itself did not, in either suite.
+        # A typo'd block tag should fail loudly with Web3ValueError rather
+        # than silently round-tripping to the RPC.
+        unknown_identifier = "unknown"
+        with pytest.raises(
+            Web3ValueError,
+            match=(
+                "Value did not match any of the recognized block identifiers: "
+                f"{unknown_identifier}"
+            ),
+        ):
+            # type ignored because we are testing an invalid block identifier
+            await async_w3.eth.get_block(unknown_identifier)  # type: ignore
+
+    @pytest.mark.asyncio
     async def test_eth_get_raw_transaction(
         self, async_w3: "AsyncWeb3[Any]", mined_txn_hash: HexStr
     ) -> None:
@@ -4535,6 +4566,31 @@ class EthModuleTest:
         block = w3.eth.get_block(block_with_txn["number"], True)
         transaction = cast(TxData, block["transactions"][0])
         assert transaction["hash"] == block_with_txn["transactions"][0]
+
+    def test_eth_getBlockByHash_full_transactions(
+        self, w3: "Web3", block_with_txn: BlockData
+    ) -> None:
+        # Mirror of test_eth_getBlockByNumber_full_transactions keyed by
+        # block hash; previously only the number-keyed path was exercised
+        # with full_transactions=True.
+        block = w3.eth.get_block(block_with_txn["hash"], True)
+        transaction = cast(TxData, block["transactions"][0])
+        assert transaction["hash"] == block_with_txn["transactions"][0]
+
+    def test_eth_getBlock_invalid_identifier_raises_error(self, w3: "Web3") -> None:
+        # get_raw_transaction_by_block had this coverage but get_block itself
+        # did not. A typo'd block tag should fail with Web3ValueError rather
+        # than silently round-tripping to the RPC.
+        unknown_identifier = "unknown"
+        with pytest.raises(
+            Web3ValueError,
+            match=(
+                "Value did not match any of the recognized block identifiers: "
+                f"{unknown_identifier}"
+            ),
+        ):
+            # type ignored because we are testing an invalid block identifier
+            w3.eth.get_block(unknown_identifier)  # type: ignore
 
     def test_eth_getBlockReceipts_hash(
         self, w3: "Web3", empty_block: BlockData
