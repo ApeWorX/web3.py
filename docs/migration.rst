@@ -1,6 +1,65 @@
 Migration Guide
 ===============
 
+.. _migrating_v7_to_v8:
+
+Migrating from v7 to v8
+-----------------------
+
+web3.py follows `Semantic Versioning <http://semver.org>`_, which means that
+version 8 introduced backwards-incompatible changes. If you're upgrading from
+web3.py ``v7``, you can expect to need to make some changes. Refer to this
+guide for a summary of breaking changes when updating from ``v7`` to ``v8``.
+
+End of Support and Feature Removals
+
+Python 3.8 and 3.9 Support Dropped
+``````````````````````````````````
+
+Support for Python 3.8 and 3.9 has been dropped. The library now requires Python 3.10 or greater and we want to focus our efforts on supporting
+the latest versions of Python.
+
+Provider Updates
+
+WebSocketProvider
+`````````````````
+
+The ``LegacyWebSocketProvider`` (formerly ``WebsocketProvider``) has been removed in ``v8``.
+
+In summary:
+
+- ``WebsocketProvider`` -> Removed (Migrate to ``WebSocketProvider``)
+- ``WebsocketProviderV2`` -> ``WebSocketProvider``
+
+If migrating from ``WebSocketProviderV2`` to ``WebSocketProvider``, you can expect the
+following changes:
+
+- Instantiation no longer requires the ``persistent_websocket`` method:
+
+  .. code-block:: python
+
+      # WebsocketsProviderV2:
+      AsyncWeb3.persistent_websocket(WebsocketProviderV2('...'))
+
+      # WebSocketProvider:
+      AsyncWeb3(WebSocketProvider('...'))
+
+- Handling incoming subscription messages now occurs under a more flexible namespace:
+  ``socket``. The ``AsyncIPCProvider`` uses the same API to listen for messages via
+  an IPC socket.
+
+  .. code-block:: python
+
+    # WebsocketsProviderV2:
+    async for message in w3.ws.process_subscriptions():
+      ...
+
+    # WebSocketProvider:
+    async for message in w3.socket.process_subscriptions():
+      ...
+
+
+
 .. _migrating_v6_to_v7:
 
 Migrating from v6 to v7
@@ -22,8 +81,9 @@ WebSocketProvider
 `````````````````
 
 ``WebsocketProviderV2``, introduced in web3.py ``v6``, has taken priority over the
-legacy ``WebsocketProvider``. The ``LegacyWebSocketProvider`` has been deprecated in
-``v7`` and is slated for removal in the next major version of the library. In summary:
+legacy ``WebsocketProvider``. The LegacyWebSocketProvider (formerly WebsocketProvider) has been removed in v7.
+
+In summary:
 
 - ``WebsocketProvider`` -> ``LegacyWebSocketProvider`` (and deprecated)
 - ``WebsocketProviderV2`` -> ``WebSocketProvider``
@@ -251,10 +311,9 @@ errors:
 
 
 End of Support and Feature Removals
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Python 3.7 Support Dropped
-``````````````````````````
+```````````````````````````
 
 Python 3.7 support has been dropped in favor of Python 3.8+. Python 3.7 is no longer
 supported by the Python core team, and we want to focus our efforts on supporting
