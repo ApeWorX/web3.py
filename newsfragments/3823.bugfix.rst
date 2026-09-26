@@ -1,0 +1,1 @@
+Preserve empty named-params objects when sync providers encode JSON-RPC requests instead of rewriting them to empty positional params.
