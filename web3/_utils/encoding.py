@@ -206,7 +206,13 @@ class FriendlyJsonSerde:
         self, obj: dict[Any, Any], cls: type[json.JSONEncoder] | None = None
     ) -> str:
         try:
-            encoded = json.dumps(obj, cls=cls)
+            # Use the most compact separators. The JSON-RPC spec is
+            # whitespace-agnostic, every RPC request/response we serialize is
+            # consumed by another machine, and the default ", "/": " padding
+            # adds ~2 bytes per dict/list entry across very large payloads
+            # (e.g. eth_getLogs, batched calls). Saves bandwidth and log
+            # volume without changing semantics.
+            encoded = json.dumps(obj, cls=cls, separators=(",", ":"))
             return encoded
         except TypeError as full_exception:
             if hasattr(obj, "items"):
