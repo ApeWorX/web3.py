@@ -1,0 +1,2 @@
+Document the web3.py exception hierarchy and how JSON-RPC responses map to general
+or specialized exceptions.
