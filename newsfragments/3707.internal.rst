@@ -1,0 +1,1 @@
+Add transaction-formatter regression tests for EIP-2930 (type 1) and EIP-1559 (type 2) payloads carrying an ``accessList``, plus an EIP-7702 (type 4) payload carrying both an ``authorizationList`` and an ``accessList`` together, exercising both ``eth_sendTransaction`` and ``eth_sendRawTransaction`` paths.
