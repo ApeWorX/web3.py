@@ -26,6 +26,9 @@ from eth_utils.toolz import (
 from hexbytes import (
     HexBytes,
 )
+from web3.exceptions import (
+    ContractLogicError,
+)
 
 from . import (
     abis,
@@ -151,10 +154,6 @@ class ENS(BaseENS):
         :raises InvalidName: if `name` has invalid syntax
         :raises ResolverNotFound: if no resolver found for `name`
         """
-        from web3.exceptions import (
-            ContractLogicError,
-        )
-
         if coin_type is None:
             return cast(ChecksumAddress, self._resolve(name, "addr"))
         else:
@@ -373,10 +372,6 @@ class ENS(BaseENS):
 
         :param str name: The ENS name
         """
-        from web3.exceptions import (
-            ContractLogicError,
-        )
-
         normal_name = normalize_name(name)
         dns_name = dns_encode_name(normal_name)
         try:
@@ -403,10 +398,6 @@ class ENS(BaseENS):
         :rtype: str
         :raises ResolverNotFound: If no resolver is found for the provided name
         """
-        from web3.exceptions import (
-            ContractLogicError,
-        )
-
         dns_name, calldata = self._prepare_resolve_call(name, "text", [key])
         try:
             result, resolver_addr = self._universal_resolver.caller.resolve(
@@ -487,10 +478,6 @@ class ENS(BaseENS):
     def _resolve(
         self, name: str, fn_name: str = "addr"
     ) -> ChecksumAddress | str | None:
-        from web3.exceptions import (
-            ContractLogicError,
-        )
-
         resolver_contract = (
             self._reverse_resolver_contract
             if fn_name == "name"
