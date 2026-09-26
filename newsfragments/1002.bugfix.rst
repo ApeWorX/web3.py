@@ -1,0 +1,3 @@
+Improve contract call errors when a contract address has code but returns
+insufficient data for ABI decoding, raising ``ContractLogicError`` instead of a
+generic decode failure.
