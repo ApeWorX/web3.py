@@ -57,6 +57,7 @@ from ens.utils import (
     normal_name_to_hash,
     normalize_name,
     raw_name_to_hash,
+    resolved_address_to_bytes,
 )
 
 if TYPE_CHECKING:
@@ -146,6 +147,69 @@ class AsyncENS(BaseENS):
 
         return ns
 
+    async def address_bytes(
+        self,
+        name: str,
+        coin_type: int | None = None,
+    ) -> bytes | None:
+        """
+        Look up the raw address bytes that `name` points to.
+
+        Returns the ENSIP-9 native binary encoding from the resolver without
+        converting to a checksummed hex string. For Ethereum (``coin_type=60``
+        or the default ``addr(node)`` record), this is typically 20 bytes. For
+        other chains (for example Bitcoin or Solana), byte length and format
+        follow `ENSIP-9 <https://docs.ens.domains/ensip/9/#address-encoding>`_.
+
+        Use :meth:`address` when you need an EIP-55 checksummed Ethereum address.
+        For other coin types, encode the returned bytes with a chain-specific
+        library such as `ensdomains/address-encoder
+        <https://github.com/ensdomains/address-encoder>`_.
+
+        :param str name: an ENS name to look up
+        :param int coin_type: if provided, look up the address for this coin type
+        :raises InvalidName: if `name` has invalid syntax
+        """
+        from web3.exceptions import (
+            ContractLogicError,
+        )
+
+        if coin_type is None:
+            normal_name = normalize_name(name)
+            node = self.namehash(normal_name)
+            dns_name = dns_encode_name(normal_name)
+            calldata = self._resolver_contract.encode_abi("addr", args=[node])
+            try:
+                result, resolver_addr = await self._universal_resolver.caller.resolve(
+                    dns_name, calldata
+                )
+            except ContractLogicError:
+                return None
+            if not result or result == b"":
+                return None
+            decoded_result = self._decode_ensip10_resolve_data(
+                result, self._resolver_contract, "addr"
+            )
+            return resolved_address_to_bytes(decoded_result)
+
+        node = raw_name_to_hash(name)
+        normal_name = normalize_name(name)
+        dns_name = dns_encode_name(normal_name)
+        calldata = self._resolver_contract.encode_abi("addr", args=[node, coin_type])
+        try:
+            result, resolver_addr = await self._universal_resolver.caller.resolve(
+                dns_name, calldata
+            )
+        except ContractLogicError:
+            return None
+        if not result:
+            return None
+        decoded = self.w3.codec.decode(["bytes"], result)
+        address_as_bytes = decoded[0]
+        if is_none_or_zero_address(address_as_bytes):
+            return None
+        return address_as_bytes
+
     async def address(
         self,
         name: str,
@@ -158,32 +222,13 @@ class AsyncENS(BaseENS):
         :param int coin_type: if provided, look up the address for this coin type
         :raises InvalidName: if `name` has invalid syntax
         """
-        from web3.exceptions import (
-            ContractLogicError,
-        )
-
         if coin_type is None:
             return cast(ChecksumAddress, await self._resolve(name, "addr"))
-        else:
-            node = raw_name_to_hash(name)
-            normal_name = normalize_name(name)
-            dns_name = dns_encode_name(normal_name)
-            calldata = self._resolver_contract.encode_abi(
-                "addr", args=[node, coin_type]
-            )
-            try:
-                result, resolver_addr = await self._universal_resolver.caller.resolve(
-                    dns_name, calldata
-                )
-            except ContractLogicError:
-                return None
-            if not result:
-                return None
-            decoded = self.w3.codec.decode(["bytes"], result)
-            address_as_bytes = decoded[0]
-            if is_none_or_zero_address(address_as_bytes):
-                return None
-            return to_checksum_address(address_as_bytes)
+
+        address_as_bytes = await self.address_bytes(name, coin_type=coin_type)
+        if address_as_bytes is None:
+            return None
+        return to_checksum_address(address_as_bytes)
 
     async def setup_address(
         self,

@@ -202,6 +202,56 @@ def test_ens_address_lookup_with_coin_type(ens):
     assert returned_address == address
 
 
+# ENSIP-9 Bitcoin P2PKH on-chain encoding (25 bytes)
+BITCOIN_ADDR_BYTES = bytes.fromhex(
+    "76a91462e907b15cbf27d5425399ebf6f0fb50ebb88f1888ac"
+)
+
+
+def test_ens_address_bytes_with_coin_type(ens):
+    name = "tester.eth"
+    coin_type = 0
+    expected_node = raw_name_to_hash(name)
+
+    encoded_result = ens.w3.codec.encode(["bytes"], [BITCOIN_ADDR_BYTES])
+    mock_ur_caller = MagicMock()
+    mock_ur_caller.resolve.return_value = (encoded_result, ens.w3.eth.accounts[0])
+
+    with patch.object(ens._universal_resolver, "caller", mock_ur_caller):
+        returned_bytes = ens.address_bytes(name, coin_type=coin_type)
+
+    assert returned_bytes == BITCOIN_ADDR_BYTES
+    mock_ur_caller.resolve.assert_called_once()
+    _, calldata = mock_ur_caller.resolve.call_args.args
+    decoded_node, decoded_coin_type = ens.w3.codec.decode(
+        ["bytes32", "uint256"], bytes.fromhex(calldata[2:])[4:]
+    )
+    assert decoded_node == expected_node
+    assert decoded_coin_type == coin_type
+
+
+def test_ens_address_bytes_bitcoin_does_not_require_checksum(ens):
+    encoded_result = ens.w3.codec.encode(["bytes"], [BITCOIN_ADDR_BYTES])
+    mock_ur_caller = MagicMock()
+    mock_ur_caller.resolve.return_value = (encoded_result, ens.w3.eth.accounts[0])
+
+    with patch.object(ens._universal_resolver, "caller", mock_ur_caller):
+        # ``address()`` still applies EIP-55 encoding and fails for non-EVM bytes
+        with pytest.raises(ValueError):
+            ens.address("tester.eth", coin_type=0)
+        assert ens.address_bytes("tester.eth", coin_type=0) == BITCOIN_ADDR_BYTES
+
+
+def test_ens_address_delegates_to_address_bytes_for_coin_type(ens):
+    name = "tester.eth"
+    coin_type = 60
+    raw_bytes = bytes.fromhex(ens.w3.eth.accounts[0][2:])
+
+    with patch.object(ens, "address_bytes", return_value=raw_bytes) as mock_bytes:
+        assert ens.address(name, coin_type=coin_type) == ens.w3.eth.accounts[0]
+    mock_bytes.assert_called_once_with(name, coin_type=coin_type)
+
+
 @pytest.mark.parametrize(
     "ur_resolve_outcome",
     (
@@ -402,6 +452,24 @@ async def test_async_ens_address_lookup_with_coin_type(async_ens):
     assert decoded_node == expected_node
     assert decoded_coin_type == coin_type
     assert returned_address == address
+
+
+@pytest.mark.asyncio
+async def test_async_ens_address_bytes_with_coin_type(async_ens):
+    name = "tester.eth"
+    coin_type = 0
+    accounts = await async_ens.w3.eth.accounts
+    expected_node = raw_name_to_hash(name)
+
+    encoded_result = async_ens.w3.codec.encode(["bytes"], [BITCOIN_ADDR_BYTES])
+    mock_ur_caller = AsyncMock()
+    mock_ur_caller.resolve.return_value = (encoded_result, accounts[0])
+
+    with patch.object(async_ens._universal_resolver, "caller", mock_ur_caller):
+        returned_bytes = await async_ens.address_bytes(name, coin_type=coin_type)
+
+    assert returned_bytes == BITCOIN_ADDR_BYTES
+    mock_ur_caller.resolve.assert_called_once()
 
 
 @pytest.mark.parametrize(
