@@ -696,6 +696,75 @@ class AsyncEthModuleTest:
         assert txn_hash == HexBytes(signed.hash)
 
     @pytest.mark.asyncio
+    async def test_async_eth_send_raw_transaction_sync(
+        self,
+        async_w3: "AsyncWeb3[Any]",
+        keyfile_account_pkey: HexStr,
+        request_mocker: type[RequestMocker],
+    ) -> None:
+        keyfile_account = async_w3.eth.account.from_key(keyfile_account_pkey)
+        txn = {
+            "chainId": 131277322940537,  # the chainId set for the fixture
+            "from": keyfile_account.address,
+            "to": keyfile_account.address,
+            "value": Wei(0),
+            "gas": 21000,
+            "nonce": await async_w3.eth.get_transaction_count(
+                keyfile_account.address, "pending"
+            ),
+            "gasPrice": 10**9,
+        }
+        signed = keyfile_account.sign_transaction(txn)
+        expected_raw_tx = HexBytes(signed.raw_transaction).to_0x_hex()
+        captured_params: list[Any] = []
+
+        mock_receipt = {
+            "transactionHash": HexBytes(signed.hash).to_0x_hex(),
+            "transactionIndex": "0x0",
+            "blockHash": "0x" + ("22" * 32),
+            "blockNumber": "0x1",
+            "from": keyfile_account.address,
+            "to": keyfile_account.address,
+            "cumulativeGasUsed": "0x5208",
+            "gasUsed": "0x5208",
+            "contractAddress": None,
+            "logs": [],
+            "logsBloom": "0x" + ("00" * 256),
+            "status": "0x1",
+            "effectiveGasPrice": "0x1",
+            "type": "0x2",
+        }
+
+        def _mock_send_raw_transaction_sync(method: RPCEndpoint, params: Any) -> Any:
+            captured_params.append(params)
+            return mock_receipt
+
+        async with request_mocker(
+            async_w3,
+            mock_results={
+                RPCEndpoint(
+                    "eth_sendRawTransactionSync"
+                ): _mock_send_raw_transaction_sync
+            },
+        ):
+            receipt = await async_w3.eth.send_raw_transaction_sync(
+                signed.raw_transaction
+            )
+            assert receipt["transactionHash"] == HexBytes(signed.hash)
+            assert receipt["blockNumber"] == 1
+
+            receipt_with_timeout = await async_w3.eth.send_raw_transaction_sync(
+                signed.raw_transaction,
+                timeout_ms=5000,
+            )
+            assert receipt_with_timeout["status"] == 1
+
+        assert captured_params == [
+            [expected_raw_tx],
+            [expected_raw_tx, "0x1388"],
+        ]
+
+    @pytest.mark.asyncio
     async def test_async_sign_and_send_raw_middleware(
         self, async_w3: "AsyncWeb3[Any]", keyfile_account_pkey: HexStr
     ) -> None:
@@ -3802,6 +3871,70 @@ class EthModuleTest:
         signed = keyfile_account.sign_transaction(txn)
         txn_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
         assert txn_hash == HexBytes(signed.hash)
+
+    def test_eth_send_raw_transaction_sync(
+        self,
+        w3: "Web3",
+        keyfile_account_pkey: HexStr,
+        request_mocker: type[RequestMocker],
+    ) -> None:
+        keyfile_account = w3.eth.account.from_key(keyfile_account_pkey)
+        txn = {
+            "chainId": 131277322940537,  # the chainId set for the fixture
+            "from": keyfile_account.address,
+            "to": keyfile_account.address,
+            "value": Wei(0),
+            "gas": 21000,
+            "nonce": w3.eth.get_transaction_count(keyfile_account.address, "pending"),
+            "gasPrice": 10**9,
+        }
+        signed = keyfile_account.sign_transaction(txn)
+        expected_raw_tx = HexBytes(signed.raw_transaction).to_0x_hex()
+        captured_params: list[Any] = []
+
+        mock_receipt = {
+            "transactionHash": HexBytes(signed.hash).to_0x_hex(),
+            "transactionIndex": "0x0",
+            "blockHash": "0x" + ("22" * 32),
+            "blockNumber": "0x1",
+            "from": keyfile_account.address,
+            "to": keyfile_account.address,
+            "cumulativeGasUsed": "0x5208",
+            "gasUsed": "0x5208",
+            "contractAddress": None,
+            "logs": [],
+            "logsBloom": "0x" + ("00" * 256),
+            "status": "0x1",
+            "effectiveGasPrice": "0x1",
+            "type": "0x2",
+        }
+
+        def _mock_send_raw_transaction_sync(method: RPCEndpoint, params: Any) -> Any:
+            captured_params.append(params)
+            return mock_receipt
+
+        with request_mocker(
+            w3,
+            mock_results={
+                RPCEndpoint(
+                    "eth_sendRawTransactionSync"
+                ): _mock_send_raw_transaction_sync
+            },
+        ):
+            receipt = w3.eth.send_raw_transaction_sync(signed.raw_transaction)
+            assert receipt["transactionHash"] == HexBytes(signed.hash)
+            assert receipt["blockNumber"] == 1
+
+            receipt_with_timeout = w3.eth.send_raw_transaction_sync(
+                signed.raw_transaction,
+                timeout_ms=5000,
+            )
+            assert receipt_with_timeout["status"] == 1
+
+        assert captured_params == [
+            [expected_raw_tx],
+            [expected_raw_tx, "0x1388"],
+        ]
 
     def test_sign_and_send_raw_middleware(
         self, w3: "Web3", keyfile_account_pkey: HexStr

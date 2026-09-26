@@ -705,6 +705,39 @@ The following methods are available on the ``web3.eth`` namespace.
         HexBytes('0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331')
 
 
+.. py:method:: Eth.send_raw_transaction_sync(raw_transaction, timeout_ms=None)
+
+    * Delegates to ``eth_sendRawTransactionSync`` RPC Method
+
+    Sends a signed and serialized transaction and waits synchronously for a transaction
+    receipt. Returns the receipt as a ``TxReceipt``.
+
+    ``timeout_ms`` is optional. If provided, it is passed to the RPC method as the
+    maximum wait time in milliseconds.
+
+    This RPC method is optional and may not be implemented by all providers. If the
+    connected node does not support it, the request will fail with a standard
+    ``method not found`` RPC error.
+
+    .. code-block:: python
+
+        >>> signed_txn = w3.eth.account.sign_transaction(
+        ...     {
+        ...         "nonce": w3.eth.get_transaction_count(public_address_of_senders_account, "pending"),
+        ...         "maxFeePerGas": 3000000000,
+        ...         "maxPriorityFeePerGas": 2000000000,
+        ...         "gas": 100000,
+        ...         "to": "0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD",
+        ...         "value": 12345,
+        ...         "data": b"",
+        ...         "chainId": 1,
+        ...     },
+        ...     private_key_for_senders_account,
+        ... )
+        >>> w3.eth.send_raw_transaction_sync(signed_txn.raw_transaction, timeout_ms=5000)
+        AttributeDict({...})
+
+
 .. py:method:: Eth.replace_transaction(transaction_hash, new_transaction)
 
     * Delegates to ``eth_sendTransaction`` RPC Method

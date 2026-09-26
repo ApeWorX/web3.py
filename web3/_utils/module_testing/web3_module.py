@@ -515,6 +515,11 @@ class Web3ModuleTest:
                 batch.execute()
 
         with w3.batch_requests() as batch:
+            with pytest.raises(MethodNotSupported, match="eth_sendRawTransactionSync"):
+                batch.add(w3.eth.send_raw_transaction_sync(b""))
+                batch.execute()
+
+        with w3.batch_requests() as batch:
             with pytest.raises(MethodNotSupported, match="eth_sign"):
                 batch.add(w3.eth.sign(Address(b"\x00" * 20)))
                 batch.execute()
@@ -775,6 +780,11 @@ class AsyncWeb3ModuleTest(Web3ModuleTest):
         async with async_w3.batch_requests() as batch:
             with pytest.raises(MethodNotSupported, match="eth_sendRawTransaction"):
                 batch.add(async_w3.eth.send_raw_transaction(b""))
+                await batch.async_execute()
+
+        async with async_w3.batch_requests() as batch:
+            with pytest.raises(MethodNotSupported, match="eth_sendRawTransactionSync"):
+                batch.add(async_w3.eth.send_raw_transaction_sync(b""))
                 await batch.async_execute()
 
         async with async_w3.batch_requests() as batch:
