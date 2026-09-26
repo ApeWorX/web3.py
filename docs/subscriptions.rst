@@ -269,7 +269,10 @@ manager or individual subscriptions.
         parallelize=True,  # process this subscription in parallel
     )
 
-    await w3.subscription_manager.subscribe([sub1, sub2])
+    # Pass every subscription defined above to ``subscribe``; the per-subscription
+    # ``parallelize`` flags on ``sub1`` and ``sub3`` cause them to run in parallel
+    # while ``sub2`` runs sequentially with the others.
+    await w3.subscription_manager.subscribe([sub1, sub2, sub3])
 
 Global parallelization can also be set on the subscription manager, which will apply to
 all subscriptions unless overridden by an individual subscription's ``parallelize``
