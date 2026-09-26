@@ -1,0 +1,6 @@
+``Wei`` and ``Gwei`` are now ``int`` subclasses that preserve their own type
+through arithmetic operations (``+``, ``-``, ``*``, ``//``, ``%``, unary
+``+``/``-``, ``abs()``). Previously they were ``NewType`` aliases, so any
+arithmetic — including ``+=`` and ``-=`` — escaped back to bare ``int`` and
+forced an explicit cast on every accumulator step. Strict-mypy code can now
+write ``total: Wei = Wei(0); total += tx_value`` without a cast.
