@@ -57,7 +57,6 @@ def test_init_web3_adds_expected_middleware():
             b"\x011\x012\x013\x014\x015\x016\x017\x018\x019\x0210\x00",
         ),
         ("abc.123.def-456.eth", b"\x03abc\x03123\x07def-456\x03eth\x00"),
-        ("abc.123.def-456.eth", b"\x03abc\x03123\x07def-456\x03eth\x00"),
         (
             "nhéééééé.eth",
             b"\x0enh\xc3\xa9\xc3\xa9\xc3\xa9\xc3\xa9\xc3\xa9\xc3\xa9\x03eth\x00",
