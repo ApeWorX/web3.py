@@ -1,0 +1,6 @@
+Fix an operator-precedence bug in ``HTTPSessionManager`` so the
+``+ 0.1`` slack on the evicted-session close timer is applied to the
+caller-supplied ``request_timeout`` rather than only to the
+``DEFAULT_HTTP_TIMEOUT`` fallback. Previously a non-default timeout
+caused the close timer to fire at exactly the request timeout, racing
+the in-flight request.
