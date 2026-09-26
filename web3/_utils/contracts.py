@@ -33,6 +33,9 @@ from eth_utils import (
     filter_abi_by_name,
     filter_abi_by_type,
     get_abi_input_types,
+    is_0x_prefixed,
+    is_hex,
+    is_text,
 )
 from eth_utils.toolz import (
     pipe,
@@ -50,6 +53,7 @@ from web3._utils.abi import (
 )
 from web3._utils.blocks import (
     is_hex_encoded_block_hash,
+    is_hex_encoded_block_number,
 )
 from web3._utils.encoding import (
     to_hex,
@@ -329,6 +333,20 @@ def validate_payable(transaction: TxParams, abi_callable: ABICallable) -> None:
         )
 
 
+def _is_hex_block_number(block_identifier: Any) -> bool:
+    # Deliberately stricter than ``is_hex_encoded_block_number``, which is a
+    # routing predicate for requests that forward the raw string to the node and
+    # let the node reject it. Here the value is converted to an ``int`` locally,
+    # so anything looser would silently change its meaning -- e.g. the decimal
+    # string "20" would resolve to block 0x20 (32) instead of erroring.
+    # The ``is_hex_encoded_block_number`` term is also what keeps the subsequent
+    # ``int(..., 16)`` infallible: it rejects a bare "0x", which ``is_hex``
+    # accepts but ``int`` cannot parse.
+    if not is_text(block_identifier) or not is_0x_prefixed(block_identifier):
+        return False
+    return is_hex(block_identifier) and is_hex_encoded_block_number(block_identifier)
+
+
 def parse_block_identifier(
     w3: "Web3", block_identifier: BlockIdentifier | None
 ) -> BlockIdentifier:
@@ -342,6 +360,8 @@ def parse_block_identifier(
         block_identifier
     ):
         return w3.eth.get_block(block_identifier)["number"]
+    elif _is_hex_block_number(block_identifier):
+        return BlockNumber(int(block_identifier, 16))
     else:
         raise BlockNumberOutOfRange
 
@@ -371,6 +391,8 @@ async def async_parse_block_identifier(
     ):
         requested_block = await async_w3.eth.get_block(block_identifier)
         return requested_block["number"]
+    elif _is_hex_block_number(block_identifier):
+        return BlockNumber(int(block_identifier, 16))
     else:
         raise BlockNumberOutOfRange
 
