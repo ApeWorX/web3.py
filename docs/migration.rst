@@ -357,7 +357,7 @@ encodable as a bytes type with length of 4. This means only 0x-prefixed hex stri
 a length of 4 and bytes types with a length of 4 will be considered valid. This removes
 doubt that comes from inferring values and assuming they should be padded.
 
-This behavior was previously available in via the ``w3.enable_strict_bytes_checking()``
+This behavior was previously available via the ``w3.enable_strict_bytes_checking()``
 method. This is now, however, a toggleable flag on the ``Web3`` instance via the
 ``w3.strict_bytes_type_checking`` property. As outlined above, this property is set to
 ``True`` by default but can be toggled on and off via the property's setter
