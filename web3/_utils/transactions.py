@@ -242,7 +242,7 @@ def prepare_replacement_transaction(
         replacement_transaction["nonce"] != original_transaction["nonce"]
     ):
         raise Web3ValueError(
-            "Supplied nonce in new_transaction must match the pending transaction"
+            "Supplied nonce in replacement_transaction must match the pending transaction"
         )
 
     if "nonce" not in replacement_transaction:
