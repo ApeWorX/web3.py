@@ -49,9 +49,16 @@ def validate_ccip_url_scheme(url: str, allow_http: bool = False) -> None:
     )
 
 
+def _canonical_ip(ip_str: str):
+    addr = ipaddress.ip_address(ip_str)
+    if isinstance(addr, ipaddress.IPv6Address) and addr.ipv4_mapped is not None:
+        return addr.ipv4_mapped
+    return addr
+
+
 def _check_ip_blocked(ip_str: str) -> bool:
     try:
-        addr = ipaddress.ip_address(ip_str)
+        addr = _canonical_ip(ip_str)
     except ValueError:
         return False
     return any(addr in network for network in BLOCKED_IP_NETWORKS)
