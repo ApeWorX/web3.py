@@ -1,0 +1,4 @@
+Merge user-provided ``request_kwargs["headers"]`` with the default headers
+returned by ``(Async)HTTPProvider.get_request_headers``, so callers can extend
+the headers (for example to add an ``Authorization`` header) without losing
+required defaults like ``Content-Type``. User-supplied keys win on conflict.
