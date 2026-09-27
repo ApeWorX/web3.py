@@ -17,6 +17,8 @@ from eth_abi.exceptions import (
 )
 from eth_typing import (
     ABI,
+    ABIComponent,
+    ABIComponentIndexed,
     ABIElement,
     ABIEvent,
     ABIFunction,
@@ -203,6 +205,18 @@ class BaseContractEvent:
         if self._topic is None:
             self._topic = encode_hex(keccak(text=self.signature))
         return self._topic
+
+    @property
+    def type(self) -> str:
+        return "event"
+
+    @property
+    def anonymous(self) -> Optional[bool]:
+        return self.abi.get("anonymous")
+
+    @property
+    def inputs(self) -> Optional[Sequence["ABIComponentIndexed"]]:
+        return self.abi.get("inputs")
 
     @combomethod
     def _get_event_abi(cls) -> ABIEvent:
@@ -589,6 +603,22 @@ class BaseContractFunction:
         event_inputs = self.abi.get("inputs", [])
         self.argument_names = tuple([input.get("name", None) for input in event_inputs])
         self.argument_types = tuple([input["type"] for input in event_inputs])
+
+    @property
+    def state_mutability(self) -> str:
+        return self.abi["stateMutability"]
+
+    @property
+    def type(self) -> str:
+        return "function"
+
+    @property
+    def inputs(self) -> Optional[Sequence["ABIComponent"]]:
+        return self.abi.get("inputs")
+
+    @property
+    def outputs(self) -> Optional[Sequence["ABIComponent"]]:
+        return self.abi.get("outputs")
 
     @combomethod
     def _get_abi(cls) -> ABIFunction:
