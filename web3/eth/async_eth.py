@@ -1,5 +1,6 @@
 import asyncio
 from collections.abc import Awaitable, Callable, Sequence
+import inspect
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -330,6 +331,14 @@ class AsyncEth(BaseEth):
         state_override: StateOverride | None = None,
     ) -> int:
         return await self._estimate_gas(transaction, block_identifier, state_override)
+
+    async def _async_generate_gas_price(
+        self, transaction_params: TxParams | None = None
+    ) -> Wei | None:
+        generated_gas_price = self.generate_gas_price(transaction_params)
+        if inspect.isawaitable(generated_gas_price):
+            return await generated_gas_price
+        return generated_gas_price
 
     # eth_getTransactionByHash
 

@@ -1,6 +1,7 @@
 import pytest
 
 from web3 import (
+    AsyncWeb3,
     Web3,
     constants,
 )
@@ -9,6 +10,9 @@ from web3.exceptions import (
 )
 from web3.gas_strategies.time_based import (
     construct_time_based_gas_price_strategy,
+)
+from web3.providers.async_base import (
+    AsyncBaseProvider,
 )
 from web3.providers.base import (
     BaseProvider,
@@ -165,6 +169,43 @@ def test_time_based_gas_price_strategy(strategy_params, expected, request_mocker
         assert actual == expected
 
 
+@pytest.mark.parametrize(
+    "strategy_params,expected",
+    (
+        (dict(max_wait_seconds=80, sample_size=5, probability=98), 70),
+        (
+            dict(
+                max_wait_seconds=80,
+                sample_size=5,
+                probability=98,
+                weighted=True,
+            ),
+            92,
+        ),
+    ),
+)
+@pytest.mark.asyncio
+async def test_time_based_gas_price_strategy_with_async_web3(
+    strategy_params, expected, request_mocker
+):
+    async_w3 = AsyncWeb3(provider=AsyncBaseProvider())
+    time_based_gas_price_strategy = construct_time_based_gas_price_strategy(
+        **strategy_params,
+    )
+    async_w3.eth.set_gas_price_strategy(time_based_gas_price_strategy)
+
+    async with request_mocker(
+        async_w3,
+        mock_results={
+            "eth_getBlockByHash": _get_block_by_something,
+            "eth_getBlockByNumber": _get_block_by_something,
+        },
+    ):
+        actual = await async_w3.eth._async_generate_gas_price()
+
+    assert actual == expected
+
+
 def _get_initial_block(method, params):
     return {
         "hash": constants.HASH_ZERO,
@@ -200,6 +241,32 @@ def test_time_based_gas_price_strategy_without_transactions(request_mocker):
     ):
         actual = w3.eth.generate_gas_price()
         assert actual == w3.eth.gas_price
+
+
+@pytest.mark.asyncio
+async def test_time_based_gas_price_strategy_without_transactions_async(
+    request_mocker,
+):
+    async_w3 = AsyncWeb3(provider=AsyncBaseProvider())
+
+    time_based_gas_price_strategy = construct_time_based_gas_price_strategy(
+        max_wait_seconds=80,
+        sample_size=5,
+        probability=50,
+        weighted=True,
+    )
+    async_w3.eth.set_gas_price_strategy(time_based_gas_price_strategy)
+    async with request_mocker(
+        async_w3,
+        mock_results={
+            "eth_getBlockByHash": _get_initial_block,
+            "eth_getBlockByNumber": _get_initial_block,
+            "eth_gasPrice": _get_gas_price,
+        },
+    ):
+        actual = await async_w3.eth._async_generate_gas_price()
+
+    assert actual == 4321
 
 
 @pytest.mark.parametrize(
@@ -277,3 +344,24 @@ def test_time_based_gas_price_strategy_zero_sample(
         ):
             w3.eth.generate_gas_price()
     assert str(excinfo.value) == expected_exception_message
+
+
+@pytest.mark.asyncio
+async def test_time_based_gas_price_strategy_zero_sample_async(request_mocker):
+    async_w3 = AsyncWeb3(provider=AsyncBaseProvider())
+    time_based_gas_price_strategy = construct_time_based_gas_price_strategy(
+        max_wait_seconds=80,
+        sample_size=0,
+        probability=98,
+    )
+    async_w3.eth.set_gas_price_strategy(time_based_gas_price_strategy)
+
+    with pytest.raises(Web3ValidationError, match="Constrained sample size is 0"):
+        async with request_mocker(
+            async_w3,
+            mock_results={
+                "eth_getBlockByHash": _get_block_by_something,
+                "eth_getBlockByNumber": _get_block_by_something,
+            },
+        ):
+            await async_w3.eth._async_generate_gas_price()

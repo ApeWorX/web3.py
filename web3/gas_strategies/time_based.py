@@ -1,8 +1,9 @@
 import collections
-from collections.abc import Iterable, Sequence
+from collections.abc import AsyncIterable, Awaitable, Iterable, Sequence
 import math
 import operator
 from typing import (
+    Any,
     cast,
 )
 
@@ -22,6 +23,7 @@ from hexbytes import (
 )
 
 from web3 import (
+    AsyncWeb3,
     Web3,
 )
 from web3._utils.math import (
@@ -43,6 +45,70 @@ MinerData = collections.namedtuple(
     "MinerData", ["miner", "num_blocks", "min_gas_price", "low_percentile_gas_price"]
 )
 Probability = collections.namedtuple("Probability", ["gas_price", "prob"])
+
+
+async def _async_get_avg_block_time(
+    async_w3: AsyncWeb3[Any], sample_size: int
+) -> float:
+    latest = await async_w3.eth.get_block("latest")
+
+    constrained_sample_size = min(sample_size, latest["number"])
+    if constrained_sample_size == 0:
+        raise Web3ValidationError("Constrained sample size is 0")
+
+    oldest = await async_w3.eth.get_block(
+        BlockNumber(latest["number"] - constrained_sample_size)
+    )
+    return (latest["timestamp"] - oldest["timestamp"]) / constrained_sample_size
+
+
+async def _async_get_weighted_avg_block_time(
+    async_w3: AsyncWeb3[Any], sample_size: int
+) -> float:
+    latest_block_number = (await async_w3.eth.get_block("latest"))["number"]
+    constrained_sample_size = min(sample_size, latest_block_number)
+    if constrained_sample_size == 0:
+        raise Web3ValidationError("Constrained sample size is 0")
+    oldest_block = await async_w3.eth.get_block(
+        BlockNumber(latest_block_number - constrained_sample_size)
+    )
+    oldest_block_number = oldest_block["number"]
+    prev_timestamp = oldest_block["timestamp"]
+    weighted_sum = 0.0
+    sum_of_weights = 0.0
+    for i in range(oldest_block_number + 1, latest_block_number + 1):
+        curr_timestamp = (await async_w3.eth.get_block(BlockNumber(i)))["timestamp"]
+        time = curr_timestamp - prev_timestamp
+        weight = (i - oldest_block_number) / constrained_sample_size
+        weighted_sum += time * weight
+        sum_of_weights += weight
+        prev_timestamp = curr_timestamp
+    return weighted_sum / sum_of_weights
+
+
+async def _async_get_raw_miner_data(
+    async_w3: AsyncWeb3[Any], sample_size: int
+) -> AsyncIterable[tuple[ChecksumAddress, HexBytes, Wei]]:
+    latest = await async_w3.eth.get_block("latest", full_transactions=True)
+
+    for transaction in latest["transactions"]:
+        transaction = cast(TxData, transaction)
+        yield (latest["miner"], latest["hash"], transaction["gasPrice"])
+
+    block = latest
+
+    for _ in range(sample_size - 1):
+        if block["number"] == 0:
+            break
+
+        # we intentionally trace backwards using parent hashes rather than
+        # block numbers to make caching the data easier to implement.
+        block = await async_w3.eth.get_block(
+            block["parentHash"], full_transactions=True
+        )
+        for transaction in block["transactions"]:
+            transaction = cast(TxData, transaction)
+            yield (block["miner"], block["hash"], transaction["gasPrice"])
 
 
 def _get_avg_block_time(w3: Web3, sample_size: int) -> float:
@@ -215,18 +281,29 @@ def construct_time_based_gas_price_strategy(
         and 100 means 100%.
     """
 
-    def time_based_gas_price_strategy(w3: Web3, transaction_params: TxParams) -> Wei:
+    async def async_time_based_gas_price_strategy(
+        async_w3: AsyncWeb3[Any], transaction_params: TxParams | None
+    ) -> Wei:
         # return gas price when no transactions available to sample
-        if w3.eth.get_block("latest")["number"] == 0:
-            return w3.eth.gas_price
+        if (await async_w3.eth.get_block("latest"))["number"] == 0:
+            return await async_w3.eth.gas_price
 
         if weighted:
-            avg_block_time = _get_weighted_avg_block_time(w3, sample_size=sample_size)
+            avg_block_time = await _async_get_weighted_avg_block_time(
+                async_w3, sample_size=sample_size
+            )
         else:
-            avg_block_time = _get_avg_block_time(w3, sample_size=sample_size)
+            avg_block_time = await _async_get_avg_block_time(
+                async_w3, sample_size=sample_size
+            )
 
         wait_blocks = int(math.ceil(max_wait_seconds / avg_block_time))
-        raw_miner_data = _get_raw_miner_data(w3, sample_size=sample_size)
+        raw_miner_data = [
+            item
+            async for item in _async_get_raw_miner_data(
+                async_w3, sample_size=sample_size
+            )
+        ]
         miner_data = _aggregate_miner_data(raw_miner_data)
 
         probabilities = _compute_probabilities(
@@ -238,7 +315,43 @@ def construct_time_based_gas_price_strategy(
         gas_price = _compute_gas_price(probabilities, probability / 100)
         return gas_price
 
-    return time_based_gas_price_strategy
+    def time_based_gas_price_strategy(
+        w3: Web3 | AsyncWeb3[Any], transaction_params: TxParams | None
+    ) -> Wei | Awaitable[Wei]:
+        if w3.provider.is_async:
+            return async_time_based_gas_price_strategy(
+                cast(AsyncWeb3[Any], w3), transaction_params
+            )
+
+        sync_w3 = cast(Web3, w3)
+
+        # return gas price when no transactions available to sample
+        if sync_w3.eth.get_block("latest")["number"] == 0:
+            return sync_w3.eth.gas_price
+
+        if weighted:
+            avg_block_time = _get_weighted_avg_block_time(
+                sync_w3, sample_size=sample_size
+            )
+        else:
+            avg_block_time = _get_avg_block_time(sync_w3, sample_size=sample_size)
+
+        wait_blocks = int(math.ceil(max_wait_seconds / avg_block_time))
+        raw_miner_data = _get_raw_miner_data(sync_w3, sample_size=sample_size)
+        miner_data = _aggregate_miner_data(raw_miner_data)
+
+        probabilities = _compute_probabilities(
+            miner_data,
+            wait_blocks=wait_blocks,
+            sample_size=sample_size,
+        )
+
+        gas_price = _compute_gas_price(probabilities, probability / 100)
+        return gas_price
+
+    # ``GasPriceStrategy`` is the long-standing public callback type. Async
+    # transaction paths normalize the awaitable returned for async providers.
+    return cast(GasPriceStrategy, time_based_gas_price_strategy)
 
 
 # fast: mine within 1 minute
