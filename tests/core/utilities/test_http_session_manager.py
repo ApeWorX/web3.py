@@ -290,6 +290,28 @@ def test_session_manager_cache_does_not_close_session_before_a_call_when_multith
     cached_session.close()
 
 
+def test_session_manager_closes_evicted_session_with_timeout_tuple(
+    mocker, http_session_manager
+):
+    # `requests` accepts a `(connect, read)` timeout tuple
+    http_session_manager.session_cache = SimpleCache(1)
+
+    evicted = http_session_manager.cache_and_return_session(
+        UNIQUE_URIS[0], request_timeout=(0.01, 0.01)
+    )
+    close_spy = mocker.spy(evicted, "close")
+    cached = http_session_manager.cache_and_return_session(
+        UNIQUE_URIS[1], request_timeout=(0.01, 0.01)
+    )
+
+    time.sleep(0.1)
+    close_spy.assert_called_once()
+
+    # -- teardown -- #
+
+    cached.close()
+
+
 def test_session_manager_unique_cache_keys_created_per_thread_with_same_uri(
     http_session_manager,
 ):
@@ -467,6 +489,31 @@ async def test_async_session_manager_cache_does_not_close_session_before_call(
 
     # appropriately close the cached session
     await cached_session.close()
+
+
+@pytest.mark.asyncio
+async def test_async_session_manager_evicts_session_cached_without_request_timeout(
+    mocker, http_session_manager
+):
+    # `AsyncHTTPProvider.cache_async_session()` caches without a `request_timeout`
+    http_session_manager.session_cache = SimpleCache(1)
+    mocker.patch("web3._utils.http_session_manager.DEFAULT_HTTP_TIMEOUT", 0)
+
+    evicted = await http_session_manager.async_cache_and_return_session(
+        UNIQUE_URIS[0], ClientSession()
+    )
+    cached = await http_session_manager.async_cache_and_return_session(
+        UNIQUE_URIS[1], ClientSession()
+    )
+
+    # evicted session is closed after the default timeout (+0.1s)
+    await asyncio.sleep(0.2)
+    assert evicted.closed
+    assert not cached.closed
+
+    # -- teardown -- #
+
+    await cached.close()
 
 
 @pytest.mark.asyncio
