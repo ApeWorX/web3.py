@@ -386,8 +386,7 @@ def _build_and_validate_label_from_tokens(tokens: list[Token]) -> Label:
     for token in tokens:
         if token.type == TokenType.TEXT:
             # apply NFC normalization to text tokens
-            chars = [chr(cp) for cp in token._original_codepoints]
-            nfc = NFC(chars)
+            nfc = NFC("".join(chr(cp) for cp in token._original_codepoints))
             token._normalized_codepoints = [ord(c) for c in nfc]
 
     label_type = _validate_tokens_and_get_label_type(tokens)
