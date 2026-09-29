@@ -166,7 +166,7 @@ def validate_abi_value(abi_type: TypeStr, value: Any) -> None:
                     raw = None
             else:
                 raw = None
-            if raw is not None and (sized is None or len(raw) == int(sized.group(1))):
+            if raw is not None and (sized is None or len(raw) <= int(sized.group(1))):
                 return
         elif is_bytes(value):
             return

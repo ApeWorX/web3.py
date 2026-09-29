@@ -145,9 +145,11 @@ def test_validation(param, validation, expected):
         ("bytes", "5402", Web3TypeError),
         ("bytes", b"T\x02", None),
         ("bytes4", b"T\x02\x00\x00", None),
-        ("bytes4", b"T\x02", Web3TypeError),
+        ("bytes4", b"T\x02", None),
+        ("bytes4", b"T\x02\x00\x00\x00", Web3TypeError),
         ("bytes4", "0x54020000", None),
-        ("bytes4", "0x5402", Web3TypeError),
+        ("bytes4", "0x5402", None),
+        ("bytes4", "0x5402000000", Web3TypeError),
         ("bytes4", "0xzz", Web3TypeError),
     ),
 )
