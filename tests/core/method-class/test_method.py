@@ -11,6 +11,9 @@ from web3 import (
     EthereumTesterProvider,
     Web3,
 )
+from web3._utils.rpc_abi import (
+    RPC,
+)
 from web3.exceptions import (
     Web3ValidationError,
     Web3ValueError,
@@ -345,6 +348,58 @@ def test_process_params(
 
         # the expected result formatters length is 1
         assert len(first_formatter) == 1
+
+
+def test_process_params_caches_static_formatters(monkeypatch):
+    calls = {
+        "request": 0,
+        "error": 0,
+        "null": 0,
+    }
+
+    def request_formatters(_method):
+        calls["request"] += 1
+        return compose(lambda params: params)
+
+    def error_formatters(_method):
+        calls["error"] += 1
+        return compose(lambda response: response)
+
+    def null_result_formatters(_method):
+        calls["null"] += 1
+        return compose(lambda params: params)
+
+    monkeypatch.setattr("web3.method.get_error_formatters", error_formatters)
+
+    method = Method(
+        RPC.eth_chainId,
+        request_formatters=request_formatters,
+        null_result_formatters=null_result_formatters,
+    )
+
+    first_request, first_response_formatters = method.process_params(object())
+    second_request, second_response_formatters = method.process_params(object())
+
+    assert first_request == second_request == (RPC.eth_chainId, ())
+    assert first_response_formatters == second_response_formatters
+    assert calls == {
+        "request": 1,
+        "error": 1,
+        "null": 1,
+    }
+
+
+def test_process_params_does_not_cache_filter_result_formatters():
+    method = Method(RPC.eth_newBlockFilter)
+
+    first_module = type("FirstModule", (), {"is_async": False})()
+    second_module = type("SecondModule", (), {"is_async": False})()
+
+    _, first_response_formatters = method.process_params(first_module)
+    _, second_response_formatters = method.process_params(second_module)
+
+    assert first_response_formatters[0]("0x1").eth_module is first_module
+    assert second_response_formatters[0]("0x2").eth_module is second_module
 
 
 def keywords(module, keyword_one, keyword_two):
