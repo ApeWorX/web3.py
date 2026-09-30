@@ -256,6 +256,33 @@ class RequestProcessor:
                 self._provider._listen_event.clear()
                 await self._provider._listen_event.wait()
 
+            while self._handler_subscription_queue.full():
+                # The handler consumer drains this queue from the subscription
+                # manager's processing loop, which never resets _listen_event.
+                # Awaiting queue.put() here with no other wakeup path can stall
+                # the message listener indefinitely; racing the put against the
+                # listen event lets whichever drains first resume the listener.
+                self._provider.logger.debug(
+                    "Handler subscription queue is full. Waiting for the "
+                    "handler consumer to drain messages before caching."
+                )
+                self._provider._listen_event.clear()
+                handler_put = asyncio.ensure_future(
+                    self._handler_subscription_queue.put(raw_response)
+                )
+                wait = asyncio.ensure_future(self._provider._listen_event.wait())
+                done, _pending = await asyncio.wait(
+                    {handler_put, wait}, return_when=asyncio.FIRST_COMPLETED
+                )
+                for task in _pending:
+                    task.cancel()
+                if handler_put in done:
+                    # the put completed: the message is queued, nothing else
+                    # to cache for this response
+                    return
+                # the response-queue consumer reset the listen event and a
+                # slot may have opened; loop and re-check both queues
+
             self._provider.logger.debug(
                 "Caching subscription response:\n    response=%s", raw_response
             )
