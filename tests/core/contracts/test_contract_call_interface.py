@@ -41,6 +41,7 @@ from web3.exceptions import (
     ABIReceiveNotFound,
     BadFunctionCallOutput,
     BlockNumberOutOfRange,
+    ContractLogicError,
     InvalidAddress,
     MismatchedABI,
     NameNotFound,
@@ -498,8 +499,10 @@ def test_call_rejects_invalid_ens_name(address_reflector_contract, call):
 def test_call_missing_function(mismatched_math_contract, call):
     # note: contract being called needs to have a fallback function
     # (StringContract in this case)
-    expected_missing_function_error_message = "Could not decode contract function call"
-    with pytest.raises(BadFunctionCallOutput) as exception_info:
+    expected_missing_function_error_message = (
+        "Contract call failed because execution reverted or returned no data."
+    )
+    with pytest.raises(ContractLogicError) as exception_info:
         call(contract=mismatched_math_contract, contract_function="return13")
     assert expected_missing_function_error_message in str(exception_info.value)
 
@@ -1788,8 +1791,10 @@ async def test_async_call_rejects_invalid_ens_name(
 async def test_async_call_missing_function(async_mismatched_math_contract, async_call):
     # note: contract being called needs to have a fallback function
     # (StringContract in this case)
-    expected_missing_function_error_message = "Could not decode contract function call"
-    with pytest.raises(BadFunctionCallOutput) as exception_info:
+    expected_missing_function_error_message = (
+        "Contract call failed because execution reverted or returned no data."
+    )
+    with pytest.raises(ContractLogicError) as exception_info:
         await async_call(
             contract=async_mismatched_math_contract,
             contract_function="return13",

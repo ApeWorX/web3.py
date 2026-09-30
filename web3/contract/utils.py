@@ -52,6 +52,7 @@ from web3._utils.transactions import (
 )
 from web3.exceptions import (
     BadFunctionCallOutput,
+    ContractLogicError,
     Web3ValueError,
 )
 from web3.types import (
@@ -76,6 +77,19 @@ if TYPE_CHECKING:
     )
 
 ACCEPTABLE_EMPTY_STRINGS = ["0x", b"0x", "", b""]
+
+
+def _is_code_missing(code: bytes) -> bool:
+    return code in ACCEPTABLE_EMPTY_STRINGS
+
+
+def _has_insufficient_output_data(
+    return_data: bytes,
+    output_types: Sequence[TypeStr],
+) -> bool:
+    if return_data in ACCEPTABLE_EMPTY_STRINGS:
+        return True
+    return len(return_data) < 32 * len(output_types)
 
 
 @curry
@@ -200,20 +214,23 @@ def call_contract_function(
     except DecodingError as e:
         # Provide a more helpful error message than the one provided by
         # eth-abi-utils
-        is_missing_code_error = (
-            return_data in ACCEPTABLE_EMPTY_STRINGS
-            and w3.eth.get_code(address) in ACCEPTABLE_EMPTY_STRINGS
-        )
-        if is_missing_code_error:
+        code = w3.eth.get_code(address)
+        if _is_code_missing(code):
             msg = (
                 "Could not transact with/call contract function, is contract "
                 "deployed correctly and chain synced?"
             )
-        else:
+            raise BadFunctionCallOutput(msg) from e
+        if output_types and _has_insufficient_output_data(return_data, output_types):
             msg = (
-                f"Could not decode contract function call to {abi_element_identifier} "
-                f"with return data: {str(return_data)}, output_types: {output_types}"
+                "Contract call failed because execution reverted or returned no "
+                "data."
             )
+            raise ContractLogicError(msg, data=str(return_data)) from e
+        msg = (
+            f"Could not decode contract function call to {abi_element_identifier} "
+            f"with return data: {str(return_data)}, output_types: {output_types}"
+        )
         raise BadFunctionCallOutput(msg) from e
 
     _normalizers = itertools.chain(
@@ -498,20 +515,23 @@ async def async_call_contract_function(
     except DecodingError as e:
         # Provide a more helpful error message than the one provided by
         # eth-abi-utils
-        is_missing_code_error = (
-            return_data in ACCEPTABLE_EMPTY_STRINGS
-            and await async_w3.eth.get_code(address) in ACCEPTABLE_EMPTY_STRINGS
-        )
-        if is_missing_code_error:
+        code = await async_w3.eth.get_code(address)
+        if _is_code_missing(code):
             msg = (
                 "Could not transact with/call contract function, is contract "
                 "deployed correctly and chain synced?"
             )
-        else:
+            raise BadFunctionCallOutput(msg) from e
+        if output_types and _has_insufficient_output_data(return_data, output_types):
             msg = (
-                f"Could not decode contract function call to {abi_element_identifier} "
-                f"with return data: {str(return_data)}, output_types: {output_types}"
+                "Contract call failed because execution reverted or returned no "
+                "data."
             )
+            raise ContractLogicError(msg, data=str(return_data)) from e
+        msg = (
+            f"Could not decode contract function call to {abi_element_identifier} "
+            f"with return data: {str(return_data)}, output_types: {output_types}"
+        )
         raise BadFunctionCallOutput(msg) from e
 
     _normalizers = itertools.chain(
