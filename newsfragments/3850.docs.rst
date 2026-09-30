@@ -1,0 +1,1 @@
+Fix the introductory subscription example to read the block number from the formatted subscription response result.
