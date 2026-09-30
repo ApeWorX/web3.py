@@ -1,0 +1,1 @@
+CCIP Read now treats IPv4-mapped IPv6 addresses (``::ffff:127.0.0.1``) as their IPv4 equivalents when blocking private and reserved hosts.
