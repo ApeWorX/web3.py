@@ -88,6 +88,8 @@ from web3.middleware import (
 )
 from web3.types import (
     ENS,
+    AccessList,
+    AccessListEntry,
     BlockData,
     FilterParams,
     Nonce,
@@ -696,6 +698,98 @@ class AsyncEthModuleTest:
         assert txn_hash == HexBytes(signed.hash)
 
     @pytest.mark.asyncio
+    async def test_async_eth_send_raw_transaction_type_1_access_list(
+        self, async_w3: "AsyncWeb3[Any]", keyfile_account_pkey: HexStr
+    ) -> None:
+        # Locks the eth_sendRawTransaction formatter on an EIP-2930 (type 1)
+        # payload — `gasPrice` + `accessList` with no max-fee fields. Surfaces
+        # any regression in the access-list field encoding on the raw path.
+        keyfile_account = async_w3.eth.account.from_key(keyfile_account_pkey)
+        access_list = AccessList(
+            [
+                AccessListEntry(
+                    address=HexStr("0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae"),
+                    storageKeys=[
+                        HexStr(
+                            "0x0000000000000000000000000000000000000000000000"
+                            "000000000000000003"
+                        ),
+                        HexStr(
+                            "0x0000000000000000000000000000000000000000000000"
+                            "000000000000000007"
+                        ),
+                    ],
+                ),
+            ]
+        )
+        txn = {
+            "chainId": 131277322940537,
+            "from": keyfile_account.address,
+            "to": keyfile_account.address,
+            "value": Wei(0),
+            "gas": 30000,
+            "nonce": await async_w3.eth.get_transaction_count(
+                keyfile_account.address, "pending"
+            ),
+            "gasPrice": 10**9,
+            "accessList": access_list,
+        }
+        signed = keyfile_account.sign_transaction(txn)
+        txn_hash = await async_w3.eth.send_raw_transaction(signed.raw_transaction)
+        assert txn_hash == HexBytes(signed.hash)
+
+        fetched = await async_w3.eth.get_transaction(txn_hash)
+        assert fetched["type"] == 1
+        assert len(fetched["accessList"]) == 1
+        assert is_same_address(
+            fetched["accessList"][0]["address"], access_list[0]["address"]
+        )
+        assert fetched["accessList"][0]["storageKeys"] == access_list[0]["storageKeys"]
+
+    @pytest.mark.asyncio
+    async def test_async_eth_send_transaction_type_2_access_list(
+        self,
+        async_w3: "AsyncWeb3[Any]",
+        async_keyfile_account_address_dual_type: ChecksumAddress,
+    ) -> None:
+        # Locks the eth_sendTransaction formatter on an EIP-1559 (type 2)
+        # payload that carries an `accessList`. Both fields go through
+        # separate formatter branches, so the combination is worth pinning.
+        access_list = AccessList(
+            [
+                AccessListEntry(
+                    address=HexStr("0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae"),
+                    storageKeys=[
+                        HexStr(
+                            "0x0000000000000000000000000000000000000000000000"
+                            "000000000000000003"
+                        ),
+                    ],
+                ),
+            ]
+        )
+        txn_params: TxParams = {
+            "from": async_keyfile_account_address_dual_type,
+            "to": async_keyfile_account_address_dual_type,
+            "value": Wei(1),
+            "gas": 30000,
+            "maxFeePerGas": async_w3.to_wei(3, "gwei"),
+            "maxPriorityFeePerGas": async_w3.to_wei(1, "gwei"),
+            "accessList": access_list,
+        }
+
+        txn_hash = await async_w3.eth.send_transaction(txn_params)
+        txn = await async_w3.eth.get_transaction(txn_hash)
+
+        assert txn["type"] == 2
+        assert is_same_address(txn["from"], cast(ChecksumAddress, txn_params["from"]))
+        assert len(txn["accessList"]) == 1
+        assert is_same_address(
+            txn["accessList"][0]["address"], access_list[0]["address"]
+        )
+        assert txn["accessList"][0]["storageKeys"] == access_list[0]["storageKeys"]
+
+    @pytest.mark.asyncio
     async def test_async_sign_and_send_raw_middleware(
         self, async_w3: "AsyncWeb3[Any]", keyfile_account_pkey: HexStr
     ) -> None:
@@ -799,6 +893,70 @@ class AsyncEthModuleTest:
 
         reset_code = await async_w3.eth.get_code(keyfile_account.address)
         assert reset_code == HexBytes("0x")
+
+    @pytest.mark.asyncio
+    async def test_async_set_code_transaction_with_access_list(
+        self,
+        async_w3: "AsyncWeb3[Any]",
+        keyfile_account_pkey: HexStr,
+        async_math_contract: "AsyncContract",
+    ) -> None:
+        # Type-4 (EIP-7702) carries authorizationList + (optionally) accessList
+        # in the same payload. Confirm both formatters cooperate on the raw
+        # signing path so future changes to either don't silently drop a field.
+        keyfile_account = async_w3.eth.account.from_key(keyfile_account_pkey)
+
+        chain_id = await async_w3.eth.chain_id
+        nonce = await async_w3.eth.get_transaction_count(keyfile_account.address)
+
+        auth = {
+            "chainId": chain_id,
+            "address": async_math_contract.address,
+            "nonce": nonce + 1,
+        }
+        signed_auth = keyfile_account.sign_authorization(auth)
+
+        math_counter = await async_math_contract.functions.counter().call()
+        data = async_math_contract.encode_abi("incrementCounter", [math_counter + 1337])
+        access_list = AccessList(
+            [
+                AccessListEntry(
+                    address=HexStr(async_math_contract.address),
+                    storageKeys=[
+                        HexStr(
+                            "0x0000000000000000000000000000000000000000000000"
+                            "000000000000000000"
+                        ),
+                    ],
+                ),
+            ]
+        )
+        txn: TxParams = {
+            "chainId": chain_id,
+            "to": keyfile_account.address,
+            "value": Wei(0),
+            "gas": 200_000,
+            "nonce": nonce,
+            "maxPriorityFeePerGas": Wei(10**9),
+            "maxFeePerGas": Wei(10**9),
+            "data": data,
+            "authorizationList": [signed_auth],
+            "accessList": access_list,
+        }
+
+        signed = keyfile_account.sign_transaction(txn)
+        tx_hash = await async_w3.eth.send_raw_transaction(signed.raw_transaction)
+        get_tx = await async_w3.eth.get_transaction(tx_hash)
+        await async_w3.eth.wait_for_transaction_receipt(tx_hash)
+
+        # Both type-4 markers must survive the round-trip
+        assert get_tx["type"] == 4
+        assert len(get_tx["authorizationList"]) == 1
+        assert len(get_tx["accessList"]) == 1
+        assert is_same_address(
+            get_tx["accessList"][0]["address"], access_list[0]["address"]
+        )
+        assert get_tx["accessList"][0]["storageKeys"] == access_list[0]["storageKeys"]
 
     @pytest.mark.asyncio
     async def test_GasPriceStrategyMiddleware(
@@ -3803,6 +3961,92 @@ class EthModuleTest:
         txn_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
         assert txn_hash == HexBytes(signed.hash)
 
+    def test_eth_send_raw_transaction_type_1_access_list(
+        self, w3: "Web3", keyfile_account_pkey: HexStr
+    ) -> None:
+        # Locks the eth_sendRawTransaction formatter on an EIP-2930 (type 1)
+        # payload — `gasPrice` + `accessList` with no max-fee fields.
+        keyfile_account = w3.eth.account.from_key(keyfile_account_pkey)
+        access_list = AccessList(
+            [
+                AccessListEntry(
+                    address=HexStr("0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae"),
+                    storageKeys=[
+                        HexStr(
+                            "0x0000000000000000000000000000000000000000000000"
+                            "000000000000000003"
+                        ),
+                        HexStr(
+                            "0x0000000000000000000000000000000000000000000000"
+                            "000000000000000007"
+                        ),
+                    ],
+                ),
+            ]
+        )
+        txn = {
+            "chainId": 131277322940537,
+            "from": keyfile_account.address,
+            "to": keyfile_account.address,
+            "value": Wei(0),
+            "gas": 30000,
+            "nonce": w3.eth.get_transaction_count(keyfile_account.address, "pending"),
+            "gasPrice": 10**9,
+            "accessList": access_list,
+        }
+        signed = keyfile_account.sign_transaction(txn)
+        txn_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
+        assert txn_hash == HexBytes(signed.hash)
+
+        fetched = w3.eth.get_transaction(txn_hash)
+        assert fetched["type"] == 1
+        assert len(fetched["accessList"]) == 1
+        assert is_same_address(
+            fetched["accessList"][0]["address"], access_list[0]["address"]
+        )
+        assert fetched["accessList"][0]["storageKeys"] == access_list[0]["storageKeys"]
+
+    def test_eth_send_transaction_type_2_access_list(
+        self,
+        w3: "Web3",
+        keyfile_account_address_dual_type: ChecksumAddress,
+    ) -> None:
+        # Locks the eth_sendTransaction formatter on an EIP-1559 (type 2)
+        # payload that carries an `accessList`.
+        access_list = AccessList(
+            [
+                AccessListEntry(
+                    address=HexStr("0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae"),
+                    storageKeys=[
+                        HexStr(
+                            "0x0000000000000000000000000000000000000000000000"
+                            "000000000000000003"
+                        ),
+                    ],
+                ),
+            ]
+        )
+        txn_params: TxParams = {
+            "from": keyfile_account_address_dual_type,
+            "to": keyfile_account_address_dual_type,
+            "value": Wei(1),
+            "gas": 30000,
+            "maxFeePerGas": w3.to_wei(3, "gwei"),
+            "maxPriorityFeePerGas": w3.to_wei(1, "gwei"),
+            "accessList": access_list,
+        }
+
+        txn_hash = w3.eth.send_transaction(txn_params)
+        txn = w3.eth.get_transaction(txn_hash)
+
+        assert txn["type"] == 2
+        assert is_same_address(txn["from"], cast(ChecksumAddress, txn_params["from"]))
+        assert len(txn["accessList"]) == 1
+        assert is_same_address(
+            txn["accessList"][0]["address"], access_list[0]["address"]
+        )
+        assert txn["accessList"][0]["storageKeys"] == access_list[0]["storageKeys"]
+
     def test_sign_and_send_raw_middleware(
         self, w3: "Web3", keyfile_account_pkey: HexStr
     ) -> None:
@@ -3898,6 +4142,68 @@ class EthModuleTest:
 
         reset_code = w3.eth.get_code(keyfile_account.address)
         assert reset_code == HexBytes("0x")
+
+    def test_set_code_transaction_with_access_list(
+        self,
+        w3: "Web3",
+        keyfile_account_pkey: HexStr,
+        math_contract: "Contract",
+    ) -> None:
+        # Type-4 (EIP-7702) carries authorizationList + (optionally) accessList
+        # in the same payload. Confirm both formatters cooperate on the raw
+        # signing path so future changes to either don't silently drop a field.
+        keyfile_account = w3.eth.account.from_key(keyfile_account_pkey)
+
+        chain_id = w3.eth.chain_id
+        nonce = w3.eth.get_transaction_count(keyfile_account.address)
+
+        auth = {
+            "chainId": chain_id,
+            "address": math_contract.address,
+            "nonce": nonce + 1,
+        }
+        signed_auth = keyfile_account.sign_authorization(auth)
+
+        math_counter = math_contract.functions.counter().call()
+        data = math_contract.encode_abi("incrementCounter", [math_counter + 1337])
+        access_list = AccessList(
+            [
+                AccessListEntry(
+                    address=HexStr(math_contract.address),
+                    storageKeys=[
+                        HexStr(
+                            "0x0000000000000000000000000000000000000000000000"
+                            "000000000000000000"
+                        ),
+                    ],
+                ),
+            ]
+        )
+        txn: TxParams = {
+            "chainId": chain_id,
+            "to": keyfile_account.address,
+            "value": Wei(0),
+            "gas": 200_000,
+            "nonce": nonce,
+            "maxPriorityFeePerGas": Wei(10**9),
+            "maxFeePerGas": Wei(10**9),
+            "data": data,
+            "authorizationList": [signed_auth],
+            "accessList": access_list,
+        }
+
+        signed = keyfile_account.sign_transaction(txn)
+        tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
+        get_tx = w3.eth.get_transaction(tx_hash)
+        w3.eth.wait_for_transaction_receipt(tx_hash)
+
+        assert get_tx["type"] == 4
+        assert len(get_tx["authorizationList"]) == 1
+        assert len(get_tx["accessList"]) == 1
+        assert is_same_address(
+            get_tx["accessList"][0]["address"], access_list[0]["address"]
+        )
+        assert get_tx["accessList"][0]["storageKeys"] == access_list[0]["storageKeys"]
 
     def test_eth_call(self, w3: "Web3", math_contract: "Contract") -> None:
         txn_params = math_contract._prepare_transaction(
