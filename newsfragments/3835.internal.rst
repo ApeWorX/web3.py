@@ -1,0 +1,9 @@
+Add async/sync parity tests for the previously-uncovered ``get_block``
+edge cases called out in #3835:
+
+- ``get_block(<hash>, full_transactions=True)`` is now exercised in both
+  ``AsyncEthModuleTest`` and ``EthModuleTest``. Only the number-keyed
+  variant was previously covered.
+- ``get_block(<unknown_identifier>)`` is now asserted to raise
+  ``Web3ValueError`` in both suites. The matching coverage previously
+  existed only for ``get_raw_transaction_by_block``.
