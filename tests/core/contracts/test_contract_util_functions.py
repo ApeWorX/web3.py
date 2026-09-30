@@ -41,12 +41,38 @@ def test_parse_block_identifier_bytes_and_hex(w3):
     assert block_id_by_hex == 0
 
 
+# a hex-encoded block number (documented as a valid ``block_identifier``) must
+# resolve to its integer block number without an extra ``eth_getBlockByHash``
+# round-trip, instead of raising ``BlockNumberOutOfRange``. see issue #3646
+@pytest.mark.parametrize(
+    "block_identifier,expected_output",
+    (
+        ("0x0", 0),
+        ("0x1a", 26),
+        ("0XABC", 2748),
+        ("0x1510FA4", 22089636),  # odd-length, mixed-case hex from the issue
+    ),
+)
+def test_parse_block_identifier_hex_block_number(w3, block_identifier, expected_output):
+    assert parse_block_identifier(w3, block_identifier) == expected_output
+
+
 @pytest.mark.parametrize(
     "block_identifier",
     (
         1.5,
         "cats",
         -70,
+        # hex-like values that are not canonical ``0x``-prefixed hex must still
+        # be rejected rather than silently reinterpreted as base 16. see #3646
+        "abc",
+        "20",
+        "1000000",
+        " 0x1a ",
+        "0x1_a",
+        "+0x1a",
+        "0b11",
+        "0x",
     ),
 )
 def test_parse_block_identifier_error(w3, block_identifier):
@@ -109,11 +135,38 @@ async def test_async_parse_block_identifier_bytes_and_hex(async_w3):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
+    "block_identifier,expected_output",
+    (
+        ("0x0", 0),
+        ("0x1a", 26),
+        ("0XABC", 2748),
+        ("0x1510FA4", 22089636),  # odd-length, mixed-case hex from the issue
+    ),
+)
+async def test_async_parse_block_identifier_hex_block_number(
+    async_w3, block_identifier, expected_output
+):
+    block_id = await async_parse_block_identifier(async_w3, block_identifier)
+    assert block_id == expected_output
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
     "block_identifier",
     (
         1.5,
         "cats",
         -70,
+        # hex-like values that are not canonical ``0x``-prefixed hex must still
+        # be rejected rather than silently reinterpreted as base 16. see #3646
+        "abc",
+        "20",
+        "1000000",
+        " 0x1a ",
+        "0x1_a",
+        "+0x1a",
+        "0b11",
+        "0x",
     ),
 )
 async def test_async_parse_block_identifier_error(async_w3, block_identifier):
