@@ -52,6 +52,9 @@ from web3._utils.transactions import (
 )
 from web3.exceptions import (
     BadFunctionCallOutput,
+    ContractCustomError,
+    ContractLogicError,
+    ContractPanicError,
     Web3ValueError,
 )
 from web3.types import (
@@ -76,6 +79,72 @@ if TYPE_CHECKING:
     )
 
 ACCEPTABLE_EMPTY_STRINGS = ["0x", b"0x", "", b""]
+
+# Solidity error selectors
+PANIC_SELECTOR = "0x4e487b71"  # Panic(uint256)
+ERROR_SELECTOR = "0x08c379a0"  # Error(string)
+
+PANIC_ERROR_CODES = {
+    "0x00": "Generic panic",
+    "0x01": "Assert failed",
+    "0x11": "Arithmetic overflow/underflow",
+    "0x12": "Division by zero",
+    "0x21": "Invalid enum conversion",
+    "0x22": "Invalid storage byte array access",
+    "0x31": "Pop on empty array",
+    "0x32": "Array index out of bounds",
+    "0x41": "Memory allocation overflow",
+    "0x51": "Call to zero address",
+}
+
+
+def _decode_contract_error(
+    w3: Union["AsyncWeb3[Any]", "Web3"],
+    return_data: bytes,
+    abi_element_identifier: ABIElementIdentifier,
+) -> ContractLogicError | None:
+    """
+    Attempt to decode contract revert/panic errors from return data.
+    Returns appropriate ContractLogicError subclass or None if not decodable.
+    """
+    if not return_data or len(return_data) < 4:
+        return None
+
+    selector = "0x" + return_data[:4].hex()
+
+    # Handle Panic(uint256) - Solidity 0.8.0+
+    # Panic data: 4-byte selector + 32-byte uint256 = 36 bytes total
+    if selector == PANIC_SELECTOR and len(return_data) >= 36:
+        try:
+            panic_code_bytes = return_data[4:8].hex()
+            panic_code = "0x" + panic_code_bytes.lstrip("0") if panic_code_bytes.lstrip("0") else "0x00"
+            panic_msg = PANIC_ERROR_CODES.get(panic_code, f"Unknown panic code: {panic_code}")
+            return ContractPanicError(
+                f"execution reverted: Panic({panic_msg})",
+                data=w3.to_hex(return_data),
+            )
+        except Exception:
+            pass
+
+    # Handle Error(string) - standard revert with message
+    # Error data: 4-byte selector + 32-byte offset + 32-byte length + string bytes
+    if selector == ERROR_SELECTOR and len(return_data) > 68:
+        try:
+            from eth_abi.abi import decode
+            reason = decode(["string"], return_data[4:])[0]
+            return ContractLogicError(
+                f"execution reverted: {reason}",
+                data=w3.to_hex(return_data),
+            )
+        except Exception:
+            pass
+
+    # Unknown custom error or other revert - return ContractCustomError with hex data
+    # Only return this if it looks like a valid ABI-encoded error (at least 4 bytes)
+    return ContractCustomError(
+        f"execution reverted: custom error {selector}",
+        data=w3.to_hex(return_data),
+    )
 
 
 @curry
@@ -209,11 +278,18 @@ def call_contract_function(
                 "Could not transact with/call contract function, is contract "
                 "deployed correctly and chain synced?"
             )
-        else:
-            msg = (
-                f"Could not decode contract function call to {abi_element_identifier} "
-                f"with return data: {str(return_data)}, output_types: {output_types}"
-            )
+            raise BadFunctionCallOutput(msg) from e
+
+        # Try to decode as contract revert/panic error
+        contract_error = _decode_contract_error(w3, return_data, abi_element_identifier)
+        if contract_error is not None:
+            raise contract_error from e
+
+        # Fallback to generic error message
+        msg = (
+            f"Could not decode contract function call to {abi_element_identifier} "
+            f"with return data: {str(return_data)}, output_types: {output_types}"
+        )
         raise BadFunctionCallOutput(msg) from e
 
     _normalizers = itertools.chain(
@@ -507,11 +583,18 @@ async def async_call_contract_function(
                 "Could not transact with/call contract function, is contract "
                 "deployed correctly and chain synced?"
             )
-        else:
-            msg = (
-                f"Could not decode contract function call to {abi_element_identifier} "
-                f"with return data: {str(return_data)}, output_types: {output_types}"
-            )
+            raise BadFunctionCallOutput(msg) from e
+
+        # Try to decode as contract revert/panic error
+        contract_error = _decode_contract_error(async_w3, return_data, abi_element_identifier)
+        if contract_error is not None:
+            raise contract_error from e
+
+        # Fallback to generic error message
+        msg = (
+            f"Could not decode contract function call to {abi_element_identifier} "
+            f"with return data: {str(return_data)}, output_types: {output_types}"
+        )
         raise BadFunctionCallOutput(msg) from e
 
     _normalizers = itertools.chain(
