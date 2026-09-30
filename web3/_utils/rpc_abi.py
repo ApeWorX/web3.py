@@ -91,6 +91,7 @@ class RPC:
     eth_newPendingTransactionFilter = RPCEndpoint("eth_newPendingTransactionFilter")
     eth_protocolVersion = RPCEndpoint("eth_protocolVersion")
     eth_sendRawTransaction = RPCEndpoint("eth_sendRawTransaction")
+    eth_sendRawTransactionSync = RPCEndpoint("eth_sendRawTransactionSync")
     eth_sendTransaction = RPCEndpoint("eth_sendTransaction")
     eth_sign = RPCEndpoint("eth_sign")
     eth_signTransaction = RPCEndpoint("eth_signTransaction")
@@ -185,6 +186,7 @@ RPC_ABIS: dict[str, Sequence[Any] | dict[str, str]] = {
     "eth_getRawTransactionByBlockHashAndIndex": ["bytes32", "uint"],
     "eth_newFilter": FILTER_PARAMS_ABIS,
     "eth_sendRawTransaction": ["bytes"],
+    "eth_sendRawTransactionSync": ["bytes", "uint"],
     "eth_sendTransaction": TRANSACTION_PARAMS_ABIS,
     "eth_signTransaction": TRANSACTION_PARAMS_ABIS,
     "eth_sign": ["address", "bytes"],

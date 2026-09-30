@@ -386,6 +386,29 @@ class Eth(BaseEth):
     def send_raw_transaction(self, transaction: HexStr | bytes) -> HexBytes:
         return self._send_raw_transaction(transaction)
 
+    # eth_sendRawTransactionSync
+
+    def send_raw_transaction_sync_munger(
+        self,
+        transaction: HexStr | bytes,
+        timeout_ms: int | None = None,
+    ) -> tuple[HexStr | bytes] | tuple[HexStr | bytes, int]:
+        if timeout_ms is None:
+            return (transaction,)
+        return (transaction, timeout_ms)
+
+    _send_raw_transaction_sync: Method[
+        Callable[[HexStr | bytes, int | None], TxReceipt]
+    ] = Method(
+        RPC.eth_sendRawTransactionSync,
+        mungers=[send_raw_transaction_sync_munger],
+    )
+
+    def send_raw_transaction_sync(
+        self, transaction: HexStr | bytes, timeout_ms: int | None = None
+    ) -> TxReceipt:
+        return self._send_raw_transaction_sync(transaction, timeout_ms)
+
     # eth_getBlockByHash
     # eth_getBlockByNumber
 

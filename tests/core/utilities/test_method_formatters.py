@@ -3,8 +3,12 @@ import pytest
 from eth_typing import (
     HexStr,
 )
+from hexbytes import (
+    HexBytes,
+)
 
 from web3._utils.method_formatters import (
+    PYTHONIC_RESULT_FORMATTERS,
     get_error_formatters,
     raise_contract_logic_error_on_revert,
     storage_key_to_hexstr,
@@ -59,6 +63,42 @@ OTHER_ERROR = RPCResponse(
             "message": "Method not found",
         },
         "id": 1,
+    }
+)
+
+EIP_7966_TIMEOUT_ERROR = RPCResponse(
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "error": {
+            "code": 4,
+            "message": "timeout",
+            "data": "0x" + ("12" * 32),
+        },
+    }
+)
+
+EIP_7966_UNKNOWN_ERROR = RPCResponse(
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "error": {
+            "code": 5,
+            "message": "queued",
+            "data": "0x" + ("34" * 32),
+        },
+    }
+)
+
+EIP_7966_NONCE_GAP_ERROR = RPCResponse(
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "error": {
+            "code": 6,
+            "message": "nonce gap",
+            "data": "0x5",
+        },
     }
 )
 
@@ -198,6 +238,46 @@ def test_get_error_formatters() -> None:
     with pytest.raises(ContractLogicError):
         formatters(REVERT_WITHOUT_MSG)
     assert formatters(OTHER_ERROR) == OTHER_ERROR
+
+
+def test_eth_send_raw_transaction_sync_result_formatter_receipt() -> None:
+    receipt = {
+        "transactionHash": "0x" + ("11" * 32),
+        "transactionIndex": "0x0",
+        "blockHash": "0x" + ("22" * 32),
+        "blockNumber": "0x1",
+        "cumulativeGasUsed": "0x5208",
+        "gasUsed": "0x5208",
+        "contractAddress": None,
+        "logs": [],
+        "logsBloom": "0x" + ("00" * 256),
+        "status": "0x1",
+        "effectiveGasPrice": "0x1",
+        "type": "0x2",
+    }
+    formatter = PYTHONIC_RESULT_FORMATTERS[RPC.eth_sendRawTransactionSync]
+    formatted_receipt = formatter(receipt)
+
+    assert formatted_receipt["transactionHash"] == HexBytes("0x" + ("11" * 32))
+    assert formatted_receipt["blockHash"] == HexBytes("0x" + ("22" * 32))
+    assert formatted_receipt["blockNumber"] == 1
+    assert formatted_receipt["status"] == 1
+    assert formatted_receipt["gasUsed"] == 21000
+
+
+@pytest.mark.parametrize(
+    "error_response",
+    (
+        EIP_7966_TIMEOUT_ERROR,
+        EIP_7966_UNKNOWN_ERROR,
+        EIP_7966_NONCE_GAP_ERROR,
+    ),
+)
+def test_eth_send_raw_transaction_sync_error_payload_passthrough(
+    error_response: RPCResponse,
+) -> None:
+    formatter = get_error_formatters(RPC.eth_sendRawTransactionSync)
+    assert formatter(error_response) == error_response
 
 
 @pytest.mark.parametrize(

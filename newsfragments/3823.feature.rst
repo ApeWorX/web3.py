@@ -1,0 +1,4 @@
+Added support for ``eth_sendRawTransactionSync`` through ``Eth.send_raw_transaction_sync()``
+and ``AsyncEth.send_raw_transaction_sync()``. The new API accepts an optional
+``timeout_ms`` argument and returns a transaction receipt on success, matching the
+response shape of ``eth_getTransactionReceipt``.
