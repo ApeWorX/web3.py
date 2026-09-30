@@ -1,4 +1,5 @@
 import pytest
+import errno
 import json
 import os
 import pathlib
@@ -372,6 +373,38 @@ async def test_async_ipc_provider_write_messages_end_with_new_line_delimiter(
 
         request_data = b'{"id": 0, "jsonrpc": "2.0", "method": "method", "params": []}'
         w3.provider._writer.write.assert_called_with(request_data + b"\n")
+
+
+@pytest.mark.asyncio
+async def test_async_ipc_provider_retry_write_ends_with_new_line_delimiter(
+    simple_ipc_server,
+    jsonrpc_ipc_pipe_path,
+):
+    async with AsyncWeb3(AsyncIPCProvider(pathlib.Path(jsonrpc_ipc_pipe_path))) as w3:
+        broken_writer = w3.provider._writer
+        broken_writer.write = Mock()
+        broken_writer.drain = AsyncMock(side_effect=OSError(errno.EPIPE, "Broken pipe"))
+
+        retry_writer = Mock()
+        retry_writer.drain = AsyncMock()
+
+        async def _reset_socket():
+            broken_writer.close()
+            await broken_writer.wait_closed()
+            w3.provider._writer = retry_writer
+
+        w3.provider._reset_socket = _reset_socket
+        w3.provider._reader.readline = AsyncMock(
+            return_value=b'{"id": 0, "jsonrpc": "2.0", "result": {}}\n'
+        )
+
+        await w3.provider.make_request("method", [])
+
+        request_data = b'{"id": 0, "jsonrpc": "2.0", "method": "method", "params": []}'
+        broken_writer.write.assert_called_once_with(request_data + b"\n")
+        # the retried message keeps the delimiter
+        retry_writer.write.assert_called_once_with(request_data + b"\n")
+        retry_writer.drain.assert_awaited_once()
 
 
 @pytest.mark.asyncio
