@@ -44,6 +44,9 @@ from web3._utils.batching import (
 from web3._utils.contracts import (
     prepare_transaction,
 )
+from web3._utils.error_formatters_utils import (
+    decode_custom_error,
+)
 from web3._utils.normalizers import (
     BASE_RETURN_NORMALIZERS,
 )
@@ -52,6 +55,7 @@ from web3._utils.transactions import (
 )
 from web3.exceptions import (
     BadFunctionCallOutput,
+    ContractCustomError,
     Web3ValueError,
 )
 from web3.types import (
@@ -145,12 +149,19 @@ def call_contract_function(
         fn_kwargs=kwargs,
     )
 
-    return_data = w3.eth.call(
-        call_transaction,
-        block_identifier=block_id,
-        state_override=state_override,
-        ccip_read_enabled=ccip_read_enabled,
-    )
+    try:
+        return_data = w3.eth.call(
+            call_transaction,
+            block_identifier=block_id,
+            state_override=state_override,
+            ccip_read_enabled=ccip_read_enabled,
+        )
+    except ContractCustomError as e:
+        if contract_abi is not None and e.data is not None:
+            decoded_error = decode_custom_error(contract_abi, str(e.data))
+            if decoded_error is not None:
+                raise ContractCustomError(decoded_error, data=e.data) from e
+        raise
 
     if abi_callable is None:
         abi_callable = cast(
@@ -442,12 +453,19 @@ async def async_call_contract_function(
         fn_kwargs=kwargs,
     )
 
-    return_data = await async_w3.eth.call(
-        call_transaction,
-        block_identifier=block_id,
-        state_override=state_override,
-        ccip_read_enabled=ccip_read_enabled,
-    )
+    try:
+        return_data = await async_w3.eth.call(
+            call_transaction,
+            block_identifier=block_id,
+            state_override=state_override,
+            ccip_read_enabled=ccip_read_enabled,
+        )
+    except ContractCustomError as e:
+        if contract_abi is not None and e.data is not None:
+            decoded_error = decode_custom_error(contract_abi, str(e.data))
+            if decoded_error is not None:
+                raise ContractCustomError(decoded_error, data=e.data) from e
+        raise
 
     if fn_abi is None:
         fn_abi = cast(

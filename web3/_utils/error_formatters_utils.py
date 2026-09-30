@@ -1,9 +1,18 @@
+from typing import (
+    Any,
+)
 import warnings
 
 from eth_abi import (
     abi,
 )
+from eth_typing import (
+    ABI,
+)
 from eth_utils import (
+    abi_to_signature,
+    filter_abi_by_type,
+    function_signature_to_4byte_selector,
     to_bytes,
 )
 
@@ -53,6 +62,58 @@ PANIC_ERROR_CODES = {
 }
 
 MISSING_DATA = "no data"
+
+
+def decode_custom_error(
+    contract_abi: ABI,
+    data: str,
+) -> str | None:
+    """
+    Try to decode a custom error revert from its hex data using the contract ABI.
+
+    Matches the first 4 bytes (function selector) of the revert data against
+    error entries in the ABI. If a match is found, decodes the parameters and
+    returns a human-readable string like ``ErrorName(arg1, arg2, ...)``.
+
+    Returns ``None`` if no matching error is found in the ABI.
+    """
+    # normalize: strip "0x" prefix if present
+    hex_data = data[2:] if data.startswith("0x") else data
+    if len(hex_data) < 8:
+        return None
+
+    error_selector = hex_data[:8]
+    error_abis = filter_abi_by_type("error", contract_abi)
+
+    for error_abi in error_abis:
+        sig = abi_to_signature(error_abi)
+        selector = function_signature_to_4byte_selector(sig).hex()
+        if selector == error_selector:
+            # matched - decode the parameters
+            input_types = [inp["type"] for inp in error_abi.get("inputs", [])]
+            input_names = [inp["name"] for inp in error_abi.get("inputs", [])]
+            if input_types:
+                try:
+                    encoded_params = bytes.fromhex(hex_data[8:])
+                    decoded_params: tuple[Any, ...] = abi.decode(
+                        input_types, encoded_params
+                    )
+                    # format params with names if available
+                    param_strs = []
+                    for i, val in enumerate(decoded_params):
+                        name = input_names[i] if i < len(input_names) else ""
+                        if name:
+                            param_strs.append(f"{name}={val!r}")
+                        else:
+                            param_strs.append(repr(val))
+                    return f"{error_abi['name']}({', '.join(param_strs)})"
+                except Exception:
+                    # if decoding fails, return just the error name
+                    return f"{error_abi['name']}()"
+            else:
+                return f"{error_abi['name']}()"
+
+    return None
 
 
 def _parse_error_with_reverted_prefix(data: str) -> str:
