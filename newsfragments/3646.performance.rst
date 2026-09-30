@@ -1,0 +1,4 @@
+``parse_block_identifier`` / ``async_parse_block_identifier`` now forward a
+block hash to the JSON-RPC node directly instead of resolving it to a block
+number first. This removes an extra ``eth_getBlockBy*`` round-trip on every
+contract call that targets a specific block hash.
