@@ -25,10 +25,12 @@ from .persistent import (
     WebSocketProvider,
 )
 from .auto import (
+    AsyncAutoProvider,
     AutoProvider,
 )
 
 __all__ = [
+    "AsyncAutoProvider",
     "AsyncBaseProvider",
     "AsyncEthereumTesterProvider",
     "AsyncHTTPProvider",

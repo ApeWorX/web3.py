@@ -1,0 +1,1 @@
+Introduce ``AsyncAutoProvider`` for automatic detection of async providers (AsyncHTTP, WebSocket, AsyncIPC) and ``load_async_provider_from_uri`` / ``load_async_provider_from_environment`` helpers.
