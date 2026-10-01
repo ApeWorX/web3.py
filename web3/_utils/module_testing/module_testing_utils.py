@@ -1,11 +1,9 @@
 import asyncio
+from collections.abc import Collection, Generator, Sequence
 from typing import (
     TYPE_CHECKING,
     Any,
-    Collection,
-    Generator,
     Literal,
-    Sequence,
     Union,
 )
 
@@ -24,6 +22,9 @@ from hexbytes import (
     HexBytes,
 )
 import requests
+from websockets.protocol import (
+    State,
+)
 
 from web3._utils.http import (
     DEFAULT_HTTP_TIMEOUT,
@@ -61,6 +62,24 @@ def assert_contains_log(
     assert log_entry["transactionHash"] == HexBytes(txn_hash_with_log)
 
 
+def _mock_getaddrinfo_public(
+    monkeypatch: "MonkeyPatch",
+) -> None:
+    # Patch socket.getaddrinfo to return a public IP for CCIP test domains
+    # so that CCIP URL host validation passes during tests. Pass through
+    # to the real getaddrinfo for all other hosts (e.g. 127.0.0.1 for geth).
+    import socket as _socket
+
+    _original_getaddrinfo = _socket.getaddrinfo
+
+    def _patched_getaddrinfo(host: Any, port: Any, *args: Any, **kwargs: Any) -> Any:
+        if host == "web3.py":
+            return [(_socket.AF_INET, _socket.SOCK_STREAM, 0, "", ("1.2.3.4", 0))]
+        return _original_getaddrinfo(host, port, *args, **kwargs)
+
+    monkeypatch.setattr("socket.getaddrinfo", _patched_getaddrinfo)
+
+
 def mock_offchain_lookup_request_response(
     monkeypatch: "MonkeyPatch",
     http_method: Literal["GET", "POST"] = "GET",
@@ -72,6 +91,8 @@ def mock_offchain_lookup_request_response(
     sender: str = None,
     calldata: str = None,
 ) -> None:
+    _mock_getaddrinfo_public(monkeypatch)
+
     class MockedResponse:
         status_code = mocked_status_code
 
@@ -91,6 +112,7 @@ def mock_offchain_lookup_request_response(
         # mock response only to specified url while validating appropriate fields
         if url_from_args == mocked_request_url:
             assert kwargs["timeout"] == DEFAULT_HTTP_TIMEOUT
+            assert kwargs.get("allow_redirects") is False
             if http_method.upper() == "POST":
                 assert kwargs["json"] == {"data": calldata, "sender": sender}
             return MockedResponse()
@@ -118,6 +140,8 @@ def async_mock_offchain_lookup_request_response(
     sender: str = None,
     calldata: str = None,
 ) -> None:
+    _mock_getaddrinfo_public(monkeypatch)
+
     class AsyncMockedResponse:
         status = mocked_status_code
 
@@ -141,6 +165,7 @@ def async_mock_offchain_lookup_request_response(
         # mock response only to specified url while validating appropriate fields
         if url_from_args == mocked_request_url:
             assert kwargs["timeout"] == ClientTimeout(DEFAULT_HTTP_TIMEOUT)
+            assert kwargs.get("allow_redirects") is False
             if http_method.upper() == "POST":
                 assert kwargs["json"] == {"data": calldata, "sender": sender}
             return AsyncMockedResponse()
@@ -159,10 +184,12 @@ def async_mock_offchain_lookup_request_response(
 
 
 class WebSocketMessageStreamMock:
-    closed: bool = False
+    state: State = State.OPEN
 
     def __init__(
-        self, messages: Collection[bytes] = None, raise_exception: Exception = None
+        self,
+        messages: Collection[bytes] = None,
+        raise_exception: Exception = None,
     ) -> None:
         self.queue = asyncio.Queue()  # type: ignore  # py38 issue
         for msg in messages or []:

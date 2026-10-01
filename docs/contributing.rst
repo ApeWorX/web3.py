@@ -16,7 +16,7 @@ Without code:
 * Answer user questions within GitHub issues, Stack Overflow, or the `Python Discord server`_.
 * Write or record tutorial content.
 * Improve our documentation (including typo fixes).
-* `Open an issue <https://github.com/ethereum/web3.py/issues/new>`_ on GitHub to document a bug. Include as much detail as possible, e.g., how to reproduce the issue and any exception messages.
+* `Open an issue <https://github.com/ApeWorX/web3.py/issues/new>`_ on GitHub to document a bug. Include as much detail as possible, e.g., how to reproduce the issue and any exception messages.
 
 With code:
 
@@ -50,12 +50,13 @@ your fork to your local machine, include the ``--recursive`` flag:
     $ cd web3.py
 
 
-Finally, install all development dependencies:
+Finally, install all development dependencies. The ``dev`` dependency group is
+installed by default, so ``uv sync`` is enough for a local development environment:
 
 .. code:: sh
 
-    $ python -m pip install -e ".[dev]"
-    $ pre-commit install
+    $ uv sync
+    $ uv run prek install
 
 
 Using Docker
@@ -114,7 +115,7 @@ First, install the test dependencies:
 
 .. code:: sh
 
-    $ python -m pip install -e ".[test]"
+    $ uv sync --group test
 
 
 You can run all tests with:
@@ -216,7 +217,7 @@ Working With Test Contracts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Contracts used for testing exist under ``web3/_utils/contract_sources``. These contracts
-get compiled via the ``compile_contracts.py`` script in the same directory. To use
+get compiled via the ``scripts/compile_contracts.py`` maintenance tool. To use
 this script, simply pass the Solidity version to be used to compile the contracts as an
 argument at the command line.
 
@@ -230,12 +231,11 @@ Arguments for the script are:
                             specific ``.sol`` filename here to compile just one file.
 
 
-To run the script, you will need the ``py-solc-x`` library for compiling the files
-as well as ``black`` for code formatting. You can install those with:
+The maintenance dependency group provides ``py-solc-x`` and Ruff:
 
 .. code:: sh
 
-    $ python -m pip install py-solc-x black
+    $ uv sync --group maintenance
 
 The following example compiles all the contracts and generates their respective
 contract data that is used across our test files for the test suites. This data gets
@@ -245,7 +245,7 @@ folder.
 .. code-block:: bash
 
     $ cd ../web3.py/web3/_utils/contract_sources
-    $ python compile_contracts.py -v 0.8.17
+    $ uv run --project ../../.. --group maintenance python ../../../scripts/compile_contracts.py -v 0.8.17
     Compiling OffchainLookup
     ...
     ...
@@ -257,7 +257,7 @@ filename with the ``-f`` (or ``--filename``) argument flag.
 .. code-block:: bash
 
     $ cd ../web3.py/web3/_utils/contract_sources
-    $ python compile_contracts.py -v 0.8.17 -f OffchainLookup.sol
+    $ uv run --project ../../.. --group maintenance python ../../../scripts/compile_contracts.py -v 0.8.17 -f OffchainLookup.sol
     Compiling OffchainLookup.sol
     reformatted ...
 
@@ -284,7 +284,7 @@ you can install it from your development directory:
 Code Style
 ~~~~~~~~~~
 
-We use `pre-commit <https://pre-commit.com/>`_ to enforce a consistent code style across
+We use `prek <https://prek.j178.dev>`_ to enforce a consistent code style across
 the library. This tool runs automatically with every commit, but you can also run it
 manually with:
 
@@ -293,7 +293,7 @@ manually with:
    $ make lint
 
 
-If you need to make a commit that skips the ``pre-commit`` checks, you can do so with
+If you need to make a commit that skips the ``prek`` checks, you can do so with
 ``git commit --no-verify``.
 
 We use Black as part of our linting. To ignore the commits that introduced Black in
@@ -305,7 +305,7 @@ git history, you can configure your git environment like so:
 
 
 This library uses `type hints`_, which are enforced by the ``mypy`` tool (part of the
-``pre-commit`` checks). All new code is required to land with type hints, with the
+``prek`` checks). All new code is required to land with type hints, with the
 exception of code within the ``tests`` directory.
 
 
@@ -329,17 +329,13 @@ submission.
 
 See GitHub's documentation for `working on pull requests`_.
 
-Once you've made a pull request take a look at the Circle CI build status in
+Once you've made a pull request, check the GitHub Actions status in
 the GitHub interface and make sure all tests are passing. In general, pull
 requests that do not pass the CI build yet won't get reviewed unless explicitly
 requested.
 
-If the pull request introduces changes that should be reflected in the release
-notes, please add a **newsfragment** file as explained
-`here <https://github.com/ethereum/web3.py/blob/main/newsfragments/README.md>`_.
-
-If possible, the change to the release notes file should be included in the
-commit that introduces the feature or bugfix.
+Use the conventional-commit format for the pull request title. GitHub generates
+release notes from merged pull requests.
 
 .. _generating_fixtures:
 
@@ -354,7 +350,7 @@ Before generating new fixtures, make sure you have the test dependencies install
 
 .. code:: sh
 
-    $ python -m pip install -e ".[test]"
+    $ uv sync --group test
 
 .. note::
 
@@ -376,26 +372,24 @@ Geth Fixtures
 
    .. code:: sh
 
-      $ python -m geth.install v1.16.7
+      $ uv run --group integration python -m geth.install v1.16.7
 
 2. Specify the Geth binary and run the fixture creation script (from within the web3.py directory):
 
    .. code:: sh
 
-      $ GETH_BINARY=~/.py-geth/geth-v1.16.7/bin/geth python ./tests/integration/generate_fixtures/go_ethereum.py
+      $ GETH_BINARY=~/.py-geth/geth-v1.16.7/bin/geth uv run --group integration python -m scripts.generate_fixtures.go_ethereum
 
 3. The output of this script is your fixture, a zip file, which is now stored in ``/tests/integration/``.
-   The ``/tests/integration/go_ethereum/conftest.py`` and
-   ``/web3/tools/benchmark/node.py`` files should be updated automatically to point to this new fixture.
-   Delete the old fixture.
+   The ``/tests/integration/go_ethereum/conftest.py`` file should be updated automatically
+   to point to this new fixture. Delete the old fixture.
 
 4. Run the tests. To ensure that the tests run with the correct Geth version locally,
    you may again include the ``GETH_BINARY`` environment variable.
 
-5. The ``geth_version`` and ``pygeth_version`` parameter defaults in
-   ``/.circleci/config.yml`` should be automatically updated to match the
-   ``go-ethereum`` version used to generate the test fixture and the ``py-geth``
-   version that supports installing it.
+5. The ``GETH_VERSION`` values in ``/.github/workflows/test.yaml`` should be
+   automatically updated to match the ``go-ethereum`` version used to generate the
+   test fixture.
 
 
 CI Testing With a Nightly Geth Build
@@ -406,7 +400,7 @@ Geth - e.g. to test upcoming hard fork changes. The workflow described below is 
 testing only, as updates will only be merged into main once the Geth release is
 published and the test runs are updated to use the new stable version.
 
-1. Configure ``tests/integration/generate_fixtures/go_ethereum/common.py`` as needed.
+1. Configure ``scripts/generate_fixtures/common.py`` as needed.
 
 2. Geth automagically compiles new builds for every commit that gets merged into the codebase.
    Download the desired build from the `develop builds <https://geth.ethereum.org/downloads/>`_.
@@ -418,8 +412,8 @@ published and the test runs are updated to use the new stable version.
    `develop build <https://geth.ethereum.org/downloads/>`_, then
    add it to the root of your web3.py directory. Rename the binary ``custom_geth``.
 
-5. In ``.circleci/config.yml``, update the ``geth_version`` pipeline parameter to
-   "custom". This will trigger the custom Geth build to be used in the CI test suite.
+5. In the GitHub Actions geth integration jobs, update the ``GETH_VERSION``
+   environment value if the fixture generation requires a non-default geth binary.
 
 6. Create a PR and let CI do its thing.
 
@@ -434,75 +428,32 @@ released from said branch).
 Final test before each release
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Before releasing a new version, build and test the package that will be released:
+Before releasing a new version, run the test suite from the release branch:
 
 .. code:: sh
 
     $ git checkout main && git pull
-    $ make package-test
-
-This will build the package and install it in a temporary virtual environment. Follow
-the instructions to activate the venv and test whatever you think is important.
+    $ uv run --group test pytest tests/core
 
 Review the documentation that will get published:
 
 .. code:: sh
 
-    $ make docs
-
-Validate and preview the release notes:
-
-.. code:: sh
-
-    $ make validate-newsfragments
-
-Build the release notes
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Before bumping the version number, build the release notes. You must include the part of
-the version to bump (see below), which changes how the version number will show in the
-release notes.
-
-.. code:: sh
-
-    $ make notes bump=$$VERSION_PART_TO_BUMP$$
-
-If there are any errors, be sure to re-run make notes until it works.
+    $ uv run --group docs sphinx-apidoc -o docs/ . "*conftest*" "tests" "scripts" "web3/tools/*"
+    $ uv run --group docs sphinx-build -W -b html docs docs/_build/html
+    $ uv run --group docs sphinx-build -W -b doctest docs docs/_build/doctest
+    $ uv run --group docs sphinx-build -W -b epub docs docs/_build/epub
 
 Push the release to github & pypi
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-After confirming that the release package looks okay, release a new version:
+After confirming that the release package looks okay, create a GitHub Release with the
+version tag to publish. GitHub Actions builds the package from the release tag and
+publishes to PyPI with trusted publishing. Release notes should be written in the
+GitHub Release.
 
-.. code:: sh
-
-    $ make release bump=$$VERSION_PART_TO_BUMP$$
-
-This command will:
-
-- Bump the version number as specified in ``.pyproject.toml`` and ``setup.py``.
-- Create a git commit and tag for the new version.
-- Build the package.
-- Push the commit and tag to github.
-- Push the new package files to pypi.
-
-Which version part to bump
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-``$$VERSION_PART_TO_BUMP$$`` must be one of: ``major``, ``minor``, ``patch``, ``stage``,
-or ``devnum``.
-
-The version format for this repo is ``{major}.{minor}.{patch}`` for stable, and
-``{major}.{minor}.{patch}-{stage}.{devnum}`` for unstable (``stage`` can be alpha or
-beta).
-
-If you are in a beta version, ``make release bump=stage`` will switch to a stable.
-
-To issue an unstable version when the current version is stable, specify the new version
-explicitly, like ``make release bump="--new-version 4.0.0-alpha.1"``.
-
-You can see what the result of bumping any particular version part would be with
-``bump-my-version show-bump``.
+``setuptools-scm`` derives the package version from the release tag. Use PEP 440 tags,
+for example ``v8.0.0b3`` or ``v8.0.0``.
 
 .. _Python Discord server: https://discord.gg/GHryRvPB84
 .. _style guide: https://github.com/ethereum/snake-charmers-tactical-manual/blob/main/style-guide.md

@@ -1,7 +1,4 @@
-from asyncio import (
-    iscoroutinefunction,
-)
-import copy
+import inspect
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -109,16 +106,15 @@ class RequestMocker:
             self._send_request = w3.provider.send_request
             self._recv_for_request = w3.provider.recv_for_request
         else:
-            self._make_request: Union[
-                "AsyncMakeRequestFn", "MakeRequestFn"
-            ] = w3.provider.make_request
+            self._make_request: AsyncMakeRequestFn | MakeRequestFn = (
+                w3.provider.make_request
+            )
+
+        self._mock_request_counter = 1
 
     def _build_request_id(self) -> int:
-        request_id = (
-            next(copy.deepcopy(self.w3.provider.request_counter))
-            if hasattr(self.w3.provider, "request_counter")
-            else 1
-        )
+        request_id = self._mock_request_counter
+        self._mock_request_counter += 1
         return request_id
 
     def __enter__(self) -> "Self":
@@ -144,7 +140,11 @@ class RequestMocker:
 
         if all(
             method not in mock_dict
-            for mock_dict in (self.mock_errors, self.mock_results, self.mock_responses)
+            for mock_dict in (
+                self.mock_errors,
+                self.mock_results,
+                self.mock_responses,
+            )
         ):
             return self._make_request(method, params)
 
@@ -224,7 +224,7 @@ class RequestMocker:
 
             if callable(mock_return):
                 mock_return = mock_return(method, params)
-            elif iscoroutinefunction(mock_return):
+            elif inspect.iscoroutinefunction(mock_return):
                 # this is the "correct" way to mock the async make_request
                 mock_return = await mock_return(method, params)
 
@@ -239,7 +239,7 @@ class RequestMocker:
             if callable(mock_return):
                 # handle callable to make things easier since we're mocking
                 mock_return = mock_return(method, params)
-            elif iscoroutinefunction(mock_return):
+            elif inspect.iscoroutinefunction(mock_return):
                 # this is the "correct" way to mock the async make_request
                 mock_return = await mock_return(method, params)
 
@@ -249,7 +249,7 @@ class RequestMocker:
             error = self.mock_errors[method]
             if callable(error):
                 error = error(method, params)
-            elif iscoroutinefunction(error):
+            elif inspect.iscoroutinefunction(error):
                 error = await error(method, params)
             mocked_result = merge(response_dict, self._create_error_object(error))
 
@@ -265,7 +265,11 @@ class RequestMocker:
         self._make_request = cast("AsyncMakeRequestFn", self._make_request)
         if all(
             method not in mock_dict
-            for mock_dict in (self.mock_errors, self.mock_results, self.mock_responses)
+            for mock_dict in (
+                self.mock_errors,
+                self.mock_results,
+                self.mock_responses,
+            )
         ):
             return await self._make_request(method, params)
         mocked_result = await self._async_build_mock_result(method, params)
@@ -289,7 +293,11 @@ class RequestMocker:
     ) -> "RPCRequest":
         if all(
             method not in mock_dict
-            for mock_dict in (self.mock_errors, self.mock_results, self.mock_responses)
+            for mock_dict in (
+                self.mock_errors,
+                self.mock_results,
+                self.mock_responses,
+            )
         ):
             return await self._send_request(method, params)
         else:
@@ -304,7 +312,11 @@ class RequestMocker:
         request_id = rpc_request["id"]
         if all(
             method not in mock_dict
-            for mock_dict in (self.mock_errors, self.mock_results, self.mock_responses)
+            for mock_dict in (
+                self.mock_errors,
+                self.mock_results,
+                self.mock_responses,
+            )
         ):
             return await self._recv_for_request(request_id)
         mocked_result = await self._async_build_mock_result(

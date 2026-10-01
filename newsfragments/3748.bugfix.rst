@@ -1,1 +1,0 @@
-Fix ``topics`` type for ``LogsSubscription`` to reflect AND / OR nested list conditions on log filters.

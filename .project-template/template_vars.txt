@@ -1,6 +1,0 @@
-web3
-web3
-web3.py
-web3py
-web3.py
-A Python library for interacting with Ethereum

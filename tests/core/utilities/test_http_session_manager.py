@@ -184,6 +184,7 @@ def test_session_manager_make_post_request_times_out_while_streaming(
     mocker, http_session_manager
 ):
     mocker.patch("requests.Session.post", return_value=MockedResponse())
+    mocker.patch("web3._utils.http_session_manager.time.time", side_effect=[0, 1])
 
     # Submit a first request to create a session
     assert len(http_session_manager.session_cache) == 0

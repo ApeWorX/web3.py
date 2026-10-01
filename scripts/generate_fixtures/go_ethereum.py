@@ -8,7 +8,6 @@ import socket
 import subprocess
 import time
 
-import common
 from eth_utils.curried import (
     apply_formatter_if,
     is_bytes,
@@ -52,6 +51,8 @@ from web3._utils.contract_sources.contract_data.storage_contract import (
 from web3.exceptions import (
     Web3ValueError,
 )
+
+from . import common
 
 
 def get_open_port():
@@ -361,29 +362,21 @@ def setup_chain_state(w3):
     return geth_fixture
 
 
-def update_geth_version_string(what_to_replace, new_version, change_next_line=False):
-    replaced = False
+def update_geth_version_string(what_to_replace, new_version):
     for file_path, changes in what_to_replace.items():
+        replaced = False
         with open(file_path) as file:
             lines = file.readlines()
 
             for i, line in enumerate(lines):
                 for change in changes:
                     if change["line_to_replace"] in line:
-                        if (
-                            change_next_line
-                            and change["next_line_contains"] in lines[i + 1]
-                        ):
-                            lines[i + 1] = change["replace_with"]
-                            replaced = True
-                            break
-                        else:
-                            lines[i] = change["replace_with"]
-                            replaced = True
-                            break
+                        lines[i] = change["replace_with"]
+                        replaced = True
+                        break
 
         if not replaced:
-            raise ValueError("`geth_version` for {file_path} not found / replaced.")
+            raise ValueError(f"`geth_version` for {file_path} not found / replaced.")
 
         with open(file_path, "w") as file:
             file.writelines(lines)
@@ -399,7 +392,7 @@ def update_doc_version(new_version):
             },
             {
                 "line_to_replace": "GETH_BINARY=~",
-                "replace_with": f"      $ GETH_BINARY=~/.py-geth/geth-v{new_version}/bin/geth python ./tests/integration/generate_fixtures/go_ethereum.py\n",  # noqa: E501,
+                "replace_with": f"      $ GETH_BINARY=~/.py-geth/geth-v{new_version}/bin/geth uv run --group integration python -m scripts.generate_fixtures.go_ethereum\n",  # noqa: E501,
             },
         ]
     }
@@ -415,27 +408,26 @@ def update_fixture_generation_version(new_version):
                 "replace_with": f'GETH_FIXTURE_ZIP = "geth-{new_version}-fixture.zip"\n',  # noqa: E501
             },
         ],
-        "./web3/tools/benchmark/node.py": [
-            {
-                "line_to_replace": "GETH_FIXTURE_ZIP = ",
-                "replace_with": f'GETH_FIXTURE_ZIP = "geth-{new_version}-fixture.zip"\n',  # noqa: E501
-            },
-        ],
     }
     update_geth_version_string(changes, new_version)
 
 
-def update_circleci_geth_version(new_version):
+def update_github_actions_geth_version(new_version):
     changes = {
-        "./.circleci/config.yml": [
+        "./.github/workflows/test.yaml": [
             {
-                "line_to_replace": "geth_version:\n",
-                "replace_with": f'    default: "{new_version}"\n',
-                "next_line_contains": "default:",
+                "line_to_replace": "GETH_VERSION:",
+                "replace_with": f'      GETH_VERSION: "{new_version}"\n',
             }
-        ]
+        ],
+        "./.github/workflows/maintenance.yaml": [
+            {
+                "line_to_replace": "# geth-version",
+                "replace_with": f'        default: "{new_version}"  # geth-version\n',
+            }
+        ],
     }
-    update_geth_version_string(changes, new_version, change_next_line=True)
+    update_geth_version_string(changes, new_version)
 
 
 def remove_old_fixtures(current_geth_version):
@@ -460,6 +452,6 @@ if __name__ == "__main__":
     geth_version = re.search(r"geth-v([\d.]+)/", geth_binary).group(1)
     generate_go_ethereum_fixture(f"./tests/integration/geth-{geth_version}-fixture")
     remove_old_fixtures(geth_version)
-    update_circleci_geth_version(geth_version)
+    update_github_actions_geth_version(geth_version)
     update_fixture_generation_version(geth_version)
     update_doc_version(geth_version)

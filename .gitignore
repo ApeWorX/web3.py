@@ -61,6 +61,9 @@ docs/*.internal.rst
 docs/*.utils.rst
 docs/*._utils.*
 
+# uv pkg mngr
+uv.lock
+
 # Blockchain
 chains
 
@@ -120,4 +123,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-# END JetBrains section
+# uv
+
+# Claude Code
+.claude/
+pr-review.md

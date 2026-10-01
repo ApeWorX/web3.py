@@ -1,1 +1,0 @@
-Make `AsyncWeb3` with respect to the provider it is instantiated with, fixing static type issues.

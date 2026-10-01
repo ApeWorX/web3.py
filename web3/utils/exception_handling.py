@@ -24,11 +24,18 @@ from web3.exceptions import (
 from web3.types import (
     TxParams,
 )
+from web3.utils.ccip_url_validation import (
+    CcipUrlValidator,
+    validate_ccip_url_host,
+    validate_ccip_url_scheme,
+)
 
 
 def handle_offchain_lookup(
     offchain_lookup_payload: dict[str, Any],
     transaction: TxParams,
+    allow_http: bool = False,
+    url_validator: CcipUrlValidator | None = None,
 ) -> bytes:
     formatted_sender = to_hex_if_bytes(offchain_lookup_payload["sender"]).lower()
     formatted_data = to_hex_if_bytes(offchain_lookup_payload["callData"]).lower()
@@ -48,13 +55,26 @@ def handle_offchain_lookup(
         )
 
         try:
+            validate_ccip_url_scheme(formatted_url, allow_http=allow_http)
+            validate_ccip_url_host(formatted_url)
+            if url_validator is not None:
+                url_validator(formatted_url)
+        except Web3ValidationError:
+            continue
+
+        try:
             if "{data}" in url and "{sender}" in url:
-                response = session.get(formatted_url, timeout=DEFAULT_HTTP_TIMEOUT)
+                response = session.get(
+                    formatted_url,
+                    timeout=DEFAULT_HTTP_TIMEOUT,
+                    allow_redirects=False,
+                )
             else:
                 response = session.post(
                     formatted_url,
                     json={"data": formatted_data, "sender": formatted_sender},
                     timeout=DEFAULT_HTTP_TIMEOUT,
+                    allow_redirects=False,
                 )
         except Exception:
             continue  # try next url if timeout or issues making the request

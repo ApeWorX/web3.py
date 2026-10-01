@@ -237,7 +237,7 @@ def test_LocalFilterMiddleware(w3, iter_block_number):
     )
 
     # Test that all ids are str types
-    assert all(isinstance(_filter_id, (str,)) for _filter_id in filter_ids)
+    assert all(isinstance(_filter_id, str) for _filter_id in filter_ids)
 
     # Test that all ids are unique
     assert len(filter_ids) == len(set(filter_ids))
@@ -375,7 +375,7 @@ async def test_async_LocalFilterMiddleware(async_w3, iter_block_number):
     )
 
     # Test that all ids are str types
-    assert all(isinstance(_filter_id, (str,)) for _filter_id in filter_ids)
+    assert all(isinstance(_filter_id, str) for _filter_id in filter_ids)
 
     # Test that all ids are unique
     assert len(filter_ids) == len(set(filter_ids))

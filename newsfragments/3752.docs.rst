@@ -1,1 +1,0 @@
-Fix indentation in the code block in "An introduction to subscriptions"

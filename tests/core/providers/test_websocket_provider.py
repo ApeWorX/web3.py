@@ -14,6 +14,9 @@ from websockets import (
     ConnectionClosed,
     ConnectionClosedOK,
 )
+from websockets.protocol import (
+    State,
+)
 
 from web3 import (
     AsyncWeb3,
@@ -42,12 +45,12 @@ from web3.utils import (
 
 def _mock_ws(provider):
     provider._ws = AsyncMock()
-    provider._ws.closed = False
+    provider._ws.state = State.OPEN
 
 
 async def _mocked_ws_conn():
     _conn = AsyncMock()
-    _conn.closed = False
+    _conn.state = State.OPEN
     return _conn
 
 

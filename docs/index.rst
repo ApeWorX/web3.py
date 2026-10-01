@@ -45,4 +45,4 @@ Getting Started
 .. _blog post series: https://snakecharmers.ethereum.org/a-developers-guide-to-ethereum-pt-1
 .. _StackExchange: https://ethereum.stackexchange.com/questions/tagged/web3.py
 .. _Discord: https://discord.gg/GHryRvPB84
-.. _Github: https://github.com/ethereum/web3.py/issues
+.. _Github: https://github.com/ApeWorX/web3.py/issues

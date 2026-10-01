@@ -1,8 +1,6 @@
+from collections.abc import Callable, Iterable, Sequence
 from typing import (
     Any,
-    Callable,
-    Iterable,
-    Sequence,
 )
 
 from eth_typing import (
@@ -87,10 +85,6 @@ class RPC:
     eth_getTransactionByHash = RPCEndpoint("eth_getTransactionByHash")
     eth_getTransactionCount = RPCEndpoint("eth_getTransactionCount")
     eth_getTransactionReceipt = RPCEndpoint("eth_getTransactionReceipt")
-    eth_getUncleByBlockHashAndIndex = RPCEndpoint("eth_getUncleByBlockHashAndIndex")
-    eth_getUncleByBlockNumberAndIndex = RPCEndpoint("eth_getUncleByBlockNumberAndIndex")
-    eth_getUncleCountByBlockHash = RPCEndpoint("eth_getUncleCountByBlockHash")
-    eth_getUncleCountByBlockNumber = RPCEndpoint("eth_getUncleCountByBlockNumber")
     eth_getWork = RPCEndpoint("eth_getWork")
     eth_newBlockFilter = RPCEndpoint("eth_newBlockFilter")
     eth_newFilter = RPCEndpoint("eth_newFilter")
@@ -189,7 +183,6 @@ RPC_ABIS: dict[str, Sequence[Any] | dict[str, str]] = {
     "eth_getTransactionCount": ["address", None],
     "eth_getTransactionReceipt": ["bytes32"],
     "eth_getRawTransactionByBlockHashAndIndex": ["bytes32", "uint"],
-    "eth_getUncleCountByBlockHash": ["bytes32"],
     "eth_newFilter": FILTER_PARAMS_ABIS,
     "eth_sendRawTransaction": ["bytes"],
     "eth_sendTransaction": TRANSACTION_PARAMS_ABIS,

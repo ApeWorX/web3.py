@@ -1,8 +1,8 @@
+from collections.abc import Callable
 import functools
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
 )
 
 from web3.exceptions import (

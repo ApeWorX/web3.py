@@ -1,4 +1,6 @@
 import pytest
+import concurrent.futures
+import threading
 from unittest.mock import (
     Mock,
     patch,
@@ -133,3 +135,93 @@ def test_http_empty_batch_response(mock_post):
 
     # assert that even though there was an error, we have reset the batching state
     assert not w3.provider._is_batching
+
+
+def test_user_provided_session_shared_across_threads():
+    """
+    Test that when a user provides an explicit session to HTTPProvider,
+    that same session is used by ALL threads, not just the creating thread.
+
+    This is a regression test for:
+    https://github.com/ApeWorX/web3.py/issues/3789
+    """
+    shared_session = Session()
+    provider = HTTPProvider(endpoint_uri=URI, session=shared_session)
+
+    sessions_from_threads = []
+    errors = []
+
+    def get_session_from_thread():
+        try:
+            # This simulates what happens internally when a request is made
+            # from a different thread - it calls cache_and_return_session
+            session = provider._request_session_manager.cache_and_return_session(URI)
+            sessions_from_threads.append(session)
+        except Exception as e:
+            errors.append(e)
+
+    # Get session from main thread
+    main_thread_session = provider._request_session_manager.cache_and_return_session(
+        URI
+    )
+
+    # Get session from multiple different threads
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        futures = [executor.submit(get_session_from_thread) for _ in range(10)]
+        concurrent.futures.wait(futures)
+
+    assert not errors, f"Errors occurred: {errors}"
+    assert len(sessions_from_threads) == 10
+
+    # The main assertion: ALL sessions should be the SAME shared session
+    assert main_thread_session is shared_session
+    for session in sessions_from_threads:
+        assert session is shared_session, (
+            "Session from different thread should be the same as the "
+            "explicitly provided session"
+        )
+
+
+def test_no_explicit_session_creates_per_thread_sessions():
+    """
+    Test that when no explicit session is provided, each thread gets its own
+    session (the original thread-isolated behavior).
+    """
+    provider = HTTPProvider(endpoint_uri=URI)
+
+    sessions_from_threads = []
+
+    def get_session_from_thread():
+        session = provider._request_session_manager.cache_and_return_session(URI)
+        sessions_from_threads.append((threading.get_ident(), session))
+
+    # Get session from main thread
+    main_thread_id = threading.get_ident()
+    main_thread_session = provider._request_session_manager.cache_and_return_session(
+        URI
+    )
+
+    # Get sessions from different threads
+    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+        futures = [executor.submit(get_session_from_thread) for _ in range(3)]
+        concurrent.futures.wait(futures)
+
+    # Group sessions by thread ID
+    sessions_by_thread = {}
+    for thread_id, session in sessions_from_threads:
+        if thread_id not in sessions_by_thread:
+            sessions_by_thread[thread_id] = []
+        sessions_by_thread[thread_id].append(session)
+
+    # Verify thread isolation: same thread always gets the same session
+    for _, sessions in sessions_by_thread.items():
+        assert all(s is sessions[0] for s in sessions), (
+            "Same thread should always get the same session"
+        )
+
+    # Verify different threads get different sessions (not the main thread's)
+    for thread_id, sessions in sessions_by_thread.items():
+        if thread_id != main_thread_id:
+            assert sessions[0] is not main_thread_session, (
+                "Different threads should have different sessions"
+            )

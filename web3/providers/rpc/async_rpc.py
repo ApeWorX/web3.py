@@ -1,8 +1,8 @@
 import asyncio
+from collections.abc import Iterable
 import logging
 from typing import (
     Any,
-    Iterable,
     cast,
 )
 
@@ -121,11 +121,8 @@ class AsyncHTTPProvider(AsyncJSONBaseProvider):
         If exception_retry_configuration is set, retry on failure; otherwise, make
         the request without retrying.
         """
-        if (
-            self.exception_retry_configuration is not None
-            and check_if_retry_on_failure(
-                method, self.exception_retry_configuration.method_allowlist
-            )
+        if self.exception_retry_configuration is not None and check_if_retry_on_failure(
+            method, self.exception_retry_configuration.method_allowlist
         ):
             for i in range(self.exception_retry_configuration.retries):
                 try:

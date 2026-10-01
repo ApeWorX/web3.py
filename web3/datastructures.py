@@ -2,16 +2,16 @@ from collections import (
     OrderedDict,
 )
 from collections.abc import (
-    MutableMapping,
-    ValuesView,
-)
-from typing import (
-    Any,
     Callable,
     Hashable,
     Iterator,
     Mapping,
+    MutableMapping,
     Sequence,
+    ValuesView,
+)
+from typing import (
+    Any,
     TypeVar,
     cast,
 )
@@ -80,7 +80,7 @@ class ReadableAttributeDict(Mapping[TKey, TValue]):
         """
         if isinstance(value, Mapping):
             return cls({k: cls.recursive(v) for k, v in value.items()})
-        elif isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        elif isinstance(value, Sequence) and not isinstance(value, str | bytes):
             return type(value)([cls.recursive(v) for v in value])  # type: ignore
         elif isinstance(value, set):
             return {cls.recursive(v) for v in value}
@@ -135,11 +135,11 @@ def tupleize_lists_nested(d: Mapping[TKey, TValue]) -> AttributeDict[TKey, TValu
     """
 
     def _to_tuple(value: list[Any] | tuple[Any, ...]) -> Any:
-        return tuple(_to_tuple(i) if isinstance(i, (list, tuple)) else i for i in value)
+        return tuple(_to_tuple(i) if isinstance(i, list | tuple) else i for i in value)
 
     ret = dict()
     for k, v in d.items():
-        if isinstance(v, (list, tuple)):
+        if isinstance(v, list | tuple):
             ret[k] = _to_tuple(v)
         elif isinstance(v, Mapping):
             ret[k] = tupleize_lists_nested(v)
@@ -162,7 +162,7 @@ class NamedElementOnion(Mapping[TKey, TValue]):
         init_elements: Sequence[Any],
         valid_element: Callable[..., bool] = callable,
     ) -> None:
-        self._queue: "OrderedDict[Any, Any]" = OrderedDict()
+        self._queue: OrderedDict[Any, Any] = OrderedDict()
         for element in reversed(init_elements):
             if valid_element(element):
                 self.add(element)

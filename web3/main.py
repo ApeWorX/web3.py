@@ -301,7 +301,7 @@ class BaseWeb3:
         text: str | None = None,
         hexstr: HexStr | None = None,
     ) -> bytes:
-        if isinstance(primitive, (bytes, int, type(None))):
+        if isinstance(primitive, bytes | int | None):
             input_bytes = to_bytes(primitive, hexstr=hexstr, text=text)
             return eth_utils_keccak(input_bytes)
 

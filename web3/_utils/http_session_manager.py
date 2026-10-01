@@ -46,9 +46,11 @@ class HTTPSessionManager:
         self,
         cache_size: int = 100,
         session_pool_max_workers: int = 5,
+        explicit_session: requests.Session | None = None,
     ) -> None:
         self.session_cache = SimpleCache(cache_size)
         self.session_pool = ThreadPoolExecutor(max_workers=session_pool_max_workers)
+        self._explicit_session = explicit_session
 
     @staticmethod
     def get_default_http_endpoint() -> URI:
@@ -60,6 +62,11 @@ class HTTPSessionManager:
         session: requests.Session = None,
         request_timeout: float | None = None,
     ) -> requests.Session:
+        # If an explicit session was provided at init time, always use it
+        # regardless of which thread is making the request
+        if self._explicit_session is not None:
+            return self._explicit_session
+
         # cache key should have a unique thread identifier
         cache_key = generate_cache_key(f"{threading.get_ident()}:{endpoint_uri}")
 

@@ -1,8 +1,8 @@
+from collections.abc import Callable
 import operator
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
 )
 
 from eth_typing import (
@@ -261,10 +261,6 @@ request_formatters = {
         to_integer_if_hex,
     ),
     RPCEndpoint("eth_getTransactionByBlockNumberAndIndex"): apply_formatters_to_args(
-        apply_formatter_if(is_not_named_block, to_integer_if_hex),
-        to_integer_if_hex,
-    ),
-    RPCEndpoint("eth_getUncleByBlockNumberAndIndex"): apply_formatters_to_args(
         apply_formatter_if(is_not_named_block, to_integer_if_hex),
         to_integer_if_hex,
     ),

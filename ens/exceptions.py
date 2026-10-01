@@ -60,12 +60,6 @@ class ResolverNotFound(ENSException):
     """
 
 
-class UnsupportedFunction(ENSException):
-    """
-    Raised if a resolver does not support a particular method.
-    """
-
-
 class BidTooLow(ENSException):
     """
     Raised if you bid less than the minimum amount

@@ -3,6 +3,7 @@ import json
 import os
 import pathlib
 import socket
+import sys
 import tempfile
 from threading import (
     Thread,
@@ -29,6 +30,10 @@ from web3.exceptions import (
 )
 from web3.providers import (
     AsyncIPCProvider,
+)
+
+pytestmark = pytest.mark.skipif(
+    sys.platform == "win32", reason="Unix domain sockets are not supported on Windows"
 )
 
 ETH_SUBSCRIBE_RESPONSE = {

@@ -20,6 +20,7 @@ Table of Contents
     filters
     subscriptions
     middleware
+    formatters
     internals
     ens_overview
     troubleshooting

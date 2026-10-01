@@ -1,4 +1,5 @@
 import pytest
+import socket
 
 from eth_abi import (
     abi,
@@ -14,9 +15,13 @@ from web3._utils.type_conversion import (
     to_hex_if_bytes,
 )
 from web3.exceptions import (
+    MultipleFailedRequests,
     OffchainLookup,
     TooManyRequests,
     Web3ValidationError,
+)
+from web3.utils import (
+    handle_offchain_lookup,
 )
 
 # "test offchain lookup" as an abi-encoded string
@@ -208,3 +213,198 @@ def test_offchain_lookup_raises_on_continuous_redirect(
     )
     with pytest.raises(TooManyRequests, match="Too many CCIP read redirects"):
         offchain_lookup_contract.caller.continuousOffchainLookup()
+
+
+# -- SSRF mitigation tests -- #
+
+
+def test_offchain_lookup_rejects_http_urls_by_default(
+    offchain_lookup_contract,
+    monkeypatch,
+):
+    """HTTP URLs should be rejected by default (only HTTPS allowed)."""
+    to_hex_if_bytes(offchain_lookup_contract.address).lower()
+
+    # Patch getaddrinfo so host validation passes
+    def _mock_getaddrinfo(host, port, *args, **kwargs):
+        return [(socket.AF_INET, socket.SOCK_STREAM, 0, "", ("1.2.3.4", 0))]
+
+    monkeypatch.setattr("socket.getaddrinfo", _mock_getaddrinfo)
+
+    payload = {
+        "sender": offchain_lookup_contract.address,
+        "urls": [
+            "http://web3.py/gateway/{sender}/{data}.json",
+        ],
+        "callData": OFFCHAIN_LOOKUP_CONTRACT_TEST_DATA,
+        "callbackFunction": b"\x00\x00\x00\x00",
+        "extraData": b"",
+    }
+    transaction = {"to": offchain_lookup_contract.address}
+
+    with pytest.raises(MultipleFailedRequests):
+        handle_offchain_lookup(payload, transaction)
+
+
+def test_offchain_lookup_allows_http_urls_when_configured(
+    w3,
+    offchain_lookup_contract,
+    monkeypatch,
+):
+    """HTTP URLs should be allowed when ccip_read_allow_http=True on provider."""
+    normalized_address = to_hex_if_bytes(offchain_lookup_contract.address)
+    mock_offchain_lookup_request_response(
+        monkeypatch,
+        mocked_request_url=f"https://web3.py/gateway/{normalized_address}/{OFFCHAIN_LOOKUP_CONTRACT_TEST_DATA}.json",  # noqa: E501
+        mocked_json_data=WEB3PY_AS_HEXBYTES,
+    )
+
+    w3.provider.ccip_read_allow_http = True
+    try:
+        response = offchain_lookup_contract.caller.testOffchainLookup(
+            OFFCHAIN_LOOKUP_CONTRACT_TEST_DATA
+        )
+        assert abi.decode(["string"], response)[0] == "web3py"
+    finally:
+        w3.provider.ccip_read_allow_http = False
+
+
+def test_offchain_lookup_custom_url_validator_rejects(
+    offchain_lookup_contract,
+    monkeypatch,
+):
+    """Custom url_validator on provider that rejects should skip URLs."""
+    from web3.utils.exception_handling import (
+        handle_offchain_lookup,
+    )
+
+    # Patch getaddrinfo so host validation passes
+    def _mock_getaddrinfo(host, port, *args, **kwargs):
+        return [(socket.AF_INET, socket.SOCK_STREAM, 0, "", ("1.2.3.4", 0))]
+
+    monkeypatch.setattr("socket.getaddrinfo", _mock_getaddrinfo)
+
+    def reject_all(url):
+        raise Web3ValidationError(f"Rejected by policy: {url}")
+
+    payload = {
+        "sender": offchain_lookup_contract.address,
+        "urls": [
+            "https://web3.py/gateway/{sender}/{data}.json",
+        ],
+        "callData": OFFCHAIN_LOOKUP_CONTRACT_TEST_DATA,
+        "callbackFunction": b"\x00\x00\x00\x00",
+        "extraData": b"",
+    }
+    transaction = {"to": offchain_lookup_contract.address}
+
+    with pytest.raises(MultipleFailedRequests):
+        handle_offchain_lookup(payload, transaction, url_validator=reject_all)
+
+
+def test_offchain_lookup_custom_url_validator_on_provider(
+    w3,
+    offchain_lookup_contract,
+    monkeypatch,
+):
+    """Custom url_validator set on provider is honored via _durin_call."""
+
+    # Patch getaddrinfo so host validation passes
+    def _mock_getaddrinfo(host, port, *args, **kwargs):
+        return [(socket.AF_INET, socket.SOCK_STREAM, 0, "", ("1.2.3.4", 0))]
+
+    monkeypatch.setattr("socket.getaddrinfo", _mock_getaddrinfo)
+
+    validator_calls = []
+
+    def tracking_validator(url):
+        validator_calls.append(url)
+        raise Web3ValidationError(f"Rejected by policy: {url}")
+
+    w3.provider.ccip_read_url_validator = tracking_validator
+    try:
+        with pytest.raises(MultipleFailedRequests):
+            offchain_lookup_contract.caller.testOffchainLookup(
+                OFFCHAIN_LOOKUP_CONTRACT_TEST_DATA
+            )
+        assert len(validator_calls) > 0
+    finally:
+        w3.provider.ccip_read_url_validator = None
+
+
+def test_offchain_lookup_rejects_private_ip(
+    offchain_lookup_contract,
+    monkeypatch,
+):
+    """URLs resolving to private IPs should be rejected."""
+    from web3.utils.exception_handling import (
+        handle_offchain_lookup,
+    )
+
+    def _mock_getaddrinfo(host, port, *args, **kwargs):
+        return [(socket.AF_INET, socket.SOCK_STREAM, 0, "", ("127.0.0.1", 0))]
+
+    monkeypatch.setattr("socket.getaddrinfo", _mock_getaddrinfo)
+
+    payload = {
+        "sender": offchain_lookup_contract.address,
+        "urls": [
+            "https://web3.py/gateway/{sender}/{data}.json",
+        ],
+        "callData": OFFCHAIN_LOOKUP_CONTRACT_TEST_DATA,
+        "callbackFunction": b"\x00\x00\x00\x00",
+        "extraData": b"",
+    }
+    transaction = {"to": offchain_lookup_contract.address}
+
+    with pytest.raises(MultipleFailedRequests):
+        handle_offchain_lookup(payload, transaction)
+
+
+def test_offchain_lookup_redirect_not_followed(
+    offchain_lookup_contract,
+    monkeypatch,
+):
+    """302 redirects should not be followed (treated as non-2xx, try next URL)."""
+    from web3.utils.exception_handling import (
+        handle_offchain_lookup,
+    )
+
+    # Patch getaddrinfo so host validation passes
+    def _mock_getaddrinfo(host, port, *args, **kwargs):
+        return [(socket.AF_INET, socket.SOCK_STREAM, 0, "", ("1.2.3.4", 0))]
+
+    monkeypatch.setattr("socket.getaddrinfo", _mock_getaddrinfo)
+
+    class Mock302Response:
+        status_code = 302
+
+        @staticmethod
+        def raise_for_status():
+            raise Exception("called raise_for_status()")
+
+    def _mock_get(*args, **kwargs):
+        assert kwargs.get("allow_redirects") is False
+        return Mock302Response()
+
+    def _mock_post(*args, **kwargs):
+        assert kwargs.get("allow_redirects") is False
+        return Mock302Response()
+
+    monkeypatch.setattr("requests.Session.get", _mock_get)
+    monkeypatch.setattr("requests.Session.post", _mock_post)
+
+    payload = {
+        "sender": offchain_lookup_contract.address,
+        "urls": [
+            "https://web3.py/gateway/{sender}/{data}.json",
+            "https://web3.py/gateway",
+        ],
+        "callData": OFFCHAIN_LOOKUP_CONTRACT_TEST_DATA,
+        "callbackFunction": b"\x00\x00\x00\x00",
+        "extraData": b"",
+    }
+    transaction = {"to": offchain_lookup_contract.address}
+
+    with pytest.raises(MultipleFailedRequests):
+        handle_offchain_lookup(payload, transaction)

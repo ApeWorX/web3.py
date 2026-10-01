@@ -235,7 +235,7 @@ def prepare_replacement_transaction(
 ) -> TxParams:
     if original_transaction["blockHash"] is not None:
         raise Web3ValueError(
-            f'Supplied transaction with hash {original_transaction["hash"]!r} '
+            f"Supplied transaction with hash {original_transaction['hash']!r} "
             "has already been mined"
         )
     if "nonce" in replacement_transaction and (

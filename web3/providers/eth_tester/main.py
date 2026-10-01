@@ -1,8 +1,7 @@
+from collections.abc import Callable, Coroutine
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
     Literal,
     Union,
     cast,

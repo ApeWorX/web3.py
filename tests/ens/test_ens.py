@@ -5,6 +5,10 @@ from unittest.mock import (
     patch,
 )
 
+from eth_abi import (
+    encode as abi_encode,
+)
+
 from ens import (
     ENS,
     AsyncENS,
@@ -17,6 +21,9 @@ from ens.utils import (
 )
 from web3 import (
     AsyncWeb3,
+)
+from web3.exceptions import (
+    ContractLogicError,
 )
 from web3.middleware import (
     GasPriceStrategyMiddleware,
@@ -169,28 +176,54 @@ def test_ens_address_lookup_when_no_coin_type(ens):
 
 def test_ens_address_lookup_with_coin_type(ens):
     """
-    Test that when coin_type is specified, it calls:
-      1) _validate_resolver_and_interface_id
-      2) resolver.caller.addr(node, coin_type)
-      3) returns the checksum address
+    Test that when coin_type is specified, the call goes through the Universal
+    Resolver with calldata for `addr(node, coinType)` and returns the
+    checksum address.
     """
     name = "tester.eth"
     address = ens.w3.eth.accounts[0]
     coin_type = 60
-    node = raw_name_to_hash(name)
+    expected_node = raw_name_to_hash(name)
 
-    mock_resolver = MagicMock()
-    mock_resolver.caller.addr.return_value = address
+    encoded_result = ens.w3.codec.encode(["bytes"], [bytes.fromhex(address[2:])])
+    mock_ur_caller = MagicMock()
+    mock_ur_caller.resolve.return_value = (encoded_result, address)
 
-    with patch("ens.ENS.resolver") as resolver:
-        resolver.return_value = mock_resolver
+    with patch.object(ens._universal_resolver, "caller", mock_ur_caller):
+        returned_address = ens.address(name, coin_type=coin_type)
 
-        with patch("ens.ens._validate_resolver_and_interface_id") as mock_validate:
-            returned_address = ens.address(name, coin_type=coin_type)
+    mock_ur_caller.resolve.assert_called_once()
+    _, calldata = mock_ur_caller.resolve.call_args.args
+    decoded_node, decoded_coin_type = ens.w3.codec.decode(
+        ["bytes32", "uint256"], bytes.fromhex(calldata[2:])[4:]
+    )
+    assert decoded_node == expected_node
+    assert decoded_coin_type == coin_type
+    assert returned_address == address
 
-            mock_validate.assert_called_once()
-            mock_resolver.caller.addr.assert_called_once_with(node, coin_type)
-            assert returned_address == address
+
+@pytest.mark.parametrize(
+    "ur_resolve_outcome",
+    (
+        pytest.param(ContractLogicError("ResolverNotFound"), id="revert"),
+        pytest.param((b"", "0x" + "00" * 20), id="empty-bytes"),
+        pytest.param(
+            (abi_encode(["bytes"], [b"\x00" * 20]), "0x" + "00" * 20),
+            id="zero-address",
+        ),
+    ),
+)
+def test_ens_address_with_coin_type_returns_none_when_no_record(
+    ens, ur_resolve_outcome
+):
+    mock_ur_caller = MagicMock()
+    if isinstance(ur_resolve_outcome, Exception):
+        mock_ur_caller.resolve.side_effect = ur_resolve_outcome
+    else:
+        mock_ur_caller.resolve.return_value = ur_resolve_outcome
+
+    with patch.object(ens._universal_resolver, "caller", mock_ur_caller):
+        assert ens.address("tester.eth", coin_type=60) is None
 
 
 # -- async -- #
@@ -344,28 +377,53 @@ async def test_async_ens_address_lookup_when_no_coin_type(async_ens):
 @pytest.mark.asyncio
 async def test_async_ens_address_lookup_with_coin_type(async_ens):
     """
-    Test that when coin_type is specified, it calls:
-      1) _async_validate_resolver_and_interface_id
-      2) async resolver.caller.addr(node, coin_type)
-      3) returns the checksum address
+    Test that when coin_type is specified, the call goes through the Universal
+    Resolver with calldata for `addr(node, coinType)` and returns the
+    checksum address.
     """
     name = "tester.eth"
     accounts = await async_ens.w3.eth.accounts
     address = accounts[2]
     coin_type = 60
-    node = raw_name_to_hash(name)
+    expected_node = raw_name_to_hash(name)
 
-    mock_resolver = AsyncMock()
-    mock_resolver.caller.addr.return_value = address
+    encoded_result = async_ens.w3.codec.encode(["bytes"], [bytes.fromhex(address[2:])])
+    mock_ur_caller = AsyncMock()
+    mock_ur_caller.resolve.return_value = (encoded_result, address)
 
-    with patch("ens.AsyncENS.resolver") as resolver:
-        resolver.return_value = mock_resolver
+    with patch.object(async_ens._universal_resolver, "caller", mock_ur_caller):
+        returned_address = await async_ens.address(name, coin_type=coin_type)
 
-        with patch(
-            "ens.async_ens._async_validate_resolver_and_interface_id"
-        ) as mock_validate:
-            returned_address = await async_ens.address(name, coin_type=coin_type)
+    mock_ur_caller.resolve.assert_called_once()
+    _, calldata = mock_ur_caller.resolve.call_args.args
+    decoded_node, decoded_coin_type = async_ens.w3.codec.decode(
+        ["bytes32", "uint256"], bytes.fromhex(calldata[2:])[4:]
+    )
+    assert decoded_node == expected_node
+    assert decoded_coin_type == coin_type
+    assert returned_address == address
 
-            mock_validate.assert_called_once()
-            mock_resolver.caller.addr.assert_called_once_with(node, coin_type)
-            assert returned_address == address
+
+@pytest.mark.parametrize(
+    "ur_resolve_outcome",
+    (
+        pytest.param(ContractLogicError("ResolverNotFound"), id="revert"),
+        pytest.param((b"", "0x" + "00" * 20), id="empty-bytes"),
+        pytest.param(
+            (abi_encode(["bytes"], [b"\x00" * 20]), "0x" + "00" * 20),
+            id="zero-address",
+        ),
+    ),
+)
+@pytest.mark.asyncio
+async def test_async_ens_address_with_coin_type_returns_none_when_no_record(
+    async_ens, ur_resolve_outcome
+):
+    mock_ur_caller = AsyncMock()
+    if isinstance(ur_resolve_outcome, Exception):
+        mock_ur_caller.resolve.side_effect = ur_resolve_outcome
+    else:
+        mock_ur_caller.resolve.return_value = ur_resolve_outcome
+
+    with patch.object(async_ens._universal_resolver, "caller", mock_ur_caller):
+        assert await async_ens.address("tester.eth", coin_type=60) is None

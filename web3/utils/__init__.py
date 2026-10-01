@@ -39,6 +39,10 @@ from .caching import (
     RequestCacheValidationThreshold,
     SimpleCache,
 )
+from .ccip_url_validation import (
+    AsyncCcipUrlValidator,
+    CcipUrlValidator,
+)
 from .exception_handling import (
     handle_offchain_lookup,
 )
@@ -73,6 +77,8 @@ __all__ = [
     "async_handle_offchain_lookup",
     "RequestCacheValidationThreshold",
     "SimpleCache",
+    "AsyncCcipUrlValidator",
+    "CcipUrlValidator",
     "EthSubscription",
     "handle_offchain_lookup",
 ]

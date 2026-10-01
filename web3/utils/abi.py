@@ -1,8 +1,7 @@
+from collections.abc import Callable, Sequence
 import functools
 from typing import (
     Any,
-    Callable,
-    Sequence,
     cast,
 )
 
@@ -703,14 +702,19 @@ def get_event_abi(
 
         >>> from web3.utils import get_event_abi
         >>> abi = [
-        ...   {"type": "function", "name": "myFunction", "inputs": [], "outputs": []},
-        ...   {"type": "function", "name": "myFunction2", "inputs": [], "outputs": []},
-        ...   {"type": "event", "name": "MyEvent", "inputs": []}
+        ...     {"type": "function", "name": "myFunction", "inputs": [], "outputs": []},
+        ...     {
+        ...         "type": "function",
+        ...         "name": "myFunction2",
+        ...         "inputs": [],
+        ...         "outputs": [],
+        ...     },
+        ...     {"type": "event", "name": "MyEvent", "inputs": []},
         ... ]
-        >>> get_event_abi(abi, 'MyEvent')
+        >>> get_event_abi(abi, "MyEvent")
         {'type': 'event', 'name': 'MyEvent', 'inputs': []}
     """
-    filters: list[functools.partial[Sequence[ABIElement]]] = [
+    filters: list[Callable[[ABI], Sequence[ABIElement]]] = [
         functools.partial(filter_abi_by_type, "event"),
     ]
 
@@ -752,18 +756,13 @@ def get_event_log_topics(
 
         >>> from web3.utils import get_event_log_topics
         >>> abi = {
-        ...   'type': 'event',
-        ...   'anonymous': False,
-        ...   'name': 'MyEvent',
-        ...   'inputs': [
-        ...     {
-        ...       'name': 's',
-        ...       'type': 'uint256'
-        ...     }
-        ...   ]
+        ...     "type": "event",
+        ...     "anonymous": False,
+        ...     "name": "MyEvent",
+        ...     "inputs": [{"name": "s", "type": "uint256"}],
         ... }
-        >>> keccak_signature = b'l+Ff\xba\x8d\xa5\xa9W\x17b\x1d\x87\x9aw\xder_=\x81g\t\xb9\xcb\xe9\xf0Y\xb8\xf8u\xe2\x84'  # noqa: E501
-        >>> get_event_log_topics(abi, [keccak_signature, '0x1', '0x2'])
+        >>> keccak_signature = b"l+Ff\xba\x8d\xa5\xa9W\x17b\x1d\x87\x9aw\xder_=\x81g\t\xb9\xcb\xe9\xf0Y\xb8\xf8u\xe2\x84"  # noqa: E501
+        >>> get_event_log_topics(abi, [keccak_signature, "0x1", "0x2"])
         ['0x1', '0x2']
     """
     if event_abi["anonymous"]:
@@ -790,7 +789,7 @@ def log_topic_to_bytes(
     .. doctest::
 
         >>> from web3.utils import log_topic_to_bytes
-        >>> log_topic_to_bytes('0xa12fd1')
+        >>> log_topic_to_bytes("0xa12fd1")
         b'\xa1/\xd1'
     """
     return hexstr_if_str(to_bytes, log_topic)

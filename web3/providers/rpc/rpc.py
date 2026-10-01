@@ -1,9 +1,9 @@
+from collections.abc import Iterable
 import logging
 import time
 from typing import (
     TYPE_CHECKING,
     Any,
-    Iterable,
     cast,
 )
 
@@ -66,7 +66,9 @@ class HTTPProvider(JSONBaseProvider):
         **kwargs: Any,
     ) -> None:
         super().__init__(**kwargs)
-        self._request_session_manager = HTTPSessionManager()
+        # Pass explicit session to manager so it's used for ALL requests,
+        # regardless of which thread makes them
+        self._request_session_manager = HTTPSessionManager(explicit_session=session)
 
         if endpoint_uri is None:
             self.endpoint_uri = (
@@ -77,11 +79,6 @@ class HTTPProvider(JSONBaseProvider):
 
         self._request_kwargs = request_kwargs or {}
         self._exception_retry_configuration = exception_retry_configuration
-
-        if session:
-            self._request_session_manager.cache_and_return_session(
-                self.endpoint_uri, session
-            )
 
     def __str__(self) -> str:
         return f"RPC connection {self.endpoint_uri}"
@@ -129,11 +126,8 @@ class HTTPProvider(JSONBaseProvider):
         If exception_retry_configuration is set, retry on failure; otherwise, make
         the request without retrying.
         """
-        if (
-            self.exception_retry_configuration is not None
-            and check_if_retry_on_failure(
-                method, self.exception_retry_configuration.method_allowlist
-            )
+        if self.exception_retry_configuration is not None and check_if_retry_on_failure(
+            method, self.exception_retry_configuration.method_allowlist
         ):
             for i in range(self.exception_retry_configuration.retries):
                 try:

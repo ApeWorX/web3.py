@@ -1,13 +1,9 @@
+from collections.abc import AsyncIterable, AsyncIterator, Generator, Iterable, Iterator
 import itertools
 import os
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncIterable,
-    AsyncIterator,
-    Generator,
-    Iterable,
-    Iterator,
     Union,
     cast,
 )
@@ -93,7 +89,7 @@ def segment_count(start: int, stop: int, step: int = 5) -> Iterable[tuple[int, i
     (3, 6)
     >>> next(segment_counter)
     (6, 9)
-    >>> next(segment_counter) #  Remainder is also returned
+    >>> next(segment_counter)  #  Remainder is also returned
     (9, 10)
 
     """
@@ -221,8 +217,7 @@ def get_logs_multipart(
     The getLog request is partitioned into multiple calls of the max number of blocks
     ``max_blocks``.
     """
-    _block_ranges = block_ranges(start_block, stop_block, max_blocks)
-    for from_block, to_block in _block_ranges:
+    for from_block, to_block in block_ranges(start_block, stop_block, max_blocks):
         params = {
             "fromBlock": from_block,
             "toBlock": to_block,
@@ -605,7 +600,7 @@ class LocalFilterMiddleware(Web3Middleware):
                 if method == RPC.eth_newFilter:
                     _filter = RequestLogs(
                         cast("Web3", self._w3),
-                        **apply_key_map(FILTER_PARAMS_KEY_MAP, params[0])
+                        **apply_key_map(FILTER_PARAMS_KEY_MAP, params[0]),
                     )
 
                 elif method == RPC.eth_newBlockFilter:
@@ -657,7 +652,7 @@ class LocalFilterMiddleware(Web3Middleware):
                 if method == RPC.eth_newFilter:
                     _filter = await AsyncRequestLogs(
                         cast("AsyncWeb3[Any]", self._w3),
-                        **apply_key_map(FILTER_PARAMS_KEY_MAP, params[0])
+                        **apply_key_map(FILTER_PARAMS_KEY_MAP, params[0]),
                     )
 
                 elif method == RPC.eth_newBlockFilter:

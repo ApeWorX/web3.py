@@ -1,11 +1,10 @@
+from collections.abc import Callable, Sequence
 import functools
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     Generic,
     Optional,
-    Sequence,
 )
 import warnings
 
@@ -196,11 +195,11 @@ class Method(Generic[TFunc]):
     def process_params(
         self, module: "Module", *args: Any, **kwargs: Any
     ) -> tuple[
-        tuple[RPCEndpoint | Callable[..., RPCEndpoint], tuple[RPCEndpoint, ...]],
+        tuple[RPCEndpoint, tuple[Any, ...]],
         tuple[
-            TReturn | dict[str, Callable[..., Any]],
+            Any,
             Callable[..., Any],
-            TReturn | Callable[..., Any],
+            Any,
         ],
     ]:
         params = self.input_munger(module, args, kwargs)
@@ -210,11 +209,10 @@ class Method(Generic[TFunc]):
             # the first parameter determines which method needs to be called
             self.json_rpc_method = self.method_choice_depends_on_args(value=params[0])
 
-            pending_or_latest_filter_methods = [
+            if self.json_rpc_method in (
                 RPC.eth_newPendingTransactionFilter,
                 RPC.eth_newBlockFilter,
-            ]
-            if self.json_rpc_method in pending_or_latest_filter_methods:
+            ):
                 # For pending or latest filter methods, use params to determine
                 # which method to call, but don't pass them through with the request
                 params = []

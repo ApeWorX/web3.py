@@ -1,3 +1,4 @@
+from collections.abc import Callable
 import contextvars
 import itertools
 import logging
@@ -5,8 +6,6 @@ import threading
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Optional,
     cast,
 )
 
@@ -50,6 +49,9 @@ if TYPE_CHECKING:
     from web3._utils.batching import (
         RequestBatcher,
     )
+    from web3.utils.ccip_url_validation import (
+        CcipUrlValidator,
+    )
 
 
 class BaseProvider:
@@ -65,6 +67,8 @@ class BaseProvider:
     has_persistent_connection = False
     global_ccip_read_enabled: bool = True
     ccip_read_max_redirects: int = 4
+    ccip_read_allow_http: bool = False
+    ccip_read_url_validator: "CcipUrlValidator | None" = None
 
     def __init__(
         self,
@@ -80,9 +84,9 @@ class BaseProvider:
         self.cacheable_requests = cacheable_requests or CACHEABLE_REQUESTS
         self.request_cache_validation_threshold = request_cache_validation_threshold
 
-        self._batching_context: contextvars.ContextVar[
-            Optional["RequestBatcher[Any]"]
-        ] = contextvars.ContextVar("batching_context", default=None)
+        self._batching_context: contextvars.ContextVar[RequestBatcher[Any] | None] = (
+            contextvars.ContextVar("batching_context", default=None)
+        )
         self._batch_request_func_cache: tuple[
             tuple[Middleware, ...], Callable[..., list[RPCResponse] | RPCResponse]
         ] = (None, None)
@@ -106,8 +110,7 @@ class BaseProvider:
         """
         middleware: tuple[Middleware, ...] = middleware_onion.as_tuple_of_middleware()
 
-        cache_key = self._request_func_cache[0]
-        if cache_key != middleware:
+        if self._request_func_cache[0] != middleware:
             self._request_func_cache = (
                 middleware,
                 combine_middleware(
@@ -179,15 +182,13 @@ class JSONBaseProvider(BaseProvider):
     ) -> Callable[..., list[RPCResponse] | RPCResponse]:
         middleware: tuple[Middleware, ...] = middleware_onion.as_tuple_of_middleware()
 
-        cache_key = self._batch_request_func_cache[0]
-        if cache_key != middleware:
+        if self._batch_request_func_cache[0] != middleware:
             accumulator_fn = self.make_batch_request
             for mw in reversed(middleware):
-                initialized = mw(w3)
                 # type ignore bc in order to wrap the method, we have to call
                 # `wrap_make_batch_request` with the accumulator_fn as the argument
                 # which breaks the type hinting for this particular case.
-                accumulator_fn = initialized.wrap_make_batch_request(  # type: ignore
+                accumulator_fn = mw(w3).wrap_make_batch_request(  # type: ignore
                     accumulator_fn
                 )
             self._batch_request_func_cache = (middleware, accumulator_fn)

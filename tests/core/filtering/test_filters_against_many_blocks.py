@@ -96,9 +96,13 @@ def test_event_filter_new_events_many_deployed_contracts(
             contract_address = deployed_contract_addresses[
                 random.randint(0, len(deployed_contract_addresses) - 1)
             ]
-            yield w3.eth.contract(
-                address=contract_address, abi=emitter_contract_factory.abi
-            ).functions.logNoArgs(which=1).transact
+            yield (
+                w3.eth.contract(
+                    address=contract_address, abi=emitter_contract_factory.abi
+                )
+                .functions.logNoArgs(which=1)
+                .transact
+            )
 
     non_matching_transact = gen_non_matching_transact()
 
@@ -232,9 +236,13 @@ async def test_async_event_filter_new_events_many_deployed_contracts(
             contract_address = deployed_contract_addresses[
                 random.randint(0, len(deployed_contract_addresses) - 1)
             ]
-            yield async_w3.eth.contract(
-                address=contract_address, abi=async_emitter_contract_factory.abi
-            ).functions.logNoArgs(which=1).transact
+            yield (
+                async_w3.eth.contract(
+                    address=contract_address, abi=async_emitter_contract_factory.abi
+                )
+                .functions.logNoArgs(which=1)
+                .transact
+            )
 
     non_matching_transact = gen_non_matching_transact()
 

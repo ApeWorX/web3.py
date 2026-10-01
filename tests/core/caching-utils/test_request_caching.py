@@ -28,6 +28,7 @@ from web3._utils.caching.caching_utils import (
     CHAIN_VALIDATION_THRESHOLD_DEFAULTS,
     DEFAULT_VALIDATION_THRESHOLD,
     INTERNAL_VALIDATION_MAP,
+    async_handle_send_caching,
 )
 from web3.exceptions import (
     Web3RPCError,
@@ -935,3 +936,48 @@ async def test_async_validation_against_validation_threshold_time_based_configur
         await async_w3.manager.coro_request(endpoint, [blocknum, False])
         cached_items = async_w3.provider._request_cache.items()
         assert len(cached_items) == 1 if should_cache else len(cached_items) == 0
+
+
+@pytest.mark.asyncio
+async def test_ws_send_caching_dummy_request_preserves_method_and_params():
+    # Regression for gh-3823: on a cache hit the send-caching dummy must
+    # carry the original method/params so recv-caching computes the same key.
+    async def fake_send(provider, method, params):
+        return {"id": 1, "method": method, "params": params}
+
+    wrapped = async_handle_send_caching(fake_send)
+
+    async_w3 = await _async_w3_init(WebSocketProvider)
+    provider = async_w3.provider
+
+    method = RPCEndpoint("eth_chainId")
+    params: list = []
+    cache_key = generate_cache_key(f"{threading.get_ident()}:{(method, params)}")
+    provider._request_cache.cache(
+        cache_key, {"jsonrpc": "2.0", "id": 99, "result": "0x1"}
+    )
+
+    dummy = await wrapped(provider, method, params)
+
+    assert dummy["id"] == -1
+    assert dummy["method"] == method
+    assert dummy["params"] == params
+
+
+@pytest.mark.parametrize(
+    "input_params,expected",
+    [
+        ((), ()),
+        ({}, {}),
+        (None, []),
+    ],
+    ids=["empty-tuple", "empty-dict", "none"],
+)
+def test_async_form_request_preserves_params_shape(input_params, expected):
+    # Regression for gh-3823: `params or []` collapsed every falsy value
+    # (empty tuple, empty dict, etc.) into `[]`, breaking cache-key equality
+    # between send-caching and recv-caching for persistent-connection providers.
+    provider = AsyncHTTPProvider()
+    req = provider.form_request(RPCEndpoint("eth_chainId"), input_params)
+    assert req["params"] == expected
+    assert type(req["params"]) is type(expected)

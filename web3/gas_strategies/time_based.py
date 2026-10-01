@@ -1,9 +1,8 @@
 import collections
+from collections.abc import Iterable, Sequence
 import math
 import operator
 from typing import (
-    Iterable,
-    Sequence,
     cast,
 )
 

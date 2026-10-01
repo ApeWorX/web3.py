@@ -1,7 +1,14 @@
 import pytest
+import inspect
 import time
 import warnings
 
+# Monkey-patch cached_property to use inspect.iscoroutinefunction
+# instead of the deprecated asyncio.iscoroutinefunction (deprecated in Python 3.14+)
+# cached_property is a dependency of py-evm, so once we remove py-evm
+# or once cached_property gets a release, we can remove this.
+# https://github.com/pydanny/cached-property/issues/276
+import cached_property as _cached_property_module
 import pytest_asyncio
 
 from tests.utils import (
@@ -19,6 +26,8 @@ from web3.providers.eth_tester import (
     AsyncEthereumTesterProvider,
     EthereumTesterProvider,
 )
+
+_cached_property_module.asyncio.iscoroutinefunction = inspect.iscoroutinefunction
 
 
 @pytest.fixture()

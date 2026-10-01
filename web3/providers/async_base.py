@@ -1,13 +1,11 @@
 import asyncio
+from collections.abc import Callable, Coroutine
 import contextvars
 import itertools
 import logging
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Optional,
     cast,
 )
 
@@ -49,8 +47,8 @@ from web3.utils import (
 )
 
 if TYPE_CHECKING:
-    from websockets.legacy.client import (
-        WebSocketClientProtocol,
+    from websockets.asyncio.client import (
+        ClientConnection,
     )
 
     from web3 import (  # noqa: F401
@@ -62,6 +60,9 @@ if TYPE_CHECKING:
     )
     from web3.providers.persistent import (  # noqa: F401
         RequestProcessor,
+    )
+    from web3.utils.ccip_url_validation import (
+        AsyncCcipUrlValidator,
     )
 
 
@@ -78,6 +79,8 @@ class AsyncBaseProvider:
     has_persistent_connection = False
     global_ccip_read_enabled: bool = True
     ccip_read_max_redirects: int = 4
+    ccip_read_allow_http: bool = False
+    ccip_read_url_validator: "AsyncCcipUrlValidator | None" = None
 
     def __init__(
         self,
@@ -93,9 +96,9 @@ class AsyncBaseProvider:
         self.cacheable_requests = cacheable_requests or CACHEABLE_REQUESTS
         self.request_cache_validation_threshold = request_cache_validation_threshold
 
-        self._batching_context: contextvars.ContextVar[
-            Optional["RequestBatcher[Any]"]
-        ] = contextvars.ContextVar("batching_context", default=None)
+        self._batching_context: contextvars.ContextVar[RequestBatcher[Any] | None] = (
+            contextvars.ContextVar("batching_context", default=None)
+        )
         self._batch_request_func_cache: tuple[
             tuple[Middleware, ...],
             Callable[..., Coroutine[Any, Any, list[RPCResponse] | RPCResponse]],
@@ -169,7 +172,7 @@ class AsyncBaseProvider:
         )
 
     # WebSocket typing
-    _ws: "WebSocketClientProtocol"
+    _ws: "ClientConnection"
 
     # IPC typing
     _reader: asyncio.StreamReader | None
@@ -187,7 +190,10 @@ class AsyncJSONBaseProvider(AsyncBaseProvider):
             "id": request_id,
             "jsonrpc": "2.0",
             "method": method,
-            "params": params or [],
+            # Preserve the caller's params shape (e.g. empty tuple stays an empty
+            # tuple) so send/recv-caching compute the same cache key. JSON
+            # serialization still emits `[]` for empty iterables.
+            "params": [] if params is None else params,
         }
         return cast(RPCRequest, rpc_dict)
 

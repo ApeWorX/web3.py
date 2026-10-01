@@ -15,9 +15,6 @@ from web3.types import (
     RPCResponse,
 )
 
-from . import (
-    PersistentConnectionProvider,
-)
 from ...exceptions import (
     PersistentConnectionClosedOK,
     ProviderConnectionError,
@@ -26,6 +23,9 @@ from ...exceptions import (
 )
 from ..ipc import (
     get_default_ipc_path,
+)
+from . import (
+    PersistentConnectionProvider,
 )
 
 

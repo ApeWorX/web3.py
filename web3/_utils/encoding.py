@@ -1,11 +1,9 @@
 # String encodings and numeric representations
+from collections.abc import Callable, Iterable, Sequence
 import json
 import re
 from typing import (
     Any,
-    Callable,
-    Iterable,
-    Sequence,
 )
 
 from eth_abi.encoding import (
@@ -296,7 +294,7 @@ class Web3JsonEncoder(json.JSONEncoder):
     def default(self, obj: Any) -> dict[Any, Any] | HexStr:
         if isinstance(obj, AttributeDict):
             return obj.__dict__
-        elif isinstance(obj, (HexBytes, bytes)):
+        elif isinstance(obj, HexBytes | bytes):
             return to_hex(obj)
         elif isinstance(obj, BaseModel):
             # TODO: For now we can assume all BaseModel objects behave this way, but

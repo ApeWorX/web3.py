@@ -396,77 +396,6 @@ The following methods are available on the ``web3.eth`` namespace.
         1
 
 
-.. py:method:: Eth.get_uncle_by_block(block_identifier, uncle_index)
-
-    .. warning:: Deprecated. Will be removed in v8.
-
-    * Delegates to ``eth_getUncleByBlockHashAndIndex`` or
-      ``eth_getUncleByBlockNumberAndIndex`` RPC methods
-
-    Returns the uncle at the index specified by ``uncle_index``
-    from the block specified by ``block_identifier``.  Delegates to
-    ``eth_getUncleByBlockNumberAndIndex`` if ``block_identifier`` is an
-    integer or one of the predefined block parameters ``'latest', 'earliest',
-    'pending'``, otherwise delegates to
-    ``eth_getUncleByBlockHashAndIndex``. Throws ``BlockNotFound`` if the block is not found.
-
-    .. code-block:: python
-
-        >>> web3.eth.get_uncle_by_block(56160, 0)
-        AttributeDict({
-          'author': '0xbe4532e1b1db5c913cf553be76180c1777055403',
-          'difficulty': '0x17dd9ca0afe',
-          'extraData': '0x476574682f686261722f76312e302e312f6c696e75782f676f312e342e32',
-          'gasLimit': '0x2fefd8',
-          'gasUsed': '0x0',
-          'hash': '0xc78c35720d930f9ef34b4e6fb9d02ffec936f9b02a8f0fa858456e4afd4d5614',
-          'logsBloom':'0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-          'miner': '0xbe4532e1b1db5c913cf553be76180c1777055403',
-          'mixHash': '0x041e14603f35a82f6023802fec96ef760433292434a39787514f140950597e5e',
-          'nonce': '0x5d2b7e3f1af09995',
-          'number': '0xdb5e',
-          'parentHash': '0xcc30e8a9b15c548d5bf113c834143a8f0e1909fbfea96b2a208dc154293a78cf',
-          'receiptsRoot': '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
-          'sealFields': ['0xa0041e14603f35a82f6023802fec96ef760433292434a39787514f140950597e5e', '0x885d2b7e3f1af09995'],
-          'sha3Uncles': '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347',
-          'size': None, 'stateRoot': '0x8ce2b1bf8e25a06a8ca34c647ff5fd0fa48ac725cc07f657ae1645ab8ef68c91',
-          'timestamp': '0x55c6a972',
-          'totalDifficulty': '0xce4c4f0a0b810b',
-          'transactions': [],
-          'transactionsRoot': '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
-          'uncles': []
-        })
-
-        # You can also refer to the block by hash:
-        >>> web3.eth.get_uncle_by_block('0x685b2226cbf6e1f890211010aa192bf16f0a0cba9534264a033b023d7367b845', 0)
-        AttributeDict({
-            ...
-        })
-
-
-.. py:method:: Eth.get_uncle_count(block_identifier)
-
-    .. warning:: Deprecated. Will be removed in v8.
-
-    * Delegates to ``eth_getUncleCountByBlockHash`` or
-      ``eth_getUncleCountByBlockNumber`` RPC methods
-
-    Returns the (integer) number of uncles associated with the block specified by ``block_identifier``.
-    Delegates to ``eth_getUncleCountByBlockNumber`` if ``block_identifier`` is an
-    integer or one of the predefined block parameters ``'latest', 'earliest',
-    'pending'``, otherwise delegates to ``eth_getUncleCountByBlockHash``.
-    Throws ``BlockNotFound`` if the block is not found.
-
-    .. code-block:: python
-
-        >>> web3.eth.get_uncle_count(56160)
-        1
-
-        # You can also refer to the block by hash:
-        >>> web3.eth.get_uncle_count('0x685b2226cbf6e1f890211010aa192bf16f0a0cba9534264a033b023d7367b845')
-        1
-
-
 .. py:method:: Eth.get_transaction(transaction_hash)
 
     * Delegates to ``eth_getTransactionByHash`` RPC Method
@@ -943,6 +872,32 @@ The following methods are available on the ``web3.eth`` namespace.
     explicit control over specific calls. If the flag on the call is set to ``False``, the call will raise the
     ``OffchainLookup`` instead of properly handling the exception according to EIP-3668. This may be useful for
     "preflighting" a transaction with a call (see :ref:`ccip-read-example` within the examples section).
+
+    CCIP Read enforces URL validation before every outbound request. By default:
+
+    - Only ``https://`` URLs are permitted (``http://`` is rejected).
+    - Redirects are not followed.
+    - URLs whose hostnames resolve to private or reserved IP ranges (e.g. ``127.0.0.0/8``, ``10.0.0.0/8``,
+      ``192.168.0.0/16``, ``169.254.0.0/16``, ``::1``, etc.) are blocked.
+
+    These defaults can be adjusted at the provider level:
+
+    - ``ccip_read_allow_http``: Set to ``True`` to allow ``http://`` URLs. Defaults to ``False``.
+    - ``ccip_read_url_validator``: An optional callable that receives each URL (``str``) before the request is made.
+      Raise a ``Web3ValidationError`` to reject the URL and skip to the next one. This runs in addition to the
+      built-in scheme and host validation. For async providers, this should be an async callable.
+
+    .. code-block:: python
+
+        # allow http:// URLs for CCIP Read
+        w3.provider.ccip_read_allow_http = True
+
+        # add a custom URL policy on top of the built-in validation
+        def my_url_validator(url):
+            if "untrusted.com" in url:
+                raise Web3ValidationError(f"Blocked: {url}")
+
+        w3.provider.ccip_read_url_validator = my_url_validator
 
     If the function called results in a ``revert`` error, a ``ContractLogicError`` will be raised.
     If there is an error message with the error, web3.py attempts to parse the

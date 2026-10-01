@@ -1,9 +1,8 @@
+from collections.abc import Callable, Sequence
 import itertools
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Sequence,
     Union,
     cast,
 )
@@ -363,7 +362,7 @@ def get_function_by_identifier(
     """
     if len(fns) > 1:
         raise Web3ValueError(
-            f"Found multiple functions with matching {identifier}. " f"Found: {fns!r}"
+            f"Found multiple functions with matching {identifier}. Found: {fns!r}"
         )
     elif len(fns) == 0:
         raise Web3ValueError(f"Could not find any function with matching {identifier}")
@@ -403,7 +402,7 @@ def get_event_by_identifier(
     """
     if len(events) > 1:
         raise Web3ValueError(
-            f"Found multiple events with matching {identifier}. " f"Found: {events!r}"
+            f"Found multiple events with matching {identifier}. Found: {events!r}"
         )
     elif len(events) == 0:
         raise Web3ValueError(f"Could not find any event with matching {identifier}")

@@ -58,7 +58,10 @@ MULTIPLE_FUNCTIONS = json.loads(
 def bytes_contract(w3, request, address_conversion_func):
     bytes_contract_factory = w3.eth.contract(**BYTES_CONTRACT_DATA)
     return deploy(
-        w3, bytes_contract_factory, address_conversion_func, args=[request.param]
+        w3,
+        bytes_contract_factory,
+        address_conversion_func,
+        args=[request.param],
     )
 
 
@@ -81,7 +84,10 @@ def non_strict_bytes_contract(
 
 @pytest.fixture
 def call_transaction():
-    return {"data": "0x61bc221a", "to": "0xc305c901078781C232A2a521C2aF7980f8385ee9"}
+    return {
+        "data": "0x61bc221a",
+        "to": "0xc305c901078781C232A2a521C2aF7980f8385ee9",
+    }
 
 
 @pytest.fixture
@@ -97,7 +103,10 @@ def bytes32_contract_factory(w3):
 )
 def bytes32_contract(w3, bytes32_contract_factory, request, address_conversion_func):
     return deploy(
-        w3, bytes32_contract_factory, address_conversion_func, args=[request.param]
+        w3,
+        bytes32_contract_factory,
+        address_conversion_func,
+        args=[request.param],
     )
 
 
@@ -134,7 +143,9 @@ def test_deploy_raises_due_to_strict_byte_checking_by_default(
         )
 
 
-def test_invalid_address_in_deploy_arg(contract_with_constructor_address_factory):
+def test_invalid_address_in_deploy_arg(
+    contract_with_constructor_address_factory,
+):
     with pytest.raises(InvalidAddress):
         contract_with_constructor_address_factory.constructor(
             "0xd3cda913deb6f67967b99d67acdfa1712c293601",
@@ -294,7 +305,8 @@ def test_call_get_byte_const_array_strict_by_default(arrays_contract, call):
 
 def test_call_get_byte_const_array_non_strict(non_strict_arrays_contract, call):
     result = call(
-        contract=non_strict_arrays_contract, contract_function="getByteConstValue"
+        contract=non_strict_arrays_contract,
+        contract_function="getByteConstValue",
     )
     expected_byte_arr = [b"\x00", b"\x01"]
     assert result == expected_byte_arr
@@ -302,7 +314,8 @@ def test_call_get_byte_const_array_non_strict(non_strict_arrays_contract, call):
 
 def test_call_read_address_variable(contract_with_constructor_address, call):
     result = call(
-        contract=contract_with_constructor_address, contract_function="testAddr"
+        contract=contract_with_constructor_address,
+        contract_function="testAddr",
     )
     assert result == "0xd3CdA913deB6f67967B99D67aCDFa1712C293601"
 
@@ -437,7 +450,12 @@ def test_call_address_list_reflector_with_address(
 def test_call_address_reflector_single_name(address_reflector_contract, call):
     with contract_ens_addresses(
         address_reflector_contract,
-        [("dennisthepeasant.eth", "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413")],
+        [
+            (
+                "dennisthepeasant.eth",
+                "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413",
+            )
+        ],
     ):
         result = call(
             contract=address_reflector_contract,
@@ -817,7 +835,10 @@ def test_call_sending_ether_to_nonpayable_function(payable_tester_contract, call
             "reflect(ufixed256x80)",
             Decimal(2**256 - 1) / 10**80,
         ),  # maximum allowed value
-        ("reflect(ufixed256x80)", Decimal(1) / 10**80),  # smallest non-zero value
+        (
+            "reflect(ufixed256x80)",
+            Decimal(1) / 10**80,
+        ),  # smallest non-zero value
         # minimum value (for ufixed8x1)
         ("reflect_short_u", 0),
         # maximum value (for ufixed8x1)
@@ -1334,7 +1355,7 @@ async def async_mismatched_math_contract(
     return _mismatched_math_contract
 
 
-@pytest_asyncio.fixture
+@pytest.mark.asyncio
 async def test_async_deploy_raises_due_to_strict_byte_checking_by_default(
     async_w3, async_bytes_contract_factory, address_conversion_func
 ):
@@ -1454,7 +1475,8 @@ async def test_async_call_get_bytes32_array(async_arrays_contract, async_call):
 @pytest.mark.asyncio
 async def test_async_call_get_bytes32_const_array(async_arrays_contract, async_call):
     result = await async_call(
-        contract=async_arrays_contract, contract_function="getBytes32ConstValue"
+        contract=async_arrays_contract,
+        contract_function="getBytes32ConstValue",
     )
     # expected_bytes32_array = [keccak('A'), keccak('B')]
     expected_bytes32_array = [
@@ -1478,7 +1500,8 @@ async def test_async_call_get_byte_array_non_strict(
     async_non_strict_arrays_contract, async_call
 ):
     result = await async_call(
-        contract=async_non_strict_arrays_contract, contract_function="getByteValue"
+        contract=async_non_strict_arrays_contract,
+        contract_function="getByteValue",
     )
     expected_non_strict_byte_arr = [b"\xff", b"\xff", b"\xff", b"\xff"]
     assert result == expected_non_strict_byte_arr
@@ -1487,7 +1510,11 @@ async def test_async_call_get_byte_array_non_strict(
 @pytest.mark.asyncio
 @pytest.mark.parametrize("args,expected", [([b""], [b"\x00"]), (["0x"], [b"\x00"])])
 async def test_async_set_byte_array_non_strict(
-    async_non_strict_arrays_contract, async_call, async_transact, args, expected
+    async_non_strict_arrays_contract,
+    async_call,
+    async_transact,
+    args,
+    expected,
 ):
     await async_transact(
         contract=async_non_strict_arrays_contract,
@@ -1495,7 +1522,8 @@ async def test_async_set_byte_array_non_strict(
         func_args=[args],
     )
     result = await async_call(
-        contract=async_non_strict_arrays_contract, contract_function="getByteValue"
+        contract=async_non_strict_arrays_contract,
+        contract_function="getByteValue",
     )
 
     assert result == expected
@@ -1536,7 +1564,8 @@ async def test_async_call_get_byte_const_array_non_strict(
     async_non_strict_arrays_contract, async_call
 ):
     result = await async_call(
-        contract=async_non_strict_arrays_contract, contract_function="getByteConstValue"
+        contract=async_non_strict_arrays_contract,
+        contract_function="getByteConstValue",
     )
     expected_byte_arr = [b"\x00", b"\x01"]
     assert result == expected_byte_arr
@@ -1700,7 +1729,12 @@ async def test_async_call_address_reflector_single_name(
 ):
     with contract_ens_addresses(
         async_address_reflector_contract,
-        [("dennisthepeasant.eth", "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413")],
+        [
+            (
+                "dennisthepeasant.eth",
+                "0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413",
+            )
+        ],
     ):
         result = await async_call(
             contract=async_address_reflector_contract,
@@ -1757,7 +1791,8 @@ async def test_async_call_missing_function(async_mismatched_math_contract, async
     expected_missing_function_error_message = "Could not decode contract function call"
     with pytest.raises(BadFunctionCallOutput) as exception_info:
         await async_call(
-            contract=async_mismatched_math_contract, contract_function="return13"
+            contract=async_mismatched_math_contract,
+            contract_function="return13",
         )
     assert expected_missing_function_error_message in str(exception_info.value)
 
@@ -1771,7 +1806,8 @@ async def test_async_call_undeployed_contract(
     )
     with pytest.raises(BadFunctionCallOutput) as exception_info:
         await async_call(
-            contract=async_undeployed_math_contract, contract_function="return13"
+            contract=async_undeployed_math_contract,
+            contract_function="return13",
         )
     assert expected_undeployed_call_error_message in str(exception_info.value)
 
@@ -1970,7 +2006,8 @@ async def test_async_call_not_sending_ether_to_nonpayable_function(
     async_payable_tester_contract, async_call
 ):
     result = await async_call(
-        contract=async_payable_tester_contract, contract_function="doNoValueCall"
+        contract=async_payable_tester_contract,
+        contract_function="doNoValueCall",
     )
     assert result == []
 
@@ -2004,7 +2041,10 @@ async def test_async_call_sending_ether_to_nonpayable_function(
             "reflect(ufixed256x80)",
             Decimal(2**256 - 1) / 10**80,
         ),  # maximum allowed value
-        ("reflect(ufixed256x80)", Decimal(1) / 10**80),  # smallest non-zero value
+        (
+            "reflect(ufixed256x80)",
+            Decimal(1) / 10**80,
+        ),  # smallest non-zero value
         # minimum value (for ufixed8x1)
         ("reflect_short_u", 0),
         # maximum value (for ufixed8x1)
@@ -2056,7 +2096,11 @@ MULTIPLE_MATCHING_ELEMENTS = (
             Decimal("25.4" + "9" * DEFAULT_DECIMALS),
             NO_MATCHING_ARGUMENTS,
         ),
-        ("reflect(ufixed256x80)", Decimal(1) / 10**81, MULTIPLE_MATCHING_ELEMENTS),
+        (
+            "reflect(ufixed256x80)",
+            Decimal(1) / 10**81,
+            MULTIPLE_MATCHING_ELEMENTS,
+        ),
         # floats not accepted, for floating point error concerns
         ("reflect_short_u", 0.1, NO_MATCHING_ARGUMENTS),
     ),

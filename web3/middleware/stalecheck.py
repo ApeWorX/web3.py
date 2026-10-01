@@ -1,8 +1,8 @@
+from collections.abc import Collection
 import time
 from typing import (  # noqa: F401
     TYPE_CHECKING,
     Any,
-    Collection,
     Dict,
     Optional,
     Union,

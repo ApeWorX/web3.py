@@ -1,16 +1,11 @@
-from asyncio import (
-    iscoroutinefunction,
-)
 import collections
+from collections.abc import Callable, Coroutine, Sequence
 import hashlib
+import inspect
 import threading
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Sequence,
-    Union,
 )
 
 from eth_typing import (
@@ -157,8 +152,6 @@ BLOCKNUM_IN_PARAMS = {
     RPC.eth_getBlockByNumber,
     RPC.eth_getRawTransactionByBlockNumberAndIndex,
     RPC.eth_getBlockTransactionCountByNumber,
-    RPC.eth_getUncleByBlockNumberAndIndex,
-    RPC.eth_getUncleCountByBlockNumber,
 }
 BLOCK_IN_RESULT = {
     RPC.eth_getBlockByHash,
@@ -169,8 +162,6 @@ BLOCK_IN_RESULT = {
 }
 BLOCKHASH_IN_PARAMS = {
     RPC.eth_getRawTransactionByBlockHashAndIndex,
-    RPC.eth_getUncleByBlockHashAndIndex,
-    RPC.eth_getUncleCountByBlockHash,
 }
 
 INTERNAL_VALIDATION_MAP: dict[
@@ -266,7 +257,7 @@ def handle_request_caching(
 
 ASYNC_VALIDATOR_TYPE = Callable[
     ["AsyncBaseProvider", Sequence[Any], dict[str, Any]],
-    Union[bool, Coroutine[Any, Any, bool]],
+    bool | Coroutine[Any, Any, bool],
 ]
 
 ASYNC_INTERNAL_VALIDATION_MAP: dict[RPCEndpoint, ASYNC_VALIDATOR_TYPE] = {
@@ -328,11 +319,10 @@ async def _async_should_cache_response(
         and provider.request_cache_validation_threshold is not None
     ):
         cache_validator = ASYNC_INTERNAL_VALIDATION_MAP[method]
-        return (
-            await cache_validator(provider, params, result)
-            if iscoroutinefunction(cache_validator)
-            else cache_validator(provider, params, result)
-        )
+        validation_result = cache_validator(provider, params, result)
+        if inspect.isawaitable(validation_result):
+            return await validation_result
+        return validation_result
     return True
 
 
@@ -384,9 +374,9 @@ def async_handle_send_caching(
             )
             cached_response = request_cache.get_cache_entry(cache_key)
             if cached_response is not None:
-                # The request data isn't used, this just prevents a cached request from
-                # being sent - return an empty request object
-                return {"id": -1, "method": RPCEndpoint(""), "params": []}
+                # Skip sending a real request; preserve method/params so
+                # async_handle_recv_caching computes the same cache key.
+                return {"id": -1, "method": method, "params": params}
         return await func(provider, method, params)
 
     # save a reference to the decorator on the wrapped function

@@ -1,1 +1,0 @@
-Removal of the deprecated ``LegacyWebSocketProvider``.

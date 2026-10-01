@@ -1,4 +1,5 @@
 import pytest
+import socket
 
 from aiohttp import (
     ClientSession,
@@ -13,8 +14,23 @@ from web3.exceptions import (
     Web3ValidationError,
 )
 
+
+def _mock_getaddrinfo_public(monkeypatch):
+    """Patch socket.getaddrinfo to return a public IP for CCIP test domains."""
+    _original = socket.getaddrinfo
+
+    def _patched(host, port, *args, **kwargs):
+        if host == "web3.py":
+            return [(socket.AF_INET, socket.SOCK_STREAM, 0, "", ("1.2.3.4", 0))]
+        return _original(host, port, *args, **kwargs)
+
+    monkeypatch.setattr("socket.getaddrinfo", _patched)
+
+
 # the encoded calldata for the initiating ``addr(namehash(name))`` call
-ENCODED_ADDR_CALLDATA = "0x3b3b57de42041b0018edd29d7c17154b0c671acc0502ea0b3693cafbeadf58e6beaaa16c"  # noqa: E501
+ENCODED_ADDR_CALLDATA = (
+    "0x3b3b57de42041b0018edd29d7c17154b0c671acc0502ea0b3693cafbeadf58e6beaaa16c"  # noqa: E501
+)
 
 # This is one of the actual returned payloads from the GET request that
 # is triggered when resolving ``ns.address('offchainexample.eth')``
@@ -116,7 +132,7 @@ class AsyncMockHttpBadFormatResponse:
 
     @staticmethod
     async def json():
-        return {"not_data": OFFCHAIN_RESOLVER_DATA}  # noqa: E704'
+        return {"not_data": OFFCHAIN_RESOLVER_DATA}  # noqa: E704
 
     @property
     def status(self):
@@ -124,6 +140,8 @@ class AsyncMockHttpBadFormatResponse:
 
 
 def test_offchain_resolution_with_get_request(ens, monkeypatch):
+    _mock_getaddrinfo_public(monkeypatch)
+
     # mock GET response with real return data from 'offchainexample.eth' resolver
     def mock_get(*args, **kwargs):
         return MockHttpSuccessResponse("get", *args, **kwargs)
@@ -134,6 +152,8 @@ def test_offchain_resolution_with_get_request(ens, monkeypatch):
 
 
 def test_offchain_resolution_with_post_request(ens, monkeypatch):
+    _mock_getaddrinfo_public(monkeypatch)
+
     # mock POST response with real return data from 'offchainexample.eth' resolver
     def mock_post(*args, **kwargs):
         return MockHttpSuccessResponse("post", *args, **kwargs)
@@ -150,6 +170,8 @@ def test_offchain_resolution_raises_when_all_supplied_urls_fail(ens):
 
 
 def test_offchain_resolution_with_improperly_formatted_http_response(ens, monkeypatch):
+    _mock_getaddrinfo_public(monkeypatch)
+
     def mock_get(*args, **_):
         return MockHttpBadFormatResponse(*args)
 
@@ -189,6 +211,8 @@ def test_offchain_resolver_function_call_raises_with_ccip_read_disabled(
 
 @pytest.mark.asyncio
 async def test_async_offchain_resolution_with_get_request(async_ens, monkeypatch):
+    _mock_getaddrinfo_public(monkeypatch)
+
     # mock GET response with real return data from 'offchainexample.eth' resolver
     async def mock_get(*args, **kwargs):
         return AsyncMockHttpSuccessResponse("get", *args, **kwargs)
@@ -200,6 +224,8 @@ async def test_async_offchain_resolution_with_get_request(async_ens, monkeypatch
 
 @pytest.mark.asyncio
 async def test_async_offchain_resolution_with_post_request(async_ens, monkeypatch):
+    _mock_getaddrinfo_public(monkeypatch)
+
     # mock POST response with real return data from 'offchainexample.eth' resolver
     async def mock_post(*args, **kwargs):
         return AsyncMockHttpSuccessResponse("post", *args, **kwargs)
@@ -220,6 +246,8 @@ async def test_async_offchain_resolution_raises_when_all_supplied_urls_fail(asyn
 async def test_async_offchain_resolution_with_improperly_formatted_http_response(
     async_ens, monkeypatch
 ):
+    _mock_getaddrinfo_public(monkeypatch)
+
     async def mock_get(*args, **_):
         return AsyncMockHttpBadFormatResponse(*args)
 

@@ -1,6 +1,5 @@
+from collections.abc import Awaitable, Callable
 from typing import (
-    Awaitable,
-    Callable,
     Protocol,
 )
 
