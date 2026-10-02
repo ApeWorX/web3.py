@@ -119,6 +119,9 @@ from web3.providers import (
     AsyncBaseProvider,
     BaseProvider,
 )
+from web3.providers.auto import (
+    AsyncAutoProvider,
+)
 from web3.providers.eth_tester import (
     AsyncEthereumTesterProvider,
     EthereumTesterProvider,
@@ -473,6 +476,8 @@ class AsyncWeb3(BaseWeb3, Generic[AsyncProviderT]):
         ens: Union[AsyncENS, "Empty"] = empty,
     ) -> None:
         _validate_provider(self, provider)
+        if provider is None:
+            provider = cast(AsyncProviderT, AsyncAutoProvider())
 
         self.manager = self.RequestManager(self, provider, middleware)
         self.codec = ABICodec(build_strict_registry())
