@@ -4,7 +4,6 @@ from concurrent.futures import (
 )
 import logging
 import os
-import sys
 import threading
 import time
 from typing import (
@@ -38,9 +37,10 @@ from web3.utils.caching import (
     SimpleCache,
 )
 
-_NEEDS_CLEANUP_CLOSED = sys.version_info < (3, 12, 8) or (
-    (3, 13, 0) <= sys.version_info < (3, 13, 1)
-)
+try:
+    from aiohttp.connector import NEEDS_CLEANUP_CLOSED as _NEEDS_CLEANUP_CLOSED
+except ImportError:  # aiohttp < 3.10.11 honours the flag on every Python
+    _NEEDS_CLEANUP_CLOSED = True
 
 
 class HTTPSessionManager:
