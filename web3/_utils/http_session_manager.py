@@ -4,6 +4,7 @@ from concurrent.futures import (
 )
 import logging
 import os
+import sys
 import threading
 import time
 from typing import (
@@ -35,6 +36,10 @@ from web3.exceptions import (
 )
 from web3.utils.caching import (
     SimpleCache,
+)
+
+_NEEDS_CLEANUP_CLOSED = sys.version_info < (3, 12, 8) or (
+    (3, 13, 0) <= sys.version_info < (3, 13, 1)
 )
 
 
@@ -190,7 +195,8 @@ class HTTPSessionManager:
                     session = ClientSession(
                         raise_for_status=True,
                         connector=TCPConnector(
-                            force_close=True, enable_cleanup_closed=True
+                            force_close=True,
+                            enable_cleanup_closed=_NEEDS_CLEANUP_CLOSED,
                         ),
                     )
 
@@ -237,7 +243,8 @@ class HTTPSessionManager:
                     _session = ClientSession(
                         raise_for_status=True,
                         connector=TCPConnector(
-                            force_close=True, enable_cleanup_closed=True
+                            force_close=True,
+                            enable_cleanup_closed=_NEEDS_CLEANUP_CLOSED,
                         ),
                     )
                     cached_session, evicted_items = self.session_cache.cache(
