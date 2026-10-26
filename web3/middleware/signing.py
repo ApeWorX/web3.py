@@ -1,3 +1,4 @@
+from collections.abc import Collection, Iterable
 from functools import (
     singledispatch,
 )
@@ -5,8 +6,6 @@ import operator
 from typing import (
     TYPE_CHECKING,
     Any,
-    Collection,
-    Iterable,
     TypeVar,
     Union,
     cast,
@@ -94,14 +93,7 @@ _PrivateKey = Union[LocalAccount, PrivateKey, HexStr, bytes]
 def gen_normalized_accounts(
     val: _PrivateKey | Collection[_PrivateKey],
 ) -> Iterable[tuple[ChecksumAddress, LocalAccount]]:
-    if isinstance(
-        val,
-        (
-            list,
-            tuple,
-            set,
-        ),
-    ):
+    if isinstance(val, list | tuple | set):
         for i in val:
             account: LocalAccount = to_account(i)
             yield account.address, account

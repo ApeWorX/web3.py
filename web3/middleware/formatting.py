@@ -1,9 +1,7 @@
+from collections.abc import Callable, Coroutine
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Literal,
     Union,
     cast,
 )
@@ -22,7 +20,6 @@ from web3.middleware.base import (
     Web3MiddlewareBuilder,
 )
 from web3.types import (
-    EthSubscriptionParams,
     Formatters,
     FormattersDict,
     RPCEndpoint,
@@ -55,46 +52,35 @@ def _apply_response_formatters(
     error_formatters: Formatters,
     response: RPCResponse,
 ) -> RPCResponse:
-    def _format_response(
-        response_type: Literal["result", "error", "params"],
-        method_response_formatter: Callable[..., Any],
-    ) -> RPCResponse:
-        appropriate_response = response[response_type]
-
-        if response_type == "params":
-            appropriate_response = cast(EthSubscriptionParams, response[response_type])
-            return assoc(
-                response,
-                response_type,
-                assoc(
-                    response["params"],
-                    "result",
-                    method_response_formatter(appropriate_response["result"]),
-                ),
-            )
-        else:
-            return assoc(
-                response, response_type, method_response_formatter(appropriate_response)
-            )
-
     if not isinstance(response, dict):
         raise BadResponseFormat(
             "Malformed response: expected a valid JSON-RPC response object, got: "
-            "`{}`".format(response)
+            f"`{response}`"
         )
-    elif response.get("result") is not None and method in result_formatters:
-        return _format_response("result", result_formatters[method])
-    elif (
-        # eth_subscription responses
-        response.get("params") is not None
-        and response["params"].get("result") is not None
-        and method in result_formatters
-    ):
-        return _format_response("params", result_formatters[method])
-    elif "error" in response and method in error_formatters:
-        return _format_response("error", error_formatters[method])
-    else:
-        return response
+
+    if method in result_formatters:
+        result_formatter = result_formatters[method]
+        result = response.get("result")
+        if result is not None:
+            return assoc(response, "result", result_formatter(result))
+
+        params = response.get("params")
+        if params is not None and params.get("result") is not None:
+            # eth_subscription responses
+            return assoc(
+                response,
+                "params",
+                assoc(
+                    params,
+                    "result",
+                    result_formatter(params["result"]),
+                ),
+            )
+
+    if "error" in response and method in error_formatters:
+        return assoc(response, "error", error_formatters[method](response["error"]))
+
+    return response
 
 
 SYNC_FORMATTERS_BUILDER = Callable[["Web3", RPCEndpoint], FormattersDict]

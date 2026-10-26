@@ -1,7 +1,7 @@
+from collections.abc import Callable
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
 )
 
 from eth_utils.curried import (
@@ -66,7 +66,7 @@ def _validate_chain_id(web3_chain_id: int, chain_id: int) -> int:
 
 
 def _check_extradata_length(val: Any) -> Any:
-    if not isinstance(val, (str, int, bytes)):
+    if not isinstance(val, str | int | bytes):
         return val
     result = HexBytes(val)
     if len(result) > MAX_EXTRADATA_LENGTH:

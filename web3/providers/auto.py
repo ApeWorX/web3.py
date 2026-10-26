@@ -1,8 +1,7 @@
+from collections.abc import Callable, Sequence
 import os
 from typing import (
     Any,
-    Callable,
-    Sequence,
 )
 from urllib.parse import (
     urlparse,

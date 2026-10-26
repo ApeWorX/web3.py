@@ -203,8 +203,6 @@ bold:
     - **eth_getBlockByNumber**
     - **eth_getRawTransactionByBlockNumberAndIndex**
     - **eth_getBlockTransactionCountByNumber**
-    - **eth_getUncleByBlockNumberAndIndex**
-    - **eth_getUncleCountByBlockNumber**
     - **eth_getBlockByHash**
     - **eth_getTransactionByHash**
     - **eth_getTransactionByBlockNumberAndIndex**

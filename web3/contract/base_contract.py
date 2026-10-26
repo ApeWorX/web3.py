@@ -284,8 +284,7 @@ class BaseContractEvent:
     ) -> FilterParams:
         if not self.address:
             raise Web3TypeError(
-                "This method can be only called on "
-                "an instated contract with an address"
+                "This method can be only called on an instated contract with an address"
             )
 
         if argument_filters is None:

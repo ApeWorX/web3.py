@@ -1,0 +1,75 @@
+name: Maintenance
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: Maintenance artifacts to generate
+        required: true
+        type: choice
+        options:
+        - contract-data
+        - geth-fixture
+      geth-version:
+        description: Geth version used by geth-fixture
+        required: true
+        default: "1.16.7"  # geth-version
+        type: string
+      solidity-version:
+        description: Solidity compiler version used by contract-data
+        required: true
+        default: "0.8.30"
+        type: string
+
+env:
+  UV_CACHE_DIR: /tmp/uv-cache
+
+jobs:
+  contract-data:
+    if: inputs.task == 'contract-data'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: "3.10"
+    - name: Compile contract data
+      working-directory: web3/_utils/contract_sources
+      env:
+        SOLIDITY_VERSION: ${{ inputs.solidity-version }}
+      run: |
+        uv run --project ../../.. --group maintenance \
+          python ../../../scripts/compile_contracts.py --version "${SOLIDITY_VERSION}"
+    - uses: actions/upload-artifact@v4
+      with:
+        name: contract-data
+        path: web3/_utils/contract_sources/contract_data/
+
+  geth-fixture:
+    if: inputs.task == 'geth-fixture'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: "3.10"
+    - name: Install Geth
+      env:
+        GETH_VERSION: ${{ inputs.geth-version }}
+      run: |
+        uv run --group integration python -m geth.install v${GETH_VERSION}
+        echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
+    - name: Generate Geth fixture
+      run: uv run --group integration python -m scripts.generate_fixtures.go_ethereum
+    - uses: actions/upload-artifact@v4
+      with:
+        name: geth-${{ inputs.geth-version }}-fixture
+        include-hidden-files: true
+        path: |
+          tests/integration/geth-*-fixture.zip
+          tests/integration/go_ethereum/conftest.py
+          .github/workflows/test.yaml
+          .github/workflows/maintenance.yaml
+          docs/contributing.rst

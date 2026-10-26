@@ -14,14 +14,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 # sys.path.insert(0, os.path.abspath('.'))
 
-import os
-
-DIR = os.path.dirname(__file__)
-with open(os.path.join(DIR, "../setup.py")) as f:
-    for line in f:
-        if "version=" in line:
-            setup_version = line.split('"')[1]
-            break
+from importlib.metadata import version as package_version
 
 # -- General configuration ------------------------------------------------
 
@@ -54,7 +47,7 @@ master_doc = "index"
 project = "web3.py"
 copyright = "2016-2025, The Ethereum Foundation"
 
-__version__ = setup_version
+__version__ = package_version("web3")
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
@@ -91,6 +84,10 @@ exclude_patterns = [
     "web3.testing.rst",
     "web3.tools.*",
 ]
+
+# The EPUB builder packages its generated doctree cache and warns about those
+# binary files. They are expected build artifacts, not documentation sources.
+suppress_warnings = ["epub.unknown_project_files"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.

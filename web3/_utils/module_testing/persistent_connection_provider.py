@@ -1,13 +1,12 @@
 import pytest
 import asyncio
+from collections.abc import Generator, Sequence
 from dataclasses import (
     dataclass,
 )
 from typing import (
     TYPE_CHECKING,
     Any,
-    Generator,
-    Sequence,
     cast,
 )
 

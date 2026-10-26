@@ -2,6 +2,7 @@ from abc import (
     ABC,
     abstractmethod,
 )
+from collections.abc import Collection, Iterable, Sequence
 from enum import (
     Enum,
 )
@@ -9,9 +10,6 @@ import itertools
 from typing import (
     TYPE_CHECKING,
     Any,
-    Collection,
-    Iterable,
-    Sequence,
     cast,
 )
 
@@ -112,7 +110,7 @@ def construct_event_topic_set(
 ) -> list[HexStr]:
     if arguments is None:
         arguments = {}
-    elif isinstance(arguments, (list, tuple)):
+    elif isinstance(arguments, list | tuple):
         if len(arguments) != len(event_abi["inputs"]):
             raise Web3ValueError(
                 "When passing an argument list, the number of arguments must "
@@ -155,7 +153,7 @@ def construct_event_data_set(
 ) -> list[list[HexStr | None]]:
     if arguments is None:
         arguments = {}
-    if isinstance(arguments, (list, tuple)):
+    if isinstance(arguments, list | tuple):
         if len(arguments) != len(event_abi["inputs"]):
             raise Web3ValueError(
                 "When passing an argument list, the number of arguments must "
@@ -479,7 +477,7 @@ def _build_argument_filters_from_event_abi(
 ) -> Iterable[tuple[str, "BaseArgumentFilter"]]:
     for item in event_abi["inputs"]:
         key = item["name"]
-        value: "BaseArgumentFilter"
+        value: BaseArgumentFilter
         if item.get("indexed") is True:
             value = TopicArgumentFilter(
                 abi_codec=abi_codec, arg_type=collapse_if_tuple(item)

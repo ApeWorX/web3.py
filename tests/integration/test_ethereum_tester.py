@@ -158,9 +158,7 @@ def block_with_txn(w3):
             "to": ChecksumAddress(w3.eth.default_account),
             "value": w3.to_wei(1, "gwei"),
             "gas": 21000,
-            "gasPrice": w3.to_wei(
-                10**9, "gwei"
-            ),  # needs to be > base_fee post London
+            "gasPrice": w3.to_wei(10**9, "gwei"),  # needs to be > base_fee post London
         }
     )
     txn = w3.eth.get_transaction(txn_hash)

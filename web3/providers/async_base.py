@@ -1,13 +1,11 @@
 import asyncio
+from collections.abc import Callable, Coroutine
 import contextvars
 import itertools
 import logging
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Optional,
     cast,
 )
 
@@ -98,9 +96,9 @@ class AsyncBaseProvider:
         self.cacheable_requests = cacheable_requests or CACHEABLE_REQUESTS
         self.request_cache_validation_threshold = request_cache_validation_threshold
 
-        self._batching_context: contextvars.ContextVar[
-            Optional["RequestBatcher[Any]"]
-        ] = contextvars.ContextVar("batching_context", default=None)
+        self._batching_context: contextvars.ContextVar[RequestBatcher[Any] | None] = (
+            contextvars.ContextVar("batching_context", default=None)
+        )
         self._batch_request_func_cache: tuple[
             tuple[Middleware, ...],
             Callable[..., Coroutine[Any, Any, list[RPCResponse] | RPCResponse]],

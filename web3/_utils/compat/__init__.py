@@ -6,11 +6,22 @@
 # or use the back-ported version of the type.
 
 # Once web3 supports >= the noted python version, the type may be directly
-# imported from `typing`
+# imported from `typing`. Python 3.10 still needs the `typing_extensions`
+# backport for these names.
 
-from typing_extensions import (
-    NotRequired,  # py311
-    Self,  # py311
-    Unpack,  # py310
-)
+import sys
 from typing import TypeAlias
+
+if sys.version_info >= (3, 11):
+    from typing import (
+        NotRequired,  # py311
+        Self,  # py311
+        Unpack,  # py311
+    )
+else:
+    # Python 3.10 compatibility path.
+    from typing_extensions import (
+        NotRequired,
+        Self,
+        Unpack,
+    )

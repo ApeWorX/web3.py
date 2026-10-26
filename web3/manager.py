@@ -1,12 +1,9 @@
 import asyncio
+from collections.abc import AsyncGenerator, Callable, Coroutine, Sequence
 import logging
 from typing import (
     TYPE_CHECKING,
     Any,
-    AsyncGenerator,
-    Callable,
-    Coroutine,
-    Sequence,
     Union,
     cast,
 )
@@ -252,7 +249,7 @@ class RequestManager:
         Context manager for making batch requests
         """
         if not isinstance(
-            self.provider, (AsyncJSONBaseProvider, JSONBaseProvider, AutoProvider)
+            self.provider, AsyncJSONBaseProvider | JSONBaseProvider | AutoProvider
         ):
             raise Web3TypeError("Batch requests are not supported by this provider.")
         return RequestBatcher(self.w3)
@@ -277,7 +274,7 @@ class RequestManager:
         if isinstance(response, list):
             # expected format
             formatted_responses = [
-                self._format_batched_response(info, cast(RPCResponse, resp))
+                self._format_batched_response(info, resp)
                 for info, resp in zip(requests_info, response)
             ]
             return list(formatted_responses)
@@ -311,7 +308,6 @@ class RequestManager:
 
         if isinstance(response, list):
             # expected format
-            response = cast(list[RPCResponse], response)
             formatted_responses = [
                 self._format_batched_response(info, resp)
                 for info, resp in zip(unpacked_requests_info, response)

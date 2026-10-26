@@ -1,0 +1,111 @@
+on: ["push", "pull_request"]
+
+name: Test
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  UV_CACHE_DIR: /tmp/uv-cache
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: "3.10"
+    - name: Run Ruff Lint
+      run: uv run --group lint ruff check .
+    - name: Run Ruff Format
+      run: uv run --group lint ruff format --check .
+    - name: Run mdformat
+      run: uv run --group lint mdformat --check *.md
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: "3.10"
+    - name: Run MyPy
+      run: uv run --group lint --group test mypy -p web3 -p ens
+
+  core:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Run Core Tests
+      run: uv run --group test pytest tests/core -n auto --maxprocesses=15
+
+  ens:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Run ENS Tests
+      run: uv run --group test pytest tests/ens -n auto --maxprocesses=15
+
+  integration-ethtester:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Run Ethereum Tester Integration Tests
+      run: uv run --group test pytest tests/integration/test_ethereum_tester.py -n auto --maxprocesses=15
+
+  integration-geth:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    env:
+      GETH_VERSION: "1.16.7"
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Geth
+      run: |
+        uv run --group integration python -m geth.install v${GETH_VERSION}
+        echo "GETH_BINARY=${HOME}/.py-geth/geth-v${GETH_VERSION}/bin/geth" >> "$GITHUB_ENV"
+    - name: Run Geth Integration Tests
+      run: uv run --group integration pytest tests/integration/go_ethereum -n auto --maxprocesses=15

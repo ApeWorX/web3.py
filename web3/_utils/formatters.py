@@ -1,8 +1,6 @@
+from collections.abc import Callable, Iterable, Mapping
 from typing import (
     Any,
-    Callable,
-    Iterable,
-    Mapping,
     TypeVar,
 )
 
@@ -44,7 +42,7 @@ integer_to_hex = hex
 
 
 def apply_formatters_to_args(
-    *formatters: Callable[[TValue], TReturn]
+    *formatters: Callable[[TValue], TReturn],
 ) -> Callable[..., TReturn]:
     return compose(
         *(

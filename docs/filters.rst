@@ -825,7 +825,7 @@ The script can be run with: ``python ./eventscanner.py <your JSON-RPC API URL>``
         # Construct JSON-RPC raw filter presentation based on human readable Python descriptions
         # Namely, convert event names to their keccak signatures
         # More information here:
-        # https://github.com/ethereum/web3.py/blob/e176ce0793dafdd0573acc8d4b76425b6eb604ca/web3/_utils/filters.py#L71
+        # https://github.com/ApeWorX/web3.py/blob/e176ce0793dafdd0573acc8d4b76425b6eb604ca/web3/_utils/filters.py#L71
         data_filter_set, event_filter_params = construct_event_filter_params(
             abi,
             codec,
@@ -846,7 +846,7 @@ The script can be run with: ``python ./eventscanner.py <your JSON-RPC API URL>``
         for log in logs:
             # Convert raw JSON-RPC log result to human readable event by using ABI data
             # More information how process_log works here
-            # https://github.com/ethereum/web3.py/blob/fbaf1ad11b0c7fac09ba34baff2c256cffe0a148/web3/_utils/events.py#L200
+            # https://github.com/ApeWorX/web3.py/blob/fbaf1ad11b0c7fac09ba34baff2c256cffe0a148/web3/_utils/events.py#L200
             evt = get_event_data(codec, abi, log)
             # Note: This was originally yield,
             # but deferring the timeout exception caused the throttle logic not to work

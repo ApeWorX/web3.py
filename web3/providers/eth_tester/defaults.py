@@ -1,11 +1,11 @@
 import ast
+from collections.abc import Callable
 import operator
 import random
 import sys
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     NoReturn,
 )
 

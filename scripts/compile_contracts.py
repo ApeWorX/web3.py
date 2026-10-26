@@ -9,13 +9,12 @@ Arguments for the script are:
                             specific ``.sol`` filename here to compile just one file.
 
 
-To run the script, you will need the ``py-solc-x`` library for compiling the files
-as well as ``black`` for linting. You can install those independently or install the
-full ``[dev]`` package extra as shown below.
+Run the script through the project's ``maintenance`` dependency group, which provides
+``py-solc-x`` and Ruff.
 
 .. code:: sh
 
-    $ pip install "web3[dev]"
+    $ uv sync --group maintenance
 
 The following example compiles all the contracts and generates their respective
 contract data that is used across our test files for the test suites. This data gets
@@ -25,7 +24,7 @@ folder.
 .. code-block:: bash
 
     $ cd ../web3.py/web3/_utils/contract_sources
-    $ python compile_contracts.py -v 0.8.17
+    $ uv run --project ../../.. --group maintenance python ../../../scripts/compile_contracts.py -v 0.8.30
     Compiling OffchainLookup
     ...
     ...
@@ -37,7 +36,7 @@ filename with the ``-f`` (or ``--filename``) argument flag.
 .. code-block:: bash
 
     $ cd ../web3.py/web3/_utils/contract_sources
-    $ python compile_contracts.py -v 0.8.17 -f OffchainLookup.sol
+    $ uv run --project ../../.. --group maintenance python ../../../scripts/compile_contracts.py -v 0.8.30 -f OffchainLookup.sol
     Compiling OffchainLookup.sol
     reformatted ...
 """
@@ -45,6 +44,7 @@ filename with the ``-f`` (or ``--filename``) argument flag.
 import argparse
 import os
 import re
+import subprocess
 from typing import (
     Any,
 )
@@ -109,7 +109,7 @@ def _get_compiled_contract_data(
     return contract_data
 
 
-contracts_in_file = {}
+contracts_in_file: dict[str, list[str]] = {}
 
 
 def compile_files(file_list: list[str]) -> None:
@@ -178,4 +178,6 @@ def compile_files(file_list: list[str]) -> None:
 
 
 compile_files(files_to_compile)
-os.system(f"black {os.getcwd()}")
+subprocess.run(
+    ["ruff", "format", os.path.join(os.getcwd(), "contract_data")], check=True
+)

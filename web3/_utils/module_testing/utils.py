@@ -106,9 +106,9 @@ class RequestMocker:
             self._send_request = w3.provider.send_request
             self._recv_for_request = w3.provider.recv_for_request
         else:
-            self._make_request: Union[
-                "AsyncMakeRequestFn", "MakeRequestFn"
-            ] = w3.provider.make_request
+            self._make_request: AsyncMakeRequestFn | MakeRequestFn = (
+                w3.provider.make_request
+            )
 
         self._mock_request_counter = 1
 

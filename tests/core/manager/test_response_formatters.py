@@ -180,17 +180,17 @@ def test_formatted_response_invalid_response_object(w3, response, error, error_m
         (
             VALID_ERROR_RESPONSE,
             Web3RPCError,
-            f'{VALID_ERROR_RESPONSE["error"]}',
+            f"{VALID_ERROR_RESPONSE['error']}",
         ),
         (
             ERROR_RESPONSE_VALID_ID_STRING,
             Web3RPCError,
-            f'{ERROR_RESPONSE_VALID_ID_STRING["error"]}',
+            f"{ERROR_RESPONSE_VALID_ID_STRING['error']}",
         ),
         (
             ERROR_RESPONSE_VALID_ID_NONE,
             Web3RPCError,
-            f'{ERROR_RESPONSE_VALID_ID_NONE["error"]}',
+            f"{ERROR_RESPONSE_VALID_ID_NONE['error']}",
         ),
         (
             ERROR_RESPONSE_VALID_METHOD_UNAVAILABLE,
@@ -200,7 +200,7 @@ def test_formatted_response_invalid_response_object(w3, response, error, error_m
         (
             ERROR_RESPONSE_REQUEST_TIMED_OUT,
             RequestTimedOut,
-            f'{ERROR_RESPONSE_REQUEST_TIMED_OUT["error"]}',
+            f"{ERROR_RESPONSE_REQUEST_TIMED_OUT['error']}",
         ),
     ),
 )
@@ -288,7 +288,7 @@ def test_formatted_response_invalid_error_object(
             identity,
             raise_block_not_found,
             Web3RPCError,
-            f'{VALID_ERROR_RESPONSE["error"]}',
+            f"{VALID_ERROR_RESPONSE['error']}",
         ),
     ),
 )

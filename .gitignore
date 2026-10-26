@@ -61,6 +61,9 @@ docs/*.internal.rst
 docs/*.utils.rst
 docs/*._utils.*
 
+# uv pkg mngr
+uv.lock
+
 # Blockchain
 chains
 
@@ -121,7 +124,6 @@ crashlytics-build.properties
 fabric.properties
 
 # uv
-uv.lock
 
 # Claude Code
 .claude/

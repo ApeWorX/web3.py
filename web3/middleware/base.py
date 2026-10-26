@@ -165,11 +165,10 @@ class Web3MiddlewareBuilder(Web3Middleware):
                 middleware.internal_property = user_provided_argument
                 return middleware
 
-            def request_processor(self, method, params):
-                ...
+            def request_processor(self, method, params): ...
 
-            def response_processor(self, method, response):
-                ...
+            def response_processor(self, method, response): ...
+
 
         construct_my_middleware = MyMiddleware.builder
 

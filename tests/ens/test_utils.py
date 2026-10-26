@@ -1,7 +1,4 @@
 import pytest
-from unittest import (
-    mock,
-)
 from unittest.mock import (
     patch,
 )
@@ -24,7 +21,6 @@ from ens.exceptions import (
 )
 from ens.utils import (
     dns_encode_name,
-    ens_encode_name,
     init_async_web3,
     init_web3,
     is_valid_name,
@@ -207,16 +203,6 @@ def test_label_to_hash_normalizes_name_using_ensip15():
     assert label_to_hash("foo").to_0x_hex() == (
         "0x41b1a0649752af1b28b3dc29a1556eee781e4a4c3a1f7f53f90fa834de098c4d"
     )
-
-
-@mock.patch("ens.utils.dns_encode_name")
-def test_ens_encode_name_issues_deprecation_warning_and_calls_dns_encode_name(
-    mock_dns_encode_name,
-):
-    with pytest.warns(DeprecationWarning, match=r"``ens_encode_name`` is deprecated"):
-        ens_encode_name("foo")
-
-    mock_dns_encode_name.assert_called_once_with("foo")
 
 
 # -- async -- #

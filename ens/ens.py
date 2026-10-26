@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from copy import (
     deepcopy,
 )
@@ -5,7 +6,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Optional,
-    Sequence,
     cast,
 )
 
@@ -82,7 +82,7 @@ class ENS(BaseENS):
     like getting the address for a name.
 
     Unless otherwise specified, all addresses are assumed to be a `str` in
-    `checksum format <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md>`_,  # blocklint: pragma # noqa: E501
+    `checksum format <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md>`_,  # noqa: E501
     like: ``"0x314159265dD8dbb310642f98f50C066173C1259b"``
     """
 
@@ -176,9 +176,9 @@ class ENS(BaseENS):
     def setup_address(
         self,
         name: str,
-        address: Address
-        | ChecksumAddress
-        | HexAddress = cast(ChecksumAddress, default),  # noqa: B008
+        address: Address | ChecksumAddress | HexAddress = cast(
+            ChecksumAddress, default
+        ),  # noqa: B008
         coin_type: int | None = None,
         transact: Optional["TxParams"] = None,
     ) -> HexBytes | None:
@@ -221,7 +221,7 @@ class ENS(BaseENS):
             address = EMPTY_ADDR_HEX
         transact["from"] = owner
 
-        resolver: "Contract" = self._set_resolver(name, transact=transact)
+        resolver: Contract = self._set_resolver(name, transact=transact)
         node = raw_name_to_hash(name)
 
         if coin_type is None:
@@ -476,7 +476,7 @@ class ENS(BaseENS):
         name: str,
         fn_name: str,
         args: Sequence[Any] = (),
-        contract: Optional[type["Contract"]] = None,
+        contract: type["Contract"] | None = None,
     ) -> tuple[HexBytes, str]:
         contract = contract or self._resolver_contract
         node = raw_name_to_hash(name)

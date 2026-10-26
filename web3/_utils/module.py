@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 import inspect
 from io import (
     UnsupportedOperation,
@@ -5,7 +6,6 @@ from io import (
 from typing import (
     TYPE_CHECKING,
     Any,
-    Sequence,
     Union,
 )
 

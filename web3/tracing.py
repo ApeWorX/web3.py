@@ -1,6 +1,4 @@
-from typing import (
-    Callable,
-)
+from collections.abc import Callable
 
 from eth_typing import (
     HexStr,

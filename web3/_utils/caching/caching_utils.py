@@ -1,14 +1,11 @@
 import collections
+from collections.abc import Callable, Coroutine, Sequence
 import hashlib
 import inspect
 import threading
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Coroutine,
-    Sequence,
-    Union,
 )
 
 from eth_typing import (
@@ -155,8 +152,6 @@ BLOCKNUM_IN_PARAMS = {
     RPC.eth_getBlockByNumber,
     RPC.eth_getRawTransactionByBlockNumberAndIndex,
     RPC.eth_getBlockTransactionCountByNumber,
-    RPC.eth_getUncleByBlockNumberAndIndex,
-    RPC.eth_getUncleCountByBlockNumber,
 }
 BLOCK_IN_RESULT = {
     RPC.eth_getBlockByHash,
@@ -167,8 +162,6 @@ BLOCK_IN_RESULT = {
 }
 BLOCKHASH_IN_PARAMS = {
     RPC.eth_getRawTransactionByBlockHashAndIndex,
-    RPC.eth_getUncleByBlockHashAndIndex,
-    RPC.eth_getUncleCountByBlockHash,
 }
 
 INTERNAL_VALIDATION_MAP: dict[
@@ -264,7 +257,7 @@ def handle_request_caching(
 
 ASYNC_VALIDATOR_TYPE = Callable[
     ["AsyncBaseProvider", Sequence[Any], dict[str, Any]],
-    Union[bool, Coroutine[Any, Any, bool]],
+    bool | Coroutine[Any, Any, bool],
 ]
 
 ASYNC_INTERNAL_VALIDATION_MAP: dict[RPCEndpoint, ASYNC_VALIDATOR_TYPE] = {
@@ -326,11 +319,10 @@ async def _async_should_cache_response(
         and provider.request_cache_validation_threshold is not None
     ):
         cache_validator = ASYNC_INTERNAL_VALIDATION_MAP[method]
-        return (
-            await cache_validator(provider, params, result)
-            if inspect.iscoroutinefunction(cache_validator)
-            else cache_validator(provider, params, result)
-        )
+        validation_result = cache_validator(provider, params, result)
+        if inspect.isawaitable(validation_result):
+            return await validation_result
+        return validation_result
     return True
 
 

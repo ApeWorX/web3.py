@@ -28,7 +28,9 @@ def _mock_getaddrinfo_public(monkeypatch):
 
 
 # the encoded calldata for the initiating ``addr(namehash(name))`` call
-ENCODED_ADDR_CALLDATA = "0x3b3b57de42041b0018edd29d7c17154b0c671acc0502ea0b3693cafbeadf58e6beaaa16c"  # noqa: E501
+ENCODED_ADDR_CALLDATA = (
+    "0x3b3b57de42041b0018edd29d7c17154b0c671acc0502ea0b3693cafbeadf58e6beaaa16c"  # noqa: E501
+)
 
 # This is one of the actual returned payloads from the GET request that
 # is triggered when resolving ``ns.address('offchainexample.eth')``
@@ -130,7 +132,7 @@ class AsyncMockHttpBadFormatResponse:
 
     @staticmethod
     async def json():
-        return {"not_data": OFFCHAIN_RESOLVER_DATA}  # noqa: E704'
+        return {"not_data": OFFCHAIN_RESOLVER_DATA}  # noqa: E704
 
     @property
     def status(self):
