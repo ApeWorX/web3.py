@@ -4,21 +4,12 @@ on:
   release:
     types: [published]
 
-env:
-  UV_CACHE_DIR: /tmp/uv-cache
-
+# Thin caller: release trigger stays here; job body lives in
+# ApeWorX/.github/.github/workflows/publish.yaml
+# Merge ApeWorX/.github#4 before merging this PR.
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    uses: ApeWorX/.github/.github/workflows/publish.yaml@main
     permissions:
+      contents: read
       id-token: write
-
-    steps:
-    - uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
-    - uses: astral-sh/setup-uv@v7
-    - name: Build Package
-      run: uv build
-    - name: Publish Package
-      uses: pypa/gh-action-pypi-publish@release/v1
