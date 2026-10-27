@@ -2,7 +2,7 @@ name: Release
 
 on:
   release:
-    types: [released]
+    types: [published]
 
 env:
   UV_CACHE_DIR: /tmp/uv-cache
