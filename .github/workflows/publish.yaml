@@ -4,12 +4,16 @@ on:
   release:
     types: [published]
 
-# Thin caller: release trigger stays here; job body lives in
-# ApeWorX/.github/.github/workflows/publish.yaml
+# Thin caller: release trigger + workflow filename stay here so PyPI
+# Trusted Publishing (OIDC) still matches this repo's publish.yaml.
+# Job body is the org composite action (reusable workflows are not
+# supported by PyPI TP today — pypi/warehouse#11096).
 # Merge ApeWorX/.github#4 before merging this PR.
 jobs:
   deploy:
-    uses: ApeWorX/.github/.github/workflows/publish.yaml@main
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
+    steps:
+      - uses: ApeWorX/.github/.github/actions/publish@main
