@@ -251,7 +251,7 @@ retry configuration and how to override them.
     .. py:attribute:: errors
 
         A tuple of exceptions that the provider should retry on. The default is
-        ``HTTPProvider``: ``(ConnectionError, requests.HTTPError, requests.Timeout)``
+        ``HTTPProvider``: ``(requests.ConnectionError, requests.HTTPError, requests.Timeout)``
         and ``AsyncHTTPProvider``: ``(aiohttp.ClientError, asyncio.TimeoutError)``.
 
     .. py:attribute:: retries
@@ -294,7 +294,7 @@ retry configuration and how to override them.
 
 For the different http providers, ``DEFAULT_EXCEPTIONS`` is defined as:
 
-- ``HTTPProvider``: ``(ConnectionError, requests.HTTPError, requests.Timeout)``
+- ``HTTPProvider``: ``(requests.ConnectionError, requests.HTTPError, requests.Timeout)``
 - ``AsyncHTTPProvider``: ``(ConnectionError, aiohttp.ClientError, asyncio.TimeoutError)``
 
 Setting ``retry_configuration`` to ``None`` will disable retries on exceptions for the
