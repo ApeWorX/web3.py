@@ -347,47 +347,36 @@ class BaseContractEvent:
         event_logs: Sequence[EventData],
         argument_filters: dict[str, Any] | None,
     ) -> Iterable[EventData]:
-        if (
-            argument_filters is None
-            or len(event_logs) == 0
-            or
-            # if no non-indexed args in argument filters, since indexed args are
-            # filtered pre-call to ``eth_getLogs`` by building specific ``topics``.
-            not any(
-                not arg["indexed"]
-                for arg in event_abi["inputs"]
-                if arg["name"] in argument_filters
-            )
-        ):
+        if argument_filters is None or len(event_logs) == 0:
             return event_logs
 
-        filtered_logs_by_non_indexed_args = []
+        # indexed args are filtered pre-call to ``eth_getLogs`` by building specific
+        # ``topics``, so only the non-indexed args are left to filter here
+        non_indexed_filters = []
+        for abi_arg in event_abi["inputs"]:
+            arg = abi_arg["name"]
+            if abi_arg["indexed"] or arg not in argument_filters:
+                continue
+            match_values = argument_filters[arg]
+            if not is_list_like(match_values):
+                match_values = [match_values]
+            non_indexed_filters.append((arg, abi_arg["type"], match_values))
 
-        for log in event_logs:
-            match = False
-            for arg, match_values in argument_filters.items():
-                if not is_list_like(match_values):
-                    match_values = [match_values]
+        if not non_indexed_filters:
+            return event_logs
 
-                for abi_arg in event_abi["inputs"]:
-                    if abi_arg["name"] == arg:
-                        if (
-                            # isolate ``string`` values to support substrings
-                            abi_arg["type"] == "string"
-                            and any(val in log["args"][arg] for val in match_values)
-                            or (
-                                # otherwise, do direct value comparison
-                                abi_arg["type"] != "string"
-                                and log["args"][arg] in match_values
-                            )
-                        ):
-                            filtered_logs_by_non_indexed_args.append(log)
-                            match = True
-                            break
-                if match:
-                    break
+        def _matches_all_filters(log: EventData) -> bool:
+            for arg, arg_type, match_values in non_indexed_filters:
+                if arg_type == "string":
+                    # isolate ``string`` values to support substrings
+                    if not any(val in log["args"][arg] for val in match_values):
+                        return False
+                # otherwise, do direct value comparison
+                elif log["args"][arg] not in match_values:
+                    return False
+            return True
 
-        return filtered_logs_by_non_indexed_args
+        return [log for log in event_logs if _matches_all_filters(log)]
 
     @combomethod
     def _set_up_filter_builder(

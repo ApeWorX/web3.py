@@ -172,6 +172,22 @@ def test_get_logs_argument_filters_indexed_and_non_indexed_args(emitter):
     assert len(logs_filter_non_indexed_uint256_and_string) == 1
     assert logs_filter_non_indexed_uint256_and_string[0] == logs_no_filter[0]
 
+    # every filter must match: indexed and non-indexed args from different logs
+    logs_filter_indexed_and_non_indexed_mismatch = (
+        emitter.events.LogIndexedAndNotIndexed.get_logs(
+            from_block=1,
+            argument_filters={"indexedUint256": 102, "nonIndexedUint256": 201},
+        )
+    )
+    assert logs_filter_indexed_and_non_indexed_mismatch == []
+
+    # every filter must match: non-indexed args from different logs
+    logs_filter_non_indexed_mismatch = emitter.events.LogIndexedAndNotIndexed.get_logs(
+        from_block=1,
+        argument_filters={"nonIndexedUint256": 201, "nonIndexedString": "SECOND"},
+    )
+    assert logs_filter_non_indexed_mismatch == []
+
 
 def test_get_logs_argument_filters_key_validation(
     emitter,
@@ -383,6 +399,24 @@ async def test_async_get_logs_argument_filters_indexed_and_non_indexed_args(
     )
     assert len(logs_filter_non_indexed_uint256_and_string) == 1
     assert logs_filter_non_indexed_uint256_and_string[0] == logs_no_filter[0]
+
+    # every filter must match: indexed and non-indexed args from different logs
+    logs_filter_indexed_and_non_indexed_mismatch = (
+        await async_emitter.events.LogIndexedAndNotIndexed.get_logs(
+            from_block=1,
+            argument_filters={"indexedUint256": 102, "nonIndexedUint256": 201},
+        )
+    )
+    assert logs_filter_indexed_and_non_indexed_mismatch == []
+
+    # every filter must match: non-indexed args from different logs
+    logs_filter_non_indexed_mismatch = (
+        await async_emitter.events.LogIndexedAndNotIndexed.get_logs(
+            from_block=1,
+            argument_filters={"nonIndexedUint256": 201, "nonIndexedString": "SECOND"},
+        )
+    )
+    assert logs_filter_non_indexed_mismatch == []
 
 
 @pytest.mark.asyncio
