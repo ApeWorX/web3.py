@@ -85,9 +85,12 @@ def hex_encode_abi_type(
         return pad_hex(value, data_size)
     elif is_bytes_type(abi_type):
         if is_bytes(value):
-            # Pad fixed-size bytesN to their full size (Solidity right-pads to N bytes)
-            if abi_type != "bytes" and data_size is not None:
-                return pad_hex(encode_hex(value), data_size)
+            # Pad fixed-size bytesN to 32 bytes (Solidity right-pads to 32 bytes in abi.encode)
+            if abi_type != "bytes":
+                hex_val = remove_0x_prefix(encode_hex(value))
+                # Right-pad to 32 bytes (64 hex chars)
+                padded = hex_val.ljust(64, "0")
+                return add_0x_prefix(HexStr(padded))
             return encode_hex(value)
         else:
             return value
