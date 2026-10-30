@@ -117,3 +117,20 @@ Available gas price strategies
         w3.eth.set_gas_price_strategy(medium_gas_price_strategy)
 
         w3.provider.cache_allowed_requests = True
+
+    The time-based strategies also work with :class:`~web3.main.AsyncWeb3` and
+    use asynchronous RPC requests when configured on an asynchronous provider.
+
+    .. code-block:: python
+
+        from web3 import AsyncWeb3
+        from web3.gas_strategies.time_based import medium_gas_price_strategy
+
+        async_w3 = AsyncWeb3(...)
+        async_w3.eth.set_gas_price_strategy(medium_gas_price_strategy)
+
+        transaction = await contract.functions.transfer(...).build_transaction({...})
+
+    Async transaction preparation and gas-price middleware await the time-based
+    strategy's RPC calls automatically. Existing synchronous strategies and the
+    public ``generate_gas_price()`` calling convention remain unchanged.

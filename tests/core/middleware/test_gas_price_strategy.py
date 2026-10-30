@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import (
+    AsyncMock,
     Mock,
 )
 
@@ -67,3 +68,25 @@ def test_not_generate_gas_price_when_not_send_transaction_rpc(
     inner("eth_getBalance", [])
 
     the_GasPriceStrategyMiddleware._w3.get_gas_price_strategy.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_async_gas_price_strategy_is_awaited():
+    w3 = Mock()
+    w3.eth._async_generate_gas_price = AsyncMock(return_value=5)
+    w3.eth.get_block = AsyncMock(return_value={"baseFeePerGas": 1})
+    middleware = GasPriceStrategyMiddleware(w3)
+    captured_request = None
+
+    async def make_request(method, params):
+        nonlocal captured_request
+        captured_request = method, params
+        return {"jsonrpc": "2.0", "id": 1, "result": "0x1"}
+
+    inner = await middleware.async_wrap_make_request(make_request)
+    await inner("eth_sendTransaction", ({"to": "0x0", "value": 1},))
+
+    assert captured_request == (
+        "eth_sendTransaction",
+        ({"to": "0x0", "value": 1, "gasPrice": "0x5"},),
+    )

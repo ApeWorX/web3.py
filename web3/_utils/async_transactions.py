@@ -1,3 +1,4 @@
+import math
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -15,9 +16,6 @@ from hexbytes import (
     HexBytes,
 )
 
-from web3._utils.transactions import (
-    prepare_replacement_transaction,
-)
 from web3._utils.utility_methods import (
     any_in_dict,
 )
@@ -75,7 +73,9 @@ TRANSACTION_DEFAULTS = {
     "value": 0,
     "data": b"",
     "gas": _estimate_gas,
-    "gasPrice": lambda async_w3, tx, _defaults: async_w3.eth.generate_gas_price(tx),
+    "gasPrice": lambda async_w3, tx, _defaults: async_w3.eth._async_generate_gas_price(
+        tx
+    ),
     "maxPriorityFeePerGas": _max_priority_fee_gas,
     "maxFeePerGas": _max_fee_per_gas,
     "chainId": _chain_id,
@@ -126,7 +126,7 @@ async def async_fill_transaction_defaults(
     """
     If async_w3 is None, fill as much as possible while offline
     """
-    strategy_based_gas_price = async_w3.eth.generate_gas_price(transaction)
+    strategy_based_gas_price = await async_w3.eth._async_generate_gas_price(transaction)
 
     is_dynamic_fee_transaction = strategy_based_gas_price is None and (
         "gasPrice" not in transaction  # default to dynamic fee transaction
@@ -146,19 +146,23 @@ async def async_fill_transaction_defaults(
                 # gas price if dynamic fee txn
                 continue
 
-            if callable(default_getter):
+            default_val: bytes | int
+            if key == "gasPrice":
+                # Reuse the value already generated above. Time-based strategies
+                # may perform many RPC calls, so evaluating one twice is costly.
+                assert strategy_based_gas_price is not None
+                default_val = strategy_based_gas_price
+            elif callable(default_getter):
                 if async_w3 is None:
                     raise Web3ValueError(
                         f"You must specify a '{key}' value in the transaction"
                     )
-                if key == "gasPrice":
-                    # `generate_gas_price()` is on the `BaseEth` class and does not
-                    # need to be awaited
-                    default_val = default_getter(async_w3, transaction, defaults)
-                else:
-                    default_val = await default_getter(async_w3, transaction, defaults)
+                default_val = cast(
+                    bytes | int,
+                    await default_getter(async_w3, transaction, defaults),
+                )
             else:
-                default_val = default_getter
+                default_val = cast(bytes | int, default_getter)
 
             defaults[key] = default_val
     return merge(defaults, transaction)
@@ -175,10 +179,63 @@ async def async_get_required_transaction(
     return current_transaction
 
 
+async def async_prepare_replacement_transaction(
+    async_w3: "AsyncWeb3[Any]",
+    original_transaction: TxData,
+    replacement_transaction: TxParams,
+    gas_multiplier: float = 1.125,
+) -> TxParams:
+    if original_transaction["blockHash"] is not None:
+        raise Web3ValueError(
+            f"Supplied transaction with hash {original_transaction['hash']!r} "
+            "has already been mined"
+        )
+    if "nonce" in replacement_transaction and (
+        replacement_transaction["nonce"] != original_transaction["nonce"]
+    ):
+        raise Web3ValueError(
+            "Supplied nonce in new_transaction must match the pending transaction"
+        )
+    if "nonce" not in replacement_transaction:
+        replacement_transaction = assoc(
+            replacement_transaction, "nonce", original_transaction["nonce"]
+        )
+
+    if any_in_dict(DYNAMIC_FEE_TXN_PARAMS, replacement_transaction):
+        # for now, the client decides if a dynamic fee txn can replace
+        # the existing txn or not
+        pass
+    elif (
+        "gasPrice" in replacement_transaction
+        and original_transaction["gasPrice"] is not None
+    ):
+        if replacement_transaction["gasPrice"] <= original_transaction["gasPrice"]:
+            raise Web3ValueError(
+                "Supplied gas price must exceed existing transaction gas price"
+            )
+    else:
+        generated_gas_price = await async_w3.eth._async_generate_gas_price(
+            replacement_transaction
+        )
+        minimum_gas_price = int(
+            math.ceil(original_transaction["gasPrice"] * gas_multiplier)
+        )
+        if generated_gas_price and generated_gas_price > minimum_gas_price:
+            replacement_transaction = assoc(
+                replacement_transaction, "gasPrice", generated_gas_price
+            )
+        else:
+            replacement_transaction = assoc(
+                replacement_transaction, "gasPrice", minimum_gas_price
+            )
+
+    return replacement_transaction
+
+
 async def async_replace_transaction(
     async_w3: "AsyncWeb3[Any]", current_transaction: TxData, new_transaction: TxParams
 ) -> HexBytes:
-    new_transaction = prepare_replacement_transaction(
+    new_transaction = await async_prepare_replacement_transaction(
         async_w3, current_transaction, new_transaction
     )
     return await async_w3.eth.send_transaction(new_transaction)
