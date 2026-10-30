@@ -17,6 +17,10 @@ the request to an HTTP, WebSocket, or IPC socket-based server.
    that requires multiple providers, create and configure a new web3 instance
    per connection.
 
+   For failover across multiple nodes behind a single URL, consider using a
+   JSON-RPC proxy such as eRPC (open source) which handles load balancing
+   and retries transparently.
+
 If you are already happily connected to your Ethereum node, then you
 can skip the rest of this providers section.
 
