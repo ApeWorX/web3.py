@@ -82,6 +82,38 @@ class TestValidateCcipUrlHost:
         with pytest.raises(Web3ValidationError, match="blocked private/reserved"):
             validate_ccip_url_host("https://example.com/api")
 
+    @pytest.mark.parametrize(
+        "mapped_ip",
+        [
+            "::ffff:127.0.0.1",
+            "::ffff:10.0.0.1",
+            "::ffff:192.168.1.1",
+            "::ffff:169.254.169.254",
+        ],
+    )
+    def test_blocked_ipv4_mapped_ipv6(self, monkeypatch, mapped_ip):
+        def _mock_getaddrinfo(host, port, *args, **kwargs):
+            return [(socket.AF_INET6, socket.SOCK_STREAM, 0, "", (mapped_ip, 0, 0, 0))]
+
+        monkeypatch.setattr("socket.getaddrinfo", _mock_getaddrinfo)
+        with pytest.raises(Web3ValidationError, match="blocked private/reserved"):
+            validate_ccip_url_host("https://example.com/api")
+
+    def test_public_ipv4_mapped_ipv6_passes(self, monkeypatch):
+        def _mock_getaddrinfo(host, port, *args, **kwargs):
+            return [
+                (
+                    socket.AF_INET6,
+                    socket.SOCK_STREAM,
+                    0,
+                    "",
+                    ("::ffff:8.8.8.8", 0, 0, 0),
+                )
+            ]
+
+        monkeypatch.setattr("socket.getaddrinfo", _mock_getaddrinfo)
+        validate_ccip_url_host("https://example.com/api")
+
     def test_unresolvable_hostname(self, monkeypatch):
         def _mock_getaddrinfo(host, port, *args, **kwargs):
             raise socket.gaierror("Name or service not known")
