@@ -84,10 +84,16 @@ def hex_encode_abi_type(
     elif is_address_type(abi_type):
         return pad_hex(value, data_size)
     elif is_bytes_type(abi_type):
-        if is_bytes(value):
-            return encode_hex(value)
-        else:
-            return value
+        hex_value = encode_hex(value) if is_bytes(value) else value
+        if force_size is None and abi_type != "bytes":
+            # like ``abi.encodePacked``, right-pad standalone ``bytesN`` values
+            # to N bytes; values longer than N bytes are rejected by
+            # ``validate_abi_value`` above
+            byte_size = int(abi_type[len("bytes") :])
+            return add_0x_prefix(
+                HexStr(remove_0x_prefix(hex_value).ljust(byte_size * 2, "0"))
+            )
+        return hex_value
     elif is_string_type(abi_type):
         return to_hex(text=value)
     else:
