@@ -221,6 +221,27 @@ class Web3ModuleTest:
                 ),
             ),
             (
+                ["bytes2[]"],
+                [["0x5402", "0x0102"]],
+                HexBytes(
+                    "0xef5a07e0716116fbd7cb4c76a7a854509070d1a9116a8b1be001f9bdb663007a"
+                ),
+            ),
+            (
+                ["bytes4[2]"],
+                [["0x01020304", "0x05060708"]],
+                HexBytes(
+                    "0xbebe9dcf79727fd06fc41c077f248508288003518eb0d8f540a84853a747cd0b"
+                ),
+            ),
+            (
+                ["bytes2", "bytes2[]"],
+                ["0x5402", ["0x5402"]],
+                HexBytes(
+                    "0x703fd9cb3a9e8b9da734cb9ade54227ca3272c8b0accb6cdc964ab2b458f8067"
+                ),
+            ),
+            (
                 ["address[]"],
                 [
                     [
