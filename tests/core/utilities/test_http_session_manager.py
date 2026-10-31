@@ -456,12 +456,14 @@ async def test_async_session_manager_cache_does_not_close_session_before_call(
     # last session remains in cache, all others evicted
     cache_data = http_session_manager.session_cache._data
     assert len(cache_data) == 1
+    assert len(http_session_manager.aiohttp_evicted_sessions) == 1
     _key, cached_session = cache_data.popitem()
     assert cached_session == all_sessions[-1]
 
     # assert all evicted sessions were closed
     await asyncio.sleep(_timeout_for_testing + 0.1)
     assert all(session.closed for session in all_sessions[:-1])
+    assert len(http_session_manager.aiohttp_evicted_sessions) == 0
 
     # -- teardown -- #
 
