@@ -1049,7 +1049,7 @@ can be accessed via the ``data`` attribute on ``ContractLogicError``.
 
             >>> math_contract.functions.increment(5).build_transaction({'nonce': 10})
 
-        You may use :meth:`~web3.eth.Eth.getTransactionCount` to get the current nonce
+        You may use :meth:`~web3.eth.Eth.get_transaction_count` to get the current nonce
         for an account. Therefore a shortcut for producing a transaction dictionary with
         nonce included looks like:
 

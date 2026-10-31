@@ -595,7 +595,7 @@ The following methods are available on the ``web3.eth`` namespace.
     The ``transaction`` parameter should be a dictionary with the following fields.
 
     * ``from``: ``bytes or text``, checksum address or ENS name - (optional, default:
-      ``web3.eth.defaultAccount``) The address the transaction is sent from.
+      ``web3.eth.default_account``) The address the transaction is sent from.
     * ``to``: ``bytes or text``, checksum address or ENS name - (optional when creating new
       contract) The address the transaction is directed to.
     * ``gas``: ``integer`` - (optional) Integer of the gas
