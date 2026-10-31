@@ -2608,6 +2608,32 @@ class AsyncEthModuleTest:
         failure = await async_w3.eth.uninstall_filter(filter.filter_id)
         assert failure is False
 
+    @pytest.mark.asyncio
+    async def test_eth_block_number(self, async_w3: "AsyncWeb3[Any]") -> None:
+        block_number = await async_w3.eth.block_number
+        assert is_integer(block_number)
+        assert block_number >= 0
+
+    @pytest.mark.asyncio
+    async def test_eth_get_block_number(self, async_w3: "AsyncWeb3[Any]") -> None:
+        block_number = await async_w3.eth.get_block_number()
+        assert is_integer(block_number)
+        assert block_number >= 0
+
+    @pytest.mark.asyncio
+    async def test_eth_get_balance_with_block_identifier(
+        self, async_w3: "AsyncWeb3[Any]"
+    ) -> None:
+        genesis_block = await async_w3.eth.get_block(0)
+        miner_address = genesis_block["miner"]
+
+        balance_genesis = await async_w3.eth.get_balance(miner_address, 0)
+        later_balance = await async_w3.eth.get_balance(miner_address, "latest")
+
+        assert is_integer(balance_genesis)
+        assert is_integer(later_balance)
+        assert later_balance != balance_genesis
+
 
 class EthModuleTest:
     def test_eth_syncing(self, w3: "Web3") -> None:
