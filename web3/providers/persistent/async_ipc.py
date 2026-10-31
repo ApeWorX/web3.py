@@ -123,7 +123,7 @@ class AsyncIPCProvider(PersistentConnectionProvider):
             if e.errno == errno.EPIPE:
                 # one extra attempt, then give up
                 await self._reset_socket()
-                self._writer.write(request_data)
+                self._writer.write(request_data + b"\n")
                 await self._writer.drain()
 
     async def _reset_socket(self) -> None:
