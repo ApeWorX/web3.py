@@ -65,7 +65,7 @@ def either_set_is_a_subset(
     Returns a bool based on whether two sets might have some differences but are mostly
     the same. This can be useful when comparing formatters to an actual response for
     formatting.
-
+    
     :param set1:        A set of values.
     :param set2:        A second set of values.
     :param percentage:  The percentage of either set that must be present in the
