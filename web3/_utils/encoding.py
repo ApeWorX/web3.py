@@ -84,10 +84,17 @@ def hex_encode_abi_type(
     elif is_address_type(abi_type):
         return pad_hex(value, data_size)
     elif is_bytes_type(abi_type):
-        if is_bytes(value):
+        if abi_type == "bytes":
             return encode_hex(value)
         else:
-            return value
+            # bytesN: pad to N bytes as Solidity does
+            match = re.match(r"bytes(\d+)\.?byte?$", abi_type)
+            if match:
+                num_bytes = int(match.group(1))
+                value_bytes = value if isinstance(value, bytes) else bytes(value, "utf-8")
+                padded = value_bytes.rjust(num_bytes, b"\0")
+                return encode_hex(padded)
+            return encode_hex(value)
     elif is_string_type(abi_type):
         return to_hex(text=value)
     else:

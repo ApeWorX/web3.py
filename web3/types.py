@@ -74,8 +74,86 @@ ENS = NewType("ENS", str)
 Nonce = NewType("Nonce", int)
 RPCEndpoint = NewType("RPCEndpoint", str)
 Timestamp = NewType("Timestamp", int)
-Wei = NewType("Wei", int)
-Gwei = NewType("Gwei", int)
+class Wei(int):
+    """A value in wei (the smallest unit of ether).
+
+    Subclasses int so arithmetic operations preserve the Wei type,
+    allowing augmented assignment (``+=``, ``-=``) without mypy errors.
+    """
+
+    def __add__(self, other):
+        return Wei(super().__add__(other))
+
+    def __sub__(self, other):
+        return Wei(super().__sub__(other))
+
+    def __iadd__(self, other):
+        return Wei(super().__iadd__(other))
+
+    def __isub__(self, other):
+        return Wei(super().__isub__(other))
+
+    def __mul__(self, other):
+        return Wei(super().__mul__(other))
+
+    def __truediv__(self, other):
+        return Wei(super().__truediv__(other))
+
+    def __floordiv__(self, other):
+        return Wei(super().__floordiv__(other))
+
+    def __mod__(self, other):
+        return Wei(super().__mod__(other))
+
+    def __neg__(self):
+        return Wei(super().__neg__())
+
+    def __pos__(self):
+        return Wei(super().__pos__())
+
+    def __abs__(self):
+        return Wei(super().__abs__())
+
+
+class Gwei(int):
+    """A value in gwei (10^9 wei).
+
+    Subclasses int so arithmetic operations preserve the Gwei type,
+    allowing augmented assignment (``+=``, ``-=``) without mypy errors.
+    """
+
+    def __add__(self, other):
+        return Gwei(super().__add__(other))
+
+    def __sub__(self, other):
+        return Gwei(super().__sub__(other))
+
+    def __iadd__(self, other):
+        return Gwei(super().__iadd__(other))
+
+    def __isub__(self, other):
+        return Gwei(super().__isub__(other))
+
+    def __mul__(self, other):
+        return Gwei(super().__mul__(other))
+
+    def __truediv__(self, other):
+        return Gwei(super().__truediv__(other))
+
+    def __floordiv__(self, other):
+        return Gwei(super().__floordiv__(other))
+
+    def __mod__(self, other):
+        return Gwei(super().__mod__(other))
+
+    def __neg__(self):
+        return Gwei(super().__neg__())
+
+    def __pos__(self):
+        return Gwei(super().__pos__())
+
+    def __abs__(self):
+        return Gwei(super().__abs__())
 Formatters = dict[RPCEndpoint, Callable[..., Any]]
 
 
