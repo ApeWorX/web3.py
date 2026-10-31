@@ -137,6 +137,7 @@ from web3.providers import (
     WebSocketProvider,
 )
 from web3.providers.persistent import (
+    AsyncIPCProvider,
     PersistentConnection,
 )
 from web3.testing import (
@@ -461,6 +462,7 @@ class AsyncWeb3(BaseWeb3, Generic[AsyncProviderT]):
 
     # Providers
     AsyncHTTPProvider = AsyncHTTPProvider
+    AsyncIPCProvider = AsyncIPCProvider
     WebSocketProvider = WebSocketProvider
     AsyncEthereumTesterProvider = AsyncEthereumTesterProvider
 
