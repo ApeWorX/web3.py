@@ -37,6 +37,11 @@ from web3.utils.caching import (
     SimpleCache,
 )
 
+try:
+    from aiohttp.connector import NEEDS_CLEANUP_CLOSED as _NEEDS_CLEANUP_CLOSED
+except ImportError:  # aiohttp < 3.10.11 honours the flag on every Python
+    _NEEDS_CLEANUP_CLOSED = True
+
 
 class HTTPSessionManager:
     logger = logging.getLogger("web3._utils.http_session_manager.HTTPSessionManager")
@@ -190,7 +195,8 @@ class HTTPSessionManager:
                     session = ClientSession(
                         raise_for_status=True,
                         connector=TCPConnector(
-                            force_close=True, enable_cleanup_closed=True
+                            force_close=True,
+                            enable_cleanup_closed=_NEEDS_CLEANUP_CLOSED,
                         ),
                     )
 
@@ -237,7 +243,8 @@ class HTTPSessionManager:
                     _session = ClientSession(
                         raise_for_status=True,
                         connector=TCPConnector(
-                            force_close=True, enable_cleanup_closed=True
+                            force_close=True,
+                            enable_cleanup_closed=_NEEDS_CLEANUP_CLOSED,
                         ),
                     )
                     cached_session, evicted_items = self.session_cache.cache(

@@ -6,6 +6,7 @@ from concurrent.futures import (
 import json
 import threading
 import time
+import warnings
 
 from aiohttp import (
     ClientSession,
@@ -27,6 +28,7 @@ from web3._utils.caching import (
     generate_cache_key,
 )
 from web3._utils.http_session_manager import (
+    _NEEDS_CLEANUP_CLOSED,
     HTTPSessionManager,
 )
 from web3.exceptions import (
@@ -589,3 +591,16 @@ async def test_session_manager_async_use_new_session_if_session_closed_for_cache
 
     # appropriately close the new session
     await session2.close()
+
+
+@pytest.mark.asyncio
+async def test_session_manager_async_default_session_does_not_warn(
+    http_session_manager,
+):
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", DeprecationWarning)
+        session = await http_session_manager.async_cache_and_return_session(TEST_URI)
+
+    assert session.connector._cleanup_closed_disabled is not _NEEDS_CLEANUP_CLOSED
+
+    await session.close()
