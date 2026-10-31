@@ -136,6 +136,30 @@ def test_dns_encode_name_raises_validation_error_on_label_lengths_over_63(
         dns_encode_name(name)
 
 
+@pytest.mark.parametrize(
+    "name,invalid_label_index",
+    (
+        # 128 characters, but 256 bytes once utf-8 encoded
+        (f"{'é' * 128}.eth", 0),
+        (f"a.{'😀' * 64}.eth", 1),
+    ),
+)
+def test_dns_encode_name_validates_utf8_encoded_label_length(name, invalid_label_index):
+    with pytest.raises(
+        ENSValidationError, match=f"Label at position {invalid_label_index} too long"
+    ):
+        dns_encode_name(name)
+
+
+def test_dns_encode_name_multibyte_label_at_max_length():
+    # 85 three-byte characters encode to 255 bytes, the max for a single
+    # length byte
+    label = "中" * 85
+    encoded_label = to_bytes(text=label)
+    assert len(encoded_label) == 255
+    assert dns_encode_name(f"{label}.eth") == (b"\xff" + encoded_label + b"\x03eth\x00")
+
+
 def test_dns_encode_name_normalizes_name_before_encoding():
     assert dns_encode_name("Öbb.at") == dns_encode_name("öbb.at")
     assert dns_encode_name("nhÉéÉéÉé.eth") == dns_encode_name("nhéééééé.eth")

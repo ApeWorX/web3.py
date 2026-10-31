@@ -147,8 +147,9 @@ def dns_encode_name(name: str) -> HexBytes:
     labels = normalized_name.split(".")
     labels_as_bytes = [to_bytes(text=label) for label in labels]
 
-    # raises if len(label) > 255:
-    for index, label in enumerate(labels):
+    # raises if the utf-8 encoded label is longer than 255 bytes, since the
+    # length prefix must fit in a single byte:
+    for index, label in enumerate(labels_as_bytes):
         if len(label) > 255:
             raise ENSValidationError(
                 f"Label at position {index} too long after encoding."
