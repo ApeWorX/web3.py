@@ -10,6 +10,7 @@ from web3.main import (
     Web3,
 )
 from web3.providers import (
+    AsyncAutoProvider,
     AsyncBaseProvider,
     AutoProvider,
     BaseProvider,
@@ -41,6 +42,7 @@ __all__ = [
     "AsyncWeb3",
     "Web3",
     # providers:
+    "AsyncAutoProvider",
     "AsyncBaseProvider",
     "AsyncEthereumTesterProvider",
     "AsyncHTTPProvider",

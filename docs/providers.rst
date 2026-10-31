@@ -534,6 +534,29 @@ AutoProvider
 :class:`web3.Web3` without any providers. There's rarely a reason to use it
 explicitly.
 
+:class:`~web3.providers.auto.AsyncAutoProvider` is the async equivalent, used when
+initializing :class:`web3.AsyncWeb3` without any providers. It looks for a node in
+this order:
+
+1. The ``WEB3_PROVIDER_URI`` environment variable. ``file://`` URIs use
+   :class:`~web3.providers.persistent.AsyncIPCProvider`, ``http://`` and ``https://``
+   URIs use :class:`~web3.providers.rpc.AsyncHTTPProvider`, and ``ws://`` and
+   ``wss://`` URIs use :class:`~web3.providers.persistent.WebSocketProvider`.
+2. :class:`~web3.providers.persistent.AsyncIPCProvider` at the default IPC path.
+3. :class:`~web3.providers.rpc.AsyncHTTPProvider` at the default HTTP endpoint.
+
+Persistent connection providers are connected while they are being checked, and
+any provider that can't connect is disconnected again. Call
+``await w3.provider.disconnect()`` to close the connection to the active provider.
+
+.. code-block:: python
+
+    >>> from web3 import AsyncWeb3
+    >>> w3 = AsyncWeb3()
+    >>> await w3.is_connected()
+    True
+    >>> await w3.provider.disconnect()
+
 .. py:currentmodule:: web3.providers.eth_tester
 
 EthereumTesterProvider
