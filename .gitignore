@@ -128,3 +128,4 @@ fabric.properties
 # Claude Code
 .claude/
 pr-review.md
+.agents/

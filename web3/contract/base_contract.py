@@ -241,7 +241,7 @@ class BaseContractEvent:
 
         for log in txn_receipt["logs"]:
             try:
-                rich_log = get_event_data(self.w3.codec, self.abi, log)
+                rich_log = get_event_data(self.w3.codec, self._get_event_abi(), log)
             except (
                 MismatchedABI,
                 LogTopicError,
@@ -271,7 +271,7 @@ class BaseContractEvent:
 
     @combomethod
     def process_log(self, log: LogReceipt) -> EventData:
-        return get_event_data(self.w3.codec, self.abi, log)
+        return get_event_data(self.w3.codec, self._get_event_abi(), log)
 
     @combomethod
     def _get_event_filter_params(
@@ -409,10 +409,11 @@ class BaseContractEvent:
 
         _filters = dict(**argument_filters)
 
-        self.check_for_forbidden_api_filter_arguments(self.abi, _filters)
+        event_abi = self._get_event_abi()
+        self.check_for_forbidden_api_filter_arguments(event_abi, _filters)
 
         _, event_filter_params = construct_event_filter_params(
-            self.abi,
+            event_abi,
             self.w3.codec,
             contract_address=self.address,
             argument_filters=_filters,
