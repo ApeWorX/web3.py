@@ -1,5 +1,9 @@
 import pytest
 
+from eth_utils import (
+    from_wei_decimals,
+    to_wei_decimals,
+)
 from hexbytes import (
     HexBytes,
 )
@@ -253,3 +257,13 @@ def test_to_json(val, expected):
 )
 def test_to_json_with_transaction(tx, expected):
     assert Web3.to_json(tx) == expected
+
+
+def test_to_wei_decimals_wiring():
+    assert Web3.to_wei_decimals("1.5", 6) == to_wei_decimals("1.5", 6)
+    assert Web3.to_wei_decimals(2, 6) == 2000000
+
+
+def test_from_wei_decimals_wiring():
+    assert Web3.from_wei_decimals(1500000, 6) == from_wei_decimals(1500000, 6)
+    assert Web3.from_wei_decimals(2000000, 6) == 2
