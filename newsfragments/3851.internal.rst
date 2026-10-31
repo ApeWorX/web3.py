@@ -1,0 +1,1 @@
+Added regression coverage for geth integration fixture cleanup when tests fail after the fixture yields.
