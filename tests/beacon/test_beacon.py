@@ -35,8 +35,8 @@ def test_cl_beacon_raises_exception_on_invalid_url(beacon):
         beacon._make_get_request(BASE_URL + "/eth/v1/beacon/nonexistent")
 
 
-def test_beacon_user_defined_request_timeout():
-    beacon = Beacon(base_url=BASE_URL, request_timeout=0.001)
+def test_beacon_user_defined_request_timeout(beacon):
+    beacon.request_timeout = 0.001
     with pytest.raises(Timeout):
         beacon.get_validators()
 

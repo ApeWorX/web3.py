@@ -46,10 +46,10 @@ async def test_async_cl_beacon_raises_exception_on_invalid_url(async_beacon):
 
 
 @pytest.mark.asyncio
-async def test_async_beacon_user_request_timeout():
-    beacon = AsyncBeacon(base_url=BASE_URL, request_timeout=0.001)
+async def test_async_beacon_user_request_timeout(async_beacon):
+    async_beacon.request_timeout = 0.001
     with pytest.raises(TimeoutError):
-        await beacon.get_validators()
+        await async_beacon.get_validators()
 
 
 @pytest.mark.asyncio
