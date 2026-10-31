@@ -26,6 +26,9 @@ from requests.adapters import (
 from web3._utils.caching import (
     generate_cache_key,
 )
+from web3._utils.http import (
+    DEFAULT_HTTP_TIMEOUT,
+)
 from web3._utils.http_session_manager import (
     HTTPSessionManager,
 )
@@ -239,6 +242,48 @@ def test_session_manager_precached_session(mocker, http_session_manager):
     assert adapter._pool_maxsize == 100
 
 
+def test_session_manager_evicted_close_timer_uses_request_timeout_plus_slack(
+    mocker, http_session_manager
+):
+    # The evicted-session close timer should fire at ``request_timeout + 0.1``
+    # so any in-flight request has slack to finish before its session is closed.
+    # An earlier version dropped the slack for non-default timeouts because of
+    # operator precedence (``x or DEFAULT + 0.1`` parses as ``x or (DEFAULT + 0.1)``).
+    timer_mock = mocker.patch("web3._utils.http_session_manager.threading.Timer")
+
+    http_session_manager.session_cache = SimpleCache(1)
+    http_session_manager.cache_and_return_session(
+        URI("https://www.test1.com"), request_timeout=5.0
+    )
+    http_session_manager.cache_and_return_session(
+        URI("https://www.test2.com"), request_timeout=5.0
+    )
+
+    # eviction triggered the timer with the right interval
+    assert timer_mock.called
+    interval = timer_mock.call_args.args[0]
+    assert interval == pytest.approx(5.1)
+
+
+def test_session_manager_evicted_close_timer_falls_back_to_default(
+    mocker, http_session_manager
+):
+    timer_mock = mocker.patch("web3._utils.http_session_manager.threading.Timer")
+
+    http_session_manager.session_cache = SimpleCache(1)
+    http_session_manager.cache_and_return_session(
+        URI("https://www.test1.com"), request_timeout=None
+    )
+    http_session_manager.cache_and_return_session(
+        URI("https://www.test2.com"), request_timeout=None
+    )
+
+    assert timer_mock.called
+    interval = timer_mock.call_args.args[0]
+    # ``DEFAULT_HTTP_TIMEOUT`` is 30 in this codebase; verify we still add the slack.
+    assert interval == pytest.approx(DEFAULT_HTTP_TIMEOUT + 0.1)
+
+
 def test_simple_cache_cache_session():
     cache = SimpleCache(2)
     _, evicted_items = cache.cache("1", "Hello1")
@@ -330,6 +375,45 @@ class AsyncMockedResponse:
     @staticmethod
     def raise_for_status() -> None:
         pass
+
+
+@pytest.mark.asyncio
+async def test_async_evicted_close_task_uses_request_timeout_plus_slack(
+    mocker, http_session_manager
+):
+    # Async equivalent of the sync precedence-bug regression test: the
+    # evicted-session close coroutine should be scheduled with
+    # ``request_timeout.total + 0.1``.
+    captured: dict[str, float] = {}
+
+    async def _capture(timeout, evicted_sessions):
+        captured["timeout"] = timeout
+
+    mocker.patch.object(
+        http_session_manager,
+        "_async_close_evicted_sessions",
+        side_effect=_capture,
+    )
+
+    http_session_manager.session_cache = SimpleCache(1)
+    timeout = ClientTimeout(total=5.0)
+
+    s1 = ClientSession()
+    s2 = ClientSession()
+    try:
+        await http_session_manager.async_cache_and_return_session(
+            URI("https://www.test1.com"), session=s1, request_timeout=timeout
+        )
+        await http_session_manager.async_cache_and_return_session(
+            URI("https://www.test2.com"), session=s2, request_timeout=timeout
+        )
+        # let the scheduled close-task run
+        await asyncio.sleep(0)
+    finally:
+        await s1.close()
+        await s2.close()
+
+    assert captured.get("timeout") == pytest.approx(5.1)
 
 
 @pytest.mark.asyncio
