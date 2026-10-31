@@ -1,4 +1,5 @@
 import asyncio
+import sys
 from concurrent.futures import (
     ThreadPoolExecutor,
 )
@@ -18,6 +19,14 @@ from aiohttp import (
 )
 from eth_typing import (
     URI,
+)
+
+# aiohttp's `enable_cleanup_closed` parameter is deprecated on Python 3.12.8+
+# and 3.13.1+ (CPython bug fix https://github.com/python/cpython/pull/118960).
+# Passing it triggers a DeprecationWarning on those versions.
+_ENABLE_CLEANUP_CLOSED = (
+    sys.version_info < (3, 12, 8)
+    or (3, 13) <= sys.version_info < (3, 13, 1)
 )
 import requests
 
@@ -187,20 +196,16 @@ class HTTPSessionManager:
         async with async_lock(self.session_pool, self._lock):
             if cache_key not in self.session_cache:
                 if session is None:
-                    connector_kwargs = {"force_close": True}
-                    # enable_cleanup_closed is only needed on Python < 3.12.8 / 3.13.1
-                    # where CPython bug #118960 is not fixed; on newer versions it
-                    # triggers a DeprecationWarning.
-                    import sys
-                    if sys.version_info < (3, 12, 8) or (
-                        sys.version_info.major == 3
-                        and sys.version_info.minor == 13
-                        and sys.version_info.micro < 1
-                    ):
-                        connector_kwargs["enable_cleanup_closed"] = True
                     session = ClientSession(
                         raise_for_status=True,
-                        connector=TCPConnector(**connector_kwargs),
+                        connector=TCPConnector(
+                            force_close=True,
+                            **(
+                                {"enable_cleanup_closed": True}
+                                if _ENABLE_CLEANUP_CLOSED
+                                else {}
+                            ),
+                        ),
                     )
 
                 cached_session, evicted_items = self.session_cache.cache(
@@ -245,7 +250,14 @@ class HTTPSessionManager:
                     # replace stale session with a new session at the cache key
                     _session = ClientSession(
                         raise_for_status=True,
-                        connector=TCPConnector(**connector_kwargs),
+                        connector=TCPConnector(
+                            force_close=True,
+                            **(
+                                {"enable_cleanup_closed": True}
+                                if _ENABLE_CLEANUP_CLOSED
+                                else {}
+                            ),
+                        ),
                     )
                     cached_session, evicted_items = self.session_cache.cache(
                         cache_key, _session
