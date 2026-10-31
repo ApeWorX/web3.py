@@ -57,6 +57,7 @@ from .utils import (
     normal_name_to_hash,
     normalize_name,
     raw_name_to_hash,
+    resolved_address_to_bytes,
 )
 
 if TYPE_CHECKING:
@@ -138,6 +139,63 @@ class ENS(BaseENS):
 
         return ns
 
+    def address_bytes(
+        self,
+        name: str,
+        coin_type: int | None = None,
+    ) -> bytes | None:
+        """
+        Look up the raw address bytes that `name` points to.
+
+        Returns the ENSIP-9 native binary encoding from the resolver without
+        converting to a checksummed hex string. For Ethereum (``coin_type=60``
+        or the default ``addr(node)`` record), this is typically 20 bytes. For
+        other chains (for example Bitcoin or Solana), byte length and format
+        follow `ENSIP-9 <https://docs.ens.domains/ensip/9/#address-encoding>`_.
+
+        Use :meth:`address` when you need an EIP-55 checksummed Ethereum address.
+        For other coin types, encode the returned bytes with a chain-specific
+        library such as `ensdomains/address-encoder
+        <https://github.com/ensdomains/address-encoder>`_.
+
+        :param str name: an ENS name to look up
+        :param int coin_type: if provided, look up the address for this coin type
+        :raises InvalidName: if `name` has invalid syntax
+        """
+        from web3.exceptions import (
+            ContractLogicError,
+        )
+
+        if coin_type is None:
+            dns_name, calldata = self._prepare_resolve_call(name, "addr")
+            try:
+                result, resolver_addr = self._universal_resolver.caller.resolve(
+                    dns_name, calldata
+                )
+            except ContractLogicError:
+                return None
+            if not result or result == b"":
+                return None
+            decoded_result = self._decode_ensip10_resolve_data(
+                result, self._resolver_contract, "addr"
+            )
+            return resolved_address_to_bytes(decoded_result)
+
+        dns_name, calldata = self._prepare_resolve_call(name, "addr", [coin_type])
+        try:
+            result, resolver_addr = self._universal_resolver.caller.resolve(
+                dns_name, calldata
+            )
+        except ContractLogicError:
+            return None
+        if not result:
+            return None
+        decoded = self.w3.codec.decode(["bytes"], result)
+        address_as_bytes = decoded[0]
+        if is_none_or_zero_address(address_as_bytes):
+            return None
+        return address_as_bytes
+
     def address(
         self,
         name: str,
@@ -151,27 +209,13 @@ class ENS(BaseENS):
         :raises InvalidName: if `name` has invalid syntax
         :raises ResolverNotFound: if no resolver found for `name`
         """
-        from web3.exceptions import (
-            ContractLogicError,
-        )
-
         if coin_type is None:
             return cast(ChecksumAddress, self._resolve(name, "addr"))
-        else:
-            dns_name, calldata = self._prepare_resolve_call(name, "addr", [coin_type])
-            try:
-                result, resolver_addr = self._universal_resolver.caller.resolve(
-                    dns_name, calldata
-                )
-            except ContractLogicError:
-                return None
-            if not result:
-                return None
-            decoded = self.w3.codec.decode(["bytes"], result)
-            address_as_bytes = decoded[0]
-            if is_none_or_zero_address(address_as_bytes):
-                return None
-            return to_checksum_address(address_as_bytes)
+
+        address_as_bytes = self.address_bytes(name, coin_type=coin_type)
+        if address_as_bytes is None:
+            return None
+        return to_checksum_address(address_as_bytes)
 
     def setup_address(
         self,

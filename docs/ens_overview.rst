@@ -170,6 +170,13 @@ the ``coin_type`` keyword argument.
     eth_address = ns.address('ens.eth', coin_type=60)  # ETH is coin_type 60
     assert eth_address == '0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7'
 
+For non-Ethereum coin types, use :meth:`~ens.ENS.address_bytes` to obtain the
+raw ENSIP-9 binary record from the resolver, then encode it with a chain-specific
+library (for example, `ensdomains/address-encoder
+<https://github.com/ensdomains/address-encoder>`_). :meth:`~ens.ENS.address`
+applies EIP-55 checksumming and is only appropriate for 20-byte Ethereum
+records.
+
 
 Get the ENS Name for an Address
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
