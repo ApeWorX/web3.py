@@ -967,6 +967,24 @@ async def test_ws_send_caching_dummy_request_preserves_method_and_params():
 @pytest.mark.parametrize(
     "input_params,expected",
     [
+        ({}, {}),
+        (None, []),
+    ],
+    ids=["empty-dict", "none"],
+)
+def test_sync_encode_rpc_request_preserves_params_shape(input_params, expected):
+    # Follow-up to gh-3823: keep sync JSON-RPC encoding aligned with async
+    # request formation so empty named-params payloads are not rewritten to [].
+    provider = HTTPProvider()
+    encoded = provider.encode_rpc_request(RPCEndpoint("eth_chainId"), input_params)
+    decoded = provider.decode_rpc_response(encoded)
+    assert decoded["params"] == expected
+    assert type(decoded["params"]) is type(expected)
+
+
+@pytest.mark.parametrize(
+    "input_params,expected",
+    [
         ((), ()),
         ({}, {}),
         (None, []),
