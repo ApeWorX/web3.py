@@ -30,6 +30,7 @@ from web3._utils.abi_element_identifiers import (
 )
 from web3._utils.compat import (
     NotRequired,
+    Self,
 )
 
 if TYPE_CHECKING:
@@ -74,8 +75,51 @@ ENS = NewType("ENS", str)
 Nonce = NewType("Nonce", int)
 RPCEndpoint = NewType("RPCEndpoint", str)
 Timestamp = NewType("Timestamp", int)
-Wei = NewType("Wei", int)
-Gwei = NewType("Gwei", int)
+class _IntegerType(int):
+    def __add__(self, other: int) -> Self:
+        return self.__class__(int(self) + other)
+
+    def __radd__(self, other: int) -> Self:
+        return self.__class__(other + int(self))
+
+    def __sub__(self, other: int) -> Self:
+        return self.__class__(int(self) - other)
+
+    def __rsub__(self, other: int) -> Self:
+        return self.__class__(other - int(self))
+
+    def __mul__(self, other: int) -> Self:
+        return self.__class__(int(self) * other)
+
+    def __rmul__(self, other: int) -> Self:
+        return self.__class__(other * int(self))
+
+    def __floordiv__(self, other: int) -> Self:
+        return self.__class__(int(self) // other)
+
+    def __mod__(self, other: int) -> Self:
+        return self.__class__(int(self) % other)
+
+    def __divmod__(self, other: int) -> tuple[Self, Self]:
+        quotient, remainder = divmod(int(self), other)
+        return self.__class__(quotient), self.__class__(remainder)
+
+    def __neg__(self) -> Self:
+        return self.__class__(-int(self))
+
+    def __pos__(self) -> Self:
+        return self.__class__(+int(self))
+
+    def __abs__(self) -> Self:
+        return self.__class__(abs(int(self)))
+
+
+class Wei(_IntegerType):
+    pass
+
+
+class Gwei(_IntegerType):
+    pass
 Formatters = dict[RPCEndpoint, Callable[..., Any]]
 
 
