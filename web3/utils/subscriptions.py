@@ -19,6 +19,7 @@ from hexbytes import (
 from web3.exceptions import (
     Web3AttributeError,
     Web3ValueError,
+    Web3TypeError,
 )
 from web3.types import (
     BlockData,
@@ -108,6 +109,11 @@ class EthSubscription(Generic[TSubscriptionResult]):
         label: str | None = None,
         parallelize: bool | None = None,
     ) -> None:
+        if parallelize is not None and not isinstance(parallelize, bool):
+            raise Web3TypeError(
+                "`parallelize` must be a bool or None; "
+                f"got {type(parallelize).__name__!r}"
+            )
         self._subscription_params = subscription_params
         self._handler = handler_wrapper(handler)
         self._handler_context = handler_context or {}

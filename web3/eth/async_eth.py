@@ -60,6 +60,7 @@ from web3.exceptions import (
     TransactionNotFound,
     Web3RPCError,
     Web3ValueError,
+    Web3TypeError,
 )
 from web3.method import (
     Method,
@@ -708,6 +709,11 @@ class AsyncEth(BaseEth):
         label: str | None = None,
         parallelize: bool | None = None,
     ) -> HexStr:
+        if parallelize is not None and not isinstance(parallelize, bool):
+            raise Web3TypeError(
+                "`parallelize` must be a bool or None; "
+                f"got {type(parallelize).__name__!r}"
+            )
         if not isinstance(self.w3.provider, PersistentConnectionProvider):
             raise MethodNotSupported(
                 "eth_subscribe is only supported with providers that support "

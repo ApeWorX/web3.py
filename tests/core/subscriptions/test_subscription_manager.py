@@ -20,6 +20,7 @@ from web3 import (
 )
 from web3.exceptions import (
     SubscriptionHandlerTaskException,
+    Web3TypeError,
     Web3ValueError,
 )
 from web3.providers.persistent.request_processor import (
@@ -529,3 +530,22 @@ async def test_eth_subscribe_api_call_with_all_kwargs(subscription_manager):
 
     assert subscription_manager.total_handler_calls == 1
     assert len(async_w3.subscription_manager._tasks) == 0
+
+
+@pytest.mark.asyncio
+async def test_subscribe_rejects_non_bool_parallelize(async_w3):
+    with pytest.raises(Web3TypeError, match="`parallelize` must be a bool or None"):
+        await async_w3.eth.subscribe(
+            "newHeads", label="bad-parallelize", parallelize="yes"
+        )
+
+
+def test_eth_subscription_init_rejects_non_bool_parallelize():
+    from web3.utils.subscriptions import EthSubscription
+
+    with pytest.raises(Web3TypeError, match="`parallelize` must be a bool or None"):
+        EthSubscription(subscription_params=("newHeads",), parallelize="yes")
+
+    # None and bool values remain accepted
+    EthSubscription(subscription_params=("newHeads",), parallelize=None)
+    EthSubscription(subscription_params=("newHeads",), parallelize=True)
