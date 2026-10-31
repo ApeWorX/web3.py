@@ -57,6 +57,34 @@ async def test_async_beacon_request_timeout_type(async_beacon):
     assert isinstance(async_beacon.request_timeout, float)
 
 
+@pytest.mark.asyncio
+async def test_async_beacon_post_request_uses_client_timeout(async_beacon, mocker):
+    """
+    The AsyncBeacon post helpers must wrap their per-request timeout in a
+    aiohttp.ClientTimeout and forward it through to the request session
+    manager's async_json_make_post_request, with the total matching the
+    configured request_timeout. Without this, downstream aiohttp would
+    silently fall back to its default and the configured `request_timeout`
+    knob would have no effect.
+    """
+    from aiohttp import ClientTimeout
+
+    patched_call = mocker.patch.object(
+        async_beacon._request_session_manager,
+        "async_json_make_post_request",
+        return_value={},
+    )
+
+    await async_beacon.get_validators()
+
+    assert patched_call.call_count == 1
+    timeout_arg = patched_call.call_args.kwargs.get("timeout")
+    if timeout_arg is None:
+        timeout_arg = patched_call.call_args.args[2]  # positional fallback
+    assert isinstance(timeout_arg, ClientTimeout)
+    assert timeout_arg.total == async_beacon.request_timeout
+
+
 # Beacon endpoint tests:
 
 
