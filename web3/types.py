@@ -74,8 +74,105 @@ ENS = NewType("ENS", str)
 Nonce = NewType("Nonce", int)
 RPCEndpoint = NewType("RPCEndpoint", str)
 Timestamp = NewType("Timestamp", int)
-Wei = NewType("Wei", int)
-Gwei = NewType("Gwei", int)
+
+
+class _PreservingInt(int):
+    """``int`` subclass whose arithmetic operators return ``type(self)``
+    instead of bare ``int``.
+
+    Concrete subclasses (``Wei``, ``Gwei``) inherit this without adding any
+    state, so the only observable change versus a plain ``int`` is that the
+    result of arithmetic stays in the subclass. This is what lets ``+=`` /
+    ``-=`` and accumulator loops over typed quantities pass strict mypy
+    without an explicit cast on every step.
+
+    ``__truediv__`` deliberately falls back to ``int``'s implementation (which
+    returns ``float``), since the result of dividing a quantity is no longer
+    the same unit.
+    """
+
+    __slots__ = ()
+
+    def __add__(self, other: int) -> "_PreservingInt":
+        result = int.__add__(self, other)
+        if result is NotImplemented:
+            return result  # type: ignore[return-value]
+        return type(self)(result)
+
+    def __radd__(self, other: int) -> "_PreservingInt":
+        result = int.__radd__(self, other)
+        if result is NotImplemented:
+            return result  # type: ignore[return-value]
+        return type(self)(result)
+
+    def __sub__(self, other: int) -> "_PreservingInt":
+        result = int.__sub__(self, other)
+        if result is NotImplemented:
+            return result  # type: ignore[return-value]
+        return type(self)(result)
+
+    def __rsub__(self, other: int) -> "_PreservingInt":
+        result = int.__rsub__(self, other)
+        if result is NotImplemented:
+            return result  # type: ignore[return-value]
+        return type(self)(result)
+
+    def __mul__(self, other: int) -> "_PreservingInt":
+        result = int.__mul__(self, other)
+        if result is NotImplemented:
+            return result  # type: ignore[return-value]
+        return type(self)(result)
+
+    def __rmul__(self, other: int) -> "_PreservingInt":
+        result = int.__rmul__(self, other)
+        if result is NotImplemented:
+            return result  # type: ignore[return-value]
+        return type(self)(result)
+
+    def __floordiv__(self, other: int) -> "_PreservingInt":
+        result = int.__floordiv__(self, other)
+        if result is NotImplemented:
+            return result  # type: ignore[return-value]
+        return type(self)(result)
+
+    def __mod__(self, other: int) -> "_PreservingInt":
+        result = int.__mod__(self, other)
+        if result is NotImplemented:
+            return result  # type: ignore[return-value]
+        return type(self)(result)
+
+    def __neg__(self) -> "_PreservingInt":
+        return type(self)(int.__neg__(self))
+
+    def __pos__(self) -> "_PreservingInt":
+        return type(self)(int.__pos__(self))
+
+    def __abs__(self) -> "_PreservingInt":
+        return type(self)(int.__abs__(self))
+
+
+class Wei(_PreservingInt):
+    """Quantity of Wei (smallest unit of ETH).
+
+    Arithmetic preserves the ``Wei`` type so ``Wei`` accumulators type-check
+    under strict mypy:
+
+    >>> total: Wei = Wei(0)
+    >>> total += Wei(100)   # stays Wei, no cast needed
+    """
+
+    __slots__ = ()
+
+
+class Gwei(_PreservingInt):
+    """Quantity of Gwei.
+
+    See :class:`Wei` for the same arithmetic-preserving rationale.
+    """
+
+    __slots__ = ()
+
+
 Formatters = dict[RPCEndpoint, Callable[..., Any]]
 
 
