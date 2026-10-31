@@ -1,0 +1,1139 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../web3.eth.rst:4
+msgid "web3.eth API"
+msgstr ""
+
+#: ../../web3.eth.rst:10
+msgid ""
+"The ``web3.eth`` object exposes the following properties and methods to "
+"interact with the RPC APIs under the ``eth_`` namespace."
+msgstr ""
+
+#: ../../web3.eth.rst:13
+msgid ""
+"By default, when a property or method returns a mapping of keys to "
+"values, it will return an ``AttributeDict`` which acts like a ``dict`` "
+"but you can access the keys as attributes and cannot modify its fields. "
+"For example, you can find the latest block number in these two ways:"
+msgstr ""
+
+#: ../../web3.eth.rst:36
+msgid ""
+"This feature is available via the ``AttributeDictMiddleware`` which is a "
+"default middleware."
+msgstr ""
+
+#: ../../web3.eth.rst:40
+msgid ""
+"Accessing an ``AttributeDict`` property via attribute will break type "
+"hinting. If typing is crucial for your application, accessing via key / "
+"value, as well as removing the ``AttributeDictMiddleware`` altogether, "
+"may be desired."
+msgstr ""
+
+#: ../../web3.eth.rst:46
+msgid "Properties"
+msgstr ""
+
+#: ../../web3.eth.rst:48
+msgid "The following properties are available on the ``web3.eth`` namespace."
+msgstr ""
+
+#: ../../web3.eth.rst:53
+msgid ""
+"The ethereum address that will be used as the default ``from`` address "
+"for all transactions. Defaults to empty."
+msgstr ""
+
+#: ../../web3.eth.rst:59
+msgid ""
+"The default block number that will be used for any RPC methods that "
+"accept a block identifier. Defaults to ``'latest'``."
+msgstr ""
+
+#: ../../web3.eth.rst:65
+msgid "Delegates to ``eth_syncing`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:67
+msgid ""
+"Returns either ``False`` if the node is not syncing or a dictionary "
+"showing sync status."
+msgstr ""
+
+#: ../../web3.eth.rst:84
+msgid "Delegates to ``eth_maxPriorityFeePerGas`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:86
+msgid ""
+"Returns a suggestion for a max priority fee for dynamic fee transactions "
+"in Wei."
+msgstr ""
+
+#: ../../web3.eth.rst:96
+msgid "Delegates to ``eth_gasPrice`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:98
+msgid "Returns the current gas price in Wei."
+msgstr ""
+
+#: ../../web3.eth.rst:108
+msgid "Delegates to ``eth_accounts`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:110
+msgid "Returns the list of known accounts."
+msgstr ""
+
+#: ../../web3.eth.rst:120 ../../web3.eth.rst:179
+msgid "Delegates to ``eth_blockNumber`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:122
+msgid "Returns the number of the most recent block"
+msgstr ""
+
+#: ../../web3.eth.rst:124
+msgid "Alias for :meth:`~web3.eth.Eth.get_block_number`"
+msgstr ""
+
+#: ../../web3.eth.rst:134
+msgid "Delegates to ``eth_chainId`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:136
+msgid ""
+"Returns an integer value for the currently configured \"Chain Id\" value "
+"introduced in `EIP-155 "
+"<https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md>`_. Returns"
+" ``None`` if no Chain Id is available."
+msgstr ""
+
+#: ../../web3.eth.rst:145
+msgid ""
+"This property gets called frequently in validation middleware, but "
+"`eth_chainId` is an allowed method for caching by default. Simply turn on"
+" request caching to avoid repeated calls to this method."
+msgstr ""
+
+#: ../../web3.eth.rst:157
+msgid "Methods"
+msgstr ""
+
+#: ../../web3.eth.rst:159
+msgid "The following methods are available on the ``web3.eth`` namespace."
+msgstr ""
+
+#: ../../web3.eth.rst:164
+msgid "Delegates to ``eth_getBalance`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:166
+msgid ""
+"Returns the balance of the given ``account`` at the block specified by "
+"``block_identifier``."
+msgstr ""
+
+#: ../../web3.eth.rst:169 ../../web3.eth.rst:196 ../../web3.eth.rst:224
+#: ../../web3.eth.rst:326 ../../web3.eth.rst:652 ../../web3.eth.rst:871
+#: ../../web3.eth.rst:905
+msgid "``account`` may be a checksum address or an ENS name"
+msgstr ""
+
+#: ../../web3.eth.rst:181
+msgid "Returns the number of the most recent block."
+msgstr ""
+
+#: ../../web3.eth.rst:191
+msgid "Delegates to ``eth_getStorageAt`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:193
+msgid ""
+"Returns the value from a storage position for the given ``account`` at "
+"the block specified by ``block_identifier``."
+msgstr ""
+
+#: ../../web3.eth.rst:205
+msgid "Fetches the expected base fee for blobs in the next block."
+msgstr ""
+
+#: ../../web3.eth.rst:207
+msgid "Delegates to ``eth_blobBaseFee`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:209
+msgid "Returns the expected base fee in Wei."
+msgstr ""
+
+#: ../../web3.eth.rst:219
+msgid "Delegates to ``eth_getProof`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:221
+msgid ""
+"Returns the values from an array of storage positions for the given "
+"``account`` at the block specified by ``block_identifier``."
+msgstr ""
+
+#: ../../web3.eth.rst:251
+msgid "Merkle proof verification using py-trie."
+msgstr ""
+
+#: ../../web3.eth.rst:253
+msgid ""
+"The following example verifies that the values returned in the "
+"``AttributeDict`` are included in the state of given trie ``root``."
+msgstr ""
+
+#: ../../web3.eth.rst:321
+msgid "Delegates to ``eth_getCode`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:323
+msgid ""
+"Returns the bytecode for the given ``account`` at the block specified by "
+"``block_identifier``."
+msgstr ""
+
+#: ../../web3.eth.rst:340
+msgid ""
+"Delegates to ``eth_getBlockByNumber`` or ``eth_getBlockByHash`` RPC "
+"Methods"
+msgstr ""
+
+#: ../../web3.eth.rst:342
+msgid ""
+"Returns the block specified by ``block_identifier``.  Delegates to "
+"``eth_getBlockByNumber`` if ``block_identifier`` is an integer or one of "
+"the predefined block parameters ``'latest', 'earliest', 'pending', "
+"'safe', 'finalized'`` - otherwise delegates to ``eth_getBlockByHash``. "
+"Throws ``BlockNotFound`` error if the block is not found."
+msgstr ""
+
+#: ../../web3.eth.rst:348
+msgid ""
+"If ``full_transactions`` is ``True`` then the ``'transactions'`` key will"
+" contain full transactions objects.  Otherwise it will be an array of "
+"transaction hashes."
+msgstr ""
+
+#: ../../web3.eth.rst:380
+msgid ""
+"Delegates to ``eth_getBlockTransactionCountByNumber`` or "
+"``eth_getBlockTransactionCountByHash`` RPC Methods"
+msgstr ""
+
+#: ../../web3.eth.rst:383
+msgid ""
+"Returns the number of transactions in the block specified by "
+"``block_identifier``.  Delegates to "
+"``eth_getBlockTransactionCountByNumber`` if ``block_identifier`` is an "
+"integer or one of the predefined block parameters ``'latest', 'earliest',"
+" 'pending', 'safe', 'finalized'``, otherwise delegates to "
+"``eth_getBlockTransactionCountByHash``. Throws ``BlockNotFoundError`` if "
+"transactions are not found."
+msgstr ""
+
+#: ../../web3.eth.rst:401 ../../web3.eth.rst:449
+msgid "Deprecated. Will be removed in v8."
+msgstr ""
+
+#: ../../web3.eth.rst:403
+msgid ""
+"Delegates to ``eth_getUncleByBlockHashAndIndex`` or "
+"``eth_getUncleByBlockNumberAndIndex`` RPC methods"
+msgstr ""
+
+#: ../../web3.eth.rst:406
+msgid ""
+"Returns the uncle at the index specified by ``uncle_index`` from the "
+"block specified by ``block_identifier``.  Delegates to "
+"``eth_getUncleByBlockNumberAndIndex`` if ``block_identifier`` is an "
+"integer or one of the predefined block parameters ``'latest', 'earliest',"
+" 'pending'``, otherwise delegates to ``eth_getUncleByBlockHashAndIndex``."
+" Throws ``BlockNotFound`` if the block is not found."
+msgstr ""
+
+#: ../../web3.eth.rst:451
+msgid ""
+"Delegates to ``eth_getUncleCountByBlockHash`` or "
+"``eth_getUncleCountByBlockNumber`` RPC methods"
+msgstr ""
+
+#: ../../web3.eth.rst:454
+msgid ""
+"Returns the (integer) number of uncles associated with the block "
+"specified by ``block_identifier``. Delegates to "
+"``eth_getUncleCountByBlockNumber`` if ``block_identifier`` is an integer "
+"or one of the predefined block parameters ``'latest', 'earliest', "
+"'pending'``, otherwise delegates to ``eth_getUncleCountByBlockHash``. "
+"Throws ``BlockNotFound`` if the block is not found."
+msgstr ""
+
+#: ../../web3.eth.rst:472
+msgid "Delegates to ``eth_getTransactionByHash`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:474
+msgid ""
+"Returns the transaction specified by ``transaction_hash``. If the "
+"transaction cannot be found throws "
+":class:`web3.exceptions.TransactionNotFound`."
+msgstr ""
+
+#: ../../web3.eth.rst:499
+msgid "Delegates to ``eth_getRawTransactionByHash`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:501
+msgid "Returns the raw form of transaction specified by ``transaction_hash``."
+msgstr ""
+
+#: ../../web3.eth.rst:503
+msgid "If no transaction is found, ``TransactionNotFound`` is raised."
+msgstr ""
+
+#: ../../web3.eth.rst:513
+msgid ""
+"Delegates to ``eth_getTransactionByBlockNumberAndIndex`` or "
+"``eth_getTransactionByBlockHashAndIndex`` RPC Methods"
+msgstr ""
+
+#: ../../web3.eth.rst:516
+msgid ""
+"Returns the transaction at the index specified by ``transaction_index`` "
+"from the block specified by ``block_identifier``.  Delegates to "
+"``eth_getTransactionByBlockNumberAndIndex`` if ``block_identifier`` is an"
+" integer or one of the predefined block parameters ``'latest', "
+"'earliest', 'pending', 'safe', 'finalized'``, otherwise delegates to "
+"``eth_getTransactionByBlockHashAndIndex``. If a transaction is not found "
+"at specified arguments, throws "
+":class:`web3.exceptions.TransactionNotFound`."
+msgstr ""
+
+#: ../../web3.eth.rst:562
+msgid ""
+"Delegates to ``eth_getRawTransactionByBlockNumberAndIndex`` or "
+"``eth_getRawTransactionByBlockHashAndIndex`` RPC Methods"
+msgstr ""
+
+#: ../../web3.eth.rst:565
+msgid ""
+"Returns the raw transaction at the index specified by "
+"``transaction_index`` from the block specified by ``block_identifier``.  "
+"Delegates to ``eth_getRawTransactionByBlockNumberAndIndex`` if "
+"``block_identifier`` is an integer or one of the predefined block "
+"parameters ``'latest', 'earliest', 'pending', 'safe', 'finalized'``, "
+"otherwise delegates to ``eth_getRawTransactionByBlockHashAndIndex``. If a"
+" transaction is not found at specified arguments, throws "
+":class:`web3.exceptions.TransactionNotFound`."
+msgstr ""
+
+#: ../../web3.eth.rst:584
+msgid ""
+"Waits for the transaction specified by ``transaction_hash`` to be "
+"included in a block, then returns its transaction receipt."
+msgstr ""
+
+#: ../../web3.eth.rst:587
+msgid ""
+"Optionally, specify a ``timeout`` in seconds. If timeout elapses before "
+"the transaction is added to a block, then "
+":meth:`~Eth.wait_for_transaction_receipt` raises a "
+":class:`web3.exceptions.TimeExhausted` exception."
+msgstr ""
+
+#: ../../web3.eth.rst:615
+msgid "Delegates to ``eth_getTransactionReceipt`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:617
+msgid ""
+"Returns the transaction receipt specified by ``transaction_hash``.  If "
+"the transaction cannot be found throws "
+":class:`web3.exceptions.TransactionNotFound`."
+msgstr ""
+
+#: ../../web3.eth.rst:619
+msgid ""
+"If ``status`` in response equals 1 the transaction was successful. If it "
+"is equals 0 the transaction was reverted by EVM."
+msgstr ""
+
+#: ../../web3.eth.rst:647
+msgid "Delegates to ``eth_getTransactionCount`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:649
+msgid ""
+"Returns the number of transactions that have been sent from ``account`` "
+"as of the block specified by ``block_identifier``."
+msgstr ""
+
+#: ../../web3.eth.rst:662 ../../web3.eth.rst:781 ../../web3.eth.rst:837
+msgid "Delegates to ``eth_sendTransaction`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:664
+msgid "Signs and sends the given ``transaction``"
+msgstr ""
+
+#: ../../web3.eth.rst:666
+msgid ""
+"The ``transaction`` parameter should be a dictionary with the following "
+"fields."
+msgstr ""
+
+#: ../../web3.eth.rst:668
+msgid ""
+"``from``: ``bytes or text``, checksum address or ENS name - (optional, "
+"default: ``web3.eth.defaultAccount``) The address the transaction is sent"
+" from."
+msgstr ""
+
+#: ../../web3.eth.rst:670
+msgid ""
+"``to``: ``bytes or text``, checksum address or ENS name - (optional when "
+"creating new contract) The address the transaction is directed to."
+msgstr ""
+
+#: ../../web3.eth.rst:672
+msgid ""
+"``gas``: ``integer`` - (optional) Integer of the gas provided for the "
+"transaction execution. It will return unused gas."
+msgstr ""
+
+#: ../../web3.eth.rst:674
+msgid ""
+"``maxFeePerGas``: ``integer or hex`` - (optional) maximum amount you're "
+"willing to pay, inclusive of ``baseFeePerGas`` and "
+"``maxPriorityFeePerGas``. The difference between ``maxFeePerGas`` and "
+"``baseFeePerGas + maxPriorityFeePerGas`` is refunded to the user."
+msgstr ""
+
+#: ../../web3.eth.rst:678
+msgid ""
+"``maxPriorityFeePerGas``: ``integer or hex`` - (optional) the part of the"
+" fee that goes to the miner"
+msgstr ""
+
+#: ../../web3.eth.rst:680
+msgid ""
+"``gasPrice``: ``integer`` - Integer of the gasPrice used for each paid "
+"gas **LEGACY** - unless you have a good reason to use ``gasPrice``, use "
+"``maxFeePerGas`` and ``maxPriorityFeePerGas`` instead."
+msgstr ""
+
+#: ../../web3.eth.rst:683
+msgid ""
+"``value``: ``integer`` - (optional) Integer of the value send with this "
+"transaction"
+msgstr ""
+
+#: ../../web3.eth.rst:685
+msgid ""
+"``data``: ``bytes or text`` - The compiled code of a contract OR the hash"
+" of the invoked method signature and encoded parameters. For details see "
+"`Ethereum Contract ABI <https://github.com/ethereum/wiki/wiki/Ethereum-"
+"Contract-ABI>`_."
+msgstr ""
+
+#: ../../web3.eth.rst:688
+msgid ""
+"``nonce``: ``integer`` - (optional) Integer of a nonce. This allows to "
+"overwrite your own pending transactions that use the same nonce."
+msgstr ""
+
+#: ../../web3.eth.rst:691
+msgid ""
+"If the ``transaction`` specifies a ``data`` value but does not specify "
+"``gas`` then the ``gas`` value will be populated using the "
+":meth:`~web3.eth.Eth.estimate_gas()` function with an additional buffer "
+"of ``100000`` gas up to the ``gasLimit`` of the latest block.  In the "
+"event that the value returned by :meth:`~web3.eth.Eth.estimate_gas()` "
+"method is greater than the ``gasLimit`` a ``ValueError`` will be raised."
+msgstr ""
+
+#: ../../web3.eth.rst:734
+msgid "Delegates to ``eth_signTransaction`` RPC Method."
+msgstr ""
+
+#: ../../web3.eth.rst:736
+msgid ""
+"Returns a transaction that's been signed by the node's private key, but "
+"not yet submitted. The signed tx can be submitted with "
+"``Eth.send_raw_transaction``"
+msgstr ""
+
+#: ../../web3.eth.rst:756
+msgid "Delegates to ``eth_sendRawTransaction`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:758
+msgid ""
+"Sends a signed and serialized transaction. Returns the transaction hash "
+"as a HexBytes object."
+msgstr ""
+
+#: ../../web3.eth.rst:783
+msgid ""
+"Sends a transaction that replaces the transaction with "
+"``transaction_hash``."
+msgstr ""
+
+#: ../../web3.eth.rst:785
+msgid "The ``transaction_hash`` must be the hash of a pending transaction."
+msgstr ""
+
+#: ../../web3.eth.rst:787
+msgid ""
+"The ``new_transaction`` parameter should be a dictionary with transaction"
+" fields as required by :meth:`~web3.eth.Eth.send_transaction`. It will be"
+" used to entirely replace the transaction of ``transaction_hash`` without"
+" using any of the pending transaction's values."
+msgstr ""
+
+#: ../../web3.eth.rst:792
+msgid ""
+"If the ``new_transaction`` specifies a ``nonce`` value, it must match the"
+" pending transaction's nonce."
+msgstr ""
+
+#: ../../web3.eth.rst:795
+msgid ""
+"If the ``new_transaction`` specifies ``maxFeePerGas`` and "
+"``maxPriorityFeePerGas`` values, they must be greater than the pending "
+"transaction's values for each field, respectively."
+msgstr ""
+
+#: ../../web3.eth.rst:799
+msgid "Legacy Transaction Support (Less Efficient - Not Recommended)"
+msgstr ""
+
+#: ../../web3.eth.rst:801
+msgid ""
+"If the pending transaction specified a ``gasPrice`` value (legacy "
+"transaction), the ``gasPrice`` value for the ``new_transaction`` must be "
+"greater than the pending transaction's ``gasPrice``."
+msgstr ""
+
+#: ../../web3.eth.rst:805
+msgid ""
+"If the ``new_transaction`` does not specify any of ``gasPrice``, "
+"``maxFeePerGas``, or ``maxPriorityFeePerGas`` values, one of the "
+"following will happen:"
+msgstr ""
+
+#: ../../web3.eth.rst:808
+msgid ""
+"If the pending transaction has a ``gasPrice`` value, this value will be "
+"used with a multiplier of 1.125 - This is typically the minimum "
+"``gasPrice`` increase a node requires before it accepts a replacement "
+"transaction."
+msgstr ""
+
+#: ../../web3.eth.rst:811
+msgid ""
+"If a gas price strategy is set, the ``gasPrice`` value from the gas price"
+" strategy(See :ref:`Gas_Price`) will be used."
+msgstr ""
+
+#: ../../web3.eth.rst:813
+msgid ""
+"If none of the above, the client will ultimately decide appropriate "
+"values for ``maxFeePerGas`` and ``maxPriorityFeePerGas``. These will "
+"likely be default values and may result in an unsuccessful replacement of"
+" the pending transaction."
+msgstr ""
+
+#: ../../web3.eth.rst:817
+msgid ""
+"This method returns the transaction hash of the replacement transaction "
+"as a HexBytes object."
+msgstr ""
+
+#: ../../web3.eth.rst:839
+msgid ""
+"Sends a transaction that modifies the transaction with "
+"``transaction_hash``."
+msgstr ""
+
+#: ../../web3.eth.rst:841
+msgid ""
+"``transaction_params`` are keyword arguments that correspond to valid "
+"transaction parameters as required by "
+":meth:`~web3.eth.Eth.send_transaction`. The parameter values will "
+"override the pending transaction's values to create the replacement "
+"transaction to send."
+msgstr ""
+
+#: ../../web3.eth.rst:846
+msgid ""
+"The same validation and defaulting rules of "
+":meth:`~web3.eth.Eth.replace_transaction` apply."
+msgstr ""
+
+#: ../../web3.eth.rst:848
+msgid ""
+"This method returns the transaction hash of the newly modified "
+"transaction as a HexBytes object."
+msgstr ""
+
+#: ../../web3.eth.rst:864
+msgid "Delegates to ``eth_sign`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:866
+msgid "Caller must specify exactly one of: ``data``, ``hexstr``, or ``text``."
+msgstr ""
+
+#: ../../web3.eth.rst:868
+msgid ""
+"Signs the given data with the private key of the given ``account``. The "
+"account must be unlocked."
+msgstr ""
+
+#: ../../web3.eth.rst:893
+msgid "Delegates to ``eth_signTypedData`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:897
+msgid ""
+"``eth_signTypedData`` is not currently supported by any major client "
+"(Besu, Erigon, Geth, or Nethermind)"
+msgstr ""
+
+#: ../../web3.eth.rst:899
+msgid ""
+"Please note that the ``jsonMessage`` argument is the loaded JSON Object "
+"and **NOT** the JSON String itself."
+msgstr ""
+
+#: ../../web3.eth.rst:902
+msgid ""
+"Signs the ``Structured Data`` (or ``Typed Data``) with the private key of"
+" the given ``account``. The account must be unlocked."
+msgstr ""
+
+#: ../../web3.eth.rst:910
+msgid "Delegates to ``eth_call`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:912
+msgid ""
+"Executes the given transaction locally without creating a new transaction"
+" on the blockchain.  Returns the return value of the executed contract."
+msgstr ""
+
+#: ../../web3.eth.rst:915
+msgid ""
+"The ``transaction`` parameter is handled in the same manner as the "
+":meth:`~web3.eth.Eth.send_transaction()` method."
+msgstr ""
+
+#: ../../web3.eth.rst:928
+msgid ""
+"In most cases it is better to make contract function call through the "
+":py:class:`web3.contract.Contract` interface."
+msgstr ""
+
+#: ../../web3.eth.rst:930
+msgid ""
+"Overriding state is a debugging feature available in Geth clients. View "
+"their `usage documentation <https://geth.ethereum.org/docs/rpc/ns-"
+"eth#3-object---state-override-set>`_ for a list of possible parameters."
+msgstr ""
+
+#: ../../web3.eth.rst:934
+msgid ""
+"`EIP-3668 <https://eips.ethereum.org/EIPS/eip-3668>`_ introduced support "
+"for the ``OffchainLookup`` revert / CCIP Read support. In order to "
+"properly handle a call to a contract function that reverts with an "
+"``OffchainLookup`` error for offchain data retrieval, the "
+"``ccip_read_enabled`` flag has been added to the ``eth_call`` method. "
+"``ccip_read_enabled`` is optional, yielding the default value for CCIP "
+"Read on calls to a global ``global_ccip_read_enabled`` flag on the "
+"provider which is set to ``True`` by default. This means CCIP Read is "
+"enabled by default for calls, as is recommended in EIP-3668. Therefore, "
+"calls to contract functions that revert with an ``OffchainLookup`` will "
+"be handled appropriately by default."
+msgstr ""
+
+#: ../../web3.eth.rst:942
+msgid ""
+"The ``ccip_read_enabled`` flag on the call will always override the value"
+" of the global flag on the provider for explicit control over specific "
+"calls. If the flag on the call is set to ``False``, the call will raise "
+"the ``OffchainLookup`` instead of properly handling the exception "
+"according to EIP-3668. This may be useful for \"preflighting\" a "
+"transaction with a call (see :ref:`ccip-read-example` within the examples"
+" section)."
+msgstr ""
+
+#: ../../web3.eth.rst:947
+msgid ""
+"If the function called results in a ``revert`` error, a "
+"``ContractLogicError`` will be raised. If there is an error message with "
+"the error, web3.py attempts to parse the message that comes back and "
+"return it to the user as the error string. As of v6.3.0, the raw data is "
+"also returned and can be accessed via the ``data`` attribute on "
+"``ContractLogicError``."
+msgstr ""
+
+#: ../../web3.eth.rst:956
+msgid "Delegates to ``eth_simulateV1`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:958
+msgid ""
+"Executes a simulation for the given payload at the given block. Returns "
+"the simulation results."
+msgstr ""
+
+#: ../../web3.eth.rst:1026
+msgid "Delegates to ``eth_createAccessList`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:1028
+msgid ""
+"This method creates an `EIP-2930 "
+"<https://eips.ethereum.org/EIPS/eip-2930>`_ type ``accessList`` based on "
+"a given ``transaction``. The ``accessList`` contains all storage slots "
+"and addresses read and written by the transaction, except for the sender "
+"account and the precompiles. This method uses the same ``transaction`` "
+"call object and ``block_identifier`` object as "
+":meth:`~web3.eth.Eth.call()`. An ``accessList`` can be used to access "
+"contracts that became inaccessible due to gas cost increases."
+msgstr ""
+
+#: ../../web3.eth.rst:1034
+msgid ""
+"The ``transaction`` parameter is handled in the same manner as the "
+":meth:`~web3.eth.Eth.send_transaction()` method. The optional "
+"``block_identifier`` parameter is a block_number or ``latest`` or "
+"``pending``. Default is ``latest``."
+msgstr ""
+
+#: ../../web3.eth.rst:1066
+msgid ""
+"The method ``eth_createAccessList`` returns a list of addresses and "
+"storage keys used by the transaction, plus the gas consumed when the "
+"``accessList`` is included. Like ``eth_estimateGas``, this is an "
+"estimation; the list could change when the transaction is actually "
+"finalized. Adding an ``accessList`` to your transaction does not "
+"necessarily result in lower gas usage compared to a transaction without "
+"an ``accessList``."
+msgstr ""
+
+#: ../../web3.eth.rst:1073
+msgid "Delegates to ``eth_feeHistory`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:1075
+msgid "Returns transaction fee data for up to 1,024 blocks."
+msgstr ""
+
+#: ../../web3.eth.rst
+msgid "Parameters"
+msgstr ""
+
+#: ../../web3.eth.rst:1077
+msgid ""
+"The number of blocks in the requested range. Depending on the client, "
+"this value should be either a :py:class:`int` between 1 and 1024 or a "
+"hexstring. Less than requested may be returned if not all blocks are "
+"available."
+msgstr ""
+
+#: ../../web3.eth.rst:1081
+msgid ""
+"The newest, highest-numbered, block in the requested range. This value "
+"may be an :py:class:`int` or one of the predefined block parameters "
+"``'latest'``, ``'earliest'``, or ``'pending'``."
+msgstr ""
+
+#: ../../web3.eth.rst:1084
+msgid ""
+"*(optional)* A monotonically increasing list of percentile "
+":py:class:`float` values to sample from each block's effective priority "
+"fees per gas in ascending order, weighted by gas used."
+msgstr ""
+
+#: ../../web3.eth.rst
+msgid "Returns"
+msgstr ""
+
+#: ../../web3.eth.rst:1087
+msgid "An ``AttributeDict`` containing the following keys:"
+msgstr ""
+
+#: ../../web3.eth.rst:1089
+msgid ""
+"**oldestBlock** *(int)* -- The oldest, lowest-numbered, block in the "
+"range requested as a ``BlockNumber`` type with :py:class:`int` value."
+msgstr ""
+
+#: ../../web3.eth.rst:1091
+msgid ""
+"**baseFeePerGas** *(List[Wei])* -- An array of block base fees per gas. "
+"This includes the next block after the newest of the returned range, "
+"because this value can be derived from the newest block. Zeroes are "
+"returned for pre-EIP-1559 blocks."
+msgstr ""
+
+#: ../../web3.eth.rst:1094
+msgid ""
+"**gasUsedRatio** *(List[float])* -- An array of ``gasUsed``/``gasLimit`` "
+"float values for the requested blocks."
+msgstr ""
+
+#: ../../web3.eth.rst:1095
+msgid ""
+"**reward** *(List[List[Wei]])* -- *(optional)* A two-dimensional array of"
+" effective priority fees per gas at the requested block percentiles."
+msgstr ""
+
+#: ../../web3.eth.rst:1111
+msgid "Delegates to ``eth_estimateGas`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:1113
+msgid ""
+"Executes the given transaction locally without creating a new transaction"
+" on the blockchain.  Returns amount of gas consumed by execution which "
+"can be used as a gas estimate."
+msgstr ""
+
+#: ../../web3.eth.rst:1117
+msgid ""
+"The ``transaction`` and ``block_identifier`` parameters are handled in "
+"the same manner as the :meth:`~web3.eth.Eth.send_transaction()` method."
+msgstr ""
+
+#: ../../web3.eth.rst:1120
+msgid ""
+"The ``state_override`` is useful when there is a chain of transaction "
+"calls. It overrides state so that the gas estimate of a transaction is "
+"accurate in cases where prior calls produce side effects."
+msgstr ""
+
+#: ../../web3.eth.rst:1132
+msgid ""
+"Uses the selected gas price strategy to calculate a gas price. This "
+"method returns the gas price denominated in wei."
+msgstr ""
+
+#: ../../web3.eth.rst:1135
+msgid ""
+"The ``transaction_params`` argument is optional however some gas price "
+"strategies may require it to be able to produce a gas price."
+msgstr ""
+
+#: ../../web3.eth.rst:1144
+msgid ""
+"For information about how gas price can be customized in web3 see "
+":ref:`Gas_Price`."
+msgstr ""
+
+#: ../../web3.eth.rst:1150
+msgid ""
+"Set the selected gas price strategy. It must be a method of the signature"
+" ``(web3, transaction_params)`` and return a gas price denominated in "
+"wei."
+msgstr ""
+
+#: ../../web3.eth.rst:1156
+msgid "Delegates to ``eth_subscribe`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:1158 ../../web3.eth.rst:1176
+msgid ""
+"Only available on persistent connection providers: "
+":class:`~web3.providers.persistent.WebSocketProvider` and "
+":class:`~web3.providers.persistent.AsyncIPCProvider`."
+msgstr ""
+
+#: ../../web3.eth.rst:1162
+msgid ""
+"Returns a subscription ID that can be used to track a particular "
+"subscription to, or unsubscribe from, an event. For usage examples see "
+"the docs on :ref:`subscription-examples`."
+msgstr ""
+
+#: ../../web3.eth.rst:1174
+msgid "Delegates to ``eth_unsubscribe`` RPC Method"
+msgstr ""
+
+#: ../../web3.eth.rst:1180
+msgid ""
+"Returns ``True`` if successfully unsubscribed. For usage examples see the"
+" docs on :ref:`subscription-examples`."
+msgstr ""
+
+#: ../../web3.eth.rst:1191
+msgid "Filters"
+msgstr ""
+
+#: ../../web3.eth.rst:1193
+msgid ""
+"The following methods are available on the ``web3.eth`` object for "
+"interacting with the filtering API."
+msgstr ""
+
+#: ../../web3.eth.rst:1199
+msgid ""
+"Delegates to ``eth_newFilter``, ``eth_newBlockFilter``, and "
+"``eth_newPendingTransactionFilter`` RPC Methods."
+msgstr ""
+
+#: ../../web3.eth.rst:1202
+msgid ""
+"This method delegates to one of three RPC methods depending on the value "
+"of ``filter_params``."
+msgstr ""
+
+#: ../../web3.eth.rst:1205
+msgid ""
+"If ``filter_params`` is the string ``'pending'`` then a new filter is "
+"registered using the ``eth_newPendingTransactionFilter`` RPC method. This"
+" will create a new filter that will be called for each new unmined "
+"transaction that the node receives."
+msgstr ""
+
+#: ../../web3.eth.rst:1209
+msgid ""
+"If ``filter_params`` is the string ``'latest'`` then a new filter is "
+"registered using the ``eth_newBlockFilter`` RPC method.  This will create"
+" a new filter that will be called each time the node receives a new "
+"block."
+msgstr ""
+
+#: ../../web3.eth.rst:1212
+msgid ""
+"If ``filter_params`` is a dictionary then a new filter is registered "
+"using the ``eth_newFilter`` RPC method.  This will create a new filter "
+"that will be called for all log entries that match the provided "
+"``filter_params``."
+msgstr ""
+
+#: ../../web3.eth.rst:1217
+msgid ""
+"This method returns a ``web3.utils.filters.Filter`` object which can then"
+" be used to either directly fetch the results of the filter or to "
+"register callbacks which will be called with each result of the filter."
+msgstr ""
+
+#: ../../web3.eth.rst:1221
+msgid ""
+"When creating a new log filter, the ``filter_params`` should be a "
+"dictionary with the following keys. Note that the keys are camel-cased "
+"strings, as is expected in a JSON-RPC request."
+msgstr ""
+
+#: ../../web3.eth.rst:1225
+msgid ""
+"``fromBlock``: ``integer/tag`` - (optional, default: \"latest\") Integer "
+"block number, or one of predefined block identifiers \"latest\", "
+"\"pending\", \"earliest\", \"safe\", or \"finalized\"."
+msgstr ""
+
+#: ../../web3.eth.rst:1228
+msgid ""
+"``toBlock``: ``integer/tag`` - (optional, default: \"latest\") Integer "
+"block number, or one of predefined block identifiers \"latest\", "
+"\"pending\", \"earliest\", \"safe\", or \"finalized\"."
+msgstr ""
+
+#: ../../web3.eth.rst:1231
+msgid ""
+"``address``: ``string`` or list of ``strings``, each 20 Bytes - "
+"(optional) Contract address or a list of addresses from which logs should"
+" originate."
+msgstr ""
+
+#: ../../web3.eth.rst:1234
+msgid ""
+"``topics``: list of 32 byte ``strings`` or ``null`` - (optional) Array of"
+" topics that should be used for filtering.  Topics are order-dependent. "
+"This parameter can also be a list of topic lists in which case filtering "
+"will match any of the provided topic arrays."
+msgstr ""
+
+#: ../../web3.eth.rst:1241
+msgid ""
+"Though ``\"latest\"`` and ``\"safe\"`` block identifiers are not yet part"
+" of the specifications for ``eth_newFilter``, they are supported by "
+"web3.py and may or may not yield expected results depending on the node "
+"being accessed."
+msgstr ""
+
+#: ../../web3.eth.rst:1245
+msgid "See :doc:`./filters` for more information about filtering."
+msgstr ""
+
+#: ../../web3.eth.rst:1258
+msgid "Delegates to ``eth_getFilterChanges`` RPC Method."
+msgstr ""
+
+#: ../../web3.eth.rst:1260
+msgid ""
+"Returns all new entries which occurred since the last call to this method"
+" for the given ``filter_id``"
+msgstr ""
+
+#: ../../web3.eth.rst:1286
+msgid "Delegates to ``eth_getFilterLogs`` RPC Method."
+msgstr ""
+
+#: ../../web3.eth.rst:1288
+msgid "Returns all entries for the given ``filter_id``"
+msgstr ""
+
+#: ../../web3.eth.rst:1313
+msgid "Delegates to ``eth_uninstallFilter`` RPC Method."
+msgstr ""
+
+#: ../../web3.eth.rst:1315
+msgid ""
+"Uninstalls the filter specified by the given ``filter_id``.  Returns "
+"boolean as to whether the filter was successfully uninstalled."
+msgstr ""
+
+#: ../../web3.eth.rst:1329
+msgid ""
+"This is the equivalent of: creating a new filter, running "
+":meth:`~Eth.get_filter_logs`, and then uninstalling the filter. See "
+":meth:`~Eth.filter` for details on allowed filter parameters."
+msgstr ""
+
+#: ../../web3.eth.rst:1335
+msgid "Contracts"
+msgstr ""
+
+#: ../../web3.eth.rst:1339
+msgid ""
+"If ``address`` is provided, then this method will return an instance of "
+"the contract defined by ``abi``. The address may be a checksum string, or"
+" an ENS name like ``'mycontract.eth'``."
+msgstr ""
+
+#: ../../web3.eth.rst:1356
+msgid ""
+"If you use an ENS name to initialize a contract, the contract will be "
+"looked up by name on each use. If the name could ever change maliciously,"
+" first :ref:`ens_get_address`, and then create the contract with the "
+"checksum address."
+msgstr ""
+
+#: ../../web3.eth.rst:1361
+msgid ""
+"If ``address`` is *not* provided, the newly created contract class will "
+"be returned. That class will then be initialized by supplying the "
+"address."
+msgstr ""
+
+#: ../../web3.eth.rst:1376
+msgid ""
+"``contract_name`` will be used as the name of the contract class.  If it "
+"is ``None`` then the name of the ``ContractFactoryClass`` will be used."
+msgstr ""
+
+#: ../../web3.eth.rst:1379
+msgid "``ContractFactoryClass`` will be used as the base Contract class."
+msgstr ""
+
+#: ../../web3.eth.rst:1381
+msgid "The following arguments are accepted for contract class creation."
+msgstr ""
+
+#: ../../web3.eth.rst:1383
+msgid ""
+"Application Binary Interface. Usually provided since an ``abi`` is "
+"required to interact with any contract."
+msgstr ""
+
+#: ../../web3.eth.rst:1385
+msgid "Assembly code generated by the compiler"
+msgstr ""
+
+#: ../../web3.eth.rst:1386
+msgid "Abstract Syntax Tree of the contract generated by the compiler"
+msgstr ""
+
+#: ../../web3.eth.rst:1387
+msgid "Bytecode of the contract generated by the compiler"
+msgstr ""
+
+#: ../../web3.eth.rst:1388
+msgid ""
+"Bytecode stored at the contract address, excludes the constructor and "
+"initialization code"
+msgstr ""
+
+#: ../../web3.eth.rst:1391
+msgid "Optionally convert tuples/structs to named tuples"
+msgstr ""
+
+#: ../../web3.eth.rst:1393
+msgid "Contract Metadata generated by the compiler"
+msgstr ""
+
+#: ../../web3.eth.rst:1394
+msgid "Opcodes for the contract generated by the compiler"
+msgstr ""
+
+#: ../../web3.eth.rst:1398
+msgid "Instance of the contract"
+msgstr ""
+
+#: ../../web3.eth.rst
+msgid "Return type"
+msgstr ""
+
+#: ../../web3.eth.rst
+msgid "Raises"
+msgstr ""
+
+#: ../../web3.eth.rst:1400
+msgid "If the address is not provided"
+msgstr ""
+
+#: ../../web3.eth.rst:1401
+msgid "If the contract class is not initialized"
+msgstr ""
+
+#: ../../web3.eth.rst:1403
+msgid ""
+"See the :doc:`web3.contract` documentation for more information about "
+"Contracts."
+msgstr ""
+
+#: ../../web3.eth.rst:1408
+msgid ""
+"Modify the default contract factory from ``Contract`` to "
+"``contractFactoryClass``. Future calls to ``Eth.contract()`` will then "
+"default to ``contractFactoryClass``."
+msgstr ""

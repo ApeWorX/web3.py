@@ -1,0 +1,181 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../web3.geth.rst:2
+msgid "Geth API"
+msgstr ""
+
+#: ../../web3.geth.rst:6
+msgid ""
+"The ``web3.geth`` object exposes modules that enable you to interact with"
+" the JSON-RPC endpoints supported by `Geth <https://github.com/ethereum"
+"/go-ethereum/wiki/Management-APIs>`_ that are not defined in the standard"
+" set of Ethereum JSONRPC endpoints according to `EIP 1474 "
+"<https://github.com/ethereum/EIPs/pull/1474>`_."
+msgstr ""
+
+#: ../../web3.geth.rst:9
+msgid "GethAdmin API"
+msgstr ""
+
+#: ../../web3.geth.rst:11
+msgid "The following methods are available on the ``web3.geth.admin`` namespace."
+msgstr ""
+
+#: ../../web3.geth.rst:15
+msgid ""
+"The ``web3.geth.admin`` object exposes methods to interact with the RPC "
+"APIs under the ``admin_`` namespace that are supported by the Geth "
+"client."
+msgstr ""
+
+#: ../../web3.geth.rst:20
+msgid "Delegates to ``admin_datadir`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:22
+msgid "Returns the system path of the node's data directory."
+msgstr ""
+
+#: ../../web3.geth.rst:32
+msgid "Delegates to ``admin_nodeInfo`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:34
+msgid "Returns information about the currently running node."
+msgstr ""
+
+#: ../../web3.geth.rst:59
+msgid "Delegates to ``admin_peers`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:61
+msgid "Returns the current peers the node is connected to."
+msgstr ""
+
+#: ../../web3.geth.rst:105
+msgid "Delegates to ``admin_addPeer`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:107
+msgid "Requests adding a new remote node to the list of tracked static nodes."
+msgstr ""
+
+#: ../../web3.geth.rst:117
+msgid "Delegates to ``admin_startHTTP`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:119
+msgid ""
+"Starts the HTTP based JSON RPC API webserver on the specified ``host`` "
+"and ``port``, with the ``rpccorsdomain`` set to the provided ``cors`` "
+"value and with the APIs specified by ``apis`` enabled.  Returns boolean "
+"as to whether the server was successfully started."
+msgstr ""
+
+#: ../../web3.geth.rst:132
+msgid "Delegates to ``admin_startWS`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:134
+msgid ""
+"Starts the WebSocket based JSON RPC API webserver on the specified "
+"``host`` and ``port``, with the ``rpccorsdomain`` set to the provided "
+"``cors`` value and with the APIs specified by ``apis`` enabled.  Returns "
+"boolean as to whether the server was successfully started."
+msgstr ""
+
+#: ../../web3.geth.rst:147
+msgid "Delegates to ``admin_stopHTTP`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:149
+msgid "Stops the HTTP based JSON RPC server."
+msgstr ""
+
+#: ../../web3.geth.rst:159
+msgid "Delegates to ``admin_stopWS`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:161
+msgid "Stops the WebSocket based JSON RPC server."
+msgstr ""
+
+#: ../../web3.geth.rst:172
+msgid "GethTxPool API"
+msgstr ""
+
+#: ../../web3.geth.rst:174
+msgid ""
+"The ``web3.geth.txpool`` object exposes methods to interact with the RPC "
+"APIs under the ``txpool_`` namespace. These methods are only exposed "
+"under the ``geth`` namespace since they are not standard."
+msgstr ""
+
+#: ../../web3.geth.rst:178
+msgid "The following methods are available on the ``web3.geth.txpool`` namespace."
+msgstr ""
+
+#: ../../web3.geth.rst:182
+msgid "Delegates to ``txpool_inspect`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:184 ../../web3.geth.rst:246
+msgid ""
+"Returns a textual summary of all transactions currently pending for "
+"inclusion in the next block(s) as well as ones that are scheduled for "
+"future execution."
+msgstr ""
+
+#: ../../web3.geth.rst:244
+msgid "Delegates to ``txpool_status`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:260
+msgid "Delegates to ``txpool_content`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:262
+msgid "Returns the exact details of all transactions that are pending or queued."
+msgstr ""
+
+#: ../../web3.geth.rst:374
+msgid "GethDebug API"
+msgstr ""
+
+#: ../../web3.geth.rst:376
+msgid ""
+"The ``web3.geth.debug`` object exposes methods to interact with the RPC "
+"APIs under the ``debug_`` namespace. These methods are only exposed under"
+" the ``geth`` namespace. Full documentation around options can be found "
+"in the `Geth docs <https://geth.ethereum.org/docs/developers/evm-tracing"
+"/built-in-tracers>`_."
+msgstr ""
+
+#: ../../web3.geth.rst:383
+msgid "Delegates to ``debug_traceTransaction`` RPC Method"
+msgstr ""
+
+#: ../../web3.geth.rst:385
+msgid ""
+"Returns the trace of the transaction with the given ``transaction_hash`` "
+"and ``trace_config``."
+msgstr ""

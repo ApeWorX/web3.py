@@ -1,0 +1,1374 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../migration.rst:2
+msgid "Migration Guide"
+msgstr "迁移指南"
+
+#: ../../migration.rst:7
+msgid "Migrating from v6 to v7"
+msgstr ""
+
+#: ../../migration.rst:9
+msgid ""
+"web3.py follows `Semantic Versioning <http://semver.org>`_, which means "
+"that version 7 introduced backwards-incompatible changes. If you're "
+"upgrading from web3.py ``v6`` or earlier, you can expect to need to make "
+"some changes. Refer to this guide for a summary of breaking changes when "
+"updating from ``v6`` to ``v7``. If you are more than one major version "
+"behind, you should also review the migration guides for the versions in "
+"between."
+msgstr ""
+
+#: ../../migration.rst:18
+msgid "Provider Updates"
+msgstr ""
+
+#: ../../migration.rst:22
+msgid "WebSocketProvider"
+msgstr ""
+
+#: ../../migration.rst:24
+msgid ""
+"``WebsocketProviderV2``, introduced in web3.py ``v6``, has taken priority"
+" over the legacy ``WebsocketProvider``. The ``LegacyWebSocketProvider`` "
+"has been deprecated in ``v7`` and is slated for removal in the next major"
+" version of the library. In summary:"
+msgstr ""
+
+#: ../../migration.rst:28
+msgid "``WebsocketProvider`` -> ``LegacyWebSocketProvider`` (and deprecated)"
+msgstr ""
+
+#: ../../migration.rst:29
+msgid "``WebsocketProviderV2`` -> ``WebSocketProvider``"
+msgstr ""
+
+#: ../../migration.rst:31
+msgid ""
+"If migrating from ``WebSocketProviderV2`` to ``WebSocketProvider``, you "
+"can expect the following changes:"
+msgstr ""
+
+#: ../../migration.rst:34
+msgid "Instantiation no longer requires the ``persistent_websocket`` method:"
+msgstr ""
+
+#: ../../migration.rst:44
+msgid ""
+"Handling incoming subscription messages now occurs under a more flexible "
+"namespace: ``socket``. The ``AsyncIPCProvider`` uses the same API to "
+"listen for messages via an IPC socket."
+msgstr ""
+
+#: ../../migration.rst:60
+msgid "AsyncIPCProvider (non-breaking feature)"
+msgstr ""
+
+#: ../../migration.rst:62
+msgid ""
+"An asynchronous IPC provider, ``AsyncIPCProvider``, is newly available in"
+" ``v7``. This provider makes use of some of the same internals that the "
+"new ``WebSocketProvider`` introduced, allowing it to also support "
+"``eth_subscription``."
+msgstr ""
+
+#: ../../migration.rst:68
+msgid "EthereumTesterProvider"
+msgstr ""
+
+#: ../../migration.rst:70
+msgid ""
+"``EthereumTesterProvider`` now returns ``input`` instead of ``data`` for "
+"``eth_getTransaction*`` calls, as expected."
+msgstr ""
+
+#: ../../migration.rst:75
+msgid "Middlewares -> Middleware"
+msgstr ""
+
+#: ../../migration.rst:77
+msgid ""
+"All references to ``middlewares`` have been replaced with the more "
+"grammatically correct ``middleware``. Notably, this includes when a "
+"provider needs to be instantiated with custom middleware."
+msgstr ""
+
+#: ../../migration.rst:83
+msgid "Class-Based Middleware Model"
+msgstr ""
+
+#: ../../migration.rst:85
+msgid "The middleware model has been changed to a class-based model."
+msgstr ""
+
+#: ../../migration.rst:97
+msgid ""
+"Previously, middleware were defined as functions that tightly wrapped the"
+" provider's ``make_request`` function, where transformations could be "
+"conditionally applied before and after the request was made."
+msgstr ""
+
+#: ../../migration.rst:101
+msgid ""
+"Now, middleware logic can be separated into ``request_processor`` and "
+"``response_processor`` functions that enable pre-request and post-"
+"response logic, respectively. This change offers a simpler, clearer "
+"interface for defining middleware, gives more flexibility for "
+"asynchronous operations and also paved the way for supporting "
+":ref:`batch_requests`."
+msgstr ""
+
+#: ../../migration.rst:106
+msgid ""
+"Major changes for migration are highlighted in this section. Consult the "
+":ref:`middleware_internals` section of the documentation for specifics "
+"and examples on the new class-based design."
+msgstr ""
+
+#: ../../migration.rst:112
+msgid "Middleware Builder Classes"
+msgstr ""
+
+#: ../../migration.rst:114
+msgid ""
+"In ``v6``, certain middleware needed to be constructed with parameters. "
+"This was done by passing the parameters to a constructor method."
+msgstr ""
+
+#: ../../migration.rst:123
+msgid ""
+"In the class-based ``v7`` middleware model, a middleware builder class is"
+" instantiated with the necessary parameters via the ``build()`` method."
+msgstr ""
+
+#: ../../migration.rst:134
+msgid "Middleware Renaming and Removals"
+msgstr ""
+
+#: ../../migration.rst:136
+msgid "The following middleware have been renamed for generalization or clarity:"
+msgstr ""
+
+#: ../../migration.rst:138
+msgid "``name_to_address_middleware`` -> ``ENSNameToAddressMiddleware``"
+msgstr ""
+
+#: ../../migration.rst:139
+msgid "``geth_poa_middleware`` -> ``ExtraDataToPOAMiddleware``"
+msgstr ""
+
+#: ../../migration.rst:141 ../../migration.rst:156 ../../migration.rst:174
+msgid "The following middleware have been removed:"
+msgstr ""
+
+#: ../../migration.rst:145
+msgid "ABI Middleware"
+msgstr ""
+
+#: ../../migration.rst:147
+msgid ""
+"``abi_middleware`` is no longer necessary and has been removed. All of "
+"the functionality of the ``abi_middleware`` was already handled by "
+"web3.py's ABI formatters. For additional context: a bug in the ENS name-"
+"to-address middleware would override the formatters. Fixing this bug has "
+"removed the need for the ``abi_middleware``."
+msgstr ""
+
+#: ../../migration.rst:154
+msgid "Caching Middleware"
+msgstr ""
+
+#: ../../migration.rst:158
+msgid "``simple_cache_middleware``"
+msgstr ""
+
+#: ../../migration.rst:159
+msgid "``latest_block_based_cache_middleware``"
+msgstr ""
+
+#: ../../migration.rst:160
+msgid "``time_based_cache_middleware``"
+msgstr ""
+
+#: ../../migration.rst:162
+msgid ""
+"All caching middleware has been removed in favor of a decorator/wrapper "
+"around the ``make_request`` methods of providers with configuration "
+"options on the provider class. The configuration options are outlined in "
+"the documentation in the :ref:`request_caching` section."
+msgstr ""
+
+#: ../../migration.rst:167
+msgid ""
+"If desired, the previous caching middleware can be re-created using the "
+"new class-based middleware model overriding the ``wrap_make_request`` (or"
+" ``async_wrap_make_request``) method in the middleware class."
+msgstr ""
+
+#: ../../migration.rst:173
+msgid "Result Generating Middleware"
+msgstr ""
+
+#: ../../migration.rst:176
+msgid "``fixture_middleware``"
+msgstr ""
+
+#: ../../migration.rst:177
+msgid "``result_generator_middleware``"
+msgstr ""
+
+#: ../../migration.rst:179
+msgid ""
+"The ``fixture_middleware`` and ``result_generator_middleware`` which were"
+" used for testing/mocking purposes have been removed. These have been "
+"replaced internally by the ``RequestMocker`` class, utilized for testing "
+"via a ``request_mocker`` pytest fixture."
+msgstr ""
+
+#: ../../migration.rst:185
+msgid "HTTP Retry Request Middleware"
+msgstr ""
+
+#: ../../migration.rst:187
+msgid ""
+"The ``http_retry_request_middleware`` has been removed in favor of a "
+"configuration option on the ``HTTPProvider`` and ``AsyncHTTPProvider`` "
+"classes. The configuration options are outlined in the documentation in "
+"the :ref:`http_retry_requests` section."
+msgstr ""
+
+#: ../../migration.rst:193
+msgid "Normalize Request Parameters Middleware"
+msgstr ""
+
+#: ../../migration.rst:195
+msgid ""
+"The ``normalize_request_parameters`` middleware was not used anywhere "
+"internally and has been removed."
+msgstr ""
+
+#: ../../migration.rst:200
+msgid "Remaining camelCase -> snake_case Updates"
+msgstr ""
+
+#: ../../migration.rst:202
+msgid ""
+"The following arguments have been renamed across the library from "
+"camelCase to snake_case in all methods where they are passed in as a "
+"kwarg."
+msgstr ""
+
+#: ../../migration.rst:205
+msgid "``fromBlock`` -> ``from_block``"
+msgstr ""
+
+#: ../../migration.rst:206
+msgid "``toBlock`` -> ``to_block``"
+msgstr ""
+
+#: ../../migration.rst:207
+msgid "``blockHash`` -> ``block_hash``"
+msgstr ""
+
+#: ../../migration.rst:209
+msgid ""
+"Note that if a dictionary is used instead, say to a call such as "
+"`eth_getLogs`, the keys in the dictionary should be camelCase. This is "
+"because the dictionary is passed directly to the JSON-RPC request, where "
+"the keys are expected to be in camelCase."
+msgstr ""
+
+#: ../../migration.rst:215
+msgid "Changes to Exception Handling"
+msgstr ""
+
+#: ../../migration.rst:217
+msgid ""
+"All Python standard library exceptions that were raised from within "
+"web3.py have been replaced with custom ``Web3Exception`` classes. This "
+"change allows for better control over exception handling, being able to "
+"distinguish between exceptions raised by web3.py and those raised from "
+"elsewhere in a codebase. The following exceptions have been replaced:"
+msgstr ""
+
+#: ../../migration.rst:223
+msgid "``AssertionError`` -> ``Web3AssertionError``"
+msgstr ""
+
+#: ../../migration.rst:224
+msgid "``ValueError`` -> ``Web3ValueError``"
+msgstr ""
+
+#: ../../migration.rst:225
+msgid "``TypeError`` -> ``Web3TypeError``"
+msgstr ""
+
+#: ../../migration.rst:226
+msgid "``AttributeError`` -> ``Web3AttributeError``"
+msgstr ""
+
+#: ../../migration.rst:228
+msgid ""
+"A new ``MethodNotSupported`` exception is now raised when a method is not"
+" supported by web3.py. This allows a user to distinguish between when a "
+"method is not available on the current provider, ``MethodUnavailable``, "
+"and when a method is not supported by web3.py under certain conditions, "
+"``MethodNotSupported``."
+msgstr ""
+
+#: ../../migration.rst:233
+msgid ""
+"A ``MismatchedABI`` exception is now raised instead of a "
+"``Web3ValidationError`` in cases where an ABI is not compatible with the "
+"data being passed to it. This change allows for more specific error "
+"handling when using certain ABI types."
+msgstr ""
+
+#: ../../migration.rst:239
+msgid "JSON-RPC Error Handling"
+msgstr ""
+
+#: ../../migration.rst:241
+msgid ""
+"Rather than a ``ValueError`` being replaced with a ``Web3ValueError`` "
+"when a JSON-RPC response comes back with an ``error`` object, a new "
+"``Web3RPCError`` exception is now raised to provide more distinction for "
+"JSON-RPC error responses. Some previously existing exceptions now extend "
+"from this class since they too are related to JSON-RPC errors:"
+msgstr ""
+
+#: ../../migration.rst:247
+msgid "``MethodUnavailable``"
+msgstr ""
+
+#: ../../migration.rst:248
+msgid "``BlockNotFound``"
+msgstr ""
+
+#: ../../migration.rst:249
+msgid "``TransactionNotFound``"
+msgstr ""
+
+#: ../../migration.rst:250
+msgid "``TransactionIndexingInProgress``"
+msgstr ""
+
+#: ../../migration.rst:254
+msgid "End of Support and Feature Removals"
+msgstr ""
+
+#: ../../migration.rst:257
+msgid "Python 3.7 Support Dropped"
+msgstr ""
+
+#: ../../migration.rst:259
+msgid ""
+"Python 3.7 support has been dropped in favor of Python 3.8+. Python 3.7 "
+"is no longer supported by the Python core team, and we want to focus our "
+"efforts on supporting the latest versions of Python."
+msgstr ""
+
+#: ../../migration.rst:265
+msgid "EthPM Module Removed"
+msgstr ""
+
+#: ../../migration.rst:267
+msgid ""
+"The EthPM module has been removed from the library. It was not widely "
+"used and has not been functional since around October 2022. It was "
+"deprecated in ``v6`` and has been completely removed in ``v7``."
+msgstr ""
+
+#: ../../migration.rst:271
+msgid ""
+"Types in the `eth_typing.ethpm <https://github.com/ethereum/eth-"
+"typing/blob/ef9c2d566b7747bb6799214e2c89006b8cde4c36/eth_typing/ethpm.py>`_"
+" module have been deprecated and will be removed from ``eth-typing`` in "
+"the next major release."
+msgstr ""
+
+#: ../../migration.rst:278
+msgid "Geth Miner Namespace Removed"
+msgstr ""
+
+#: ../../migration.rst:280
+msgid ""
+"The ``geth.miner`` namespace, deprecated in ``v6``, has been removed in "
+"``v7``. The ``miner`` namespace was used for managing the concept of a "
+"miner in geth. This is no longer a feature in geth and is planned for "
+"complete removal in the future, with Ethereum having transitioned to "
+"proof-of-stake."
+msgstr ""
+
+#: ../../migration.rst:287
+msgid "Geth Personal Namespace Removed"
+msgstr ""
+
+#: ../../migration.rst:289
+msgid ""
+"The ``geth.personal`` namespace, deprecated in ``v6``, has been removed "
+"in ``v7``. The ``personal`` namespace was used for managing accounts and "
+"keys and was deprecated in geth in ``v1.11.0``. Geth has moved to using "
+"``clef`` for account and key management."
+msgstr ""
+
+#: ../../migration.rst:295
+msgid "ABI Types Removed"
+msgstr ""
+
+#: ../../migration.rst:297
+msgid ""
+"The type definitions for ABIs, deprecated in ``v6``, have been removed in"
+" ``v7``. New types have been introduced in the ``eth_typing`` ``v5`` "
+"package for ABIs. Improvements have been made to make required types more"
+" explicit and to offer better semantics."
+msgstr ""
+
+#: ../../migration.rst:301
+msgid ""
+"The following types from ``web3.types`` have been removed: - "
+"``ABIEventParams`` is no longer available. Use ``ABIComponentIndexed`` "
+"from ``eth_typing`` to represent event input components. - ``ABIEvent`` "
+"now resides in ``eth_typing``. ``ABIEvent.type`` and ``ABIEvent.name`` "
+"are now required fields. - ``ABIFunctionComponents`` and "
+"``ABIFunctionParams`` are no longer available. Use ``ABIComponent`` from "
+"``eth_typing`` to represent function input components. - ``ABIFunction`` "
+"now resides in ``eth_typing``. ``ABIFunction.type`` and "
+"``ABIFunction.name`` are now required fields. - ``ABIElement`` now "
+"resides in ``eth_typing`` and represents a ``Union`` of all valid ABI "
+"element types, ``ABICallable``, ``ABIEvent`` and ``ABIError``."
+msgstr ""
+
+#: ../../migration.rst:315
+msgid "Miscellaneous Changes"
+msgstr ""
+
+#: ../../migration.rst:317
+msgid ""
+"``LRU`` has been removed from the library and dependency on ``lru-dict`` "
+"library was dropped."
+msgstr ""
+
+#: ../../migration.rst:319
+msgid ""
+"``CallOverride`` type was changed to ``StateOverride`` since more methods"
+" than ``eth_call`` utilize the state override params."
+msgstr ""
+
+#: ../../migration.rst:321
+msgid "``User-Agent`` header was changed to a more readable format."
+msgstr ""
+
+#: ../../migration.rst:322
+msgid ""
+"``BaseContractFunctions`` iterator now returns instances of "
+"``ContractFunction`` rather than the function names."
+msgstr ""
+
+#: ../../migration.rst:324
+msgid ""
+"``BaseContractFunction`` class attribute ``function_identifier`` has been"
+" removed in favor of the ``abi_element_identifier`` attribute."
+msgstr ""
+
+#: ../../migration.rst:326
+msgid ""
+"``web3.contract.utils.call_contract_function()`` no longer uses "
+"``fn_abi`` as a parameter. Instead, the ``abi_callable`` parameter of "
+"type ``ABICallable`` is used."
+msgstr ""
+
+#: ../../migration.rst:328
+msgid "Beacon API filename change: ``beacon/main.py`` -> ``beacon/beacon.py``."
+msgstr ""
+
+#: ../../migration.rst:329
+msgid ""
+"The asynchronous version of ``w3.eth.wait_for_transaction_receipt()`` "
+"changes its signature to use ``Optional[float]`` instead of ``float`` "
+"since it may be ``None``."
+msgstr ""
+
+#: ../../migration.rst:331
+msgid ""
+"``get_default_ipc_path()`` and ``get_dev_ipc_path()`` now return the path"
+" value without checking if the ``geth.ipc`` file exists."
+msgstr ""
+
+#: ../../migration.rst:333
+msgid "``Web3.is_address()`` returns ``True`` for non-checksummed addresses."
+msgstr ""
+
+#: ../../migration.rst:334
+msgid ""
+"``Contract.encodeABI()`` has been renamed to ``Contract.encode_abi()``. "
+"The ``fn_name`` argument has been changed to ``abi_element_identifier``."
+msgstr ""
+
+#: ../../migration.rst:336
+msgid ""
+"JSON-RPC responses are now more strictly validated against the JSON-RPC "
+"2.0 specification while providing more informative error messages for "
+"invalid responses."
+msgstr ""
+
+#: ../../migration.rst:343
+msgid "Migrating from v5 to v6"
+msgstr ""
+
+#: ../../migration.rst:345
+msgid ""
+"web3.py follows `Semantic Versioning <http://semver.org>`_, which means "
+"that version 6 introduced backwards-incompatible changes. If your project"
+" depends on web3.py v6, then you'll probably need to make some changes."
+msgstr ""
+
+#: ../../migration.rst:349
+msgid "Breaking Changes:"
+msgstr ""
+
+#: ../../migration.rst:352
+msgid "Strict Bytes Checking by Default"
+msgstr ""
+
+#: ../../migration.rst:354
+msgid ""
+"web3.py v6 moved to requiring strict bytes checking by default. This "
+"means that if an ABI specifies a ``bytes4`` argument, web3.py will "
+"invalidate any entry that is not encodable as a bytes type with length of"
+" 4. This means only 0x-prefixed hex strings with a length of 4 and bytes "
+"types with a length of 4 will be considered valid. This removes doubt "
+"that comes from inferring values and assuming they should be padded."
+msgstr ""
+
+#: ../../migration.rst:360
+msgid ""
+"This behavior was previously available in via the "
+"``w3.enable_strict_bytes_checking()`` method. This is now, however, a "
+"toggleable flag on the ``Web3`` instance via the "
+"``w3.strict_bytes_type_checking`` property. As outlined above, this "
+"property is set to ``True`` by default but can be toggled on and off via "
+"the property's setter (e.g. ``w3.strict_bytes_type_checking = False``)."
+msgstr ""
+
+#: ../../migration.rst:368
+msgid "Snake Case"
+msgstr ""
+
+#: ../../migration.rst:370
+msgid ""
+"web3.py v6 moved to the more Pythonic convention of snake_casing wherever"
+" possible. There are some exceptions to this pattern:"
+msgstr ""
+
+#: ../../migration.rst:373
+msgid ""
+"Contract methods and events use whatever is listed in the ABI. If the "
+"smart contract convention is to use camelCase for method and event names,"
+" web3.py won't do any magic to convert it to snake_casing."
+msgstr ""
+
+#: ../../migration.rst:376
+msgid ""
+"Arguments to JSON-RPC methods. For example: transaction and filter "
+"parameters still use camelCasing. The reason for this is primarily due to"
+" error messaging. It would be confusing to pass in a snake_cased "
+"parameter and get an error message with a camelCased parameter."
+msgstr ""
+
+#: ../../migration.rst:380
+msgid ""
+"Data that is returned from JSON-RPC methods. For example: The keys in a "
+"transaction receipt will still be returned as camelCase."
+msgstr ""
+
+#: ../../migration.rst:385
+msgid "Python 3.10 and 3.11 Support"
+msgstr ""
+
+#: ../../migration.rst:387
+msgid ""
+"Support for Python 3.10 and 3.11 is here. In order to support Python "
+"3.10, we had to update the ``websockets`` dependency to v10+."
+msgstr ""
+
+#: ../../migration.rst:391
+msgid "Exceptions"
+msgstr ""
+
+#: ../../migration.rst:394
+msgid "Exceptions inherit from a base class"
+msgstr ""
+
+#: ../../migration.rst:396
+msgid "In v5, some web3.py exceptions inherited from ``AttributeError``, namely:"
+msgstr ""
+
+#: ../../migration.rst:398
+msgid "``NoABIFunctionsFound``"
+msgstr ""
+
+#: ../../migration.rst:399
+msgid "``NoABIFound``"
+msgstr ""
+
+#: ../../migration.rst:400
+msgid "``NoABIEventsFound``"
+msgstr ""
+
+#: ../../migration.rst:402
+msgid "Others inherited from ``ValueError``, namely:"
+msgstr ""
+
+#: ../../migration.rst:404
+msgid "``InvalidAddress``"
+msgstr ""
+
+#: ../../migration.rst:405
+msgid "``NameNotFound``"
+msgstr ""
+
+#: ../../migration.rst:406
+msgid "``LogTopicError``"
+msgstr ""
+
+#: ../../migration.rst:407
+msgid "``InvalidEventABI``"
+msgstr ""
+
+#: ../../migration.rst:409
+msgid "Now web3.py exceptions inherit from the same base ``Web3Exception``."
+msgstr ""
+
+#: ../../migration.rst:411
+msgid ""
+"As such, any code that was expecting a ``ValueError`` or an "
+"``AttributeError`` from web3.py must update to expecting one of the "
+"exceptions listed above, or ``Web3Exception``."
+msgstr ""
+
+#: ../../migration.rst:415
+msgid ""
+"Similarly, exceptions raised in the EthPM and ENS modules inherit from "
+"the base ``EthPMException`` and ``ENSException``, respectively."
+msgstr ""
+
+#: ../../migration.rst:419
+msgid "ValidationError"
+msgstr ""
+
+#: ../../migration.rst:421
+msgid ""
+"The Python dev tooling ecosystem is moving towards standardizing "
+"``ValidationError``, so users know that they're catching the correct "
+"``ValidationError``. The base ``ValidationError`` is imported from "
+"``eth_utils``. However, we also wanted to empower users to catch all "
+"errors emitted by a particular module. So we now have a "
+"``Web3ValidationError``, ``EthPMValidationError``, and an "
+"``ENSValidationError`` that all inherit from the generic "
+"``eth_utils.exceptions.ValidationError``."
+msgstr ""
+
+#: ../../migration.rst:430
+msgid "Web3 class split into Web3 and AsyncWeb3"
+msgstr ""
+
+#: ../../migration.rst:432
+msgid ""
+"The `Web3` class previously contained both sync and async methods. We've "
+"separated `Web3` and `AsyncWeb3` functionality to tighten up typing. For "
+"example:"
+msgstr ""
+
+#: ../../migration.rst:443
+msgid "`dict` to `AttributeDict` conversion moved to middleware"
+msgstr ""
+
+#: ../../migration.rst:445
+msgid ""
+"`Eth` module data returned as key-value pairs was previously "
+"automatically converted to an `AttributeDict` by result formatters, which"
+" could cause problems with typing. This conversion has been moved to a "
+"default `attrdict_middleware` where it can be easily removed if "
+"necessary. See the `Eth module <web3.eth.html#web3.eth.Eth>`_ docs for "
+"more detail."
+msgstr ""
+
+#: ../../migration.rst:451
+msgid "Other Misc Changes"
+msgstr ""
+
+#: ../../migration.rst:453
+msgid ""
+"``InfuraKeyNotFound`` exception has been changed to "
+"``InfuraProjectIdNotFound``"
+msgstr ""
+
+#: ../../migration.rst:454
+msgid "``SolidityError`` has been removed in favor of ``ContractLogicError``"
+msgstr ""
+
+#: ../../migration.rst:455
+msgid ""
+"When a method is unavailable from a node provider (i.e. a response error "
+"code of -32601 is returned), a ``MethodUnavailable`` error is now raised "
+"instead of ``ValueError``"
+msgstr ""
+
+#: ../../migration.rst:458
+msgid ""
+"Logs' `data` field was previously formatted with `to_ascii_if_bytes`, now"
+" formatted to `HexBytes`"
+msgstr ""
+
+#: ../../migration.rst:459
+msgid ""
+"Receipts' `type` field was previously not formatted, now formatted with "
+"`to_integer_if_hex`"
+msgstr ""
+
+#: ../../migration.rst:462
+msgid "Removals"
+msgstr ""
+
+#: ../../migration.rst:464
+msgid "Removed unused IBAN module"
+msgstr ""
+
+#: ../../migration.rst:465
+msgid ""
+"Removed ``WEB3_INFURA_API_KEY`` environment variable in favor of "
+"``WEB3_INFURA_PROJECT_ID``"
+msgstr ""
+
+#: ../../migration.rst:466
+msgid "Removed Kovan auto provider"
+msgstr ""
+
+#: ../../migration.rst:467
+msgid ""
+"Removed deprecated ``sha3`` and ``soliditySha3`` methods in favor of "
+"``keccak`` and ``solidityKeccak``"
+msgstr ""
+
+#: ../../migration.rst:468
+msgid "Remove Parity Module and References"
+msgstr ""
+
+#: ../../migration.rst:472
+msgid "Other notable changes"
+msgstr ""
+
+#: ../../migration.rst:474
+msgid ""
+"The ``ipfshttpclient`` library is now opt-in via a web3 install extra. "
+"This only affects the ethpm ipfs backends, which rely on the library."
+msgstr ""
+
+#: ../../migration.rst:481
+msgid "Migrating from v4 to v5"
+msgstr ""
+
+#: ../../migration.rst:483
+msgid ""
+"Web3.py follows `Semantic Versioning <http://semver.org>`_, which means "
+"that version 5 introduced backwards-incompatible changes. If your project"
+" depends on Web3.py v4, then you'll probably need to make some changes."
+msgstr ""
+
+#: ../../migration.rst:487 ../../migration.rst:623
+msgid "Here are the most common required updates:"
+msgstr ""
+
+#: ../../migration.rst:490
+msgid "Python 3.5 no longer supported"
+msgstr ""
+
+#: ../../migration.rst:492
+msgid "You will need to upgrade to either Python 3.6 or 3.7"
+msgstr ""
+
+#: ../../migration.rst:495
+msgid "``eth-abi`` v1 no longer supported"
+msgstr ""
+
+#: ../../migration.rst:497
+msgid "You will need to upgrade the ``eth-abi`` dependency to v2"
+msgstr ""
+
+#: ../../migration.rst:500
+msgid "Changes to base API"
+msgstr ""
+
+#: ../../migration.rst:503
+msgid "JSON-RPC Updates"
+msgstr ""
+
+#: ../../migration.rst:505
+msgid ""
+"In v4, JSON-RPC calls that looked up transactions or blocks and didn't "
+"find them, returned ``None``. Now if a transaction or block is not found,"
+" a ``BlockNotFound`` or a ``TransactionNotFound`` error will be thrown as"
+" appropriate. This applies to the following web3 methods:"
+msgstr ""
+
+#: ../../migration.rst:511
+msgid ""
+":meth:`~web3.eth.Eth.getTransaction` will throw a ``TransactionNotFound``"
+" error"
+msgstr ""
+
+#: ../../migration.rst:512
+msgid ""
+":meth:`~web3.eth.Eth.getTransactionReceipt` will throw a "
+"``TransactionNotFound`` error"
+msgstr ""
+
+#: ../../migration.rst:513
+msgid ""
+":meth:`~web3.eth.Eth.getTransactionByBlock` will throw a "
+"``TransactionNotFound`` error"
+msgstr ""
+
+#: ../../migration.rst:514
+msgid ""
+":meth:`~web3.eth.Eth.getTransactionCount` will throw a ``BlockNotFound`` "
+"error"
+msgstr ""
+
+#: ../../migration.rst:515
+msgid ":meth:`~web3.eth.Eth.getBlock` will throw a ``BlockNotFound`` error"
+msgstr ""
+
+#: ../../migration.rst:516
+msgid ":meth:`~web3.eth.Eth.getUncleCount` will throw a ``BlockNotFound`` error"
+msgstr ""
+
+#: ../../migration.rst:517
+msgid ":meth:`~web3.eth.Eth.getUncleByBlock` will throw a ``BlockNotFound`` error"
+msgstr ""
+
+#: ../../migration.rst:520 ../../migration.rst:737
+msgid "Removed Methods"
+msgstr ""
+
+#: ../../migration.rst:522
+msgid ""
+"``contract.buildTransaction`` was removed for "
+"``contract.functions.buildTransaction.<method name>``"
+msgstr ""
+
+#: ../../migration.rst:523
+msgid "``contract.deploy`` was removed for ``contract.constructor.transact``"
+msgstr ""
+
+#: ../../migration.rst:524
+msgid ""
+"``contract.estimateGas`` was removed for ``contract.functions.<method "
+"name>.estimateGas``"
+msgstr ""
+
+#: ../../migration.rst:525
+msgid ""
+"``contract.call`` was removed for ``contract.<functions/events>.<method "
+"name>.call``"
+msgstr ""
+
+#: ../../migration.rst:526
+msgid ""
+"``contract.transact`` was removed for "
+"``contract.<functions/events>.<method name>.transact``"
+msgstr ""
+
+#: ../../migration.rst:527
+msgid ""
+"``contract.eventFilter`` was removed for ``contract.events.<event "
+"name>.createFilter``"
+msgstr ""
+
+#: ../../migration.rst:528
+msgid "``middleware_stack`` was renamed to :meth:`~Web3.middleware_onion`"
+msgstr ""
+
+#: ../../migration.rst:529
+msgid ""
+"``web3.miner.hashrate`` was a duplicate of :meth:`~web3.eth.Eth.hashrate`"
+" and was removed."
+msgstr ""
+
+#: ../../migration.rst:530
+msgid ""
+"``web3.version.network`` was a duplicate of :meth:`~web3.net.Net.version`"
+" and was removed."
+msgstr ""
+
+#: ../../migration.rst:531
+msgid ""
+"``web3.providers.tester.EthereumTesterProvider`` and "
+"``web3.providers.tester.TestRPCProvider`` have been removed for "
+":meth:`~web3.providers.eth_tester.EthereumTesterProvider`"
+msgstr ""
+
+#: ../../migration.rst:532
+msgid "``web3.eth.enableUnauditedFeatures`` was removed"
+msgstr ""
+
+#: ../../migration.rst:533
+msgid "``web3.txpool`` was moved to :meth:`~web3.geth.txpool`"
+msgstr ""
+
+#: ../../migration.rst:534
+msgid "``web3.version.node`` was removed for ``web3.clientVersion``"
+msgstr ""
+
+#: ../../migration.rst:535
+msgid ""
+"``web3.version.ethereum`` was removed for "
+":meth:`~web3.eth.Eth.protocolVersion`"
+msgstr ""
+
+#: ../../migration.rst:536
+msgid ""
+"Relocated personal RPC endpoints to reflect Parity and Geth "
+"implementations:"
+msgstr ""
+
+#: ../../migration.rst:538
+msgid ""
+"``web3.personal.listAccounts`` was removed for "
+":meth:`~web3.geth.personal.listAccounts` or "
+":meth:`~web3.parity.personal.listAccounts`"
+msgstr ""
+
+#: ../../migration.rst:539
+msgid ""
+"``web3.personal.importRawKey`` was removed for "
+":meth:`~web3.geth.personal.importRawKey` or "
+":meth:`~web3.parity.personal.importRawKey`"
+msgstr ""
+
+#: ../../migration.rst:540
+msgid ""
+"``web3.personal.newAccount`` was removed for "
+":meth:`~web3.geth.personal.newAccount` or "
+":meth:`~web3.parity.personal.newAccount`"
+msgstr ""
+
+#: ../../migration.rst:541
+msgid ""
+"``web3.personal.lockAccount`` was removed for "
+":meth:`~web3.geth.personal.lockAccount`"
+msgstr ""
+
+#: ../../migration.rst:542
+msgid ""
+"``web3.personal.unlockAccount`` was removed for "
+":meth:`~web3.geth.personal.unlockAccount` or "
+":meth:`~web3.parity.personal.unlockAccount`"
+msgstr ""
+
+#: ../../migration.rst:543
+msgid ""
+"``web3.personal.sendTransaction`` was removed for "
+":meth:`~web3.geth.personal.sendTransaction` or "
+":meth:`~web3.parity.personal.sendTransaction`"
+msgstr ""
+
+#: ../../migration.rst:545
+msgid "Relocated ``web3.admin`` module to ``web3.geth`` namespace"
+msgstr ""
+
+#: ../../migration.rst:546
+msgid "Relocated ``web3.miner`` module to ``web3.geth`` namespace"
+msgstr ""
+
+#: ../../migration.rst:549
+msgid "Deprecated Methods"
+msgstr ""
+
+#: ../../migration.rst:551
+msgid "Expect the following methods to be removed in v6:"
+msgstr ""
+
+#: ../../migration.rst:553
+msgid "``web3.sha3`` was deprecated for :meth:`~Web3.keccak`"
+msgstr ""
+
+#: ../../migration.rst:554
+msgid "``web3.soliditySha3`` was deprecated for :meth:`~Web3.solidityKeccak`"
+msgstr ""
+
+#: ../../migration.rst:555
+msgid ""
+":meth:`~web3.net.Net.chainId` was deprecated for "
+":meth:`~web3.eth.Eth.chainId`. Follow issue `#1293 "
+"<https://github.com/ethereum/web3.py/issues/1293>`_ for details"
+msgstr ""
+
+#: ../../migration.rst:557
+msgid "``web3.eth.getCompilers()`` was deprecated and will not be replaced"
+msgstr ""
+
+#: ../../migration.rst:558
+msgid ""
+":meth:`~web3.eth.getTransactionFromBlock()` was deprecated for "
+":meth:`~Web3.getTransactionByBlock`"
+msgstr ""
+
+#: ../../migration.rst:561
+msgid "Deprecated ConciseContract and ImplicitContract"
+msgstr ""
+
+#: ../../migration.rst:562
+msgid ""
+"The ConciseContract and ImplicitContract have been deprecated and will be"
+" removed in v6."
+msgstr ""
+
+#: ../../migration.rst:564
+msgid ""
+"ImplicitContract instances will need to use the verbose syntax. For "
+"example:"
+msgstr ""
+
+#: ../../migration.rst:566
+#, python-brace-format
+msgid "``contract.functions.<function name>.transact({})``"
+msgstr ""
+
+#: ../../migration.rst:568
+msgid ""
+"ConciseContract has been replaced with the ContractCaller API. Instead of"
+" using the ConciseContract factory, you can now use:"
+msgstr ""
+
+#: ../../migration.rst:570
+msgid "``contract.caller.<function_name>``"
+msgstr ""
+
+#: ../../migration.rst:572
+msgid "or the classic contract syntax:"
+msgstr ""
+
+#: ../../migration.rst:574
+msgid "``contract.functions.<function name>.call()``."
+msgstr ""
+
+#: ../../migration.rst:576
+msgid ""
+"Some more concrete examples can be found in the `ContractCaller docs "
+"<https://web3py.readthedocs.io/en/stable/web3.contract.html#contractcaller>`_"
+msgstr ""
+
+#: ../../migration.rst:580
+msgid "Manager Provider"
+msgstr ""
+
+#: ../../migration.rst:582
+msgid ""
+"In v5, only a single provider will be allowed. While allowing multiple "
+"providers is a feature we'd like to support in the future, the way that "
+"multiple providers was handled in v4 wasn't ideal. The only thing they "
+"could do was fall back. There was no mechanism for any round robin, nor "
+"was there any control around which provider was chosen. Eventually, the "
+"idea is to expand the Manager API to support injecting custom logic into "
+"the provider selection process."
+msgstr ""
+
+#: ../../migration.rst:590
+msgid ""
+"For now, ``manager.providers`` has changed to ``manager.provider``. "
+"Similarly, instances of ``web3.providers`` have been changed to "
+"``web3.provider``."
+msgstr ""
+
+#: ../../migration.rst:595
+msgid "Testnet Changes"
+msgstr ""
+
+#: ../../migration.rst:597
+msgid ""
+"Web3.py will no longer automatically look up a testnet connection in "
+"IPCProvider."
+msgstr ""
+
+#: ../../migration.rst:601
+msgid "ENS"
+msgstr ""
+
+#: ../../migration.rst:603
+msgid ""
+"Web3.py has stopped inferring the ``.eth`` TLD on domain names. If a "
+"domain name is used instead of an address, you'll need to specify the "
+"TLD. An ``InvalidTLD`` error will be thrown if the TLD is missing."
+msgstr ""
+
+#: ../../migration.rst:609
+msgid "Required Infura API Key"
+msgstr ""
+
+#: ../../migration.rst:611
+msgid ""
+"In order to interact with Infura after March 27, 2019, you'll need to set"
+" an environment variable called ``WEB3_INFURA_PROJECT_ID``. You can get a"
+" project id by visiting https://infura.io/register."
+msgstr ""
+
+#: ../../migration.rst:617
+msgid "Migrating from v3 to v4"
+msgstr ""
+
+#: ../../migration.rst:619
+msgid ""
+"Web3.py follows `Semantic Versioning <http://semver.org>`_, which means "
+"that version 4 introduced backwards-incompatible changes. If your project"
+" depends on Web3.py v3, then you'll probably need to make some changes."
+msgstr ""
+
+#: ../../migration.rst:626
+msgid "Python 2 to Python 3"
+msgstr ""
+
+#: ../../migration.rst:628
+msgid ""
+"Only Python 3 is supported in v4. If you are running in Python 2, it's "
+"time to upgrade. We recommend using `2to3` which can make most of your "
+"code compatible with Python 3, automatically."
+msgstr ""
+
+#: ../../migration.rst:632
+msgid ""
+"The most important update, relevant to Web3.py, is the new :class:`bytes`"
+" type. It is used regularly, throughout the library, whenever dealing "
+"with data that is not guaranteed to be text."
+msgstr ""
+
+#: ../../migration.rst:636
+msgid ""
+"Many different methods in Web3.py accept text or binary data, like "
+"contract methods, transaction details, and cryptographic functions. The "
+"following example uses :meth:`~Web3.sha3`, but the same pattern applies "
+"elsewhere."
+msgstr ""
+
+#: ../../migration.rst:640
+msgid ""
+"In v3 & Python 2, you might have calculated the hash of binary data this "
+"way:"
+msgstr ""
+
+#: ../../migration.rst:647
+msgid "Or, you might have calculated the hash of text data this way:"
+msgstr ""
+
+#: ../../migration.rst:654
+msgid "After switching to Python 3, these would instead be executed as:"
+msgstr ""
+
+#: ../../migration.rst:664
+msgid ""
+"Note that the return value is different too: you can treat "
+":class:`hexbytes.main.HexBytes` like any other bytes value, but the "
+"representation on the console shows you the hex encoding of those bytes, "
+"for easier visual comparison."
+msgstr ""
+
+#: ../../migration.rst:668
+msgid ""
+"It takes a little getting used to, but the new py3 types are much better."
+" We promise."
+msgstr ""
+
+#: ../../migration.rst:671
+msgid "Filters"
+msgstr ""
+
+#: ../../migration.rst:673
+msgid "Filters usually don't work quite the way that people want them to."
+msgstr ""
+
+#: ../../migration.rst:675
+msgid ""
+"The first step toward fixing them was to simplify them by removing the "
+"polling logic. Now, you must request an update on your filters "
+"explicitly. That means that any exceptions during the request will bubble"
+" up into your code."
+msgstr ""
+
+#: ../../migration.rst:679
+msgid ""
+"In v3, those exceptions (like \"filter is not found\") were swallowed "
+"silently in the automated polling logic. Here was the invocation for "
+"printing out new block hashes as they appear:"
+msgstr ""
+
+#: ../../migration.rst:691
+msgid "In v4, that same logic:"
+msgstr ""
+
+#: ../../migration.rst:699
+msgid ""
+"The caller is responsible for polling the results from "
+"``get_new_entries()``. See :ref:`asynchronous_filters` for examples of "
+"filter-event handling with web3 v4."
+msgstr ""
+
+#: ../../migration.rst:703
+msgid "TestRPCProvider and EthereumTesterProvider"
+msgstr ""
+
+#: ../../migration.rst:705
+msgid ""
+"These providers are fairly uncommon. If you don't recognize the names, "
+"you can probably skip the section."
+msgstr ""
+
+#: ../../migration.rst:708
+msgid ""
+"However, if you were using web3.py for testing contracts, you might have "
+"been using TestRPCProvider or EthereumTesterProvider."
+msgstr ""
+
+#: ../../migration.rst:711
+msgid ""
+"In v4 there is a new :class:`EthereumTesterProvider`, and the old v3 "
+"implementation has been removed. Web3.py v4 uses "
+":class:`eth_tester.main.EthereumTester` under the hood, instead of eth-"
+"testrpc. While ``eth-tester`` is still in beta, many parts are already in"
+" better shape than testrpc, so we decided to replace it in v4."
+msgstr ""
+
+#: ../../migration.rst:716
+msgid ""
+"If you were using TestRPC, or were explicitly importing "
+"EthereumTesterProvider, like: ``from web3.providers.tester import "
+"EthereumTesterProvider``, then you will need to update."
+msgstr ""
+
+#: ../../migration.rst:719
+msgid ""
+"With v4 you should import with ``from web3 import "
+"EthereumTesterProvider``. As before, you'll need to install Web3.py with "
+"the ``tester`` extra to get these features, like:"
+msgstr ""
+
+#: ../../migration.rst:728
+msgid "Changes to base API convenience methods"
+msgstr ""
+
+#: ../../migration.rst:731
+msgid "Web3.toDecimal()"
+msgstr ""
+
+#: ../../migration.rst:733
+msgid ""
+"In v4 ``Web3.toDecimal()`` is renamed: :meth:`~Web3.toInt` for improved "
+"clarity. It does not return a :class:`decimal.Decimal`, it returns an "
+":class:`int`."
+msgstr ""
+
+#: ../../migration.rst:739
+msgid "``Web3.toUtf8`` was removed for :meth:`~Web3.toText`."
+msgstr ""
+
+#: ../../migration.rst:740
+msgid "``Web3.fromUtf8`` was removed for :meth:`~Web3.toHex`."
+msgstr ""
+
+#: ../../migration.rst:741
+msgid "``Web3.toAscii`` was removed for :meth:`~Web3.toBytes`."
+msgstr ""
+
+#: ../../migration.rst:742
+msgid "``Web3.fromAscii`` was removed for :meth:`~Web3.toHex`."
+msgstr ""
+
+#: ../../migration.rst:743
+msgid "``Web3.fromDecimal`` was removed for :meth:`~Web3.toHex`."
+msgstr ""
+
+#: ../../migration.rst:746
+msgid "Provider Access"
+msgstr ""
+
+#: ../../migration.rst:748
+msgid "In v4, ``w3.currentProvider`` was removed, in favor of ``w3.providers``."
+msgstr ""
+
+#: ../../migration.rst:751
+msgid "Disambiguating String Inputs"
+msgstr ""
+
+#: ../../migration.rst:753
+msgid ""
+"There are a number of places where an arbitrary string input might be "
+"either a byte-string that has been hex-encoded, or unicode characters in "
+"text. These are named ``hexstr`` and ``text`` in Web3.py. You specify "
+"which kind of :class:`str` you have by using the appropriate keyword "
+"argument. See examples in :ref:`overview_type_conversions`."
+msgstr ""
+
+#: ../../migration.rst:759
+msgid ""
+"In v3, some methods accepted a :class:`str` as the first positional "
+"argument. In v4, you must pass strings as one of ``hexstr`` or ``text`` "
+"keyword arguments."
+msgstr ""
+
+#: ../../migration.rst:762
+msgid "Notable methods that no longer accept ambiguous strings:"
+msgstr ""
+
+#: ../../migration.rst:764
+msgid ":meth:`~Web3.sha3`"
+msgstr ""
+
+#: ../../migration.rst:765
+msgid ":meth:`~Web3.toBytes`"
+msgstr ""
+
+#: ../../migration.rst:768
+msgid "Contracts"
+msgstr ""
+
+#: ../../migration.rst:770
+msgid ""
+"When a contract returns the ABI type ``string``, Web3.py v4 now returns a"
+" :class:`str` value by decoding the underlying bytes using UTF-8."
+msgstr ""
+
+#: ../../migration.rst:772
+msgid ""
+"When a contract returns the ABI type ``bytes`` (of any length), Web3.py "
+"v4 now returns a :class:`bytes` value"
+msgstr ""
+
+#: ../../migration.rst:776
+msgid "Personal API"
+msgstr ""
+
+#: ../../migration.rst:778
+msgid ""
+"``w3.personal.signAndSendTransaction`` is no longer available. Use "
+":meth:`w3.personal.sendTransaction() <web3.personal.sendTransaction>` "
+"instead."
+msgstr ""

@@ -1,0 +1,609 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>贡献 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="行为准则" href="code_of_conduct.html" />
+    <link rel="prev" title="资源和学习材料" href="resources.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">贡献</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-help">How to Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#your-development-environment">Your Development Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#using-docker">Using Docker</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-tests">Running The Tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-tests">Writing Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#unit-testing-and-eth-tester-tests">Unit Testing and eth-tester Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#integration-testing">Integration Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#working-with-test-contracts">Working With Test Contracts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#manual-testing">Manual Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-style">Code Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pull-requests">Pull Requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-new-fixtures">Generating New Fixtures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geth-fixtures">Geth Fixtures</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ci-testing-with-a-nightly-geth-build">CI Testing With a Nightly Geth Build</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#releasing">Releasing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#final-test-before-each-release">Final test before each release</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-release-notes">Build the release notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#push-the-release-to-github-pypi">Push the release to github &amp; pypi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#which-version-part-to-bump">Which version part to bump</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">贡献</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributing.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="contributing">
+<span id="id1"></span><h1>贡献<a class="headerlink" href="#contributing" title="Link to this heading"></a></h1>
+<p>Thanks for your interest in contributing to web3.py! Read on to learn what
+would be helpful and how to go about it. If you get stuck along the way, reach
+for help in the <a class="reference external" href="https://discord.gg/GHryRvPB84">Python Discord server</a>.</p>
+<section id="how-to-help">
+<h2>How to Help<a class="headerlink" href="#how-to-help" title="Link to this heading"></a></h2>
+<p>Without code:</p>
+<ul class="simple">
+<li><p>Answer user questions within GitHub issues, Stack Overflow, or the <a class="reference external" href="https://discord.gg/GHryRvPB84">Python Discord server</a>.</p></li>
+<li><p>Write or record tutorial content.</p></li>
+<li><p>Improve our documentation (including typo fixes).</p></li>
+<li><p><a class="reference external" href="https://github.com/ethereum/web3.py/issues/new">Open an issue</a> on GitHub to document a bug. Include as much detail as possible, e.g., how to reproduce the issue and any exception messages.</p></li>
+</ul>
+<p>With code:</p>
+<ul class="simple">
+<li><p>Fix a bug that has been reported in an issue.</p></li>
+<li><p>Add a feature that has been documented in an issue.</p></li>
+<li><p>Add a missing test case.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p><strong>Before you start:</strong> always ask if a change would be desirable or let us know that
+you plan to work on something! We don't want to waste your time on changes we can't
+accept or duplicated effort.</p>
+</div>
+</section>
+<section id="your-development-environment">
+<h2>Your Development Environment<a class="headerlink" href="#your-development-environment" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Use of a virtual environment is strongly advised for minimizing dependency issues. See
+<a class="reference external" href="https://realpython.com/effective-python-environment/#virtual-environments">this article</a>
+for usage patterns.</p>
+</div>
+<p>All pull requests are made from a fork of the repository; use the GitHub UI to create a fork.
+web3.py depends on <a class="reference external" href="https://gist.github.com/gitaarik/8735255">submodules</a>, so when you clone
+your fork to your local machine, include the <code class="docutils literal notranslate"><span class="pre">--recursive</span></code> flag:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/&lt;your-github-username&gt;/web3.py.git
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>web3.py
+</pre></div>
+</div>
+<p>Finally, install all development dependencies:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+$<span class="w"> </span>pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+<section id="using-docker">
+<h3>Using Docker<a class="headerlink" href="#using-docker" title="Link to this heading"></a></h3>
+<p>Developing within Docker is not required, but if you prefer that workflow, use
+the <em>sandbox</em> container provided in the <strong>docker-compose.yml</strong> file.</p>
+<p>To start up the test environment, run:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</pre></div>
+</div>
+<p>This will build a Docker container set up with an environment to run the
+Python test code.</p>
+<p>To run the core tests from your local machine:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>sandbox<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;pytest tests/core&#39;</span>
+</pre></div>
+</div>
+<p>The container does not have <code class="docutils literal notranslate"><span class="pre">go-ethereum</span></code> installed, so you can exclude those tests
+by using the <code class="docutils literal notranslate"><span class="pre">-k</span> <span class="pre">&quot;not</span> <span class="pre">goethereum&quot;</span></code> flag.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>sandbox<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;pytest tests/integration -k &quot;not goethereum&quot;&#39;</span>
+</pre></div>
+</div>
+<p>You can run arbitrary commands inside the Docker container by using the
+<code class="docutils literal notranslate"><span class="pre">bash</span> <span class="pre">-c</span></code> prefix.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>sandbox<span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;pwd &amp;&amp; ls&#39;</span>
+</pre></div>
+</div>
+<p>Or, if you would like to open a session to the container, run:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>sandbox<span class="w"> </span>bash
+</pre></div>
+</div>
+</section>
+</section>
+<section id="running-the-tests">
+<h2>Running The Tests<a class="headerlink" href="#running-the-tests" title="Link to this heading"></a></h2>
+<p>A great way to explore the code base is to run the tests.</p>
+<p>First, install the test dependencies:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[test]&quot;</span>
+</pre></div>
+</div>
+<p>You can run all tests with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest
+</pre></div>
+</div>
+<p>However, running the entire test suite takes a very long time and is generally impractical.
+Typically, you'll just want to run a subset instead, like:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>tests/core/eth-module/test_accounts.py
+</pre></div>
+</div>
+<p>Linting is also performed by the CI and locally with each commit. You can save yourself
+some time by checking for linting errors manually:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>lint
+</pre></div>
+</div>
+<p>It is important to understand that each pull request must pass the full test
+suite as part of the CI check. This test suite will run in the CI anytime a
+pull request is opened or updated.</p>
+</section>
+<section id="writing-tests">
+<h2>Writing Tests<a class="headerlink" href="#writing-tests" title="Link to this heading"></a></h2>
+<p>We strongly encourage contributors to write good tests for their code as
+part of the code review process. This helps ensure that your code is doing
+what it should be doing.</p>
+<p>We strongly encourage you to use our existing tests for both guidance and
+homogeneity / consistency across our tests. We use <code class="docutils literal notranslate"><span class="pre">pytest</span></code> for our tests.
+For more specific pytest guidance, please refer to the <a class="reference external" href="https://docs.pytest.org/en/latest">pytest documentation</a>.</p>
+<p>Within the <code class="docutils literal notranslate"><span class="pre">pytest</span></code> scope, <code class="file docutils literal notranslate"><span class="pre">conftest.py</span></code> files are used for common code
+shared between modules that exist within the same directory as that particular
+<code class="file docutils literal notranslate"><span class="pre">conftest.py</span></code> file.</p>
+<section id="unit-testing-and-eth-tester-tests">
+<h3>Unit Testing and eth-tester Tests<a class="headerlink" href="#unit-testing-and-eth-tester-tests" title="Link to this heading"></a></h3>
+<p>Our unit tests are grouped together with tests against the <code class="docutils literal notranslate"><span class="pre">eth-tester</span></code> library,
+using the <code class="docutils literal notranslate"><span class="pre">py-evm</span></code> library as a backend, via the <code class="docutils literal notranslate"><span class="pre">EthereumTesterProvider</span></code>.</p>
+<p>These tests live under appropriately named child directories within the
+<code class="docutils literal notranslate"><span class="pre">/tests</span></code> directory. The core of these tests live under <code class="docutils literal notranslate"><span class="pre">/tests/core</span></code>.
+Do your best to follow the existing structure when adding a test and make sure
+that its location makes sense.</p>
+</section>
+<section id="integration-testing">
+<h3>Integration Testing<a class="headerlink" href="#integration-testing" title="Link to this heading"></a></h3>
+<p>Our integration test suite setup lives under the <code class="docutils literal notranslate"><span class="pre">/tests/integration</span></code> directory.
+The integration test suite is dependent on what we call &quot;fixtures&quot; (not to be
+confused with pytest fixtures). These zip file fixtures, which also live in the
+<code class="docutils literal notranslate"><span class="pre">/tests/integration</span></code> directory, are configured to run the specific client we are
+testing against along with a genesis configuration that gives our tests some
+pre-determined useful objects (like unlocked, pre-loaded accounts) to be able to
+interact with the client when we run our tests.</p>
+<p>The parent <code class="docutils literal notranslate"><span class="pre">/integration</span></code> directory houses some common configuration shared across
+all client tests, whereas the <code class="docutils literal notranslate"><span class="pre">/go_ethereum</span></code> directory houses common code to be
+shared across geth-specific provider tests. Though the setup and run configurations
+exist across the different files within <code class="docutils literal notranslate"><span class="pre">/tests/integration</span></code>, our integration module
+tests are written across different files within <code class="docutils literal notranslate"><span class="pre">/web3/_utils/module_testing</span></code>.</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">common.py</span></code> files within the client directories contain code that is shared across
+all provider tests (http, ipc, and ws). This is mostly used to override tests that span
+across all providers.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">conftest.py</span></code> files within each of these directories contain mostly code that
+can be <em>used</em> by all test files that exist within the same directory or subdirectories
+of the <code class="file docutils literal notranslate"><span class="pre">conftest.py</span></code> file. This is mostly used to house pytest fixtures to be
+shared among our tests. Refer to the <a class="reference external" href="https://docs.pytest.org/en/latest/how-to/fixtures.html">pytest documentation on fixtures</a> for more
+information.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_{client}_{provider}.py</span></code> files (e.g. <code class="file docutils literal notranslate"><span class="pre">test_goethereum_http.py</span></code>) are where
+client-and-provider-specific test configurations exist. This is mostly used to
+override tests specific to the provider type for the respective client.</p></li>
+</ul>
+<p>The integration tests are each run in insolation to prevent muddied contexts. Because
+they are run in isolation, they can be parallelized with <code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code> in order to
+speed up the test suite. To run the tests in parallel, you can use the <code class="docutils literal notranslate"><span class="pre">-n</span></code> flag
+with <code class="docutils literal notranslate"><span class="pre">pytest</span></code>. For example, to run the tests in parallel with 4 workers, you can
+use the following command:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pytest<span class="w"> </span>tests/integration/go_ethereum/path/to/module/or/test<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span>
+</pre></div>
+</div>
+</section>
+<section id="working-with-test-contracts">
+<h3>Working With Test Contracts<a class="headerlink" href="#working-with-test-contracts" title="Link to this heading"></a></h3>
+<p>Contracts used for testing exist under <code class="docutils literal notranslate"><span class="pre">web3/_utils/contract_sources</span></code>. These contracts
+get compiled via the <code class="docutils literal notranslate"><span class="pre">compile_contracts.py</span></code> script in the same directory. To use
+this script, simply pass the Solidity version to be used to compile the contracts as an
+argument at the command line.</p>
+<dl class="simple">
+<dt>Arguments for the script are:</dt><dd><dl class="simple">
+<dt>-v or --version         Solidity version to be used to compile the contracts. If</dt><dd><p>blank, the script uses the latest available version from
+solcx.</p>
+</dd>
+<dt>-f or --filename        If left blank, all .sol files will be compiled and the</dt><dd><p>respective contract data will be generated. Pass in a
+specific <code class="docutils literal notranslate"><span class="pre">.sol</span></code> filename here to compile just one file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>To run the script, you will need the <code class="docutils literal notranslate"><span class="pre">py-solc-x</span></code> library for compiling the files
+as well as <code class="docutils literal notranslate"><span class="pre">black</span></code> for code formatting. You can install those with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>py-solc-x<span class="w"> </span>black
+</pre></div>
+</div>
+<p>The following example compiles all the contracts and generates their respective
+contract data that is used across our test files for the test suites. This data gets
+generated within the <code class="docutils literal notranslate"><span class="pre">contract_data</span></code> subdirectory within the <code class="docutils literal notranslate"><span class="pre">contract_sources</span></code>
+folder.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../web3.py/web3/_utils/contract_sources
+$<span class="w"> </span>python<span class="w"> </span>compile_contracts.py<span class="w"> </span>-v<span class="w"> </span><span class="m">0</span>.8.17
+Compiling<span class="w"> </span>OffchainLookup
+...
+...
+reformatted<span class="w"> </span>...
+</pre></div>
+</div>
+<p>To compile and generate contract data for only one <code class="docutils literal notranslate"><span class="pre">.sol</span></code> file, specify using the
+filename with the <code class="docutils literal notranslate"><span class="pre">-f</span></code> (or <code class="docutils literal notranslate"><span class="pre">--filename</span></code>) argument flag.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../web3.py/web3/_utils/contract_sources
+$<span class="w"> </span>python<span class="w"> </span>compile_contracts.py<span class="w"> </span>-v<span class="w"> </span><span class="m">0</span>.8.17<span class="w"> </span>-f<span class="w"> </span>OffchainLookup.sol
+Compiling<span class="w"> </span>OffchainLookup.sol
+reformatted<span class="w"> </span>...
+</pre></div>
+</div>
+<p>If there is any contract data that is not generated via the script but is important
+to pass on to the integration tests, the <code class="docutils literal notranslate"><span class="pre">_custom_contract_data.py</span></code> file within the
+<code class="docutils literal notranslate"><span class="pre">contract_data</span></code> subdirectory can be used to store that information when appropriate.</p>
+<p>Be sure to re-generate the integration test fixture after running the script to update
+the contract bytecodes for the integration test suite - see the
+<a class="reference internal" href="#generating-fixtures"><span class="std std-ref">Generating New Fixtures</span></a> section below.</p>
+</section>
+</section>
+<section id="manual-testing">
+<h2>Manual Testing<a class="headerlink" href="#manual-testing" title="Link to this heading"></a></h2>
+<p>To import and test an unreleased version of web3.py in another context,
+you can install it from your development directory:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>../path/to/web3py
+</pre></div>
+</div>
+</section>
+<section id="code-style">
+<h2>Code Style<a class="headerlink" href="#code-style" title="Link to this heading"></a></h2>
+<p>We use <a class="reference external" href="https://pre-commit.com/">pre-commit</a> to enforce a consistent code style across
+the library. This tool runs automatically with every commit, but you can also run it
+manually with:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>lint
+</pre></div>
+</div>
+<p>If you need to make a commit that skips the <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> checks, you can do so with
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span> <span class="pre">--no-verify</span></code>.</p>
+<p>We use Black as part of our linting. To ignore the commits that introduced Black in
+git history, you can configure your git environment like so:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>config<span class="w"> </span>blame.ignoreRevsFile<span class="w"> </span>.git-blame-ignore-revs
+</pre></div>
+</div>
+<p>This library uses <a class="reference external" href="https://www.python.org/dev/peps/pep-0484/">type hints</a>, which are enforced by the <code class="docutils literal notranslate"><span class="pre">mypy</span></code> tool (part of the
+<code class="docutils literal notranslate"><span class="pre">pre-commit</span></code> checks). All new code is required to land with type hints, with the
+exception of code within the <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory.</p>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<p>Good documentation will lead to quicker adoption and happier users. Please
+check out our guide on <a class="reference external" href="https://github.com/ethereum/snake-charmers-tactical-manual/blob/main/documentation.md">how to create documentation</a> for the Python Ethereum
+ecosystem.</p>
+<p>Pull requests generate their own preview of the latest documentation at
+<code class="docutils literal notranslate"><span class="pre">https://web3py--&lt;pr-number&gt;.org.readthedocs.build/en/&lt;pr-number&gt;/</span></code>.</p>
+</section>
+<section id="pull-requests">
+<h2>Pull Requests<a class="headerlink" href="#pull-requests" title="Link to this heading"></a></h2>
+<p>It's a good idea to make pull requests early on. A pull request represents the
+start of a discussion, and doesn't necessarily need to be the final, finished
+submission.</p>
+<p>See GitHub's documentation for <a class="reference external" href="https://help.github.com/articles/about-pull-requests/">working on pull requests</a>.</p>
+<p>Once you've made a pull request take a look at the Circle CI build status in
+the GitHub interface and make sure all tests are passing. In general, pull
+requests that do not pass the CI build yet won't get reviewed unless explicitly
+requested.</p>
+<p>If the pull request introduces changes that should be reflected in the release
+notes, please add a <strong>newsfragment</strong> file as explained
+<a class="reference external" href="https://github.com/ethereum/web3.py/blob/main/newsfragments/README.md">here</a>.</p>
+<p>If possible, the change to the release notes file should be included in the
+commit that introduces the feature or bugfix.</p>
+</section>
+<section id="generating-new-fixtures">
+<span id="generating-fixtures"></span><h2>Generating New Fixtures<a class="headerlink" href="#generating-new-fixtures" title="Link to this heading"></a></h2>
+<p>Our integration tests make use of Geth private networks.
+When new versions of the client software are introduced, new fixtures should be
+generated.</p>
+<p>Before generating new fixtures, make sure you have the test dependencies installed:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[test]&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>A &quot;fixture&quot; is a pre-synced network. It's the result of configuring and running
+a client, deploying the test contracts, and saving the resulting state for
+testing web3.py functionality against.</p>
+</div>
+<section id="geth-fixtures">
+<h3>Geth Fixtures<a class="headerlink" href="#geth-fixtures" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Install the desired Geth version on your machine locally. We recommend <a class="reference external" href="https://github.com/ethereum/py-geth">py-geth</a> for
+this purpose, because it enables you to easily manage multiple versions of Geth.</p>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">py-geth</span></code> will need updating to support each new Geth version as well.
+Adding newer Geth versions to py-geth is straightforward; see past commits for a template.</p>
+<p>If py-geth has the Geth version you need, install that version locally. For example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>geth.install<span class="w"> </span>v1.16.2
+</pre></div>
+</div>
+</li>
+<li><p>Specify the Geth binary and run the fixture creation script (from within the web3.py directory):</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nv">GETH_BINARY</span><span class="o">=</span>~/.py-geth/geth-v1.16.2/bin/geth<span class="w"> </span>python<span class="w"> </span>./tests/integration/generate_fixtures/go_ethereum.py
+</pre></div>
+</div>
+</li>
+<li><p>The output of this script is your fixture, a zip file, which is now stored in <code class="docutils literal notranslate"><span class="pre">/tests/integration/</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">/tests/integration/go_ethereum/conftest.py</span></code> and
+<code class="docutils literal notranslate"><span class="pre">/web3/tools/benchmark/node.py</span></code> files should be updated automatically to point to this new fixture.
+Delete the old fixture.</p></li>
+<li><p>Run the tests. To ensure that the tests run with the correct Geth version locally,
+you may again include the <code class="docutils literal notranslate"><span class="pre">GETH_BINARY</span></code> environment variable.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">geth_version</span></code> and <code class="docutils literal notranslate"><span class="pre">pygeth_version</span></code> parameter defaults in
+<code class="docutils literal notranslate"><span class="pre">/.circleci/config.yml</span></code> should be automatically updated to match the
+<code class="docutils literal notranslate"><span class="pre">go-ethereum</span></code> version used to generate the test fixture and the <code class="docutils literal notranslate"><span class="pre">py-geth</span></code>
+version that supports installing it.</p></li>
+</ol>
+</section>
+<section id="ci-testing-with-a-nightly-geth-build">
+<h3>CI Testing With a Nightly Geth Build<a class="headerlink" href="#ci-testing-with-a-nightly-geth-build" title="Link to this heading"></a></h3>
+<p>Occasionally you'll want to have CI run the test suite against an unreleased version of
+Geth - e.g. to test upcoming hard fork changes. The workflow described below is for
+testing only, as updates will only be merged into main once the Geth release is
+published and the test runs are updated to use the new stable version.</p>
+<ol class="arabic simple">
+<li><p>Configure <code class="docutils literal notranslate"><span class="pre">tests/integration/generate_fixtures/go_ethereum/common.py</span></code> as needed.</p></li>
+<li><p>Geth automagically compiles new builds for every commit that gets merged into the codebase.
+Download the desired build from the <a class="reference external" href="https://geth.ethereum.org/downloads/">develop builds</a>.</p></li>
+<li><p>Build your test fixture, passing in the binary you just downloaded via <code class="docutils literal notranslate"><span class="pre">GETH_BINARY</span></code>. Don't forget
+to update the <code class="docutils literal notranslate"><span class="pre">/tests/integration/go_ethereum/conftest.py</span></code> file to point to your new fixture.</p></li>
+<li><p>Our CI runs on Ubuntu, so download the corresponding 64-bit Linux
+<a class="reference external" href="https://geth.ethereum.org/downloads/">develop build</a>, then
+add it to the root of your web3.py directory. Rename the binary <code class="docutils literal notranslate"><span class="pre">custom_geth</span></code>.</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">.circleci/config.yml</span></code>, update the <code class="docutils literal notranslate"><span class="pre">geth_version</span></code> pipeline parameter to
+&quot;custom&quot;. This will trigger the custom Geth build to be used in the CI test suite.</p></li>
+<li><p>Create a PR and let CI do its thing.</p></li>
+</ol>
+</section>
+</section>
+<section id="releasing">
+<h2>Releasing<a class="headerlink" href="#releasing" title="Link to this heading"></a></h2>
+<p>Releases are typically done from the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch, except when releasing a beta (in
+which case the beta is released from <code class="docutils literal notranslate"><span class="pre">main</span></code>, and the previous stable branch is
+released from said branch).</p>
+<section id="final-test-before-each-release">
+<h3>Final test before each release<a class="headerlink" href="#final-test-before-each-release" title="Link to this heading"></a></h3>
+<p>Before releasing a new version, build and test the package that will be released:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>main<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull
+$<span class="w"> </span>make<span class="w"> </span>package-test
+</pre></div>
+</div>
+<p>This will build the package and install it in a temporary virtual environment. Follow
+the instructions to activate the venv and test whatever you think is important.</p>
+<p>Review the documentation that will get published:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>docs
+</pre></div>
+</div>
+<p>Validate and preview the release notes:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>validate-newsfragments
+</pre></div>
+</div>
+</section>
+<section id="build-the-release-notes">
+<h3>Build the release notes<a class="headerlink" href="#build-the-release-notes" title="Link to this heading"></a></h3>
+<p>Before bumping the version number, build the release notes. You must include the part of
+the version to bump (see below), which changes how the version number will show in the
+release notes.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>notes<span class="w"> </span><span class="nv">bump</span><span class="o">=</span><span class="nv">$$</span>VERSION_PART_TO_BUMP<span class="nv">$$</span>
+</pre></div>
+</div>
+<p>If there are any errors, be sure to re-run make notes until it works.</p>
+</section>
+<section id="push-the-release-to-github-pypi">
+<h3>Push the release to github &amp; pypi<a class="headerlink" href="#push-the-release-to-github-pypi" title="Link to this heading"></a></h3>
+<p>After confirming that the release package looks okay, release a new version:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>release<span class="w"> </span><span class="nv">bump</span><span class="o">=</span><span class="nv">$$</span>VERSION_PART_TO_BUMP<span class="nv">$$</span>
+</pre></div>
+</div>
+<p>This command will:</p>
+<ul class="simple">
+<li><p>Bump the version number as specified in <code class="docutils literal notranslate"><span class="pre">.pyproject.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">setup.py</span></code>.</p></li>
+<li><p>Create a git commit and tag for the new version.</p></li>
+<li><p>Build the package.</p></li>
+<li><p>Push the commit and tag to github.</p></li>
+<li><p>Push the new package files to pypi.</p></li>
+</ul>
+</section>
+<section id="which-version-part-to-bump">
+<h3>Which version part to bump<a class="headerlink" href="#which-version-part-to-bump" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">$$VERSION_PART_TO_BUMP$$</span></code> must be one of: <code class="docutils literal notranslate"><span class="pre">major</span></code>, <code class="docutils literal notranslate"><span class="pre">minor</span></code>, <code class="docutils literal notranslate"><span class="pre">patch</span></code>, <code class="docutils literal notranslate"><span class="pre">stage</span></code>,
+or <code class="docutils literal notranslate"><span class="pre">devnum</span></code>.</p>
+<p>The version format for this repo is <code class="docutils literal notranslate"><span class="pre">{major}.{minor}.{patch}</span></code> for stable, and
+<code class="docutils literal notranslate"><span class="pre">{major}.{minor}.{patch}-{stage}.{devnum}</span></code> for unstable (<code class="docutils literal notranslate"><span class="pre">stage</span></code> can be alpha or
+beta).</p>
+<p>If you are in a beta version, <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">release</span> <span class="pre">bump=stage</span></code> will switch to a stable.</p>
+<p>To issue an unstable version when the current version is stable, specify the new version
+explicitly, like <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">release</span> <span class="pre">bump=&quot;--new-version</span> <span class="pre">4.0.0-alpha.1&quot;</span></code>.</p>
+<p>You can see what the result of bumping any particular version part would be with
+<code class="docutils literal notranslate"><span class="pre">bump-my-version</span> <span class="pre">show-bump</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="resources.html" class="btn btn-neutral float-left" title="资源和学习材料" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="code_of_conduct.html" class="btn btn-neutral float-right" title="行为准则" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

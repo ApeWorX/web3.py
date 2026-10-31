@@ -1,0 +1,841 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Beacon API &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Net API" href="web3.net.html" />
+    <link rel="prev" title="web3.eth API" href="web3.eth.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Beacon API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_genesis"><code class="docutils literal notranslate"><span class="pre">Beacon.get_genesis()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_hash_root"><code class="docutils literal notranslate"><span class="pre">Beacon.get_hash_root()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_fork_data"><code class="docutils literal notranslate"><span class="pre">Beacon.get_fork_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_finality_checkpoint"><code class="docutils literal notranslate"><span class="pre">Beacon.get_finality_checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_validators"><code class="docutils literal notranslate"><span class="pre">Beacon.get_validators()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_validator"><code class="docutils literal notranslate"><span class="pre">Beacon.get_validator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_validator_balances"><code class="docutils literal notranslate"><span class="pre">Beacon.get_validator_balances()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_epoch_committees"><code class="docutils literal notranslate"><span class="pre">Beacon.get_epoch_committees()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_block_headers"><code class="docutils literal notranslate"><span class="pre">Beacon.get_block_headers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_block_header"><code class="docutils literal notranslate"><span class="pre">Beacon.get_block_header()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_block"><code class="docutils literal notranslate"><span class="pre">Beacon.get_block()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_block_root"><code class="docutils literal notranslate"><span class="pre">Beacon.get_block_root()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_block_attestations"><code class="docutils literal notranslate"><span class="pre">Beacon.get_block_attestations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_attestations"><code class="docutils literal notranslate"><span class="pre">Beacon.get_attestations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_attester_slashings"><code class="docutils literal notranslate"><span class="pre">Beacon.get_attester_slashings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_proposer_slashings"><code class="docutils literal notranslate"><span class="pre">Beacon.get_proposer_slashings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_voluntary_exits"><code class="docutils literal notranslate"><span class="pre">Beacon.get_voluntary_exits()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_fork_schedule"><code class="docutils literal notranslate"><span class="pre">Beacon.get_fork_schedule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_spec"><code class="docutils literal notranslate"><span class="pre">Beacon.get_spec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_deposit_contract"><code class="docutils literal notranslate"><span class="pre">Beacon.get_deposit_contract()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_beacon_state"><code class="docutils literal notranslate"><span class="pre">Beacon.get_beacon_state()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_beacon_heads"><code class="docutils literal notranslate"><span class="pre">Beacon.get_beacon_heads()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_blob_sidecars"><code class="docutils literal notranslate"><span class="pre">Beacon.get_blob_sidecars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_node_identity"><code class="docutils literal notranslate"><span class="pre">Beacon.get_node_identity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_peers"><code class="docutils literal notranslate"><span class="pre">Beacon.get_peers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_peer"><code class="docutils literal notranslate"><span class="pre">Beacon.get_peer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_health"><code class="docutils literal notranslate"><span class="pre">Beacon.get_health()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_version"><code class="docutils literal notranslate"><span class="pre">Beacon.get_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Beacon.get_syncing"><code class="docutils literal notranslate"><span class="pre">Beacon.get_syncing()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Beacon API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/web3.beacon.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="beacon-api">
+<h1>Beacon API<a class="headerlink" href="#beacon-api" title="Link to this heading"></a></h1>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>This API Is experimental. Client support is incomplete and the API itself is still evolving.</p>
+</div>
+<p>To use this API, you'll need a beacon node running locally or remotely. To set that up, refer to the documentation of your specific client.</p>
+<p>Once you have a running beacon node, import and configure your beacon instance:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.beacon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Beacon</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span> <span class="o">=</span> <span class="n">Beacon</span><span class="p">(</span><span class="s2">&quot;http://localhost:5051&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_genesis">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_genesis</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_genesis" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_genesis</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;genesis_time&#39;: &#39;1605700807&#39;,</span>
+<span class="go">    &#39;genesis_validators_root&#39;: &#39;0x9436e8a630e3162b7ed4f449b12b8a5a368a4b95bc46b941ae65c11613bfa4c1&#39;,</span>
+<span class="go">    &#39;genesis_fork_version&#39;: &#39;0x00002009&#39;</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_hash_root">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_hash_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'head'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_hash_root" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_hash_root</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &quot;data&quot;: {</span>
+<span class="go">    &quot;root&quot;:&quot;0xbb399fda70617a6f198b3d9f1c1cdbd70077677231b84f34e58568c9dc903558&quot;</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_fork_data">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_fork_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'head'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_fork_data" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_fork_data</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;previous_version&#39;: &#39;0x00002009&#39;,</span>
+<span class="go">    &#39;current_version&#39;: &#39;0x00002009&#39;,</span>
+<span class="go">    &#39;epoch&#39;: &#39;0&#39;</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_finality_checkpoint">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_finality_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'head'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_finality_checkpoint" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_finality_checkpoint</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;previous_justified&#39;: {</span>
+<span class="go">      &#39;epoch&#39;: &#39;5024&#39;,</span>
+<span class="go">      &#39;root&#39;: &#39;0x499ba555e8e8be639dd84be1be6d54409738facefc662f37d97065aa91a1a8d4&#39;</span>
+<span class="go">    },</span>
+<span class="go">    &#39;current_justified&#39;: {</span>
+<span class="go">      &#39;epoch&#39;: &#39;5025&#39;,</span>
+<span class="go">      &#39;root&#39;: &#39;0x34e8a230f11536ab2ec56a0956e1f3b3fd703861f96d4695877eaa48fbacc241&#39;</span>
+<span class="go">    },</span>
+<span class="go">    &#39;finalized&#39;: {</span>
+<span class="go">      &#39;epoch&#39;: &#39;5024&#39;,</span>
+<span class="go">      &#39;root&#39;: &#39;0x499ba555e8e8be639dd84be1be6d54409738facefc662f37d97065aa91a1a8d4&#39;</span>
+<span class="go">    }</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_validators">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_validators</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'head'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_validators" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_validators</span><span class="p">()</span>
+<span class="go"> {</span>
+<span class="go">   &#39;data&#39;: [</span>
+<span class="go">     {</span>
+<span class="go">       &#39;index&#39;: &#39;110280&#39;,</span>
+<span class="go">       &#39;balance&#39;: &#39;32000000000&#39;,</span>
+<span class="go">       &#39;status&#39;: &#39;pending_queued&#39;,</span>
+<span class="go">       &#39;validator&#39;: {</span>
+<span class="go">         &#39;pubkey&#39;: &#39;0x99d37d1f7dd15859995330f75c158346f86d298e2ffeedfbf1b38dcf3df89a7dbd1b34815f3bcd1b2a5588592a35b783&#39;,</span>
+<span class="go">         &#39;withdrawal_credentials&#39;: &#39;0x00f338cfdb0c22bb85beed9042bd19fff58ad6421c8a833f8bc902b7cca06f5f&#39;,</span>
+<span class="go">         &#39;effective_balance&#39;: &#39;32000000000&#39;,</span>
+<span class="go">         &#39;slashed&#39;: False,</span>
+<span class="go">         &#39;activation_eligibility_epoch&#39;: &#39;5029&#39;,</span>
+<span class="go">         &#39;activation_epoch&#39;: &#39;18446744073709551615&#39;,</span>
+<span class="go">         &#39;exit_epoch&#39;: &#39;18446744073709551615&#39;,</span>
+<span class="go">         &#39;withdrawable_epoch&#39;: &#39;18446744073709551615&#39;</span>
+<span class="go">       }</span>
+<span class="go">     },</span>
+<span class="go">     ...</span>
+<span class="go">   ]</span>
+<span class="go"> }</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_validator">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_validator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validator_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'head'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_validator" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_validator</span><span class="p">(</span><span class="mi">110280</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;index&#39;: &#39;110280&#39;,</span>
+<span class="go">    &#39;balance&#39;: &#39;32000000000&#39;,</span>
+<span class="go">    &#39;status&#39;: &#39;pending_queued&#39;,</span>
+<span class="go">    &#39;validator&#39;: {</span>
+<span class="go">      &#39;pubkey&#39;: &#39;0x99d37d1f7dd15859995330f75c158346f86d298e2ffeedfbf1b38dcf3df89a7dbd1b34815f3bcd1b2a5588592a35b783&#39;,</span>
+<span class="go">      &#39;withdrawal_credentials&#39;: &#39;0x00f338cfdb0c22bb85beed9042bd19fff58ad6421c8a833f8bc902b7cca06f5f&#39;,</span>
+<span class="go">      &#39;effective_balance&#39;: &#39;32000000000&#39;,</span>
+<span class="go">      &#39;slashed&#39;: False,</span>
+<span class="go">      &#39;activation_eligibility_epoch&#39;: &#39;5029&#39;,</span>
+<span class="go">      &#39;activation_epoch&#39;: &#39;18446744073709551615&#39;,</span>
+<span class="go">      &#39;exit_epoch&#39;: &#39;18446744073709551615&#39;,</span>
+<span class="go">      &#39;withdrawable_epoch&#39;: &#39;18446744073709551615&#39;</span>
+<span class="go">    }</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_validator_balances">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_validator_balances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'head'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_validator_balances" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_validator_balances</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: [</span>
+<span class="go">    {</span>
+<span class="go">      &#39;index&#39;: &#39;110278&#39;,</span>
+<span class="go">      &#39;balance&#39;: &#39;32000000000&#39;</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">  ]</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_epoch_committees">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_epoch_committees</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'head'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_epoch_committees" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_epoch_committees</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: [</span>
+<span class="go">    {</span>
+<span class="go">      &#39;slot&#39;: &#39;162367&#39;,</span>
+<span class="go">      &#39;index&#39;: &#39;25&#39;,</span>
+<span class="go">      &#39;validators&#39;: [&#39;50233&#39;, &#39;36829&#39;, &#39;84635&#39;, ...],</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">  ]</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_block_headers">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_block_headers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_block_headers" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_block_headers</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: [</span>
+<span class="go">    {</span>
+<span class="go">      &#39;root&#39;: &#39;0xa3873e7b1e0bcc7c59013340cfea59dff16e42e79825e7b8ab6c243dbafd4fe0&#39;,</span>
+<span class="go">      &#39;canonical&#39;: True,</span>
+<span class="go">      &#39;header&#39;: {</span>
+<span class="go">        &#39;message&#39;: {</span>
+<span class="go">          &#39;slot&#39;: &#39;163587&#39;,</span>
+<span class="go">          &#39;proposer_index&#39;: &#39;69198&#39;,</span>
+<span class="go">          &#39;parent_root&#39;: &#39;0xc32558881dbb791ef045c48e3709a0978dc445abee4ae34d30df600eb5fbbb3d&#39;,</span>
+<span class="go">          &#39;state_root&#39;: &#39;0x4dc0a72959803a84ee0231160b05dda76a91b8f8b77220b4cfc7db160840b8a8&#39;,</span>
+<span class="go">          &#39;body_root&#39;: &#39;0xa3873e7b1e0bcc7c59013340cfea59dff16e42e79825e7b8ab6c243dbafd4fe0&#39;</span>
+<span class="go">        },</span>
+<span class="go">        &#39;signature&#39;: &#39;0x87b549448d36e5e8b1783944b5511a05f34bb78ad3fcbf71a1adb346eed363d46e50d51ac53cd23bd03d0107d064e05913a6ef10f465f9171aba3b2b8a7a4d621c9e18d5f148813295a2d5aa5053029ccbd88cec72130833de2b4b7addf7faca&#39;</span>
+<span class="go">      }</span>
+<span class="go">    }</span>
+<span class="go">  ]</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_block_header">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_block_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_block_header" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_block_header</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    root&#39;: &#39;0x30c04689dd4f6cd4d56eb78f72727d2d16d8b6346724e4a88f546875f11b750d&#39;,</span>
+<span class="go">    &#39;canonical&#39;: True,</span>
+<span class="go">    &#39;header&#39;: {</span>
+<span class="go">      &#39;message&#39;: {</span>
+<span class="go">        &#39;slot&#39;: &#39;1&#39;,</span>
+<span class="go">        &#39;proposer_index&#39;: &#39;61090&#39;,</span>
+<span class="go">        &#39;parent_root&#39;: &#39;0x6a89af5df908893eedbed10ba4c13fc13d5653ce57db637e3bfded73a987bb87&#39;,</span>
+<span class="go">        &#39;state_root&#39;: &#39;0x7773ed5a7e944c6238cd0a5c32170663ef2be9efc594fb43ad0f07ecf4c09d2b&#39;,</span>
+<span class="go">        &#39;body_root&#39;: &#39;0x30c04689dd4f6cd4d56eb78f72727d2d16d8b6346724e4a88f546875f11b750d&#39;</span>
+<span class="go">      },</span>
+<span class="go">      &#39;signature&#39;: &#39;0xa30d70b3e62ff776fe97f7f8b3472194af66849238a958880510e698ec3b8a470916680b1a82f9d4753c023153fbe6db10c464ac532c1c9c8919adb242b05ef7152ba3e6cd08b730eac2154b9802203ead6079c8dfb87f1e900595e6c00b4a9a&#39;</span>
+<span class="go">    }</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_block">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_block" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;message&#39;: {</span>
+<span class="go">      &#39;slot&#39;: &#39;1&#39;,</span>
+<span class="go">      &#39;proposer_index&#39;: &#39;61090&#39;,</span>
+<span class="go">      &#39;parent_root&#39;: &#39;0x6a89af5df908893eedbed10ba4c13fc13d5653ce57db637e3bfded73a987bb87&#39;,</span>
+<span class="go">      &#39;state_root&#39;: &#39;0x7773ed5a7e944c6238cd0a5c32170663ef2be9efc594fb43ad0f07ecf4c09d2b&#39;,</span>
+<span class="go">      &#39;body&#39;: {</span>
+<span class="go">        &#39;randao_reveal&#39;: &#39;0x8e245a52a0a680fcfe789013e123880c321f237de10cad108dc55dd47290d7cfe50cdaa003c6f783405efdac48cef44e152493abba40d9f9815a060dd6151cb0635906c9e3c1ad4859cada73ccd2d6b8747e4aeeada7d75d454bcc8672afa813&#39;,</span>
+<span class="go">        &#39;eth1_data&#39;: {</span>
+<span class="go">          &#39;deposit_root&#39;: &#39;0x4e910ac762815c13e316e72506141f5b6b441d58af8e0a049cd3341c25728752&#39;,</span>
+<span class="go">          &#39;deposit_count&#39;: &#39;100596&#39;,</span>
+<span class="go">          &#39;block_hash&#39;: &#39;0x89cb78044843805fb4dab8abd743fc96c2b8e955c58f9b7224d468d85ef57130&#39;</span>
+<span class="go">        },</span>
+<span class="go">        &#39;graffiti&#39;: &#39;0x74656b752f76302e31322e31342b34342d673863656562663600000000000000&#39;,</span>
+<span class="go">        &#39;proposer_slashings&#39;: [],</span>
+<span class="go">        &#39;attester_slashings&#39;: [],</span>
+<span class="go">        &#39;attestations&#39;: [</span>
+<span class="go">          {</span>
+<span class="go">            &#39;aggregation_bits&#39;: &#39;0x0080020004000000008208000102000905&#39;,</span>
+<span class="go">            &#39;data&#39;: {</span>
+<span class="go">              &#39;slot&#39;: &#39;0&#39;,</span>
+<span class="go">              &#39;index&#39;: &#39;7&#39;,</span>
+<span class="go">              &#39;beacon_block_root&#39;: &#39;0x6a89af5df908893eedbed10ba4c13fc13d5653ce57db637e3bfded73a987bb87&#39;,</span>
+<span class="go">              &#39;source&#39;: {</span>
+<span class="go">                &#39;epoch&#39;: &#39;0&#39;,</span>
+<span class="go">                &#39;root&#39;: &#39;0x0000000000000000000000000000000000000000000000000000000000000000&#39;</span>
+<span class="go">              },</span>
+<span class="go">              &#39;target&#39;: {</span>
+<span class="go">                &#39;epoch&#39;: &#39;0&#39;,</span>
+<span class="go">                &#39;root&#39;: &#39;0x6a89af5df908893eedbed10ba4c13fc13d5653ce57db637e3bfded73a987bb87&#39;</span>
+<span class="go">              }</span>
+<span class="go">            },</span>
+<span class="go">            &#39;signature&#39;: &#39;0x967dd2946358db7e426ed19d4576bc75123520ef6a489ca50002222070ee4611f9cef394e5e3071236a93b825f18a4ad07f1d5a1405e6c984f1d71e03f535d13a2156d6ba22cb0c2b148df23a7b8a7293315d6e74b9a26b64283e8393f2ad4c5&#39;</span>
+<span class="go">          }</span>
+<span class="go">        ],</span>
+<span class="go">        &#39;deposits&#39;: [],</span>
+<span class="go">        &#39;voluntary_exits&#39;: []</span>
+<span class="go">      }</span>
+<span class="go">    },</span>
+<span class="go">    &#39;signature&#39;: &#39;0xa30d70b3e62ff776fe97f7f8b3472194af66849238a958880510e698ec3b8a470916680b1a82f9d4753c023153fbe6db10c464ac532c1c9c8919adb242b05ef7152ba3e6cd08b730eac2154b9802203ead6079c8dfb87f1e900595e6c00b4a9a&#39;</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_block_root">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_block_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_block_root" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_block_root</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;root&#39;: &#39;0x30c04689dd4f6cd4d56eb78f72727d2d16d8b6346724e4a88f546875f11b750d&#39;</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_block_attestations">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_block_attestations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_block_attestations" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_block_attestations</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: [</span>
+<span class="go">    {</span>
+<span class="go">      &#39;aggregation_bits&#39;: &#39;0x0080020004000000008208000102000905&#39;,</span>
+<span class="go">      &#39;data&#39;: {</span>
+<span class="go">        &#39;slot&#39;: &#39;0&#39;,</span>
+<span class="go">        &#39;index&#39;: &#39;7&#39;,</span>
+<span class="go">        &#39;beacon_block_root&#39;: &#39;0x6a89af5df908893eedbed10ba4c13fc13d5653ce57db637e3bfded73a987bb87&#39;,</span>
+<span class="go">        &#39;source&#39;: {</span>
+<span class="go">          &#39;epoch&#39;: &#39;0&#39;,</span>
+<span class="go">          &#39;root&#39;: &#39;0x0000000000000000000000000000000000000000000000000000000000000000&#39;</span>
+<span class="go">        },</span>
+<span class="go">        &#39;target&#39;: {</span>
+<span class="go">          &#39;epoch&#39;: &#39;0&#39;,</span>
+<span class="go">          &#39;root&#39;: &#39;0x6a89af5df908893eedbed10ba4c13fc13d5653ce57db637e3bfded73a987bb87&#39;</span>
+<span class="go">        }</span>
+<span class="go">      },</span>
+<span class="go">      &#39;signature&#39;: &#39;0x967dd2946358db7e426ed19d4576bc75123520ef6a489ca50002222070ee4611f9cef394e5e3071236a93b825f18a4ad07f1d5a1405e6c984f1d71e03f535d13a2156d6ba22cb0c2b148df23a7b8a7293315d6e74b9a26b64283e8393f2ad4c5&#39;</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">  ]</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_attestations">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_attestations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_attestations" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_attestations</span><span class="p">()</span>
+<span class="go">{&#39;data&#39;: []}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_attester_slashings">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_attester_slashings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_attester_slashings" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_attester_slashings</span><span class="p">()</span>
+<span class="go">{&#39;data&#39;: []}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_proposer_slashings">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_proposer_slashings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_proposer_slashings" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_proposer_slashings</span><span class="p">()</span>
+<span class="go">{&#39;data&#39;: []}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_voluntary_exits">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_voluntary_exits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_voluntary_exits" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_voluntary_exits</span><span class="p">()</span>
+<span class="go">{&#39;data&#39;: []}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_fork_schedule">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_fork_schedule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_fork_schedule" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_fork_schedule</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: [</span>
+<span class="go">    {</span>
+<span class="go">      &#39;previous_version&#39;: &#39;0x00002009&#39;,</span>
+<span class="go">      &#39;current_version&#39;: &#39;0x00002009&#39;,</span>
+<span class="go">      &#39;epoch&#39;: &#39;0&#39;</span>
+<span class="go">    }</span>
+<span class="go">  ]</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_spec">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_spec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_spec" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_spec</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;DEPOSIT_CONTRACT_ADDRESS&#39;: &#39;0x8c5fecdC472E27Bc447696F431E425D02dd46a8c&#39;,</span>
+<span class="go">    &#39;MIN_ATTESTATION_INCLUSION_DELAY&#39;: &#39;1&#39;,</span>
+<span class="go">    &#39;SLOTS_PER_EPOCH&#39;: &#39;32&#39;,</span>
+<span class="go">    &#39;SHUFFLE_ROUND_COUNT&#39;: &#39;90&#39;,</span>
+<span class="go">    &#39;MAX_EFFECTIVE_BALANCE&#39;: &#39;32000000000&#39;,</span>
+<span class="go">    &#39;DOMAIN_BEACON_PROPOSER&#39;: &#39;0x00000000&#39;,</span>
+<span class="go">    &#39;MAX_ATTESTER_SLASHINGS&#39;: &#39;2&#39;,</span>
+<span class="go">    &#39;DOMAIN_SELECTION_PROOF&#39;: &#39;0x05000000&#39;,</span>
+<span class="go">    ...</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_deposit_contract">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_deposit_contract</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_deposit_contract" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_deposit_contract</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;chain_id&#39;: &#39;5&#39;,</span>
+<span class="go">    &#39;address&#39;: &#39;0x8c5fecdC472E27Bc447696F431E425D02dd46a8c&#39;</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_beacon_state">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_beacon_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'head'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_beacon_state" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_beacon_state</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;genesis_time&#39;: &#39;1&#39;,</span>
+<span class="go">    &#39;genesis_validators_root&#39;: &#39;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&#39;,</span>
+<span class="go">    &#39;slot&#39;: &#39;1&#39;,</span>
+<span class="go">    &#39;fork&#39;: {</span>
+<span class="go">      &#39;previous_version&#39;: &#39;0x00000000&#39;,</span>
+<span class="go">      &#39;current_version&#39;: &#39;0x00000000&#39;,</span>
+<span class="go">      &#39;epoch&#39;: &#39;1&#39;</span>
+<span class="go">    },</span>
+<span class="go">    &#39;latest_block_header&#39;: {</span>
+<span class="go">      &#39;slot&#39;: &#39;1&#39;,</span>
+<span class="go">      &#39;proposer_index&#39;: &#39;1&#39;,</span>
+<span class="go">      &#39;parent_root&#39;: &#39;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&#39;,</span>
+<span class="go">      &#39;state_root&#39;: &#39;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&#39;,</span>
+<span class="go">      &#39;body_root&#39;: &#39;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&#39;</span>
+<span class="go">    },</span>
+<span class="go">    &#39;block_roots&#39;: [&#39;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&#39;],</span>
+<span class="go">    &#39;state_roots&#39;: [&#39;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&#39;],</span>
+<span class="go">    &#39;historical_roots&#39;: [&#39;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&#39;],</span>
+<span class="go">    &#39;eth1_data&#39;: {</span>
+<span class="go">      &#39;deposit_root&#39;: &#39;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&#39;,</span>
+<span class="go">      &#39;deposit_count&#39;: &#39;1&#39;,</span>
+<span class="go">      &#39;block_hash&#39;: &#39;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&#39;</span>
+<span class="go">    },</span>
+<span class="go">    &#39;eth1_data_votes&#39;: [...],</span>
+<span class="go">    &#39;eth1_deposit_index&#39;: &#39;1&#39;,</span>
+<span class="go">    &#39;validators&#39;: [...],</span>
+<span class="go">    &#39;balances&#39;: [...],</span>
+<span class="go">    &#39;randao_mixes&#39;: [...],</span>
+<span class="go">    &#39;slashings&#39;: [...],</span>
+<span class="go">    &#39;previous_epoch_attestations&#39;: [...],</span>
+<span class="go">    &#39;current_epoch_attestations&#39;: [...],</span>
+<span class="go">    &#39;justification_bits&#39;: &#39;0x0f&#39;,</span>
+<span class="go">    &#39;previous_justified_checkpoint&#39;: {</span>
+<span class="go">      &#39;epoch&#39;: &#39;5736&#39;,</span>
+<span class="go">      &#39;root&#39;: &#39;0xec7ef54f1fd81bada8170dd0cb6be8216f8ee2f445e6936f95f5c6894a4a3b38&#39;</span>
+<span class="go">    },</span>
+<span class="go">    &#39;current_justified_checkpoint&#39;: {</span>
+<span class="go">      &#39;epoch&#39;: &#39;5737&#39;,</span>
+<span class="go">      &#39;root&#39;: &#39;0x781f0166e34c361ce2c88070c1389145abba2836edcb446338a2ca2b0054826e&#39;</span>
+<span class="go">    },</span>
+<span class="go">    &#39;finalized_checkpoint&#39;: {</span>
+<span class="go">      &#39;epoch&#39;: &#39;5736&#39;,</span>
+<span class="go">      &#39;root&#39;: &#39;0xec7ef54f1fd81bada8170dd0cb6be8216f8ee2f445e6936f95f5c6894a4a3b38&#39;</span>
+<span class="go">    }</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_beacon_heads">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_beacon_heads</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_beacon_heads" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_beacon_heads</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: [</span>
+<span class="go">    {</span>
+<span class="go">      &#39;slot&#39;: &#39;221600&#39;,</span>
+<span class="go">      &#39;root&#39;: &#39;0x9987754077fe6100a60c75d81a51b1ef457d019404d1546a66f4f5d6c23fae45&#39;</span>
+<span class="go">    }</span>
+<span class="go">  ]</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_blob_sidecars">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_blob_sidecars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_blob_sidecars" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_blob_sidecars</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="go">{</span>
+<span class="go">  &quot;data&quot;: [</span>
+<span class="go">    {</span>
+<span class="go">      &quot;index&quot;: &quot;1&quot;,</span>
+<span class="go">      &quot;blob&quot;: ..., # omitted</span>
+<span class="go">      &quot;kzg_commitment&quot;: &quot;0x93247f2209abcacf57b75a51dafae777f9dd38bc7053d1af526f220a7489a6d3a2753e5f3e8b1cfe39b56f43611df74a&quot;,</span>
+<span class="go">      &quot;kzg_proof&quot;: &quot;0x7FB0A12D11Ffe8A48c2fF80dCA17adbCC1da5F6aADaAEF2b338717dcDEECf6DaB9FD7C4e4265CfBc097cD31dCB19E836&quot;,</span>
+<span class="go">      &quot;signed_block_header&quot;: {</span>
+<span class="go">        &quot;message&quot;: {</span>
+<span class="go">          &quot;slot&quot;: &quot;1&quot;,</span>
+<span class="go">          &quot;proposer_index&quot;: &quot;1&quot;,</span>
+<span class="go">          &quot;parent_root&quot;: &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">          &quot;state_root&quot;: &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">          &quot;body_root&quot;: &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;</span>
+<span class="go">        },</span>
+<span class="go">        &quot;signature&quot;: &quot;0x1b66ac1fb663c9bc59509846d6ec05345bd908eda73e670af888da41af171505cc411d61252fb6cb3fa0017b679f8bb2305b26a285fa2737f175668d0dff91cc1b66ac1fb663c9bc59509846d6ec05345bd908eda73e670af888da41af171505&quot;</span>
+<span class="go">      },</span>
+<span class="go">      &quot;kzg_commitment_inclusion_proof&quot;: [</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;,</span>
+<span class="go">        &quot;0xcf8e0d4e9587369b2301d0790347320302cc0943d5a1884560367e8208d920f2&quot;</span>
+<span class="go">      ]</span>
+<span class="go">    }</span>
+<span class="go">  ]</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_node_identity">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_node_identity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_node_identity" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_node_identity</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;peer_id&#39;: &#39;16Uiu2HAmLZ1CYVFKpa3wwn4cnknZqosum8HX3GHDhUpEULQc9ixE&#39;,</span>
+<span class="go">    &#39;enr&#39;: &#39;enr:-KG4QCIp6eCZ6hG_fd93qsw12qmbfsl2rUTfQvwVP4FOTlWeNXYo0Gg9y3WVYIdF6FQC6R0E8CbK0Ywq_6TKMx1BpGlAhGV0aDKQOwiHlQAAIAn__________4JpZIJ2NIJpcIR_AAABiXNlY3AyNTZrMaEDdVT4g1gw86BfbrtLCq2fRBlG0AnMxsXtAQgA327S5FeDdGNwgiMog3VkcIIjKA&#39;,</span>
+<span class="go">    &#39;p2p_addresses&#39;: [&#39;/ip4/127.0.0.1/tcp/9000/p2p/16Uiu2HAmLZ1CYVFKpa3wwn4cnknZqosum8HX3GHDhUpEULQc9ixE&#39;],</span>
+<span class="go">    &#39;discovery_addresses&#39;: [&#39;/ip4/127.0.0.1/udp/9000/p2p/16Uiu2HAmLZ1CYVFKpa3wwn4cnknZqosum8HX3GHDhUpEULQc9ixE&#39;],</span>
+<span class="go">    &#39;metadata&#39;: {&#39;seq_number&#39;: &#39;0&#39;, &#39;attnets&#39;: &#39;0x0000000000000000&#39;}</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_peers">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_peers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_peers" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_peers</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: [</span>
+<span class="go">    {</span>
+<span class="go">      &#39;peer_id&#39;: &#39;16Uiu2HAkw1yVqF3RtMCBHMbkLZbNhfGcTUdD6Uo4X3wfzPhGVnqv&#39;,</span>
+<span class="go">      &#39;address&#39;: &#39;/ip4/3.127.23.51/tcp/9000&#39;,</span>
+<span class="go">      &#39;state&#39;: &#39;connected&#39;,</span>
+<span class="go">      &#39;direction&#39;: &#39;outbound&#39;</span>
+<span class="go">    },</span>
+<span class="go">    {</span>
+<span class="go">      &#39;peer_id&#39;: &#39;16Uiu2HAmEJHiCzgS8GwiEYLyM3d148mzvZ9iZzsz8yqayWVPANMG&#39;,</span>
+<span class="go">      &#39;address&#39;: &#39;/ip4/3.88.7.240/tcp/9000&#39;,</span>
+<span class="go">      &#39;state&#39;: &#39;connected&#39;,</span>
+<span class="go">      &#39;direction&#39;: &#39;outbound&#39;</span>
+<span class="go">    }</span>
+<span class="go">  ]</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_peer">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_peer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">peer_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_peer" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_peer</span><span class="p">(</span><span class="s1">&#39;16Uiu2HAkw1yVqF3RtMCBHMbkLZbNhfGcTUdD6Uo4X3wfzPhGVnqv&#39;</span><span class="p">)</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;peer_id&#39;: &#39;16Uiu2HAkw1yVqF3RtMCBHMbkLZbNhfGcTUdD6Uo4X3wfzPhGVnqv&#39;,</span>
+<span class="go">    &#39;address&#39;: &#39;/ip4/3.127.23.51/tcp/9000&#39;,</span>
+<span class="go">    &#39;state&#39;: &#39;connected&#39;,</span>
+<span class="go">    &#39;direction&#39;: &#39;outbound&#39;</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_health">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_health</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_health" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_health</span><span class="p">()</span>
+<span class="go">200</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_version">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_version" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_version</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;version&#39;: &#39;teku/v20.12.0+9-g9392008/osx-x86_64/adoptopenjdk-java-15&#39;</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Beacon.get_syncing">
+<span class="sig-prename descclassname"><span class="pre">Beacon.</span></span><span class="sig-name descname"><span class="pre">get_syncing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Beacon.get_syncing" title="Link to this definition"></a></dt>
+<dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">beacon</span><span class="o">.</span><span class="n">get_syncing</span><span class="p">()</span>
+<span class="go">{</span>
+<span class="go">  &#39;data&#39;: {</span>
+<span class="go">    &#39;head_slot&#39;: &#39;222270&#39;,</span>
+<span class="go">    &#39;sync_distance&#39;: &#39;190861&#39;</span>
+<span class="go">  }</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="web3.eth.html" class="btn btn-neutral float-left" title="web3.eth API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="web3.net.html" class="btn btn-neutral float-right" title="Net API" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

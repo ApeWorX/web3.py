@@ -1,0 +1,812 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>提供者 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Accounts" href="web3.eth.account.html" />
+    <link rel="prev" title="发布说明" href="release_notes.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">提供者</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#choosing-a-provider">Choosing a Provider</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#provider-via-environment-variable">Provider via Environment Variable</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#auto-initialization-provider-shortcuts">Auto-initialization Provider Shortcuts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geth-dev-proof-of-authority">Geth dev Proof of Authority</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#built-in-providers">Built In Providers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#httpprovider">HTTPProvider</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.providers.rpc.HTTPProvider"><code class="docutils literal notranslate"><span class="pre">web3.providers.rpc.HTTPProvider</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ipcprovider">IPCProvider</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.providers.ipc.IPCProvider"><code class="docutils literal notranslate"><span class="pre">web3.providers.ipc.IPCProvider</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#asynchttpprovider">AsyncHTTPProvider</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.providers.rpc.AsyncHTTPProvider"><code class="docutils literal notranslate"><span class="pre">web3.providers.rpc.AsyncHTTPProvider</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#persistent-connection-providers">Persistent Connection Providers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#persistent-connection-base-class">Persistent Connection Base Class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asyncipcprovider">AsyncIPCProvider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#websocketprovider">WebSocketProvider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-persistent-connection-providers">Using Persistent Connection Providers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asyncweb3-with-persistent-connection-providers">AsyncWeb3 with Persistent Connection Providers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interacting-with-the-persistent-connection">Interacting with the Persistent Connection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#legacywebsocketprovider">LegacyWebSocketProvider</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.providers.legacy_websocket.LegacyWebSocketProvider"><code class="docutils literal notranslate"><span class="pre">web3.providers.legacy_websocket.LegacyWebSocketProvider</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#autoprovider">AutoProvider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ethereumtesterprovider">EthereumTesterProvider</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.providers.eth_tester.EthereumTesterProvider"><code class="docutils literal notranslate"><span class="pre">EthereumTesterProvider</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#web3.providers.eth_tester.AsyncEthereumTesterProvider"><code class="docutils literal notranslate"><span class="pre">AsyncEthereumTesterProvider</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">提供者</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/providers.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="providers">
+<span id="id1"></span><h1>提供者<a class="headerlink" href="#providers" title="Link to this heading"></a></h1>
+<p>Using Ethereum requires access to an Ethereum node. If you have the means, you're
+encouraged to <a class="reference external" href="https://ethereum.org/en/developers/docs/nodes-and-clients/run-a-node/">run your own node</a>. (Note that you do not need to stake ether to
+run a node.) If you're unable to run your own node, you can use a <a class="reference external" href="https://ethereum.org/en/developers/docs/nodes-and-clients/nodes-as-a-service/">remote node</a>.</p>
+<p>Once you have access to a node, you can connect to it using a <strong>provider</strong>.
+Providers generate <a class="reference external" href="https://ethereum.org/en/developers/docs/apis/json-rpc/">JSON-RPC</a> requests and return the response. This is done by submitting
+the request to an HTTP, WebSocket, or IPC socket-based server.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>web3.py supports one provider per instance. If you have an advanced use case
+that requires multiple providers, create and configure a new web3 instance
+per connection.</p>
+</div>
+<p>If you are already happily connected to your Ethereum node, then you
+can skip the rest of this providers section.</p>
+<section id="choosing-a-provider">
+<span id="choosing-provider"></span><h2>Choosing a Provider<a class="headerlink" href="#choosing-a-provider" title="Link to this heading"></a></h2>
+<p>Most nodes have a variety of ways to connect to them. Most commonly:</p>
+<ol class="arabic simple">
+<li><p>IPC (uses local filesystem: fastest and most secure)</p></li>
+<li><p>WebSocket (works remotely, faster than HTTP)</p></li>
+<li><p>HTTP (more nodes support it)</p></li>
+</ol>
+<p>If you're not sure how to decide, choose this way:</p>
+<ul class="simple">
+<li><p>If you have the option of running web3.py on the same machine as the node, choose IPC.</p></li>
+<li><p>If you must connect to a node on a different computer, use WebSocket.</p></li>
+<li><p>If your node does not support WebSocket, use HTTP.</p></li>
+</ul>
+<p>Once you have decided how to connect, you'll select and configure the appropriate provider
+class:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#web3.providers.rpc.HTTPProvider" title="web3.providers.rpc.HTTPProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTTPProvider</span></code></a></p></li>
+<li><p><a class="reference internal" href="#web3.providers.ipc.IPCProvider" title="web3.providers.ipc.IPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">IPCProvider</span></code></a></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncHTTPProvider</span></code></p></li>
+<li><p><a class="reference internal" href="#web3.providers.persistent.AsyncIPCProvider" title="web3.providers.persistent.AsyncIPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code></a> (Persistent Connection Provider)</p></li>
+<li><p><a class="reference internal" href="#web3.providers.persistent.WebSocketProvider" title="web3.providers.persistent.WebSocketProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProvider</span></code></a> (Persistent Connection Provider)</p></li>
+</ul>
+<p>Each provider above links to the documentation on how to properly initialize that
+provider. Once you have reviewed the relevant documentation for the provider of your
+choice, you are ready to <a class="reference internal" href="quickstart.html#first-w3-use"><span class="std std-ref">get started with web3.py</span></a>.</p>
+<section id="provider-via-environment-variable">
+<h3>Provider via Environment Variable<a class="headerlink" href="#provider-via-environment-variable" title="Link to this heading"></a></h3>
+<p>Alternatively, you can set the environment variable <code class="docutils literal notranslate"><span class="pre">WEB3_PROVIDER_URI</span></code>
+before starting your script, and web3 will look for that provider first.</p>
+<p>Valid formats for this environment variable are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">file:///path/to/node/rpc-json/file.ipc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">http://192.168.1.2:8545</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">https://node.ontheweb.com</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ws://127.0.0.1:8546</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="auto-initialization-provider-shortcuts">
+<h2>Auto-initialization Provider Shortcuts<a class="headerlink" href="#auto-initialization-provider-shortcuts" title="Link to this heading"></a></h2>
+<section id="geth-dev-proof-of-authority">
+<h3>Geth dev Proof of Authority<a class="headerlink" href="#geth-dev-proof-of-authority" title="Link to this heading"></a></h3>
+<p>To connect to a <code class="docutils literal notranslate"><span class="pre">geth</span> <span class="pre">--dev</span></code> Proof of Authority instance with
+the POA middleware loaded by default:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.auto.gethdev</span><span class="w"> </span><span class="kn">import</span> <span class="n">w3</span>
+
+<span class="go"># confirm that the connection succeeded</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Or, connect to an async web3 instance:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.auto.gethdev</span><span class="w"> </span><span class="kn">import</span> <span class="n">async_w3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">async_w3</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+<span class="go"># confirm that the connection succeeded</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">async_w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="built-in-providers">
+<h2>Built In Providers<a class="headerlink" href="#built-in-providers" title="Link to this heading"></a></h2>
+<p>Web3 ships with the following providers which are appropriate for connecting to
+local and remote JSON-RPC servers.</p>
+<section id="httpprovider">
+<h3>HTTPProvider<a class="headerlink" href="#httpprovider" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.rpc.HTTPProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.rpc.</span></span><span class="sig-name descname"><span class="pre">HTTPProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception_retry_configuration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ExceptionRetryConfiguration()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.rpc.HTTPProvider" title="Link to this definition"></a></dt>
+<dd><p>This provider handles interactions with an HTTP or HTTPS based JSON-RPC server.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">endpoint_uri</span></code> should be the full URI to the RPC endpoint such as
+<code class="docutils literal notranslate"><span class="pre">'https://localhost:8545'</span></code>.  For RPC servers behind HTTP connections
+running on port 80 and HTTPS connections running on port 443 the port can
+be omitted from the URI.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">request_kwargs</span></code> should be a dictionary of keyword arguments which
+will be passed onto each http/https POST request made to your node.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session</span></code> allows you to pass a <code class="docutils literal notranslate"><span class="pre">requests.Session</span></code> object initialized
+as desired.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exception_retry_configuration</span></code> is an instance of the
+<a class="reference internal" href="internals.html#web3.providers.rpc.utils.ExceptionRetryConfiguration" title="web3.providers.rpc.utils.ExceptionRetryConfiguration"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionRetryConfiguration</span></code></a>
+class which allows you to configure how the provider should handle exceptions
+when making certain requests. Setting this to <code class="docutils literal notranslate"><span class="pre">None</span></code> will disable
+exception retries.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:8545&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Note that you should create only one HTTPProvider with the same provider URL
+per python process, as the HTTPProvider recycles underlying TCP/IP
+network connections, for better performance. Multiple HTTPProviders with different
+URLs will work as expected.</p>
+<p>Under the hood, the <code class="docutils literal notranslate"><span class="pre">HTTPProvider</span></code> uses the python requests library for
+making requests.  If you would like to modify how requests are made, you can
+use the <code class="docutils literal notranslate"><span class="pre">request_kwargs</span></code> to do so.  A common use case for this is increasing
+the timeout for each request.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:8545&quot;</span><span class="p">,</span> <span class="n">request_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;timeout&#39;</span><span class="p">:</span> <span class="mi">60</span><span class="p">}))</span>
+</pre></div>
+</div>
+<p>To tune the connection pool size, you can pass your own <code class="docutils literal notranslate"><span class="pre">requests.Session</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">adapter</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">HTTPAdapter</span><span class="p">(</span><span class="n">pool_connections</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">pool_maxsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="n">adapter</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">session</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">,</span> <span class="n">adapter</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:8545&quot;</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="ipcprovider">
+<h3>IPCProvider<a class="headerlink" href="#ipcprovider" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.ipc.IPCProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.ipc.</span></span><span class="sig-name descname"><span class="pre">IPCProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipc_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.ipc.IPCProvider" title="Link to this definition"></a></dt>
+<dd><p>This provider handles interaction with an IPC Socket based JSON-RPC
+server.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ipc_path</span></code> is the filesystem path to the IPC socket:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">IPCProvider</span><span class="p">(</span><span class="s2">&quot;~/Library/Ethereum/geth.ipc&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>If no <code class="docutils literal notranslate"><span class="pre">ipc_path</span></code> is specified, it will use a default depending on your operating
+system.</p>
+<ul class="simple">
+<li><p>On Linux and FreeBSD: <code class="docutils literal notranslate"><span class="pre">~/.ethereum/geth.ipc</span></code></p></li>
+<li><p>On Mac OS: <code class="docutils literal notranslate"><span class="pre">~/Library/Ethereum/geth.ipc</span></code></p></li>
+<li><p>On Windows: <code class="docutils literal notranslate"><span class="pre">\\.\pipe\geth.ipc</span></code></p></li>
+</ul>
+</dd></dl>
+
+</section>
+<section id="asynchttpprovider">
+<h3>AsyncHTTPProvider<a class="headerlink" href="#asynchttpprovider" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.rpc.AsyncHTTPProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.rpc.</span></span><span class="sig-name descname"><span class="pre">AsyncHTTPProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint_uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception_retry_configuration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">ExceptionRetryConfiguration()</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.rpc.AsyncHTTPProvider" title="Link to this definition"></a></dt>
+<dd><p>This provider handles interactions with an HTTP or HTTPS based JSON-RPC server asynchronously.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">endpoint_uri</span></code> should be the full URI to the RPC endpoint such as
+<code class="docutils literal notranslate"><span class="pre">'https://localhost:8545'</span></code>.  For RPC servers behind HTTP connections
+running on port 80 and HTTPS connections running on port 443 the port can
+be omitted from the URI.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">request_kwargs</span></code> should be a dictionary of keyword arguments which
+will be passed onto each http/https POST request made to your node.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">exception_retry_configuration</span></code> is an instance of the
+<a class="reference internal" href="internals.html#web3.providers.rpc.utils.ExceptionRetryConfiguration" title="web3.providers.rpc.utils.ExceptionRetryConfiguration"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExceptionRetryConfiguration</span></code></a>
+class which allows you to configure how the provider should handle exceptions
+when making certain requests. Setting this to <code class="docutils literal notranslate"><span class="pre">None</span></code> will disable
+exception retries.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">cache_async_session()</span></code> method allows you to use your own
+<code class="docutils literal notranslate"><span class="pre">aiohttp.ClientSession</span></code> object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">aiohttp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientSession</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncWeb3</span><span class="p">,</span> <span class="n">AsyncHTTPProvider</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncHTTPProvider</span><span class="p">(</span><span class="n">endpoint_uri</span><span class="p">))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># If you want to pass in your own session:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">custom_session</span> <span class="o">=</span> <span class="n">ClientSession</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">cache_async_session</span><span class="p">(</span><span class="n">custom_session</span><span class="p">)</span> <span class="c1"># This method is an async method so it needs to be handled accordingly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># when you&#39;re finished, disconnect:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Under the hood, the <code class="docutils literal notranslate"><span class="pre">AsyncHTTPProvider</span></code> uses the python
+<a class="reference external" href="https://docs.aiohttp.org/en/stable/">aiohttp</a> library for making requests.</p>
+</dd></dl>
+
+</section>
+<section id="persistent-connection-providers">
+<h3>Persistent Connection Providers<a class="headerlink" href="#persistent-connection-providers" title="Link to this heading"></a></h3>
+<section id="persistent-connection-base-class">
+<h4>Persistent Connection Base Class<a class="headerlink" href="#persistent-connection-base-class" title="Link to this heading"></a></h4>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>This class is not meant to be used directly. If your provider class inherits
+from this class, look to these docs for additional configuration options.</p>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.persistent.PersistentConnectionProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.persistent.</span></span><span class="sig-name descname"><span class="pre">PersistentConnectionProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_timeout:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">50.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_response_queue_size:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">silence_listener_task_exceptions:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span>&#160;&#160;&#160;&#160; <span class="pre">max_connection_retries:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_information_cache_size:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">500</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.persistent.PersistentConnectionProvider" title="Link to this definition"></a></dt>
+<dd><p>This is a base provider class, inherited by the following providers:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="#web3.providers.persistent.WebSocketProvider" title="web3.providers.persistent.WebSocketProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProvider</span></code></a></p></li>
+<li><p><a class="reference internal" href="#web3.providers.persistent.AsyncIPCProvider" title="web3.providers.persistent.AsyncIPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code></a></p></li>
+</ul>
+</div></blockquote>
+<p>It handles interactions with a persistent connection to a JSON-RPC server. Among
+its configuration, it houses all of the
+<a class="reference internal" href="internals.html#web3.providers.persistent.request_processor.RequestProcessor" title="web3.providers.persistent.request_processor.RequestProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestProcessor</span></code></a> logic for
+handling the asynchronous sending and receiving of requests and responses. See
+the <a class="reference internal" href="internals.html#internals-persistent-connection-providers"><span class="std std-ref">Request Processing for Persistent Connection Providers</span></a> section for more details on
+the internals of persistent connection providers.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">request_timeout</span></code> is the timeout in seconds, used when sending data over the
+connection and waiting for a response to be received from the listener task.
+Defaults to <code class="docutils literal notranslate"><span class="pre">50.0</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">subscription_response_queue_size</span></code> is the size of the queue used to store
+subscription responses, defaults to <code class="docutils literal notranslate"><span class="pre">500</span></code>. While messages are being consumed,
+this queue should never fill up as it is a transient queue and meant to handle
+asynchronous receiving and processing of responses. When in sync with the
+socket stream, this queue should only ever store 1 to a few messages at a time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">silence_listener_task_exceptions</span></code> is a boolean that determines whether
+exceptions raised by the listener task are silenced. Defaults to <code class="docutils literal notranslate"><span class="pre">False</span></code>,
+raising any exceptions that occur in the listener task.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_connection_retries</span></code> is the maximum number of times to retry a connection
+to the provider when initializing the provider. Defaults to <code class="docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">request_information_cache_size</span></code> specifies the size of the transient cache for
+storing request details, enabling the provider to process responses based on the
+original request information. Defaults to <code class="docutils literal notranslate"><span class="pre">500</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</section>
+<section id="asyncipcprovider">
+<h4>AsyncIPCProvider<a class="headerlink" href="#asyncipcprovider" title="Link to this heading"></a></h4>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.persistent.AsyncIPCProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.persistent.</span></span><span class="sig-name descname"><span class="pre">AsyncIPCProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipc_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_connection_retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.persistent.AsyncIPCProvider" title="Link to this definition"></a></dt>
+<dd><p>This provider handles asynchronous, persistent interaction with an IPC Socket based
+JSON-RPC server.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ipc_path</span></code> is the filesystem path to the IPC socket:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">read_buffer_limit</span></code> is the maximum size of data, in bytes, that can be read
+from the socket at one time. Defaults to 20MB (20 * 1024 * 1024). Raises
+<code class="docutils literal notranslate"><span class="pre">ReadBufferLimitReached</span></code> if the limit is reached, suggesting that the buffer
+limit be increased.</p></li>
+</ul>
+<p>This provider inherits from the
+<a class="reference internal" href="#web3.providers.persistent.PersistentConnectionProvider" title="web3.providers.persistent.PersistentConnectionProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code></a> class. Refer to
+the <a class="reference internal" href="#web3.providers.persistent.PersistentConnectionProvider" title="web3.providers.persistent.PersistentConnectionProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code></a> documentation
+for details on additional configuration options available for this provider.</p>
+<p>If no <code class="docutils literal notranslate"><span class="pre">ipc_path</span></code> is specified, it will use a default depending on your operating
+system.</p>
+<ul class="simple">
+<li><p>On Linux and FreeBSD: <code class="docutils literal notranslate"><span class="pre">~/.ethereum/geth.ipc</span></code></p></li>
+<li><p>On Mac OS: <code class="docutils literal notranslate"><span class="pre">~/Library/Ethereum/geth.ipc</span></code></p></li>
+<li><p>On Windows: <code class="docutils literal notranslate"><span class="pre">\\.\pipe\geth.ipc</span></code></p></li>
+</ul>
+</dd></dl>
+
+</section>
+<section id="websocketprovider">
+<h4>WebSocketProvider<a class="headerlink" href="#websocketprovider" title="Link to this heading"></a></h4>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.persistent.WebSocketProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.persistent.</span></span><span class="sig-name descname"><span class="pre">WebSocketProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint_uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="（在 Python v3.13）"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">websocket_kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="（在 Python v3.13）"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_text_frames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="（在 Python v3.13）"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.persistent.WebSocketProvider" title="Link to this definition"></a></dt>
+<dd><p>This provider handles interactions with an WS or WSS based JSON-RPC server.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">endpoint_uri</span></code> should be the full URI to the RPC endpoint such as
+<code class="docutils literal notranslate"><span class="pre">'ws://localhost:8546'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">websocket_kwargs</span></code> this should be a dictionary of keyword arguments which
+will be passed onto the ws/wss websocket connection.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_text_frames</span></code> will ensure websocket data is sent as text frames
+for servers that do not support binary communication.</p></li>
+</ul>
+<p>This provider inherits from the
+<a class="reference internal" href="#web3.providers.persistent.PersistentConnectionProvider" title="web3.providers.persistent.PersistentConnectionProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code></a> class. Refer to
+the <a class="reference internal" href="#web3.providers.persistent.PersistentConnectionProvider" title="web3.providers.persistent.PersistentConnectionProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code></a> documentation
+for details on additional configuration options available for this provider.</p>
+<p>Under the hood, the <code class="docutils literal notranslate"><span class="pre">WebSocketProvider</span></code> uses the python websockets library for
+making requests.  If you would like to modify how requests are made, you can
+use the <code class="docutils literal notranslate"><span class="pre">websocket_kwargs</span></code> to do so.  See the <a class="reference external" href="https://websockets.readthedocs.io/en/stable/reference/asyncio/client.html#websockets.client.WebSocketClientProtocol">websockets documentation</a> for
+available arguments.</p>
+</dd></dl>
+
+</section>
+<section id="using-persistent-connection-providers">
+<span id="subscription-examples"></span><h4>Using Persistent Connection Providers<a class="headerlink" href="#using-persistent-connection-providers" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">AsyncWeb3</span></code> class may be used as a context manager, utilizing the <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">with</span></code>
+syntax, when instantiating with a
+<a class="reference internal" href="#web3.providers.persistent.PersistentConnectionProvider" title="web3.providers.persistent.PersistentConnectionProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code></a>. This will
+automatically close the connection when the context manager exits and is the
+recommended way to initiate a persistent connection to the provider.</p>
+<p>A similar example using a <code class="docutils literal notranslate"><span class="pre">websockets</span></code> connection as an asynchronous context manager
+can be found in the <a class="reference external" href="https://websockets.readthedocs.io/en/stable/reference/asyncio/client.html#websockets.client.connect">websockets connection</a> docs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncWeb3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.providers.persistent</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">AsyncIPCProvider</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">WebSocketProvider</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">LOG</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># toggle debug logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">LOG</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="gp">... </span>    <span class="c1"># logger = logging.getLogger(&quot;web3.providers.AsyncIPCProvider&quot;)  # for the AsyncIPCProvider</span>
+<span class="gp">... </span>    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;web3.providers.WebSocketProvider&quot;</span><span class="p">)</span>  <span class="c1"># for the WebSocketProvider</span>
+<span class="gp">... </span>    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">())</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">context_manager_subscription_example</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="c1">#  async with AsyncWeb3(AsyncIPCProvider(&quot;./path/to.filename.ipc&quot;) as w3:  # for the AsyncIPCProvider</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ws://127.0.0.1:8546&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">w3</span><span class="p">:</span>  <span class="c1"># for the WebSocketProvider</span>
+<span class="gp">... </span>        <span class="c1"># subscribe to new block headers</span>
+<span class="gp">... </span>        <span class="n">subscription_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">&quot;newHeads&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="k">async</span> <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">w3</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">process_subscriptions</span><span class="p">():</span>
+<span class="gp">... </span>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">... </span>            <span class="c1"># handle responses here</span>
+<span class="gp">...</span>
+<span class="gp">... </span>            <span class="k">if</span> <span class="n">some_condition</span><span class="p">:</span>
+<span class="gp">... </span>                <span class="c1"># unsubscribe from new block headers and break out of</span>
+<span class="gp">... </span>                <span class="c1"># iterator</span>
+<span class="gp">... </span>                <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">subscription_id</span><span class="p">)</span>
+<span class="gp">... </span>                <span class="k">break</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="c1"># still an open connection, make any other requests and get</span>
+<span class="gp">... </span>        <span class="c1"># responses via send / receive</span>
+<span class="gp">... </span>        <span class="n">latest_block</span> <span class="o">=</span> <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="s2">&quot;latest&quot;</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Latest block: </span><span class="si">{</span><span class="n">latest_block</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">... </span>        <span class="c1"># the connection closes automatically when exiting the context</span>
+<span class="gp">... </span>        <span class="c1"># manager (the `async with` block)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">context_manager_subscription_example</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">AsyncWeb3</span></code> class may also be used as an asynchronous iterator, utilizing the
+<code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">for</span></code> syntax, when instantiating with a
+<a class="reference internal" href="#web3.providers.persistent.PersistentConnectionProvider" title="web3.providers.persistent.PersistentConnectionProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code></a>. This may be used to
+set up an indefinite websocket connection and reconnect automatically if the connection
+is lost.</p>
+<p>A similar example using a <code class="docutils literal notranslate"><span class="pre">websockets</span></code> connection as an asynchronous iterator can
+be found in the <a class="reference external" href="https://websockets.readthedocs.io/en/stable/reference/asyncio/client.html#websockets.client.connect">websockets connection</a> docs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">websockets</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncWeb3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.providers.persistent</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">AsyncIPCProvider</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">WebSocketProvider</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">subscription_iterator_example</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="c1"># async for w3 in AsyncWeb3(AsyncIPCProvider(&quot;./path/to/filename.ipc&quot;)):  # for the AsyncIPCProvider</span>
+<span class="gp">... </span>    <span class="k">async</span> <span class="k">for</span> <span class="n">w3</span> <span class="ow">in</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ws://127.0.0.1:8546&quot;</span><span class="p">)):</span>  <span class="c1"># for the WebSocketProvider</span>
+<span class="gp">... </span>        <span class="k">try</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="o">...</span>
+<span class="gp">... </span>        <span class="k">except</span> <span class="n">websockets</span><span class="o">.</span><span class="n">ConnectionClosed</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="k">continue</span>
+
+<span class="go"># run the example</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">subscription_iterator_example</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Awaiting the instantiation with a
+<a class="reference internal" href="#web3.providers.persistent.PersistentConnectionProvider" title="web3.providers.persistent.PersistentConnectionProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code></a>, or instantiating
+and awaiting the <code class="docutils literal notranslate"><span class="pre">connect()</span></code> method is also possible. Both of these examples are
+shown below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">await_instantiation_example</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="c1"># w3 = await AsyncWeb3(AsyncIPCProvider(&quot;./path/to/filename.ipc&quot;))  # for the AsyncIPCProvider</span>
+<span class="gp">... </span>    <span class="n">w3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ws://127.0.0.1:8546&quot;</span><span class="p">))</span>  <span class="c1"># for the WebSocketProvider</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="c1"># some code here</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="c1"># manual cleanup</span>
+<span class="gp">... </span>    <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+<span class="go"># run the example</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">await_instantiation_example</span><span class="p">())</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">await_provider_connect_example</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="c1"># w3 = AsyncWeb3(AsyncIPCProvider(&quot;./path/to/filename.ipc&quot;))  # for the AsyncIPCProvider</span>
+<span class="gp">... </span>    <span class="n">w3</span> <span class="o">=</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ws://127.0.0.1:8546&quot;</span><span class="p">))</span>  <span class="c1"># for the WebSocketProvider</span>
+<span class="gp">... </span>    <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="c1"># some code here</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="c1"># manual cleanup</span>
+<span class="gp">... </span>    <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+<span class="go"># run the example</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">await_provider_connect_example</span><span class="p">())</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#web3.providers.persistent.PersistentConnectionProvider" title="web3.providers.persistent.PersistentConnectionProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code></a> classes use the
+<a class="reference internal" href="internals.html#web3.providers.persistent.request_processor.RequestProcessor" title="web3.providers.persistent.request_processor.RequestProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestProcessor</span></code></a> class under the
+hood to sync up the receiving of responses and response processing for one-to-one and
+one-to-many request-to-response requests. Refer to the
+<a class="reference internal" href="internals.html#web3.providers.persistent.request_processor.RequestProcessor" title="web3.providers.persistent.request_processor.RequestProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">RequestProcessor</span></code></a>
+documentation for details.</p>
+</section>
+<section id="asyncweb3-with-persistent-connection-providers">
+<h4>AsyncWeb3 with Persistent Connection Providers<a class="headerlink" href="#asyncweb3-with-persistent-connection-providers" title="Link to this heading"></a></h4>
+<p>When an <code class="docutils literal notranslate"><span class="pre">AsyncWeb3</span></code> class is connected to a
+<a class="reference internal" href="#web3.providers.persistent.PersistentConnectionProvider" title="web3.providers.persistent.PersistentConnectionProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnectionProvider</span></code></a>, some attributes and
+methods become available.</p>
+<blockquote>
+<div><dl class="py attribute">
+<dt class="sig sig-object py" id="socket">
+<span class="sig-name descname"><span class="pre">socket</span></span><a class="headerlink" href="#socket" title="Link to this definition"></a></dt>
+<dd><p>The public API for interacting with the websocket connection is available via
+the <code class="docutils literal notranslate"><span class="pre">socket</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">Asyncweb3</span></code> class. This attribute is an
+instance of the
+<a class="reference internal" href="#web3.providers.persistent.persistent_connection.PersistentConnection" title="web3.providers.persistent.persistent_connection.PersistentConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentConnection</span></code></a>
+class and is the main interface for interacting with the socket connection.</p>
+</dd></dl>
+
+</div></blockquote>
+</section>
+<section id="interacting-with-the-persistent-connection">
+<h4>Interacting with the Persistent Connection<a class="headerlink" href="#interacting-with-the-persistent-connection" title="Link to this heading"></a></h4>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.persistent.persistent_connection.PersistentConnection">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.persistent.persistent_connection.</span></span><span class="sig-name descname"><span class="pre">PersistentConnection</span></span><a class="headerlink" href="#web3.providers.persistent.persistent_connection.PersistentConnection" title="Link to this definition"></a></dt>
+<dd><p>This class handles interactions with a persistent socket connection. It is available
+via the <code class="docutils literal notranslate"><span class="pre">socket</span></code> attribute on the <code class="docutils literal notranslate"><span class="pre">AsyncWeb3</span></code> class. The
+<code class="docutils literal notranslate"><span class="pre">PersistentConnection</span></code> class has the following methods and attributes:</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.providers.persistent.persistent_connection.PersistentConnection.subscriptions">
+<span class="sig-name descname"><span class="pre">subscriptions</span></span><a class="headerlink" href="#web3.providers.persistent.persistent_connection.PersistentConnection.subscriptions" title="Link to this definition"></a></dt>
+<dd><p>This attribute returns the current active subscriptions as a dict mapping
+the subscription <code class="docutils literal notranslate"><span class="pre">id</span></code> to a dict of metadata about the subscription
+request.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.providers.persistent.persistent_connection.PersistentConnection.process_subscriptions">
+<span class="sig-name descname"><span class="pre">process_subscriptions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.persistent.persistent_connection.PersistentConnection.process_subscriptions" title="Link to this definition"></a></dt>
+<dd><p>This method is available for listening to websocket subscriptions indefinitely.
+It is an asynchronous iterator that yields strictly one-to-many
+(e.g. <code class="docutils literal notranslate"><span class="pre">eth_subscription</span></code> responses) request-to-response messages from the
+websocket connection. To receive responses for one-to-one request-to-response
+calls, use the standard API for making requests via the appropriate module
+(e.g. <code class="docutils literal notranslate"><span class="pre">block_num</span> <span class="pre">=</span> <span class="pre">await</span> <span class="pre">w3.eth.block_number</span></code>)</p>
+<p>The responses from this method are formatted by <em>web3.py</em> formatters and run
+through the middleware that were present at the time of subscription.
+Examples on how to use this method can be seen above in the
+<a class="reference internal" href="#using-persistent-connection-providers">Using Persistent Connection Providers</a> section.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.providers.persistent.persistent_connection.PersistentConnection.send">
+<span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RPCEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.persistent.persistent_connection.PersistentConnection.send" title="Link to this definition"></a></dt>
+<dd><p>This method is available strictly for sending raw requests to the socket,
+if desired. It is not recommended to use this method directly, as the
+responses will not be formatted by <em>web3.py</em> formatters or run through the
+middleware. Instead, use the methods available on the respective web3
+module. For example, use <code class="docutils literal notranslate"><span class="pre">w3.eth.get_block(&quot;latest&quot;)</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">w3.socket.send(&quot;eth_getBlockByNumber&quot;,</span> <span class="pre">[&quot;latest&quot;,</span> <span class="pre">True])</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.providers.persistent.persistent_connection.PersistentConnection.recv">
+<span class="sig-name descname"><span class="pre">recv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.persistent.persistent_connection.PersistentConnection.recv" title="Link to this definition"></a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">recv()</span></code> method can be used to receive the next response for a request
+from the socket. The response from this method is the raw response. This is not
+the recommended way to receive a response for a request, as it is not formatted
+by <em>web3.py</em> formatters or run through the middleware. Instead, use the methods
+available on the respective web3 module
+(e.g. <code class="docutils literal notranslate"><span class="pre">block_num</span> <span class="pre">=</span> <span class="pre">await</span> <span class="pre">w3.eth.block_number</span></code>) for retrieving responses for
+one-to-one request-to-response calls.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.providers.persistent.persistent_connection.PersistentConnection.make_request">
+<span class="sig-name descname"><span class="pre">make_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">RPCEndpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.persistent.persistent_connection.PersistentConnection.make_request" title="Link to this definition"></a></dt>
+<dd><p>This method is available for making requests to the socket and retrieving the
+response. It is not recommended to use this method directly, as the responses
+will not be properly formatted by <em>web3.py</em> formatters or run through the
+middleware. Instead, use the methods available on the respective web3 module.
+For example, use <code class="docutils literal notranslate"><span class="pre">w3.eth.get_block(&quot;latest&quot;)</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">w3.socket.make_request(&quot;eth_getBlockByNumber&quot;,</span> <span class="pre">[&quot;latest&quot;,</span> <span class="pre">True])</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="legacywebsocketprovider">
+<h3>LegacyWebSocketProvider<a class="headerlink" href="#legacywebsocketprovider" title="Link to this heading"></a></h3>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p><code class="docutils literal notranslate"><span class="pre">LegacyWebSocketProvider</span></code> is deprecated and is likely to be removed in a
+future major release. Please use <code class="docutils literal notranslate"><span class="pre">WebSocketProvider</span></code> instead.</p>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.legacy_websocket.LegacyWebSocketProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.legacy_websocket.</span></span><span class="sig-name descname"><span class="pre">LegacyWebSocketProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">endpoint_uri</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">websocket_timeout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">websocket_kwargs</span></span></em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.legacy_websocket.LegacyWebSocketProvider" title="Link to this definition"></a></dt>
+<dd><p>This provider handles interactions with an WS or WSS based JSON-RPC server.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">endpoint_uri</span></code> should be the full URI to the RPC endpoint such as
+<code class="docutils literal notranslate"><span class="pre">'ws://localhost:8546'</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">websocket_timeout</span></code> is the timeout in seconds, used when receiving or
+sending data over the connection. Defaults to 10.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">websocket_kwargs</span></code> this should be a dictionary of keyword arguments which
+will be passed onto the ws/wss websocket connection.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">LegacyWebSocketProvider</span><span class="p">(</span><span class="s2">&quot;ws://127.0.0.1:8546&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Under the hood, <code class="docutils literal notranslate"><span class="pre">LegacyWebSocketProvider</span></code> uses the python <code class="docutils literal notranslate"><span class="pre">websockets</span></code> library for
+making requests.  If you would like to modify how requests are made, you can
+use the <code class="docutils literal notranslate"><span class="pre">websocket_kwargs</span></code> to do so.  See the <a class="reference external" href="https://websockets.readthedocs.io/en/stable/reference/asyncio/client.html#websockets.client.WebSocketClientProtocol">websockets documentation</a> for
+available arguments.</p>
+<p>Unlike HTTP connections, the timeout for WS connections is controlled by a
+separate <code class="docutils literal notranslate"><span class="pre">websocket_timeout</span></code> argument, as shown below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">LegacyWebSocketProvider</span><span class="p">(</span><span class="s2">&quot;ws://127.0.0.1:8546&quot;</span><span class="p">,</span> <span class="n">websocket_timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="autoprovider">
+<h3>AutoProvider<a class="headerlink" href="#autoprovider" title="Link to this heading"></a></h3>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">AutoProvider</span></code> is the default used when initializing
+<a class="reference internal" href="web3.main.html#web3.Web3" title="web3.Web3"><code class="xref py py-class docutils literal notranslate"><span class="pre">web3.Web3</span></code></a> without any providers. There's rarely a reason to use it
+explicitly.</p>
+</section>
+<section id="ethereumtesterprovider">
+<h3>EthereumTesterProvider<a class="headerlink" href="#ethereumtesterprovider" title="Link to this heading"></a></h3>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>Experimental:  This provider is experimental. There are still significant
+gaps in functionality. However it is being actively developed and supported.</p>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.eth_tester.EthereumTesterProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.eth_tester.</span></span><span class="sig-name descname"><span class="pre">EthereumTesterProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ethereum_tester</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_endpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.eth_tester.EthereumTesterProvider" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.providers.eth_tester.AsyncEthereumTesterProvider">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.providers.eth_tester.</span></span><span class="sig-name descname"><span class="pre">AsyncEthereumTesterProvider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ethereum_tester</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_endpoints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.providers.eth_tester.AsyncEthereumTesterProvider" title="Link to this definition"></a></dt>
+<dd><p>This provider integrates with the <code class="docutils literal notranslate"><span class="pre">eth-tester</span></code> library. The <code class="docutils literal notranslate"><span class="pre">ethereum_tester</span></code>
+constructor argument should be an instance of the <code class="xref py py-class docutils literal notranslate"><span class="pre">EthereumTester</span></code>
+or a subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChainBackend</span></code> class provided
+by the <code class="docutils literal notranslate"><span class="pre">eth-tester</span></code> library. The <code class="docutils literal notranslate"><span class="pre">api_endpoints</span></code> argument should be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>
+of RPC endpoints. You can see the structure and defaults <a class="reference external" href="https://github.com/ethereum/web3.py/blob/283b536c7d53e605c61468941e3fc07a6c5d0c09/web3/providers/eth_tester/defaults.py#L228">here</a>.
+If you would like a custom <code class="docutils literal notranslate"><span class="pre">eth-tester</span></code> instance to test with, see the
+<code class="docutils literal notranslate"><span class="pre">eth-tester</span></code> library <a class="reference external" href="https://github.com/ethereum/eth-tester">documentation</a>
+for details.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">())</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>To install the needed dependencies to use EthereumTesterProvider, you can
+install the pip extras package that has the correct interoperable versions of the
+<code class="docutils literal notranslate"><span class="pre">eth-tester</span></code> and <code class="docutils literal notranslate"><span class="pre">py-evm</span></code> dependencies needed: e.g. <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;web3[tester]&quot;</span></code></p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="release_notes.html" class="btn btn-neutral float-left" title="发布说明" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="web3.eth.account.html" class="btn btn-neutral float-right" title="Accounts" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

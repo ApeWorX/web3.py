@@ -1,0 +1,591 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../troubleshooting.rst:2
+msgid "Troubleshooting"
+msgstr "故障排除"
+
+#: ../../troubleshooting.rst:7
+msgid "Set up a clean environment"
+msgstr ""
+
+#: ../../troubleshooting.rst:9
+msgid ""
+"Many things can cause a broken environment. You might be on an "
+"unsupported version of Python. Another package might be installed that "
+"has a name or version conflict. Often, the best way to guarantee a "
+"correct environment is with ``virtualenv``, like:"
+msgstr ""
+
+#: ../../troubleshooting.rst:36
+msgid ""
+"Remember that each new terminal session requires you to reactivate your "
+"virtualenv, like: ``$ source ~/.venv-py3/bin/activate``"
+msgstr ""
+
+#: ../../troubleshooting.rst:43
+msgid "Why can't I use a particular function?"
+msgstr ""
+
+#: ../../troubleshooting.rst:45
+msgid ""
+"Note that a web3.py instance must be configured before you can use most "
+"of its capabilities. One symptom of not configuring the instance first is"
+" an error that looks something like this: ``AttributeError: type object "
+"'Web3' has no attribute 'eth'``."
+msgstr ""
+
+#: ../../troubleshooting.rst:49
+msgid ""
+"To properly configure your web3.py instance, specify which provider "
+"you're using to connect to the Ethereum network. An example "
+"configuration, if you're connecting to a locally run node, might be:"
+msgstr ""
+
+#: ../../troubleshooting.rst:62
+msgid ""
+"Refer to the :ref:`providers` documentation for further help with "
+"configuration."
+msgstr ""
+
+#: ../../troubleshooting.rst:68
+msgid "Why isn't my web3 instance connecting to the network?"
+msgstr ""
+
+#: ../../troubleshooting.rst:69
+msgid ""
+"You can check that your instance is connected via the ``is_connected`` "
+"method:"
+msgstr ""
+
+#: ../../troubleshooting.rst:76
+msgid ""
+"There are a variety of explanations for why you may see ``False`` here. "
+"To help you diagnose the problem, ``is_connected`` has an optional "
+"``show_traceback`` argument:"
+msgstr ""
+
+#: ../../troubleshooting.rst:87
+msgid ""
+"If you're running a local node, such as Geth, double-check that you've "
+"indeed started the binary and that you've started it from the intended "
+"directory - particularly if you've specified a relative path to its ipc "
+"file."
+msgstr ""
+
+#: ../../troubleshooting.rst:91
+msgid ""
+"If that does not address your issue, it's probable that you still have a "
+"Provider configuration issue. There are several options for configuring a"
+" Provider, detailed :ref:`here<providers>`."
+msgstr ""
+
+#: ../../troubleshooting.rst:98
+msgid "How do I get ether for my test network?"
+msgstr ""
+
+#: ../../troubleshooting.rst:100
+msgid ""
+"Test networks usually have something called a \"faucet\" to help get test"
+" ether to people who want to use it. The faucet simply sends you test "
+"ether when you visit a web page, or ping a chat bot, etc."
+msgstr ""
+
+#: ../../troubleshooting.rst:104
+msgid ""
+"Each test network has its own version of test ether, so each one must "
+"maintain its own faucet. Faucet mechanisms tend to come and go, so a web "
+"search for \"ethereum testnet faucet\" should give you the most up-to-"
+"date options."
+msgstr ""
+
+#: ../../troubleshooting.rst:109
+msgid "How do I use my MetaMask accounts from web3.py?"
+msgstr ""
+
+#: ../../troubleshooting.rst:111
+msgid ""
+"Export your private key from MetaMask, and use the local private key "
+"tools in web3.py to sign and send transactions."
+msgstr ""
+
+#: ../../troubleshooting.rst:114
+msgid ""
+"See `how to export your private key "
+"<https://ethereum.stackexchange.com/questions/33053/what-is-a-private-"
+"key-in-an-ethereum-wallet-like-metamask-and-how-do-i-find-it>`_ and :ref"
+":`eth-account`."
+msgstr ""
+
+#: ../../troubleshooting.rst:121
+msgid "How do I create an account?"
+msgstr ""
+
+#: ../../troubleshooting.rst:123
+msgid "In general, your options for accounts are:"
+msgstr ""
+
+#: ../../troubleshooting.rst:125
+msgid ""
+"Import a keystore file for an account and :ref:`extract the private "
+"key<extract_geth_pk>`."
+msgstr ""
+
+#: ../../troubleshooting.rst:126
+msgid ""
+"Create an account via the :ref:`eth-account <eth-account>` API, e.g., "
+"``new_acct = w3.eth.account.create()``."
+msgstr ""
+
+#: ../../troubleshooting.rst:127
+msgid ""
+"Use an external service (e.g. Metamask) to generate a new account, then "
+"securely import its private key."
+msgstr ""
+
+#: ../../troubleshooting.rst:129
+msgid ""
+"Don't store real value in an account until you are familiar with security"
+" best practices. If you lose your private key, you lose your account!"
+msgstr ""
+
+#: ../../troubleshooting.rst:133
+msgid "Why doesn't my transaction work on another network?"
+msgstr ""
+
+#: ../../troubleshooting.rst:135
+msgid ""
+"web3.py is an Ethereum-specific library, which defaults to `\"type 2\" "
+"EIP-1559 transactions "
+"<https://ethereum.org/en/developers/docs/transactions/#typed-transaction-"
+"envelope>`_ as of the London network upgrade. Some chains (including "
+"Ethereum L2s) do not support the same transaction types."
+msgstr ""
+
+#: ../../troubleshooting.rst:140
+msgid ""
+"If your chain doesn't support this transaction type, you likely need to "
+"create a \"legacy\" transaction, i.e., include ``gasPrice``, but not "
+"``type``, ``maxFeePerGas``, or ``maxPriorityFeePerGas`` in your "
+"transaction body."
+msgstr ""
+
+#: ../../troubleshooting.rst:144
+msgid ""
+"If that doesn't resolve your issue, open a GitHub issue or reach out for "
+"help in the community `Discord`_ server if you're having trouble with an "
+"Ethereum-ecosystem chain. If you're debugging in an alternative "
+"ecosystem, please find another appropriate forum to raise your question."
+msgstr ""
+
+#: ../../troubleshooting.rst:153
+msgid "How do I conform to ABI types?"
+msgstr ""
+
+#: ../../troubleshooting.rst:155
+msgid "The web3 library follows the following conventions:"
+msgstr ""
+
+#: ../../troubleshooting.rst:158
+msgid "Bytes vs Text"
+msgstr ""
+
+#: ../../troubleshooting.rst:160
+msgid ""
+"The term *bytes* is used to refer to the binary representation of a "
+"string."
+msgstr ""
+
+#: ../../troubleshooting.rst:161
+msgid "The term *text* is used to refer to unicode representations of strings."
+msgstr ""
+
+#: ../../troubleshooting.rst:164
+msgid "Hexadecimal Representations"
+msgstr ""
+
+#: ../../troubleshooting.rst:166
+msgid "All hexadecimal values will be returned as text."
+msgstr ""
+
+#: ../../troubleshooting.rst:167
+msgid "All hexadecimal values will be ``0x`` prefixed."
+msgstr ""
+
+#: ../../troubleshooting.rst:170
+msgid "Ethereum Addresses"
+msgstr ""
+
+#: ../../troubleshooting.rst:172
+msgid "All addresses must be supplied in one of three ways:"
+msgstr ""
+
+#: ../../troubleshooting.rst:174
+msgid ""
+"A 20-byte hexadecimal that is checksummed using the `EIP-55 "
+"<https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md>`_ spec."
+msgstr ""
+
+#: ../../troubleshooting.rst:176
+msgid "A 20-byte binary address (python bytes type)."
+msgstr ""
+
+#: ../../troubleshooting.rst:177
+msgid ""
+"While connected to an Ethereum Name Service (ENS) supported chain, an ENS"
+" name (often in the form ``myname.eth``)."
+msgstr ""
+
+#: ../../troubleshooting.rst:181
+msgid "Disabling Strict Bytes Type Checking"
+msgstr ""
+
+#: ../../troubleshooting.rst:183
+msgid ""
+"There is a boolean flag on the ``Web3`` class and the ``ENS`` class that "
+"will disable strict bytes type checking. This allows bytes values of "
+"Python strings and allows byte strings less than the specified byte size,"
+" appropriately padding values that need padding. To disable stricter "
+"checks, set the ``w3.strict_bytes_type_checking`` (or "
+"``ns.strict_bytes_type_checking``) flag to ``False``. This will no longer"
+" cause the ``Web3`` / ``ENS`` instance to raise an error if a Python "
+"string is passed in without a \"0x\" prefix. It will also render valid "
+"byte strings or hex strings that are below the exact number of bytes "
+"specified by the ABI type by padding the value appropriately, according "
+"to the ABI type. See the :ref:`disable-strict-byte-check` section for an "
+"example on using the flag and more details."
+msgstr ""
+
+#: ../../troubleshooting.rst:195
+msgid ""
+"If a standalone ``ENS`` instance is instantiated from a ``Web3`` "
+"instance, i.e. ``ns = ENS.from_web3(w3)``, it will inherit the value of "
+"the ``w3.strict_bytes_type_checking`` flag from the ``Web3`` instance at "
+"the time of instantiation."
+msgstr ""
+
+#: ../../troubleshooting.rst:200
+msgid ""
+"Also of note, all modules on the ``Web3`` class will inherit the value of"
+" this flag, since all modules use the parent ``w3`` object reference "
+"under the hood. This means that ``w3.eth.w3.strict_bytes_type_checking`` "
+"will always have the same value as ``w3.strict_bytes_type_checking``."
+msgstr ""
+
+#: ../../troubleshooting.rst:206
+msgid ""
+"For more details on the ABI specification, refer to the `Solidity ABI "
+"Spec <https://docs.soliditylang.org/en/latest/abi-spec.html>`_."
+msgstr ""
+
+#: ../../troubleshooting.rst:212
+msgid "Types by Example"
+msgstr ""
+
+#: ../../troubleshooting.rst:214
+msgid "Let's use a contrived contract to demonstrate input types in web3.py:"
+msgstr ""
+
+#: ../../troubleshooting.rst:255
+msgid "Booleans"
+msgstr ""
+
+#: ../../troubleshooting.rst:262
+msgid "Unsigned Integers"
+msgstr ""
+
+#: ../../troubleshooting.rst:271
+msgid "Signed Integers"
+msgstr ""
+
+#: ../../troubleshooting.rst:278
+msgid "Addresses"
+msgstr ""
+
+#: ../../troubleshooting.rst:285
+msgid "Bytes"
+msgstr ""
+
+#: ../../troubleshooting.rst:292
+msgid "Structs"
+msgstr ""
+
+#: ../../troubleshooting.rst:300
+msgid "How can I optimize Ethereum JSON-RPC API access?"
+msgstr ""
+
+#: ../../troubleshooting.rst:302
+msgid ""
+"Your Ethereum node JSON-RPC API might be slow when fetching multiple and "
+"large requests, especially when running batch jobs. Here are some tips "
+"for how to speed up your web3.py application."
+msgstr ""
+
+#: ../../troubleshooting.rst:304
+msgid ""
+"Run your client locally, e.g., `Go Ethereum <https://github.com/ethereum"
+"/go-ethereum>`_ or `TurboGeth <https://github.com/ledgerwatch/turbo-"
+"geth>`_. The network latency and speed are the major limiting factors for"
+" fast API access."
+msgstr ""
+
+#: ../../troubleshooting.rst:306
+msgid ""
+"Use IPC communication instead of HTTP/WebSockets. See "
+":ref:`choosing_provider`."
+msgstr ""
+
+#: ../../troubleshooting.rst:308
+msgid ""
+"Use an optimised JSON decoder. A future iteration of web3.py may change "
+"the default decoder or provide an API to configure one, but for now, you "
+"may patch the provider class to use `ujson "
+"<https://pypi.org/project/ujson/>`_."
+msgstr ""
+
+#: ../../troubleshooting.rst:338
+msgid "Why am I getting Visual C++ or Cython not installed error?"
+msgstr ""
+
+#: ../../troubleshooting.rst:340
+msgid ""
+"Some Windows users that do not have Microsoft Visual C++ version 14.0 or "
+"greater installed may see an error message when installing web3.py as "
+"shown below:"
+msgstr ""
+
+#: ../../troubleshooting.rst:348
+msgid "To fix this error, download and install Microsoft Visual C++ from here :"
+msgstr ""
+
+#: ../../troubleshooting.rst:350
+msgid ""
+"`Microsoft Visual C++ Redistributable for Visual Studio "
+"<https://visualstudio.microsoft.com/downloads/#microsoft-visual-c"
+"-redistributable-for-visual-studio-2019>`_"
+msgstr ""
+
+#: ../../troubleshooting.rst:352
+msgid "`x64 Visual C++ <https://aka.ms/vs/16/release/VC_redist.x64.exe>`_"
+msgstr ""
+
+#: ../../troubleshooting.rst:354
+msgid "`x86 Visual C++ <https://aka.ms/vs/16/release/VC_redist.x86.exe>`_"
+msgstr ""
+
+#: ../../troubleshooting.rst:356
+msgid "`ARM64 Visual C++ <https://aka.ms/vs/16/release/VC_redist.arm64.exe>`_"
+msgstr ""
+
+#: ../../troubleshooting.rst:360
+msgid "How do I convert currency denominations?"
+msgstr ""
+
+#: ../../troubleshooting.rst:362
+msgid "The following denominations are supported:"
+msgstr ""
+
+#: ../../troubleshooting.rst:365
+msgid "denomination"
+msgstr ""
+
+#: ../../troubleshooting.rst:365
+msgid "amount in wei"
+msgstr ""
+
+#: ../../troubleshooting.rst:367
+msgid "wei"
+msgstr ""
+
+#: ../../troubleshooting.rst:367
+msgid "1"
+msgstr ""
+
+#: ../../troubleshooting.rst:369
+msgid "kwei"
+msgstr ""
+
+#: ../../troubleshooting.rst:369 ../../troubleshooting.rst:371
+#: ../../troubleshooting.rst:373
+msgid "1000"
+msgstr ""
+
+#: ../../troubleshooting.rst:371
+msgid "babbage"
+msgstr ""
+
+#: ../../troubleshooting.rst:373
+msgid "femtoether"
+msgstr ""
+
+#: ../../troubleshooting.rst:375
+msgid "mwei"
+msgstr ""
+
+#: ../../troubleshooting.rst:375 ../../troubleshooting.rst:377
+#: ../../troubleshooting.rst:379
+msgid "1000000"
+msgstr ""
+
+#: ../../troubleshooting.rst:377
+msgid "lovelace"
+msgstr ""
+
+#: ../../troubleshooting.rst:379
+msgid "picoether"
+msgstr ""
+
+#: ../../troubleshooting.rst:381
+msgid "gwei"
+msgstr ""
+
+#: ../../troubleshooting.rst:381 ../../troubleshooting.rst:383
+#: ../../troubleshooting.rst:385 ../../troubleshooting.rst:387
+msgid "1000000000"
+msgstr ""
+
+#: ../../troubleshooting.rst:383
+msgid "shannon"
+msgstr ""
+
+#: ../../troubleshooting.rst:385
+msgid "nanoether"
+msgstr ""
+
+#: ../../troubleshooting.rst:387
+msgid "nano"
+msgstr ""
+
+#: ../../troubleshooting.rst:389
+msgid "szabo"
+msgstr ""
+
+#: ../../troubleshooting.rst:389 ../../troubleshooting.rst:391
+#: ../../troubleshooting.rst:393
+msgid "1000000000000"
+msgstr ""
+
+#: ../../troubleshooting.rst:391
+msgid "microether"
+msgstr ""
+
+#: ../../troubleshooting.rst:393
+msgid "micro"
+msgstr ""
+
+#: ../../troubleshooting.rst:395
+msgid "finney"
+msgstr ""
+
+#: ../../troubleshooting.rst:395 ../../troubleshooting.rst:397
+#: ../../troubleshooting.rst:399
+msgid "1000000000000000"
+msgstr ""
+
+#: ../../troubleshooting.rst:397
+msgid "milliether"
+msgstr ""
+
+#: ../../troubleshooting.rst:399
+msgid "milli"
+msgstr ""
+
+#: ../../troubleshooting.rst:401
+msgid "ether"
+msgstr ""
+
+#: ../../troubleshooting.rst:401
+msgid "1000000000000000000"
+msgstr ""
+
+#: ../../troubleshooting.rst:403
+msgid "kether"
+msgstr ""
+
+#: ../../troubleshooting.rst:403 ../../troubleshooting.rst:405
+msgid "1000000000000000000000"
+msgstr ""
+
+#: ../../troubleshooting.rst:405
+msgid "grand"
+msgstr ""
+
+#: ../../troubleshooting.rst:407
+msgid "mether"
+msgstr ""
+
+#: ../../troubleshooting.rst:407
+msgid "1000000000000000000000000"
+msgstr ""
+
+#: ../../troubleshooting.rst:409
+msgid "gether"
+msgstr ""
+
+#: ../../troubleshooting.rst:409
+msgid "1000000000000000000000000000"
+msgstr ""
+
+#: ../../troubleshooting.rst:411
+msgid "tether"
+msgstr ""
+
+#: ../../troubleshooting.rst:411
+msgid "1000000000000000000000000000000"
+msgstr ""
+
+#: ../../troubleshooting.rst:414
+msgid ""
+"You can use the :meth:`~web3.from_wei` method to convert a balance to "
+"ether (or another denomination)."
+msgstr ""
+
+#: ../../troubleshooting.rst:422
+msgid ""
+"To convert back to wei, you can use the inverse function, "
+":meth:`~web3.to_wei`. Note that Python's default floating point precision"
+" is insufficient for this use case, so it's necessary to cast the value "
+"to a `Decimal <https://docs.python.org/3/library/decimal.html>`_ if it "
+"isn't already."
+msgstr ""
+
+#: ../../troubleshooting.rst:433
+msgid ""
+"Best practice: If you need to work with multiple currency denominations, "
+"default to wei. A typical workflow may require a conversion from some "
+"denomination to wei, then from wei to whatever you need."
+msgstr ""
+
+#: ../../troubleshooting.rst:446
+msgid "How do I adjust the log levels?"
+msgstr ""
+
+#: ../../troubleshooting.rst:448
+msgid ""
+"web3.py internally uses `Python logging subsystem "
+"<https://docs.python.org/3/library/logging.html>`_."
+msgstr ""
+
+#: ../../troubleshooting.rst:450
+msgid ""
+"If you want to run your application logging in debug mode, below is an "
+"example of how to make some JSON-RPC traffic quieter."
+msgstr ""

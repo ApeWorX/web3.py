@@ -1,0 +1,836 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中间件 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Web3 内部实现" href="internals.html" />
+    <link rel="prev" title="事件订阅" href="subscriptions.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">中间件</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#configuring-middleware">Configuring Middleware</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#middleware-order">Middleware Order</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#middleware-stack-api">Middleware Stack API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Web3.middleware_onion.add"><code class="docutils literal notranslate"><span class="pre">Web3.middleware_onion.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Web3.middleware_onion.inject"><code class="docutils literal notranslate"><span class="pre">Web3.middleware_onion.inject()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Web3.middleware_onion.remove"><code class="docutils literal notranslate"><span class="pre">Web3.middleware_onion.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Web3.middleware_onion.replace"><code class="docutils literal notranslate"><span class="pre">Web3.middleware_onion.replace()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Web3.middleware_onion.clear"><code class="docutils literal notranslate"><span class="pre">Web3.middleware_onion.clear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Web3.middleware_onion.middleware"><code class="docutils literal notranslate"><span class="pre">Web3.middleware_onion.middleware</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#instantiate-with-custom-middleware">Instantiate with Custom Middleware</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#default-middleware">Default Middleware</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#attributedict">AttributeDict</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.middleware.AttributeDictMiddleware"><code class="docutils literal notranslate"><span class="pre">web3.middleware.AttributeDictMiddleware</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ens-name-to-address-resolution">ENS Name to Address Resolution</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.middleware.ENSNameToAddressMiddleware"><code class="docutils literal notranslate"><span class="pre">web3.middleware.ENSNameToAddressMiddleware</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gas-price-strategy">Gas Price Strategy</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.middleware.GasPriceStrategyMiddleware"><code class="docutils literal notranslate"><span class="pre">web3.middleware.GasPriceStrategyMiddleware</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#buffered-gas-estimate">Buffered Gas Estimate</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.middleware.BufferedGasEstimateMiddleware"><code class="docutils literal notranslate"><span class="pre">web3.middleware.BufferedGasEstimateMiddleware</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#validation">Validation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.middleware.ValidationMiddleware"><code class="docutils literal notranslate"><span class="pre">web3.middleware.ValidationMiddleware</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-middleware">Optional Middleware</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#stalecheck">Stalecheck</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.middleware.StalecheckMiddlewareBuilder"><code class="docutils literal notranslate"><span class="pre">web3.middleware.StalecheckMiddlewareBuilder()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#proof-of-authority">Proof of Authority</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.middleware.ExtraDataToPOAMiddleware"><code class="docutils literal notranslate"><span class="pre">web3.middleware.ExtraDataToPOAMiddleware</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#why-is-extradatatopoamiddleware-necessary">Why is <code class="docutils literal notranslate"><span class="pre">ExtraDataToPOAMiddleware</span></code> necessary?</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#locally-managed-log-and-block-filters">Locally Managed Log and Block Filters</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.middleware.LocalFilterMiddleware"><code class="docutils literal notranslate"><span class="pre">web3.middleware.LocalFilterMiddleware()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#signing">Signing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3.middleware.SignAndSendRawMiddlewareBuilder"><code class="docutils literal notranslate"><span class="pre">web3.middleware.SignAndSendRawMiddlewareBuilder()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-custom-middleware">Creating Custom Middleware</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">中间件</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/middleware.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="middleware">
+<span id="middleware-internals"></span><h1>中间件<a class="headerlink" href="#middleware" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">Web3</span></code> is instantiated with layers of middleware by default. They sit between the public
+<code class="docutils literal notranslate"><span class="pre">Web3</span></code> methods and the <a class="reference internal" href="providers.html"><span class="doc">提供者</span></a>, and are used to perform sanity checks, convert data
+types, enable ENS support, and more. Each layer can modify the request and/or response.
+While several middleware are enabled by default, others are available for optional use,
+and you're free to create your own!</p>
+<p>Each middleware layer gets invoked before the request reaches the provider, and then
+processes the result after the provider returns, in reverse order. However, it is
+possible for a middleware to return early from a call without the request ever getting
+to the provider (or even reaching the middleware that are in deeper layers).</p>
+<section id="configuring-middleware">
+<span id="modifying-middleware"></span><h2>Configuring Middleware<a class="headerlink" href="#configuring-middleware" title="Link to this heading"></a></h2>
+<p>Middleware can be added, removed, replaced, and cleared at runtime. To make that easier, you
+can name the middleware for later reference.</p>
+<section id="middleware-order">
+<h3>Middleware Order<a class="headerlink" href="#middleware-order" title="Link to this heading"></a></h3>
+<p>Think of the middleware as being layered in an onion, where you initiate a web3.py request at
+the outermost layer of the onion, and the Ethereum node (like geth) receives and responds
+to the request inside the innermost layer of the onion. Here is a (simplified) diagram:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>                            New request from web3.py
+
+                                        |
+                                        |
+                                        v
+
+                                `````Layer 2``````
+                         ```````                  ```````
+                    `````               |                ````
+                 ````                   v                    ````
+              ```                                                ```
+            `.               ````````Layer 1```````                `.`
+          ``             ````                      `````              .`
+        `.            ```               |               ```            `.`
+       .`          ```                  v                  ```           `.
+     `.          `.`                                         ```           .`
+    ``          .`                  `Layer 0`                  ``           .`
+   ``         `.               `````        ``````               .           .`
+  `.         ``             ```         |        ```              .`          .
+  .         ``            `.`           |           ``             .           .
+ .         `.            ``       JSON-RPC call       .`            .          .`
+ .         .            ``              |              .            ``          .
+``         .            .               v               .            .          .
+.         .`           .                                .            .          ``
+.         .            .          Ethereum node         .`           .           .
+.         .            .                                .            .           .
+.         ``           `.               |               .            .           .
+.          .            .`              |              .`            .          .
+`.         .`            .`          Response         .`            .`          .
+ .          .             `.`           |           `.`            `.           .
+ `.          .              ```         |        ````             `.           .
+  .          `.               `````     v     ````               `.           ``
+   .           .`                 ```Layer 0``                  ``           `.
+    .           `.                                            `.`           `.
+     .            `.                    |                   `.`            `.
+      .`            ```                 |                 ```             .`
+       `.              ```              v             ````              `.`
+         ``               ``````                 `````                 .`
+           ``                   `````Layer 1`````                   `.`
+             ```                                                  ```
+               ````                     |                      ```
+                  `````                 v                  ````
+                      ``````                          `````
+                            `````````Layer 2``````````
+
+                                        |
+                                        v
+
+                             Returned value in web3.py
+</pre></div>
+</div>
+<p>The middleware are maintained in <code class="docutils literal notranslate"><span class="pre">Web3.middleware_onion</span></code>. See below for the API.</p>
+<p>When specifying middleware in a list, or retrieving the list of middleware, they will
+be returned in the order of outermost layer first and innermost layer last. In the above
+example, that means that <code class="docutils literal notranslate"><span class="pre">w3.middleware_onion.middleware</span></code> would return the middleware
+in the order of: <code class="docutils literal notranslate"><span class="pre">[2,</span> <span class="pre">1,</span> <span class="pre">0]</span></code>.</p>
+</section>
+<section id="middleware-stack-api">
+<span id="id1"></span><h3>Middleware Stack API<a class="headerlink" href="#middleware-stack-api" title="Link to this heading"></a></h3>
+<p>To add or remove items in different layers, use the following API:</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Web3.middleware_onion.add">
+<span class="sig-prename descclassname"><span class="pre">Web3.middleware_onion.</span></span><span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">middleware</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Web3.middleware_onion.add" title="Link to this definition"></a></dt>
+<dd><p>Middleware will be added to the outermost layer. That means the new middleware will modify the
+request first, and the response last. You can optionally name it with any hashable object,
+typically a string.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">web3</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">GasPriceStrategyMiddleware</span><span class="p">)</span>
+<span class="go"># or</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">web3</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">GasPriceStrategyMiddleware</span><span class="p">,</span> <span class="s1">&#39;gas_price_strategy&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Web3.middleware_onion.inject">
+<span class="sig-prename descclassname"><span class="pre">Web3.middleware_onion.</span></span><span class="sig-name descname"><span class="pre">inject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">middleware</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Web3.middleware_onion.inject" title="Link to this definition"></a></dt>
+<dd><p>Inject a named middleware to an arbitrary layer.</p>
+<p>The current implementation only supports injection at the innermost or
+outermost layers. Note that injecting to the outermost layer is equivalent to calling
+<a class="reference internal" href="#Web3.middleware_onion.add" title="Web3.middleware_onion.add"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Web3.middleware_onion.add()</span></code></a> .</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Either of these will put the gas_price_strategy middleware at the innermost layer</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">web3</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">GasPriceStrategyMiddleware</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># or</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">web3</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">GasPriceStrategyMiddleware</span><span class="p">,</span> <span class="s1">&#39;gas_price_strategy&#39;</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Web3.middleware_onion.remove">
+<span class="sig-prename descclassname"><span class="pre">Web3.middleware_onion.</span></span><span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">middleware</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Web3.middleware_onion.remove" title="Link to this definition"></a></dt>
+<dd><p>Middleware will be removed from whatever layer it was in. If you added the middleware with
+a name, use the name to remove it. If you added the middleware as an object, use the object
+again later to remove it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">web3</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">GasPriceStrategyMiddleware</span><span class="p">)</span>
+<span class="go"># or</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;gas_price_strategy&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Web3.middleware_onion.replace">
+<span class="sig-prename descclassname"><span class="pre">Web3.middleware_onion.</span></span><span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_middleware</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_middleware</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Web3.middleware_onion.replace" title="Link to this definition"></a></dt>
+<dd><p>Middleware will be replaced from whatever layer it was in. If the middleware was named, it will
+continue to have the same name. If it was un-named, then you will now reference it with the new
+middleware object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">GasPriceStrategyMiddleware</span><span class="p">,</span> <span class="n">AttributeDictMiddleware</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">GasPriceStrategyMiddleware</span><span class="p">,</span> <span class="n">AttributeDictMiddleware</span><span class="p">])</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">GasPriceStrategyMiddleware</span><span class="p">,</span> <span class="n">AttributeDictMiddleware</span><span class="p">)</span>
+<span class="go"># this is now referenced by the new middleware object, so to remove it:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">AttributeDictMiddleware</span><span class="p">)</span>
+
+<span class="go"># or, if it was named</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;gas_price_strategy&#39;</span><span class="p">,</span> <span class="n">AttributeDictMiddleware</span><span class="p">)</span>
+<span class="go"># this is still referenced by the original name, so to remove it:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;gas_price_strategy&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Web3.middleware_onion.clear">
+<span class="sig-prename descclassname"><span class="pre">Web3.middleware_onion.</span></span><span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Web3.middleware_onion.clear" title="Link to this definition"></a></dt>
+<dd><p>Empty all the middleware, including the default ones.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Web3.middleware_onion.middleware">
+<span class="sig-prename descclassname"><span class="pre">Web3.middleware_onion.</span></span><span class="sig-name descname"><span class="pre">middleware</span></span><a class="headerlink" href="#Web3.middleware_onion.middleware" title="Link to this definition"></a></dt>
+<dd><p>Return all the current middleware for the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance in the appropriate order for importing into a new
+<code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3_1</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="go"># add uniquely named middleware:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3_1</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">web3</span><span class="o">.</span><span class="n">middleware</span><span class="o">.</span><span class="n">GasPriceStrategyMiddleware</span><span class="p">,</span> <span class="s1">&#39;test_middleware&#39;</span><span class="p">)</span>
+<span class="go"># export middleware from first w3 instance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">middleware</span> <span class="o">=</span> <span class="n">w3_1</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">middleware</span>
+
+<span class="go"># import into second instance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3_2</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">middleware</span><span class="o">=</span><span class="n">middleware</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">w3_1</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">middleware</span> <span class="o">==</span> <span class="n">w3_2</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">middleware</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">w3_2</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;test_middleware&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="instantiate-with-custom-middleware">
+<h3>Instantiate with Custom Middleware<a class="headerlink" href="#instantiate-with-custom-middleware" title="Link to this heading"></a></h3>
+<p>Instead of working from the default list, you can specify a custom list of
+middleware when initializing Web3:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Web3</span><span class="p">(</span><span class="n">middleware</span><span class="o">=</span><span class="p">[</span><span class="n">my_middleware1</span><span class="p">,</span> <span class="n">my_middleware2</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>This will <em>replace</em> the default middleware. To keep the default functionality,
+either use <code class="docutils literal notranslate"><span class="pre">middleware_onion.add()</span></code> from above, or add the default middleware to
+your list of new middleware.</p>
+</div>
+</section>
+</section>
+<section id="default-middleware">
+<span id="id2"></span><h2>Default Middleware<a class="headerlink" href="#default-middleware" title="Link to this heading"></a></h2>
+<p>The following middleware are included by default:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gas_price_strategy</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ens_name_to_address</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attrdict</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">validation</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gas_estimate</span></code></p></li>
+</ul>
+<p>The defaults are defined in the <code class="docutils literal notranslate"><span class="pre">get_default_middleware()</span></code> method in <code class="docutils literal notranslate"><span class="pre">web3/manager.py</span></code>.</p>
+<section id="attributedict">
+<h3>AttributeDict<a class="headerlink" href="#attributedict" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.middleware.AttributeDictMiddleware">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.middleware.</span></span><span class="sig-name descname"><span class="pre">AttributeDictMiddleware</span></span><a class="headerlink" href="#web3.middleware.AttributeDictMiddleware" title="Link to this definition"></a></dt>
+<dd><p>This middleware recursively converts any dictionary type in the result of a call
+to an <code class="docutils literal notranslate"><span class="pre">AttributeDict</span></code>. This enables dot-syntax access, like
+<code class="docutils literal notranslate"><span class="pre">eth.get_block('latest').number</span></code> in addition to
+<code class="docutils literal notranslate"><span class="pre">eth.get_block('latest')['number']</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Accessing a property via attribute breaks type hinting. For this reason, this
+feature is available as a middleware, which may be removed if desired.</p>
+</div>
+</dd></dl>
+
+</section>
+<section id="ens-name-to-address-resolution">
+<h3>ENS Name to Address Resolution<a class="headerlink" href="#ens-name-to-address-resolution" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.middleware.ENSNameToAddressMiddleware">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.middleware.</span></span><span class="sig-name descname"><span class="pre">ENSNameToAddressMiddleware</span></span><a class="headerlink" href="#web3.middleware.ENSNameToAddressMiddleware" title="Link to this definition"></a></dt>
+<dd><p>This middleware converts Ethereum Name Service (ENS) names into the
+address that the name points to. For example <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">w3.eth.send_transaction</span></code></a> will
+accept .eth names in the 'from' and 'to' fields.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>This middleware only converts ENS names on chains where the proper ENS
+contracts are deployed to support this functionality. All other cases will
+result in a <code class="docutils literal notranslate"><span class="pre">NameNotFound</span></code> error.</p>
+</div>
+</dd></dl>
+
+</section>
+<section id="gas-price-strategy">
+<h3>Gas Price Strategy<a class="headerlink" href="#gas-price-strategy" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.middleware.GasPriceStrategyMiddleware">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.middleware.</span></span><span class="sig-name descname"><span class="pre">GasPriceStrategyMiddleware</span></span><a class="headerlink" href="#web3.middleware.GasPriceStrategyMiddleware" title="Link to this definition"></a></dt>
+<dd><div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>Gas price strategy is only supported for legacy transactions. The London fork
+introduced <code class="docutils literal notranslate"><span class="pre">maxFeePerGas</span></code> and <code class="docutils literal notranslate"><span class="pre">maxPriorityFeePerGas</span></code> transaction parameters
+which should be used over <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code> whenever possible.</p>
+</div>
+<p>This adds a <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code> to transactions if applicable and when a gas price strategy has
+been set. See <a class="reference internal" href="gas_price.html#gas-price"><span class="std std-ref">Gas 价格 API</span></a> for information about how gas price is derived.</p>
+</dd></dl>
+
+</section>
+<section id="buffered-gas-estimate">
+<h3>Buffered Gas Estimate<a class="headerlink" href="#buffered-gas-estimate" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.middleware.BufferedGasEstimateMiddleware">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.middleware.</span></span><span class="sig-name descname"><span class="pre">BufferedGasEstimateMiddleware</span></span><a class="headerlink" href="#web3.middleware.BufferedGasEstimateMiddleware" title="Link to this definition"></a></dt>
+<dd><p>This adds a gas estimate to transactions if <code class="docutils literal notranslate"><span class="pre">gas</span></code> is not present in the transaction
+parameters. Sets gas to:
+<code class="docutils literal notranslate"><span class="pre">min(w3.eth.estimate_gas</span> <span class="pre">+</span> <span class="pre">gas_buffer,</span> <span class="pre">gas_limit)</span></code>
+where the gas_buffer default is 100,000</p>
+</dd></dl>
+
+</section>
+<section id="validation">
+<h3>Validation<a class="headerlink" href="#validation" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.middleware.ValidationMiddleware">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.middleware.</span></span><span class="sig-name descname"><span class="pre">ValidationMiddleware</span></span><a class="headerlink" href="#web3.middleware.ValidationMiddleware" title="Link to this definition"></a></dt>
+<dd><p>This middleware includes block and transaction validators which perform validations
+for transaction parameters.</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="optional-middleware">
+<h2>Optional Middleware<a class="headerlink" href="#optional-middleware" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Web3</span></code> includes optional middleware for common use cases. Below is a list of available
+middleware which are not enabled by default.</p>
+<section id="stalecheck">
+<h3>Stalecheck<a class="headerlink" href="#stalecheck" title="Link to this heading"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.middleware.StalecheckMiddlewareBuilder">
+<span class="sig-prename descclassname"><span class="pre">web3.middleware.</span></span><span class="sig-name descname"><span class="pre">StalecheckMiddlewareBuilder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.middleware.StalecheckMiddlewareBuilder" title="Link to this definition"></a></dt>
+<dd><p>This middleware checks how stale the blockchain is, and interrupts calls with a failure
+if the blockchain is too old.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">allowable_delay</span></code> is the length in seconds that the blockchain is allowed to be
+behind of <code class="docutils literal notranslate"><span class="pre">time.time()</span></code></p></li>
+</ul>
+<p>Because this middleware takes an argument, you must create the middleware
+with a method call.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">two_day_stalecheck</span> <span class="o">=</span> <span class="n">StalecheckMiddlewareBuilder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">web3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">two_day_stalecheck</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the latest block in the blockchain is older than 2 days in this example, then the
+middleware will raise a <code class="docutils literal notranslate"><span class="pre">StaleBlockchain</span></code> exception on every call except
+<code class="docutils literal notranslate"><span class="pre">web3.eth.get_block()</span></code>.</p>
+</dd></dl>
+
+</section>
+<section id="proof-of-authority">
+<span id="geth-poa"></span><h3>Proof of Authority<a class="headerlink" href="#proof-of-authority" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.middleware.ExtraDataToPOAMiddleware">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.middleware.</span></span><span class="sig-name descname"><span class="pre">ExtraDataToPOAMiddleware</span></span><a class="headerlink" href="#web3.middleware.ExtraDataToPOAMiddleware" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>It is <strong>crucial</strong> that this middleware is injected at the 0th layer of the
+middleware onion, using
+<code class="docutils literal notranslate"><span class="pre">w3.middleware_onion.inject(ExtraDataToPOAMiddleware,</span> <span class="pre">layer=0)</span></code>, to guarantee
+it is the <em>first</em> middleware to process the response and modify the <code class="docutils literal notranslate"><span class="pre">extraData</span></code>
+field. This ensures it processes the field before any other middleware attempts
+to validate it.</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ExtraDataToPOAMiddleware</span></code> is required to connect to <code class="docutils literal notranslate"><span class="pre">geth</span> <span class="pre">--dev</span></code> and may
+also be needed for other EVM compatible blockchains like Polygon or BNB Chain
+(Binance Smart Chain).</p>
+<p>If the middleware is not injected at the 0th layer of the middleware onion, you may get
+errors like the example below when interacting with your EVM node.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>web3.exceptions.ExtraDataLengthError:<span class="w"> </span>The<span class="w"> </span>field<span class="w"> </span>extraData<span class="w"> </span>is<span class="w"> </span><span class="m">97</span><span class="w"> </span>bytes,<span class="w"> </span>but<span class="w"> </span>should<span class="w"> </span>be
+<span class="m">32</span>.<span class="w">  </span>It<span class="w"> </span>is<span class="w"> </span>quite<span class="w"> </span>likely<span class="w"> </span>that<span class="w"> </span>you<span class="w"> </span>are<span class="w"> </span>connected<span class="w"> </span>to<span class="w"> </span>a<span class="w"> </span>POA<span class="w"> </span>chain.<span class="w"> </span>Refer<span class="w"> </span>to
+http://web3py.readthedocs.io/en/stable/middleware.html#proof-of-authority
+<span class="k">for</span><span class="w"> </span>more<span class="w"> </span>details.<span class="w"> </span>The<span class="w"> </span>full<span class="w"> </span>extraData<span class="w"> </span>is:<span class="w"> </span>HexBytes<span class="o">(</span><span class="s1">&#39;...&#39;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The easiest way to connect to a default <code class="docutils literal notranslate"><span class="pre">geth</span> <span class="pre">--dev</span></code> instance which loads the
+middleware is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.auto.gethdev</span><span class="w"> </span><span class="kn">import</span> <span class="n">w3</span>
+
+<span class="go"># confirm that the connection succeeded</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">client_version</span>
+<span class="go">&#39;Geth/v1.14.12-stable-4bb3c89d/linux-amd64/go1.22.4&#39;</span>
+</pre></div>
+</div>
+<p>This example connects to a local <code class="docutils literal notranslate"><span class="pre">geth</span> <span class="pre">--dev</span></code> instance on Linux with a
+unique IPC location and loads the middleware:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">IPCProvider</span>
+
+<span class="go"># connect to the IPC location started with &#39;geth --dev --datadir ~/mynode&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">IPCProvider</span><span class="p">(</span><span class="s1">&#39;~/mynode/geth.ipc&#39;</span><span class="p">))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExtraDataToPOAMiddleware</span>
+
+<span class="go"># inject the poa compatibility middleware to the innermost layer (0th layer)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">ExtraDataToPOAMiddleware</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="go"># confirm that the connection succeeded</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">client_version</span>
+<span class="go">&#39;Geth/v1.14.12-stable-4bb3c89d/linux-amd64/go1.22.4&#39;</span>
+</pre></div>
+</div>
+<section id="why-is-extradatatopoamiddleware-necessary">
+<h4>Why is <code class="docutils literal notranslate"><span class="pre">ExtraDataToPOAMiddleware</span></code> necessary?<a class="headerlink" href="#why-is-extradatatopoamiddleware-necessary" title="Link to this heading"></a></h4>
+<p>There is no strong community consensus on a single Proof-of-Authority (PoA) standard yet.
+Some nodes have successful experiments running though. One is go-ethereum (geth),
+which uses a prototype PoA for its development mode and the Goerli test network.</p>
+<p>Unfortunately, it does deviate from the yellow paper specification, which constrains the
+<code class="docutils literal notranslate"><span class="pre">extraData</span></code> field in each block to a maximum of 32-bytes. Geth is one such example
+where PoA uses more than 32 bytes, so this middleware modifies the block data a bit
+before returning it.</p>
+</section>
+</section>
+<section id="locally-managed-log-and-block-filters">
+<span id="local-filter"></span><h3>Locally Managed Log and Block Filters<a class="headerlink" href="#locally-managed-log-and-block-filters" title="Link to this heading"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.middleware.LocalFilterMiddleware">
+<span class="sig-prename descclassname"><span class="pre">web3.middleware.</span></span><span class="sig-name descname"><span class="pre">LocalFilterMiddleware</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.middleware.LocalFilterMiddleware" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>This middleware provides an alternative to ethereum node managed filters. When used, Log and
+Block filter logic are handled locally while using the same web3 filter api. Filter results are
+retrieved using JSON-RPC endpoints that don't rely on server state.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalFilterMiddleware</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LocalFilterMiddleware</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Normal block and log filter apis behave as before.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">block_filter</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s2">&quot;latest&quot;</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">log_filter</span> <span class="o">=</span> <span class="n">myContract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">myEvent</span><span class="o">.</span><span class="n">build_filter</span><span class="p">()</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="signing">
+<h3>Signing<a class="headerlink" href="#signing" title="Link to this heading"></a></h3>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.middleware.SignAndSendRawMiddlewareBuilder">
+<span class="sig-prename descclassname"><span class="pre">web3.middleware.</span></span><span class="sig-name descname"><span class="pre">SignAndSendRawMiddlewareBuilder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.middleware.SignAndSendRawMiddlewareBuilder" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>This middleware automatically captures transactions, signs them, and sends them as raw transactions.
+The <code class="docutils literal notranslate"><span class="pre">from</span></code> field on the transaction, or <code class="docutils literal notranslate"><span class="pre">w3.eth.default_account</span></code> must be set to the address of the private key for
+this middleware to have any effect.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">build</span></code> method for this middleware builder takes a single argument:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">private_key_or_account</span></code> A single private key or a tuple, list or set of private keys.</p>
+<blockquote>
+<div><p>Keys can be in any of the following formats:</p>
+<ul class="simple">
+<li><p>An <code class="docutils literal notranslate"><span class="pre">eth_account.LocalAccount</span></code> object</p></li>
+<li><p>An <code class="docutils literal notranslate"><span class="pre">eth_keys.PrivateKey</span></code> object</p></li>
+<li><p>A raw private key as a hex string or byte string</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>Since this middleware signs transactions, it must always run after any middleware
+that modifies the transaction. Therefore, it is recommended to inject the signing
+middleware at the 0th layer of the middleware onion using
+<code class="docutils literal notranslate"><span class="pre">w3.middleware_onion.inject(SignAndSendRawMiddlewareBuilder.build(...),</span> <span class="pre">layer=0)</span></code>.
+Ensure that any transaction-modifying middleware exists in a higher layer within the
+onion so that it runs before the signing middleware.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>If used with <code class="docutils literal notranslate"><span class="pre">ExtraDataToPOAMiddleware</span></code>, the injection order doesn't matter, as
+the <code class="docutils literal notranslate"><span class="pre">extraData</span></code> field isn't involved in transaction signing. The key is ensuring
+<code class="docutils literal notranslate"><span class="pre">SignAndSendRawMiddlewareBuilder</span></code> runs after any middleware that modifies the
+transaction.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SignAndSendRawMiddlewareBuilder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eth_account</span><span class="w"> </span><span class="kn">import</span> <span class="n">Account</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">acct</span> <span class="o">=</span> <span class="n">Account</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s1">&#39;KEYSMASH FJAFJKLDSKF7JKFDJ 1530&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">SignAndSendRawMiddlewareBuilder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">acct</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">default_account</span> <span class="o">=</span> <span class="n">acct</span><span class="o">.</span><span class="n">address</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="web3.eth.account.html#local-vs-hosted"><span class="std std-ref">Hosted nodes</span></a> (like Infura or Alchemy) only support signed
+transactions. This often results in <code class="docutils literal notranslate"><span class="pre">send_raw_transaction</span></code> being used repeatedly.
+Instead, we can automate this process with
+<code class="docutils literal notranslate"><span class="pre">SignAndSendRawMiddlewareBuilder.build(private_key_or_account)</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s1">&#39;HTTP_ENDPOINT&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SignAndSendRawMiddlewareBuilder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eth_account</span><span class="w"> </span><span class="kn">import</span> <span class="n">Account</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">acct</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">from_key</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PRIVATE_KEY&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">SignAndSendRawMiddlewareBuilder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">acct</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">default_account</span> <span class="o">=</span> <span class="n">acct</span><span class="o">.</span><span class="n">address</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use `eth_sendTransaction` to automatically sign and send the raw transaction</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">(</span><span class="n">tx_dict</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0x09511acf75918fd03de58141d2fd409af4fd6d3dce48eb3aa1656c8f3c2c5c21&#39;)</span>
+</pre></div>
+</div>
+<p>Similarly, with AsyncWeb3:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncWeb3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">async_w3</span> <span class="o">=</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncHTTPProvider</span><span class="p">(</span><span class="s1">&#39;HTTP_ENDPOINT&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SignAndSendRawMiddlewareBuilder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">eth_account</span><span class="w"> </span><span class="kn">import</span> <span class="n">Account</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">acct</span> <span class="o">=</span> <span class="n">async_w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">from_key</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PRIVATE_KEY&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">async_w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">SignAndSendRawMiddlewareBuilder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">acct</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">async_w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">default_account</span> <span class="o">=</span> <span class="n">acct</span><span class="o">.</span><span class="n">address</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># use `eth_sendTransaction` to automatically sign and send the raw transaction</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">async_w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">(</span><span class="n">tx_dict</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0x09511acf75918fd03de58141d2fd409af4fd6d3dce48eb3aa1656c8f3c2c5c21&#39;)</span>
+</pre></div>
+</div>
+<p>Now you can send a transaction from acct.address without having to build and sign each raw transaction.</p>
+<p>When making use of this signing middleware, when sending dynamic fee transactions (recommended over legacy transactions),
+the transaction <code class="docutils literal notranslate"><span class="pre">type</span></code> of <code class="docutils literal notranslate"><span class="pre">2</span></code> (or <code class="docutils literal notranslate"><span class="pre">'0x2'</span></code>) is necessary. This is because transaction signing is validated based
+on the transaction <code class="docutils literal notranslate"><span class="pre">type</span></code> parameter. This value defaults to <code class="docutils literal notranslate"><span class="pre">'0x2'</span></code> when <code class="docutils literal notranslate"><span class="pre">maxFeePerGas</span></code> and / or
+<code class="docutils literal notranslate"><span class="pre">maxPriorityFeePerGas</span></code> are present as parameters in the transaction as these params imply a dynamic fee transaction.
+Since these values effectively replace the legacy <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code> value, do not set a <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code> for dynamic fee transactions.
+Doing so will lead to validation issues.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># dynamic fee transaction, introduced by EIP-1559:</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">dynamic_fee_transaction</span> <span class="o">=</span> <span class="p">{</span>
+<span class="o">...</span>     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;0x2&#39;</span><span class="p">,</span>  <span class="c1"># optional - defaults to &#39;0x2&#39; when dynamic fee transaction params are present</span>
+<span class="o">...</span>     <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="n">acct</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>  <span class="c1"># optional if w3.eth.default_account was set with acct.address</span>
+<span class="o">...</span>     <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="n">receiving_account_address</span><span class="p">,</span>
+<span class="o">...</span>     <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
+<span class="o">...</span>     <span class="s1">&#39;maxFeePerGas&#39;</span><span class="p">:</span> <span class="mi">2000000000</span><span class="p">,</span>  <span class="c1"># required for dynamic fee transactions</span>
+<span class="o">...</span>     <span class="s1">&#39;maxPriorityFeePerGas&#39;</span><span class="p">:</span> <span class="mi">1000000000</span><span class="p">,</span>  <span class="c1"># required for dynamic fee transactions</span>
+<span class="o">...</span> <span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">(</span><span class="n">dynamic_fee_transaction</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A legacy transaction still works in the same way as it did before EIP-1559 was introduced:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">legacy_transaction</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="n">receiving_account_address</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;gasPrice&#39;</span><span class="p">:</span> <span class="mi">123456</span><span class="p">,</span>  <span class="c1"># optional - if not provided, gas_price_strategy (if exists) or eth_gasPrice is used</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">(</span><span class="n">legacy_transaction</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="creating-custom-middleware">
+<h2>Creating Custom Middleware<a class="headerlink" href="#creating-custom-middleware" title="Link to this heading"></a></h2>
+<p>To write your own middleware, create a class and extend from the base <code class="docutils literal notranslate"><span class="pre">Web3Middleware</span></code>
+class, then override only the parts of the middleware that make sense for your use case.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>The Middleware API borrows from the Django middleware API introduced
+in version 1.10.0.</p>
+</div>
+<p>If all you need is to modify the params before a request is made, you can override
+the <code class="docutils literal notranslate"><span class="pre">request_processor</span></code> method, make the necessary tweaks to the params, and pass the
+arguments to the next element in the middleware stack. Need to do some processing on the
+response? Override the <code class="docutils literal notranslate"><span class="pre">response_processor</span></code> method and return the modified response.</p>
+<p>The pattern:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3Middleware</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomMiddleware</span><span class="p">(</span><span class="n">Web3Middleware</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">request_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="c1"># Pre-request processing goes here before passing to the next middleware.</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">response_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="c1"># Response processing goes here before passing to the next middleware.</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+    <span class="c1"># If your provider is asynchronous, override the async methods instead:</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_request_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="c1"># Pre-request processing goes here before passing to the next middleware.</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_response_processor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="c1"># Response processing goes here before passing to the next middleware.</span>
+        <span class="k">return</span> <span class="n">response</span>
+</pre></div>
+</div>
+<p>If you wish to prevent making a call under certain conditions, you can override the
+<code class="docutils literal notranslate"><span class="pre">wrap_make_request</span></code> method. This allows for defining pre-request processing,
+skipping or making the request under certain conditions, as well as response
+processing before passing it to the next middleware.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3Middleware</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CustomMiddleware</span><span class="p">(</span><span class="n">Web3Middleware</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrap_make_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">make_request</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">middleware</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+            <span class="c1"># pre-request processing goes here</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">make_request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>  <span class="c1"># make the request</span>
+            <span class="c1"># response processing goes here</span>
+            <span class="k">return</span> <span class="n">response</span>
+
+        <span class="k">return</span> <span class="n">middleware</span>
+
+    <span class="c1"># If your provider is asynchronous, override the async method instead:</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">async_wrap_make_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">make_request</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">middleware</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+            <span class="c1"># pre-request processing goes here</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">make_request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="c1"># response processing goes here</span>
+            <span class="k">return</span> <span class="n">response</span>
+
+        <span class="k">return</span> <span class="n">middleware</span>
+</pre></div>
+</div>
+<p>Custom middleware can be added to the stack via the class itself, using the
+<a class="reference internal" href="#middleware-stack-api"><span class="std std-ref">Middleware Stack API</span></a>. The <code class="docutils literal notranslate"><span class="pre">name</span></code> kwarg is optional. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_module</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CustomMiddleware</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="n">endpoint_uri</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">))</span>
+
+<span class="c1"># add the middleware to the stack as the class</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">CustomMiddleware</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;custom_middleware&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="subscriptions.html" class="btn btn-neutral float-left" title="事件订阅" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="internals.html" class="btn btn-neutral float-right" title="Web3 内部实现" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

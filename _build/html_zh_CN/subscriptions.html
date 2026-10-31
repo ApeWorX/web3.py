@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>事件订阅 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="中间件" href="middleware.html" />
+    <link rel="prev" title="事件和日志" href="filters.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">事件订阅</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#an-introduction-to-subscriptions">An introduction to subscriptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#web3-py-s-subscription-manager">web3.py's <code class="docutils literal notranslate"><span class="pre">subscription_manager</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-subscription-manager">1.) The subscription_manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subscription-types">2.) Subscription types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#handlers">3.) Handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#handle-subscriptions">4.) handle_subscriptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unsubscribing">5.) Unsubscribing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#an-example">An example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parallelizing-subscriptions">Parallelizing subscriptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#faq">FAQ</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-can-i-subscribe-to-additional-events-once-my-application-is-running">How can I subscribe to additional events once my application is running?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">事件订阅</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/subscriptions.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="event-subscriptions">
+<span id="subscriptions"></span><h1>事件订阅<a class="headerlink" href="#event-subscriptions" title="Link to this heading"></a></h1>
+<p>Most Ethereum clients include <code class="docutils literal notranslate"><span class="pre">eth_subscribe</span></code> support, allowing you to listen for specific events as they occur. This applies to a limited set of events: new block headers, the syncing status of a node, new pending transactions, and emitted logs from smart contracts.</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>Subscriptions require a persistent socket connection between you and the Ethereum client. For that reason, you must use web3.py's <a class="reference internal" href="providers.html#web3.providers.persistent.WebSocketProvider" title="web3.providers.persistent.WebSocketProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProvider</span></code></a> or <a class="reference internal" href="providers.html#web3.providers.persistent.AsyncIPCProvider" title="web3.providers.persistent.AsyncIPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code></a> to utilize subscriptions. As it is the more common of the two, examples in this guide will leverage the <code class="docutils literal notranslate"><span class="pre">WebSocketProvider</span></code>.</p>
+</div>
+<section id="an-introduction-to-subscriptions">
+<h2>An introduction to subscriptions<a class="headerlink" href="#an-introduction-to-subscriptions" title="Link to this heading"></a></h2>
+<p>When you subscribe to an event – new block headers, for example – you'll receive a subscription ID. The Ethereum client will then maintain a connection to your application and send along any related event until you unsubscribe with that ID. That example in code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncWeb3</span><span class="p">,</span> <span class="n">WebSocketProvider</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">():</span>
+    <span class="c1"># connect to a node:</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="s2">&quot;wss://...&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">w3</span><span class="p">:</span>
+
+    <span class="c1"># subscribe to new block headers:</span>
+    <span class="n">subscription_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">&quot;newHeads&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">subscription_id</span><span class="p">)</span>
+
+    <span class="c1"># listen for events as they occur:</span>
+    <span class="k">async</span> <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">w3</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">process_subscriptions</span><span class="p">():</span>
+        <span class="c1"># handle each event:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+        <span class="c1"># unsubscribe:</span>
+        <span class="k">if</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;number&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">42012345</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">subscription_id</span><span class="p">)</span>
+            <span class="k">break</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">example</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="web3-py-s-subscription-manager">
+<h2>web3.py's <code class="docutils literal notranslate"><span class="pre">subscription_manager</span></code><a class="headerlink" href="#web3-py-s-subscription-manager" title="Link to this heading"></a></h2>
+<p>The example above is the &quot;manual&quot; approach to managing subscriptions. It's not so complicated in the case of listening for new block headers, but things get considerably more complex once you start listening for smart contract event logs or managing multiple subscriptions.
+As of v7.7.0, web3.py includes some additional convenient subscription management features. We'll step through them now.</p>
+<section id="the-subscription-manager">
+<h3>1.) The subscription_manager<a class="headerlink" href="#the-subscription-manager" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">w3</span></code> (<code class="docutils literal notranslate"><span class="pre">AsyncWeb3</span></code>) instance has a <code class="docutils literal notranslate"><span class="pre">subscription_manager</span></code> module. While you may
+still use the <code class="docutils literal notranslate"><span class="pre">w3.eth.subscribe</span></code> method from the previous example, the
+<code class="docutils literal notranslate"><span class="pre">subscription_manager</span></code> offers an additional way to start one or more subscriptions and
+provides better management of those subscriptions. We're going to pass in a list of
+events we want to subscribe to within the <code class="docutils literal notranslate"><span class="pre">w3.subscription_manager.subscribe</span></code> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="n">sub1</span><span class="p">,</span> <span class="n">sub2</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="subscription-types">
+<h3>2.) Subscription types<a class="headerlink" href="#subscription-types" title="Link to this heading"></a></h3>
+<p>To aid in defining those subscriptions, subscription type classes have been introduced: <code class="docutils literal notranslate"><span class="pre">NewHeadsSubscription</span></code>, <code class="docutils literal notranslate"><span class="pre">PendingTxSubscription</span></code>, <code class="docutils literal notranslate"><span class="pre">LogsSubscription</span></code>, and <code class="docutils literal notranslate"><span class="pre">SyncingSubscription</span></code>. Each class is context aware, meaning it will throw an error if you provide an unexpected data type.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.utils.subscriptions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NewHeadsSubscription</span><span class="p">,</span>
+    <span class="n">PendingTxSubscription</span><span class="p">,</span>
+    <span class="n">LogsSubscription</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">sub1</span> <span class="o">=</span> <span class="n">NewHeadsSubscription</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;new-heads-mainnet&quot;</span><span class="p">,</span>  <span class="c1"># optional label</span>
+    <span class="n">handler</span><span class="o">=</span><span class="n">new_heads_handler</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">sub2</span> <span class="o">=</span> <span class="n">PendingTxSubscription</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;pending-tx-mainnet&quot;</span><span class="p">,</span>  <span class="c1"># optional label</span>
+    <span class="n">full_transactions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">handler</span><span class="o">=</span><span class="n">pending_tx_handler</span><span class="p">,</span>
+    <span class="c1"># optional parallelization flag (see Parallelizing subscriptions section below)</span>
+    <span class="n">parallelize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">sub3</span> <span class="o">=</span> <span class="n">LogsSubscription</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;WETH transfers&quot;</span><span class="p">,</span>  <span class="c1"># optional label</span>
+    <span class="n">address</span><span class="o">=</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Transfer</span><span class="p">()</span><span class="o">.</span><span class="n">topic</span><span class="p">],</span>
+    <span class="n">handler</span><span class="o">=</span><span class="n">log_handler</span><span class="p">,</span>
+    <span class="c1"># optional `handler_context` args to help parse a response</span>
+    <span class="n">handler_context</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;transfer_event&quot;</span><span class="p">:</span> <span class="n">weth_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Transfer</span><span class="p">()},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="handlers">
+<h3>3.) Handlers<a class="headerlink" href="#handlers" title="Link to this heading"></a></h3>
+<p>In the example above, there is a handler specified for each subscription. These are context-aware functions that you can declare separate from the subscription logic. Within each handler, parse and perform whatever logic you require.
+Note that in addition to the result being processed, the <code class="docutils literal notranslate"><span class="pre">handler_context</span></code> in each handler provides access to your <code class="docutils literal notranslate"><span class="pre">AsyncWeb3</span></code> instance, the subscription instance, and any custom values declared within the <code class="docutils literal notranslate"><span class="pre">handler_context</span></code> of the subscription: <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">web3.utils.subscriptions</span> <span class="pre">import</span> <span class="pre">LogsSubscriptionContext</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">new_heads_handler</span><span class="p">(</span>
+    <span class="n">handler_context</span><span class="p">:</span> <span class="n">LogsSubscriptionContext</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">log_receipt</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">result</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;New log: </span><span class="si">{</span><span class="n">log_receipt</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">event_data</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">transfer_event</span><span class="o">.</span><span class="n">process_log</span><span class="p">(</span><span class="n">log_receipt</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Log event data: </span><span class="si">{</span><span class="n">event_data</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">log_receipt</span><span class="p">[</span><span class="s2">&quot;blockNumber&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">42012345</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="handle-subscriptions">
+<h3>4.) handle_subscriptions<a class="headerlink" href="#handle-subscriptions" title="Link to this heading"></a></h3>
+<p>Finally, when all your subscriptions are configured, utilize the handle_subscriptions method to begin processing them. If you need to listen for events on multiple chains, create one w3 instance per chain.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">sub_manager</span><span class="p">():</span>
+    <span class="o">...</span>
+
+    <span class="c1"># handle subscriptions via configured handlers:</span>
+    <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">handle_subscriptions</span><span class="p">()</span>
+
+    <span class="c1"># or, gather one w3 instance per chain:</span>
+    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+        <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">handle_subscriptions</span><span class="p">(),</span>
+        <span class="n">l2_w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">handle_subscriptions</span><span class="p">(),</span>
+    <span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sub_manager</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="unsubscribing">
+<h3>5.) Unsubscribing<a class="headerlink" href="#unsubscribing" title="Link to this heading"></a></h3>
+<p>If you don't want to subscribe indefinitely to an event, you can unsubscribe at any point. The first example in this post demonstrated the manual approach: <code class="docutils literal notranslate"><span class="pre">await</span> <span class="pre">w3.eth.unsubscribe(subscription_id)</span></code></p>
+<p>The new handler pattern will keep track of the subscription ID for you however, so the same can be accomplished via the <code class="docutils literal notranslate"><span class="pre">handler_context</span></code> without an ID:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">new_heads_handler</span><span class="p">(</span><span class="n">handler_context</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="k">if</span> <span class="n">some_condition</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">subscription</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Lastly, if you're wrapping up the whole show, you can reach for <code class="docutils literal notranslate"><span class="pre">unsubscribe_all</span></code> on the subscription_manager:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">unsubscribe_all</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">subscription_manager</span><span class="o">.</span><span class="n">subscriptions</span> <span class="o">==</span> <span class="p">[]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="an-example">
+<h2>An example<a class="headerlink" href="#an-example" title="Link to this heading"></a></h2>
+<p>Let's put all the pieces together. This example will subscribe to new block headers and transfer events from the WETH contract. It should work as written if you provide a WebSocket RPC URL.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncWeb3</span><span class="p">,</span> <span class="n">WebSocketProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.utils.subscriptions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NewHeadsSubscription</span><span class="p">,</span>
+    <span class="n">NewHeadsSubscriptionContext</span><span class="p">,</span>
+    <span class="n">LogsSubscription</span><span class="p">,</span>
+    <span class="n">LogsSubscriptionContext</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># -- declare handlers --</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">new_heads_handler</span><span class="p">(</span>
+    <span class="n">handler_context</span><span class="p">:</span> <span class="n">NewHeadsSubscriptionContext</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">header</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">result</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;New block header: </span><span class="si">{</span><span class="n">header</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">log_handler</span><span class="p">(</span>
+    <span class="n">handler_context</span><span class="p">:</span> <span class="n">LogsSubscriptionContext</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">log_receipt</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">result</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Log receipt: </span><span class="si">{</span><span class="n">log_receipt</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">sub_manager</span><span class="p">():</span>
+
+    <span class="c1"># -- initialize provider --</span>
+    <span class="n">w3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="s2">&quot;wss://...&quot;</span><span class="p">))</span>
+
+    <span class="c1"># -- subscribe to event(s) --</span>
+    <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">NewHeadsSubscription</span><span class="p">(</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;new-heads-mainnet&quot;</span><span class="p">,</span>
+                <span class="n">handler</span><span class="o">=</span><span class="n">new_heads_handler</span>
+            <span class="p">),</span>
+            <span class="n">LogsSubscription</span><span class="p">(</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">&quot;WETH transfers&quot;</span><span class="p">,</span>
+                <span class="n">address</span><span class="o">=</span><span class="n">w3</span><span class="o">.</span><span class="n">to_checksum_address</span><span class="p">(</span>
+                    <span class="s2">&quot;0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2&quot;</span>
+                <span class="p">),</span>
+                <span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef&quot;</span><span class="p">],</span>
+                <span class="n">handler</span><span class="o">=</span><span class="n">log_handler</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="c1"># -- listen for events --</span>
+    <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">handle_subscriptions</span><span class="p">()</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sub_manager</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<section id="parallelizing-subscriptions">
+<h2>Parallelizing subscriptions<a class="headerlink" href="#parallelizing-subscriptions" title="Link to this heading"></a></h2>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>Parallelizing subscriptions does not guarantee that events will be processed in the
+order they are received. Most events should still be processed in the order they are
+received, but if a particular handler takes a long time to execute, newer events may
+be processed first. It is recommended to set the <code class="docutils literal notranslate"><span class="pre">parallelize</span></code> flag to <code class="docutils literal notranslate"><span class="pre">False</span></code>
+(default behavior) for subscriptions that depend on the order of events.</p>
+</div>
+<p>If you have multiple subscriptions that can be processed in parallel, you can set the
+<code class="docutils literal notranslate"><span class="pre">parallelize</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> - either globally on the subscription manager, or
+individually on each subscription. This control allows the subscription manager to
+handle subscription processing concurrently. This flag can be set on the manager, as a
+global setting, or on individual subscriptions. This can help with performance if
+subscriptions are independent of each other, or do not rely on some external shared
+state (no race conditions are present).</p>
+<p>Global parallelization is off by default, meaning all subscriptions will be processed
+sequentially unless you set the <code class="docutils literal notranslate"><span class="pre">parallelize</span></code> flag to <code class="docutils literal notranslate"><span class="pre">True</span></code> on the subscription
+manager or individual subscriptions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sub1</span> <span class="o">=</span> <span class="n">NewHeadsSubscription</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;new-heads-mainnet&quot;</span><span class="p">,</span>
+    <span class="n">handler</span><span class="o">=</span><span class="n">new_heads_handler</span><span class="p">,</span>
+    <span class="n">parallelize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># process this subscription in parallel</span>
+<span class="p">)</span>
+
+<span class="n">sub2</span> <span class="o">=</span> <span class="n">LogsSubscription</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;WETH transfers&quot;</span><span class="p">,</span>
+    <span class="n">address</span><span class="o">=</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Transfer</span><span class="p">()</span><span class="o">.</span><span class="n">topic</span><span class="p">],</span>
+    <span class="n">handler</span><span class="o">=</span><span class="n">log_handler</span><span class="p">,</span>
+    <span class="n">parallelize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># process sequentially (this is the default behavior)</span>
+<span class="p">)</span>
+
+<span class="n">sub3</span> <span class="o">=</span> <span class="n">LogsSubscription</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;WETH approvals&quot;</span><span class="p">,</span>
+    <span class="n">address</span><span class="o">=</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Approval</span><span class="p">()</span><span class="o">.</span><span class="n">topic</span><span class="p">],</span>
+    <span class="n">handler</span><span class="o">=</span><span class="n">approval_handler</span><span class="p">,</span>
+    <span class="n">parallelize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># process this subscription in parallel</span>
+<span class="p">)</span>
+
+<span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="n">sub1</span><span class="p">,</span> <span class="n">sub2</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Global parallelization can also be set on the subscription manager, which will apply to
+all subscriptions unless overridden by an individual subscription's <code class="docutils literal notranslate"><span class="pre">parallelize</span></code>
+flag:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># or set the parallelize flag globally on the subscription manager:</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">parallelize</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># parallelize is set globally, so this will be processed in parallel</span>
+<span class="n">sub1</span> <span class="o">=</span> <span class="n">NewHeadsSubscription</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;new-heads-mainnet&quot;</span><span class="p">,</span>
+    <span class="n">handler</span><span class="o">=</span><span class="n">new_heads_handler</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># this will be processed sequentially since ``parallelize`` is set to ``False``,</span>
+<span class="c1"># overriding the global setting</span>
+<span class="n">sub2</span> <span class="o">=</span> <span class="n">LogsSubscription</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;WETH transfers&quot;</span><span class="p">,</span>
+    <span class="n">address</span><span class="o">=</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Transfer</span><span class="p">()</span><span class="o">.</span><span class="n">topic</span><span class="p">],</span>
+    <span class="n">handler</span><span class="o">=</span><span class="n">log_handler</span><span class="p">,</span>
+    <span class="n">parallelize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># process sequentially</span>
+<span class="p">)</span>
+
+<span class="c1"># this will also be processed in parallel</span>
+<span class="n">sub3</span> <span class="o">=</span> <span class="n">LogsSubscription</span><span class="p">(</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;WETH approvals&quot;</span><span class="p">,</span>
+    <span class="n">address</span><span class="o">=</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="n">topics</span><span class="o">=</span><span class="p">[</span><span class="n">weth_contract</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">Approval</span><span class="p">()</span><span class="o">.</span><span class="n">topic</span><span class="p">],</span>
+    <span class="n">handler</span><span class="o">=</span><span class="n">approval_handler</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">subscribe</span><span class="p">([</span><span class="n">sub1</span><span class="p">,</span> <span class="n">sub2</span><span class="p">,</span> <span class="n">sub3</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="faq">
+<h2>FAQ<a class="headerlink" href="#faq" title="Link to this heading"></a></h2>
+<section id="how-can-i-subscribe-to-additional-events-once-my-application-is-running">
+<h3>How can I subscribe to additional events once my application is running?<a class="headerlink" href="#how-can-i-subscribe-to-additional-events-once-my-application-is-running" title="Link to this heading"></a></h3>
+<p>Wherever you have a <code class="docutils literal notranslate"><span class="pre">w3</span></code> instance of the <code class="docutils literal notranslate"><span class="pre">AsyncWeb3</span></code> object, you can use the <code class="docutils literal notranslate"><span class="pre">subscription_manager</span></code> to subscribe to new events.</p>
+<p>For example, the handler of one subscription could initialize a new subscription:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">log_handler</span><span class="p">(</span>
+    <span class="n">handler_context</span><span class="p">:</span> <span class="n">LogsSubscriptionContext</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">log_receipt</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">result</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Log receipt: </span><span class="si">{</span><span class="n">log_receipt</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># reference the w3 instance</span>
+    <span class="n">w3</span> <span class="o">=</span> <span class="n">handler_context</span><span class="o">.</span><span class="n">async_w3</span>
+
+    <span class="c1"># initialize a new subscription</span>
+    <span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">subscription_manager</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span>
+        <span class="n">NewHeadsSubscription</span><span class="p">(</span><span class="n">handler</span><span class="o">=</span><span class="n">new_heads_handler</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="filters.html" class="btn btn-neutral float-left" title="事件和日志" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="middleware.html" class="btn btn-neutral float-right" title="中间件" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

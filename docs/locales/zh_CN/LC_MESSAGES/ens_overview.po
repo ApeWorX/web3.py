@@ -1,0 +1,290 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../ens_overview.rst:4
+msgid "Ethereum Name Service (ENS)"
+msgstr "以太坊名称服务 (ENS)"
+
+#: ../../ens_overview.rst:6
+msgid ""
+"The Ethereum Name Service (ENS) is analogous to the Domain Name Service. "
+"It enables users and developers to use human-friendly names in place of "
+"error-prone hexadecimal addresses, content hashes, and more."
+msgstr ""
+
+#: ../../ens_overview.rst:10
+msgid ""
+"The :mod:`ens` module is included with web3.py. It provides an interface "
+"to look up domains and addresses, add resolver records, or get and set "
+"metadata."
+msgstr ""
+
+#: ../../ens_overview.rst:15
+msgid "Setup"
+msgstr ""
+
+#: ../../ens_overview.rst:17
+msgid ""
+"Create an :class:`~ens.ENS` object (named ``ns`` below) in one of three "
+"ways:"
+msgstr ""
+
+#: ../../ens_overview.rst:19
+msgid "Automatic detection"
+msgstr ""
+
+#: ../../ens_overview.rst:20
+msgid "Specify an instance of a :ref:`provider <providers>`"
+msgstr ""
+
+#: ../../ens_overview.rst:21
+msgid "From an existing :class:`web3.Web3` object"
+msgstr ""
+
+#: ../../ens_overview.rst:43
+msgid "Asynchronous support is available via the ``AsyncENS`` module:"
+msgstr ""
+
+#: ../../ens_overview.rst:52
+msgid ""
+"Note that an ``ens`` module instance is also available on the ``w3`` "
+"instance. The first time it's used, web3.py will create the  ``ens`` "
+"instance using ``ENS.from_web3(w3)`` or ``AsyncENS.from_web3(w3)`` as "
+"appropriate."
+msgstr ""
+
+#: ../../ens_overview.rst:68
+msgid ""
+"The ``ENS`` instance has a ``strict_bytes_type_checking`` flag that "
+"toggles the flag with the same name on the ``Web3`` instance attached to "
+"the ``ENS`` instance. You may disable the stricter bytes type checking "
+"that is loaded by default using this flag. For more examples, see :ref"
+":`disable-strict-byte-check`"
+msgstr ""
+
+#: ../../ens_overview.rst:73
+msgid ""
+"If instantiating a standalone ENS instance using ``ENS.from_web3()``, the"
+" ENS instance will inherit the value of the flag on the Web3 instance at "
+"time of instantiation."
+msgstr ""
+
+#: ../../ens_overview.rst:107
+msgid ""
+"However, if accessing the ``ENS`` class via the ``Web3`` instance as a "
+"module (``w3.ens``), since all modules use the same ``Web3`` object "
+"reference under the hood (the parent ``w3`` object), changing the "
+"``strict_bytes_type_checking`` flag value on ``w3`` also changes the flag"
+" state for ``w3.ens.w3`` and all modules."
+msgstr ""
+
+#: ../../ens_overview.rst:138
+msgid "Usage"
+msgstr ""
+
+#: ../../ens_overview.rst:141
+msgid "Name Info"
+msgstr ""
+
+#: ../../ens_overview.rst:146
+msgid "Get the Address for an ENS Name"
+msgstr ""
+
+#: ../../ens_overview.rst:154
+msgid ""
+"The ``ENS`` module has no opinion as to which **TLD (Top Level Domain)** "
+"you can use, but will not infer a TLD if it is not provided with the "
+"name."
+msgstr ""
+
+#: ../../ens_overview.rst:158
+msgid "Multichain Address Resolution"
+msgstr ""
+
+#: ../../ens_overview.rst:160
+msgid ""
+"`ENSIP-9 <https://docs.ens.domains/ensip/9>`_ introduced multichain "
+"address resolution, allowing users to resolve addresses from different "
+"chains, specified by the coin type index from `SLIP44 "
+"<https://github.com/satoshilabs/slips/blob/master/slip-0044.md>`_. The "
+"``address()`` method on the ``ENS`` class supports multichain address "
+"resolution via the ``coin_type`` keyword argument."
+msgstr ""
+
+#: ../../ens_overview.rst:175
+msgid "Get the ENS Name for an Address"
+msgstr ""
+
+#: ../../ens_overview.rst:187
+msgid ""
+"For accuracy, and as a recommendation from the ENS documentation on "
+"`reverse resolution <https://docs.ens.domains/web/resolution#reverse-"
+"resolution>`_, the ``ENS`` module now verifies that the forward "
+"resolution matches the address with every call to get the ``name()`` for "
+"an address. This is the only sure way to know whether the reverse "
+"resolution is correct. Anyone can claim any name, only forward resolution"
+" implies that the owner of the name gave their stamp of approval."
+msgstr ""
+
+#: ../../ens_overview.rst:194
+msgid "Get the Owner of a Name"
+msgstr ""
+
+#: ../../ens_overview.rst:203
+msgid "Set Up Your Name and Address"
+msgstr ""
+
+#: ../../ens_overview.rst:206
+msgid "Link a Name to an Address"
+msgstr ""
+
+#: ../../ens_overview.rst:208
+msgid ""
+"You can set up your name so that :meth:`~ens.ENS.address` will show the "
+"address it points to. In order to do so, you must already be the owner of"
+" the domain (or its parent)."
+msgstr ""
+
+#: ../../ens_overview.rst:215
+msgid ""
+"In the common case where you want to point the name to the owning "
+"address, you can skip the address."
+msgstr ""
+
+#: ../../ens_overview.rst:221
+msgid "You can claim arbitrarily deep subdomains."
+msgstr ""
+
+#: ../../ens_overview.rst:233
+msgid "Gas costs scale up with the number of subdomains!"
+msgstr ""
+
+#: ../../ens_overview.rst:236
+msgid "Multichain Address Support"
+msgstr ""
+
+#: ../../ens_overview.rst:238
+msgid ""
+"`ENSIP-9 <https://docs.ens.domains/ensip/9>`_ introduced multichain "
+"address resolution, allowing users to resolve addresses from different "
+"chains, specified by the coin type index from `SLIP44 "
+"<https://github.com/satoshilabs/slips/blob/master/slip-0044.md>`_. The "
+"``setup_address()`` method on the ``ENS`` class supports multichain "
+"address setup via the ``coin_type`` keyword argument."
+msgstr ""
+
+#: ../../ens_overview.rst:252
+msgid "Link an Address to a Name"
+msgstr ""
+
+#: ../../ens_overview.rst:254
+msgid ""
+"You can set up your address so that :meth:`~ens.ENS.name` will show the "
+"name that points to it."
+msgstr ""
+
+#: ../../ens_overview.rst:256
+msgid ""
+"This is like Caller ID. It enables you and others to take an account and "
+"determine what name points to it. Sometimes this is referred to as "
+"\"reverse\" resolution. The ENS Reverse Resolver is used for this "
+"functionality."
+msgstr ""
+
+#: ../../ens_overview.rst:263
+msgid ""
+"If you don't supply the address, :meth:`~ens.ENS.setup_name` will assume "
+"you want the address returned by :meth:`~ens.ENS.address`."
+msgstr ""
+
+#: ../../ens_overview.rst:270
+msgid ""
+"If the name doesn't already point to an address, "
+":meth:`~ens.ENS.setup_name` will call :meth:`~ens.ENS.setup_address` for "
+"you."
+msgstr ""
+
+#: ../../ens_overview.rst:273
+msgid "Wait for the transaction to be mined, then:"
+msgstr ""
+
+#: ../../ens_overview.rst:282
+msgid "Text Records"
+msgstr ""
+
+#: ../../ens_overview.rst:285
+msgid "Set Text Metadata for an ENS Record"
+msgstr ""
+
+#: ../../ens_overview.rst:287
+msgid ""
+"As the owner of an ENS record, you can add text metadata. A list of "
+"supported fields can be found in the `ENS documentation "
+"<https://docs.ens.domains/resolvers/public#get-text-data>`_. You'll need "
+"to setup the address first, and then the text can be set:"
+msgstr ""
+
+#: ../../ens_overview.rst:297
+msgid "A transaction dictionary can be passed as the last argument if desired:"
+msgstr ""
+
+#: ../../ens_overview.rst:304
+msgid ""
+"If the transaction dictionary is not passed, sensible defaults will be "
+"used, and if a transaction dictionary is passed but does not have a "
+"``from`` value, the default will be the ``owner``."
+msgstr ""
+
+#: ../../ens_overview.rst:309
+msgid "Read Text Metadata for an ENS Record"
+msgstr ""
+
+#: ../../ens_overview.rst:311
+msgid "Anyone can read the data from an ENS Record:"
+msgstr ""
+
+#: ../../ens_overview.rst:321
+msgid "Working With Resolvers"
+msgstr ""
+
+#: ../../ens_overview.rst:324
+msgid "Get the Resolver for an ENS Record"
+msgstr ""
+
+#: ../../ens_overview.rst:326
+msgid ""
+"You can get the resolver for an ENS name via the "
+":meth:`~ens.ENS.resolver` method."
+msgstr ""
+
+#: ../../ens_overview.rst:337
+msgid "Wildcard Resolution Support"
+msgstr ""
+
+#: ../../ens_overview.rst:339
+msgid ""
+"The ``ENS`` module supports Wildcard Resolution for resolvers that "
+"implement the ``ExtendedResolver`` interface as described in `ENSIP-10 "
+"<https://docs.ens.domains/ensip/10>`_. Resolvers that implement the "
+"extended resolver interface should return ``True`` when calling the "
+"``supportsInterface()`` function with the extended resolver interface id "
+"``\"0x9061b923\"`` and should resolve subdomains to a unique address."
+msgstr ""

@@ -1,0 +1,56 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: 2025-08-06 12:09+0800\n"
+"Last-Translator: shevloader <shevloader@gmail.com>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../toc.rst:4
+msgid "Intro"
+msgstr "介绍"
+
+#: ../../toc.rst:12
+msgid "Guides"
+msgstr "指南"
+
+#: ../../toc.rst:28
+msgid "API"
+msgstr "API"
+
+#: ../../toc.rst:43
+msgid "Community"
+msgstr "社区"
+
+#: ../../toc.rst:2
+msgid "Table of Contents"
+msgstr "目录"
+
+#: ../../toc.rst:52
+msgid "Indices and tables"
+msgstr "索引和表格"
+
+#: ../../toc.rst:54
+msgid ":ref:`genindex`"
+msgstr ":ref:`genindex`"
+
+#: ../../toc.rst:55
+msgid ":ref:`modindex`"
+msgstr ":ref:`modindex`"
+
+#: ../../toc.rst:56
+msgid ":ref:`search`"
+msgstr ":ref:`search`"

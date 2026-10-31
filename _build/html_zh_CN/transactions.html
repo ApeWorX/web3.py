@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>交易 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Contracts" href="web3.contract.html" />
+    <link rel="prev" title="Accounts" href="web3.eth.account.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">交易</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#chapter-0-w3-eth-send-transaction-with-eth-tester">Chapter 0: <code class="docutils literal notranslate"><span class="pre">w3.eth.send_transaction</span></code> with <code class="docutils literal notranslate"><span class="pre">eth-tester</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chapter-1-w3-eth-send-transaction-signer-middleware">Chapter 1: <code class="docutils literal notranslate"><span class="pre">w3.eth.send_transaction</span></code> + signer middleware</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chapter-2-w3-eth-send-raw-transaction">Chapter 2: <code class="docutils literal notranslate"><span class="pre">w3.eth.send_raw_transaction</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chapter-3-contract-transactions">Chapter 3: Contract transactions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">交易</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/transactions.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="transactions">
+<h1>交易<a class="headerlink" href="#transactions" title="Link to this heading"></a></h1>
+<p>There are a handful of ways to interact with transactions in web3.py. See the
+<a class="reference internal" href="web3.eth.html#web3-eth-methods"><span class="std std-ref">Web3.eth module</span></a> for a full list of transaction-related methods. Note that you may also <a class="reference internal" href="web3.main.html#batch-requests"><span class="std std-ref">batch requests</span></a> that read transaction data, but not send new transactions in a batch request.</p>
+<p>The rest of this guide covers the decision tree for how to send a transaction.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Prefer to view this code in a Jupyter Notebook? View the repo <a class="reference external" href="https://github.com/wolovim/ethereum-notebooks/blob/master/Sending%20Transactions.ipynb">here</a>.</p>
+</div>
+<p>There are two methods for sending transactions using web3.py: <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a> and <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_raw_transaction" title="web3.eth.Eth.send_raw_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_raw_transaction()</span></code></a>. A brief guide:</p>
+<ol class="arabic simple">
+<li><p>Want to sign a transaction offline or send pre-signed transactions?</p>
+<ul class="simple">
+<li><p>use <a class="reference external" href="https://eth-account.readthedocs.io/en/latest/eth_account.html#eth_account.account.Account.sign_transaction" title="（在 eth-account v0.13）"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_transaction</span></code></a> + <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_raw_transaction" title="web3.eth.Eth.send_raw_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_raw_transaction()</span></code></a></p></li>
+</ul>
+</li>
+<li><p>Are you primarily using the same account for all transactions and would you prefer to save a few lines of code?</p>
+<ul class="simple">
+<li><p>configure the <code class="docutils literal notranslate"><span class="pre">build</span></code> method for <a class="reference internal" href="middleware.html#web3.middleware.SignAndSendRawMiddlewareBuilder" title="web3.middleware.SignAndSendRawMiddlewareBuilder"><code class="xref py py-class docutils literal notranslate"><span class="pre">SignAndSendRawMiddlewareBuilder</span></code></a>, then</p></li>
+<li><p>use <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a></p></li>
+</ul>
+</li>
+<li><p>Otherwise:</p>
+<ul class="simple">
+<li><p>load account via eth-account (<a class="reference external" href="https://eth-account.readthedocs.io/en/latest/eth_account.html#eth_account.account.Account.from_key" title="（在 eth-account v0.13）"><code class="xref py py-meth docutils literal notranslate"><span class="pre">w3.eth.account.from_key(pk)</span></code></a>), then</p></li>
+<li><p>use <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a></p></li>
+</ul>
+</li>
+</ol>
+<p>Interacting with or deploying a contract?</p>
+<ul class="simple">
+<li><p>Option 1: <a class="reference internal" href="web3.contract.html#web3.contract.ContractFunction.transact" title="web3.contract.ContractFunction.transact"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transact()</span></code></a> uses <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a> under the hood</p></li>
+<li><p>Option 2: <a class="reference internal" href="web3.contract.html#web3.contract.ContractFunction.build_transaction" title="web3.contract.ContractFunction.build_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">build_transaction()</span></code></a> + <a class="reference external" href="https://eth-account.readthedocs.io/en/latest/eth_account.html#eth_account.account.Account.sign_transaction" title="（在 eth-account v0.13）"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_transaction</span></code></a> + <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_raw_transaction" title="web3.eth.Eth.send_raw_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_raw_transaction()</span></code></a></p></li>
+</ul>
+<p>An example for each can be found below.</p>
+<section id="chapter-0-w3-eth-send-transaction-with-eth-tester">
+<h2>Chapter 0: <code class="docutils literal notranslate"><span class="pre">w3.eth.send_transaction</span></code> with <code class="docutils literal notranslate"><span class="pre">eth-tester</span></code><a class="headerlink" href="#chapter-0-w3-eth-send-transaction-with-eth-tester" title="Link to this heading"></a></h2>
+<p>Many tutorials use <code class="docutils literal notranslate"><span class="pre">eth-tester</span></code> (via EthereumTesterProvider) for convenience and speed
+of conveying ideas/building a proof of concept. Transactions sent by test accounts are
+auto-signed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">())</span>
+
+<span class="c1"># eth-tester populates accounts with test ether:</span>
+<span class="n">acct1</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">some_address</span> <span class="o">=</span> <span class="s2">&quot;0x0000000000000000000000000000000000000000&quot;</span>
+
+<span class="c1"># when using one of its generated test accounts,</span>
+<span class="c1"># eth-tester signs the tx (under the hood) before sending:</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">({</span>
+    <span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">acct1</span><span class="p">,</span>
+    <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">some_address</span><span class="p">,</span>
+    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">123123123123123</span>
+<span class="p">})</span>
+
+<span class="n">tx</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">tx</span><span class="p">[</span><span class="s2">&quot;from&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">acct1</span>
+</pre></div>
+</div>
+</section>
+<section id="chapter-1-w3-eth-send-transaction-signer-middleware">
+<h2>Chapter 1: <code class="docutils literal notranslate"><span class="pre">w3.eth.send_transaction</span></code> + signer middleware<a class="headerlink" href="#chapter-1-w3-eth-send-transaction-signer-middleware" title="Link to this heading"></a></h2>
+<p>The <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a> method is convenient and to-the-point.
+If you want to continue using the pattern after graduating from <code class="docutils literal notranslate"><span class="pre">eth-tester</span></code>, you can
+utilize web3.py middleware to sign transactions from a particular account:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SignAndSendRawMiddlewareBuilder</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Note: Never commit your key in your code! Use env variables instead:</span>
+<span class="n">pk</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PRIVATE_KEY&#39;</span><span class="p">)</span>
+
+<span class="c1"># Instantiate an Account object from your key:</span>
+<span class="n">acct2</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">from_key</span><span class="p">(</span><span class="n">pk</span><span class="p">)</span>
+
+<span class="c1"># For the sake of this example, fund the new account:</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">({</span>
+    <span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">acct1</span><span class="p">,</span>
+    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">to_wei</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">),</span>
+    <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">acct2</span><span class="o">.</span><span class="n">address</span>
+<span class="p">})</span>
+
+<span class="c1"># Add acct2 as auto-signer:</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">SignAndSendRawMiddlewareBuilder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">acct2</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># pk also works: w3.middleware_onion.inject(SignAndSendRawMiddlewareBuilder.build(pk), layer=0)</span>
+
+<span class="c1"># Transactions from `acct2` will then be signed, under the hood, in the middleware:</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">({</span>
+    <span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">acct2</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">3333333333</span><span class="p">,</span>
+    <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">some_address</span>
+<span class="p">})</span>
+
+<span class="n">tx</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">tx</span><span class="p">[</span><span class="s2">&quot;from&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">acct2</span><span class="o">.</span><span class="n">address</span>
+
+<span class="c1"># Optionally, you can set a default signer as well:</span>
+<span class="c1"># w3.eth.default_account = acct2.address</span>
+<span class="c1"># Then, if you omit a &quot;from&quot; key, acct2 will be used.</span>
+</pre></div>
+</div>
+</section>
+<section id="chapter-2-w3-eth-send-raw-transaction">
+<h2>Chapter 2: <code class="docutils literal notranslate"><span class="pre">w3.eth.send_raw_transaction</span></code><a class="headerlink" href="#chapter-2-w3-eth-send-raw-transaction" title="Link to this heading"></a></h2>
+<p>if you don't opt for the middleware, you'll need to:</p>
+<ul class="simple">
+<li><p>build each transaction,</p></li>
+<li><p><a class="reference external" href="https://eth-account.readthedocs.io/en/latest/eth_account.html#eth_account.account.Account.sign_transaction" title="（在 eth-account v0.13）"><code class="xref py py-meth docutils literal notranslate"><span class="pre">sign_transaction</span></code></a>, and</p></li>
+<li><p>then use <a class="reference internal" href="web3.eth.html#web3.eth.Eth.send_raw_transaction" title="web3.eth.Eth.send_raw_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_raw_transaction()</span></code></a>.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Build a new tx</span>
+<span class="n">transaction</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="n">acct2</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="n">some_address</span><span class="p">,</span>
+    <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">1000000000</span><span class="p">,</span>
+    <span class="s1">&#39;nonce&#39;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction_count</span><span class="p">(</span><span class="n">acct2</span><span class="o">.</span><span class="n">address</span><span class="p">),</span>
+    <span class="s1">&#39;gas&#39;</span><span class="p">:</span> <span class="mi">200000</span><span class="p">,</span>
+    <span class="s1">&#39;maxFeePerGas&#39;</span><span class="p">:</span> <span class="mi">2000000000</span><span class="p">,</span>
+    <span class="s1">&#39;maxPriorityFeePerGas&#39;</span><span class="p">:</span> <span class="mi">1000000000</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># 2. Sign tx with a private key</span>
+<span class="n">signed</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">pk</span><span class="p">)</span>
+
+<span class="c1"># 3. Send the signed transaction</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed</span><span class="o">.</span><span class="n">raw_transaction</span><span class="p">)</span>
+<span class="n">tx</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">tx</span><span class="p">[</span><span class="s2">&quot;from&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">acct2</span><span class="o">.</span><span class="n">address</span>
+</pre></div>
+</div>
+</section>
+<section id="chapter-3-contract-transactions">
+<h2>Chapter 3: Contract transactions<a class="headerlink" href="#chapter-3-contract-transactions" title="Link to this heading"></a></h2>
+<p>The same concepts apply for contract interactions, at least under the hood.</p>
+<p>Executing a function on a smart contract requires sending a transaction, which is typically done in one of two ways:</p>
+<ul class="simple">
+<li><p>executing the <a class="reference internal" href="web3.contract.html#web3.contract.ContractFunction.transact" title="web3.contract.ContractFunction.transact"><code class="xref py py-meth docutils literal notranslate"><span class="pre">transact()</span></code></a> function, or</p></li>
+<li><p><a class="reference internal" href="web3.contract.html#web3.contract.ContractFunction.build_transaction" title="web3.contract.ContractFunction.build_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">build_transaction()</span></code></a>, then signing and sending the raw transaction.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#########################################</span>
+<span class="c1">#### SMOL CONTRACT FOR THIS EXAMPLE: ####</span>
+<span class="c1">#########################################</span>
+<span class="c1"># // SPDX-License-Identifier: MIT</span>
+<span class="c1"># pragma solidity 0.8.17;</span>
+<span class="c1">#</span>
+<span class="c1"># contract Billboard {</span>
+<span class="c1">#     string public message;</span>
+<span class="c1">#</span>
+<span class="c1">#     constructor(string memory _message) {</span>
+<span class="c1">#         message = _message;</span>
+<span class="c1">#     }</span>
+<span class="c1">#</span>
+<span class="c1">#     function writeBillboard(string memory _message) public {</span>
+<span class="c1">#         message = _message;</span>
+<span class="c1">#     }</span>
+<span class="c1"># }</span>
+
+<span class="c1"># After compiling the contract, initialize the contract factory:</span>
+<span class="n">init_bytecode</span> <span class="o">=</span> <span class="s2">&quot;60806040523480156200001157600080fd5b5060...&quot;</span>
+<span class="n">abi</span> <span class="o">=</span> <span class="s1">&#39;[{&quot;inputs&quot;: [{&quot;internalType&quot;: &quot;string&quot;,&quot;name&quot;: &quot;_message&quot;,...&#39;</span>
+<span class="n">Billboard</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">bytecode</span><span class="o">=</span><span class="n">init_bytecode</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span>
+
+<span class="c1"># Deploy a contract using `transact` + the signer middleware:</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">Billboard</span><span class="o">.</span><span class="n">constructor</span><span class="p">(</span><span class="s2">&quot;gm&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">transact</span><span class="p">({</span><span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">acct2</span><span class="o">.</span><span class="n">address</span><span class="p">})</span>
+<span class="n">receipt</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction_receipt</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+<span class="n">deployed_addr</span> <span class="o">=</span> <span class="n">receipt</span><span class="p">[</span><span class="s2">&quot;contractAddress&quot;</span><span class="p">]</span>
+
+<span class="c1"># Reference the deployed contract:</span>
+<span class="n">billboard</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="n">deployed_addr</span><span class="p">,</span> <span class="n">abi</span><span class="o">=</span><span class="n">abi</span><span class="p">)</span>
+
+<span class="c1"># Manually build and sign a transaction:</span>
+<span class="n">unsent_billboard_tx</span> <span class="o">=</span> <span class="n">billboard</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">writeBillboard</span><span class="p">(</span><span class="s2">&quot;gn&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">build_transaction</span><span class="p">({</span>
+    <span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">acct2</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+    <span class="s2">&quot;nonce&quot;</span><span class="p">:</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction_count</span><span class="p">(</span><span class="n">acct2</span><span class="o">.</span><span class="n">address</span><span class="p">),</span>
+<span class="p">})</span>
+<span class="n">signed_tx</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="n">unsent_billboard_tx</span><span class="p">,</span> <span class="n">private_key</span><span class="o">=</span><span class="n">acct2</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+
+<span class="c1"># Send the raw transaction:</span>
+<span class="k">assert</span> <span class="n">billboard</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">message</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;gm&quot;</span>
+<span class="n">tx_hash</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_tx</span><span class="o">.</span><span class="n">raw_transaction</span><span class="p">)</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="n">tx_hash</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">billboard</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">message</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;gn&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="web3.eth.account.html" class="btn btn-neutral float-left" title="Accounts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="web3.contract.html" class="btn btn-neutral float-right" title="Contracts" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

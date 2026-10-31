@@ -1,0 +1,662 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>故障排除 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="迁移指南" href="migration.html" />
+    <link rel="prev" title="以太坊名称服务 (ENS)" href="ens_overview.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">故障排除</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-a-clean-environment">Set up a clean environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-can-t-i-use-a-particular-function">Why can't I use a particular function?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-isn-t-my-web3-instance-connecting-to-the-network">Why isn't my web3 instance connecting to the network?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-get-ether-for-my-test-network">How do I get ether for my test network?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-use-my-metamask-accounts-from-web3-py">How do I use my MetaMask accounts from web3.py?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-create-an-account">How do I create an account?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-doesn-t-my-transaction-work-on-another-network">Why doesn't my transaction work on another network?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-conform-to-abi-types">How do I conform to ABI types?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bytes-vs-text">Bytes vs Text</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hexadecimal-representations">Hexadecimal Representations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ethereum-addresses">Ethereum Addresses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#disabling-strict-bytes-type-checking">Disabling Strict Bytes Type Checking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#types-by-example">Types by Example</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#booleans">Booleans</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unsigned-integers">Unsigned Integers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#signed-integers">Signed Integers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#addresses">Addresses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bytes">Bytes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#structs">Structs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-can-i-optimize-ethereum-json-rpc-api-access">How can I optimize Ethereum JSON-RPC API access?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#why-am-i-getting-visual-c-or-cython-not-installed-error">Why am I getting Visual C++ or Cython not installed error?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-convert-currency-denominations">How do I convert currency denominations?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-adjust-the-log-levels">How do I adjust the log levels?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">故障排除</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/troubleshooting.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="troubleshooting">
+<h1>故障排除<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h1>
+<section id="set-up-a-clean-environment">
+<span id="setup-environment"></span><h2>Set up a clean environment<a class="headerlink" href="#set-up-a-clean-environment" title="Link to this heading"></a></h2>
+<p>Many things can cause a broken environment. You might be on an unsupported version of Python.
+Another package might be installed that has a name or version conflict.
+Often, the best way to guarantee a correct environment is with <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code>, like:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install pip if it is not available:</span>
+$<span class="w"> </span>which<span class="w"> </span>pip<span class="w"> </span><span class="o">||</span><span class="w"> </span>curl<span class="w"> </span>https://bootstrap.pypa.io/get-pip.py<span class="w"> </span><span class="p">|</span><span class="w"> </span>python
+
+<span class="c1"># Install virtualenv if it is not available:</span>
+$<span class="w"> </span>which<span class="w"> </span>virtualenv<span class="w"> </span><span class="o">||</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>virtualenv
+
+<span class="c1"># *If* the above command displays an error, you can try installing as root:</span>
+$<span class="w"> </span>sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>virtualenv
+
+<span class="c1"># Create a virtual environment:</span>
+$<span class="w"> </span>virtualenv<span class="w"> </span>-p<span class="w"> </span>python3<span class="w"> </span>~/.venv-py3
+
+<span class="c1"># Activate your new virtual environment:</span>
+$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/.venv-py3/bin/activate
+
+<span class="c1"># With virtualenv active, make sure you have the latest packaging tools</span>
+$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip<span class="w"> </span>setuptools
+
+<span class="c1"># Now we can install web3.py...</span>
+$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>web3
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Remember that each new terminal session requires you to reactivate your virtualenv, like:
+<code class="docutils literal notranslate"><span class="pre">$</span> <span class="pre">source</span> <span class="pre">~/.venv-py3/bin/activate</span></code></p>
+</div>
+</section>
+<section id="why-can-t-i-use-a-particular-function">
+<span id="instance-troubleshooting"></span><h2>Why can't I use a particular function?<a class="headerlink" href="#why-can-t-i-use-a-particular-function" title="Link to this heading"></a></h2>
+<p>Note that a web3.py instance must be configured before you can use most of its capabilities.
+One symptom of not configuring the instance first is an error that looks something like this:
+<code class="docutils literal notranslate"><span class="pre">AttributeError:</span> <span class="pre">type</span> <span class="pre">object</span> <span class="pre">'Web3'</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">attribute</span> <span class="pre">'eth'</span></code>.</p>
+<p>To properly configure your web3.py instance, specify which provider you're using to connect to the
+Ethereum network. An example configuration, if you're connecting to a locally run node, might be:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s1">&#39;http://localhost:8545&#39;</span><span class="p">))</span>
+
+<span class="go"># now `w3` is available to use:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Refer to the <a class="reference internal" href="providers.html#providers"><span class="std std-ref">提供者</span></a> documentation for further help with configuration.</p>
+</section>
+<section id="why-isn-t-my-web3-instance-connecting-to-the-network">
+<span id="use-metamask-accounts"></span><h2>Why isn't my web3 instance connecting to the network?<a class="headerlink" href="#why-isn-t-my-web3-instance-connecting-to-the-network" title="Link to this heading"></a></h2>
+<p>You can check that your instance is connected via the <code class="docutils literal notranslate"><span class="pre">is_connected</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>There are a variety of explanations for why you may see <code class="docutils literal notranslate"><span class="pre">False</span></code> here. To help you
+diagnose the problem, <code class="docutils literal notranslate"><span class="pre">is_connected</span></code> has an optional <code class="docutils literal notranslate"><span class="pre">show_traceback</span></code> argument:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">(</span><span class="n">show_traceback</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go"># this is an example, your error may differ</span>
+
+<span class="go"># &lt;long stack trace output&gt;</span>
+<span class="go">ProviderConnectionError: Problem connecting to provider with error: &lt;class &#39;FileNotFoundError&#39;&gt;: cannot connect to IPC socket at path: None</span>
+</pre></div>
+</div>
+<p>If you're running a local node, such as Geth, double-check that you've indeed started
+the binary and that you've started it from the intended directory - particularly if
+you've specified a relative path to its ipc file.</p>
+<p>If that does not address your issue, it's probable that you still have a
+Provider configuration issue. There are several options for configuring
+a Provider, detailed <a class="reference internal" href="providers.html#providers"><span class="std std-ref">here</span></a>.</p>
+</section>
+<section id="how-do-i-get-ether-for-my-test-network">
+<span id="faucets"></span><h2>How do I get ether for my test network?<a class="headerlink" href="#how-do-i-get-ether-for-my-test-network" title="Link to this heading"></a></h2>
+<p>Test networks usually have something called a &quot;faucet&quot; to
+help get test ether to people who want to use it. The faucet
+simply sends you test ether when you visit a web page, or ping a chat bot, etc.</p>
+<p>Each test network has its own version of test ether, so each one must maintain
+its own faucet. Faucet mechanisms tend to come and go, so a web search for
+&quot;ethereum testnet faucet&quot; should give you the most up-to-date options.</p>
+</section>
+<section id="how-do-i-use-my-metamask-accounts-from-web3-py">
+<h2>How do I use my MetaMask accounts from web3.py?<a class="headerlink" href="#how-do-i-use-my-metamask-accounts-from-web3-py" title="Link to this heading"></a></h2>
+<p>Export your private key from MetaMask, and use
+the local private key tools in web3.py to sign and send transactions.</p>
+<p>See <a class="reference external" href="https://ethereum.stackexchange.com/questions/33053/what-is-a-private-key-in-an-ethereum-wallet-like-metamask-and-how-do-i-find-it">how to export your private key</a>
+and <a class="reference internal" href="web3.eth.account.html#eth-account"><span class="std std-ref">Accounts</span></a>.</p>
+</section>
+<section id="how-do-i-create-an-account">
+<span id="account-troubleshooting"></span><h2>How do I create an account?<a class="headerlink" href="#how-do-i-create-an-account" title="Link to this heading"></a></h2>
+<p>In general, your options for accounts are:</p>
+<ul class="simple">
+<li><p>Import a keystore file for an account and <a class="reference internal" href="web3.eth.account.html#extract-geth-pk"><span class="std std-ref">extract the private key</span></a>.</p></li>
+<li><p>Create an account via the <a class="reference internal" href="web3.eth.account.html#eth-account"><span class="std std-ref">eth-account</span></a> API, e.g., <code class="docutils literal notranslate"><span class="pre">new_acct</span> <span class="pre">=</span> <span class="pre">w3.eth.account.create()</span></code>.</p></li>
+<li><p>Use an external service (e.g. Metamask) to generate a new account, then securely import its private key.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>Don't store real value in an account until you are familiar with security best practices.
+If you lose your private key, you lose your account!</p>
+</div>
+</section>
+<section id="why-doesn-t-my-transaction-work-on-another-network">
+<h2>Why doesn't my transaction work on another network?<a class="headerlink" href="#why-doesn-t-my-transaction-work-on-another-network" title="Link to this heading"></a></h2>
+<p>web3.py is an Ethereum-specific library, which defaults to
+<a class="reference external" href="https://ethereum.org/en/developers/docs/transactions/#typed-transaction-envelope">&quot;type 2&quot; EIP-1559 transactions</a>
+as of the London network upgrade. Some chains (including Ethereum L2s) do not support
+the same transaction types.</p>
+<p>If your chain doesn't support this transaction type, you likely need to create a
+&quot;legacy&quot; transaction, i.e., include <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code>, but not <code class="docutils literal notranslate"><span class="pre">type</span></code>, <code class="docutils literal notranslate"><span class="pre">maxFeePerGas</span></code>,
+or <code class="docutils literal notranslate"><span class="pre">maxPriorityFeePerGas</span></code> in your transaction body.</p>
+<p>If that doesn't resolve your issue, open a GitHub issue or reach out for help in the community
+<a class="reference external" href="https://discord.gg/GHryRvPB84">Discord</a> server if you're having trouble with an Ethereum-ecosystem chain. If you're
+debugging in an alternative ecosystem, please find another appropriate forum to raise
+your question.</p>
+</section>
+<section id="how-do-i-conform-to-abi-types">
+<h2>How do I conform to ABI types?<a class="headerlink" href="#how-do-i-conform-to-abi-types" title="Link to this heading"></a></h2>
+<p>The web3 library follows the following conventions:</p>
+<section id="bytes-vs-text">
+<h3>Bytes vs Text<a class="headerlink" href="#bytes-vs-text" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The term <em>bytes</em> is used to refer to the binary representation of a string.</p></li>
+<li><p>The term <em>text</em> is used to refer to unicode representations of strings.</p></li>
+</ul>
+</section>
+<section id="hexadecimal-representations">
+<h3>Hexadecimal Representations<a class="headerlink" href="#hexadecimal-representations" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>All hexadecimal values will be returned as text.</p></li>
+<li><p>All hexadecimal values will be <code class="docutils literal notranslate"><span class="pre">0x</span></code> prefixed.</p></li>
+</ul>
+</section>
+<section id="ethereum-addresses">
+<h3>Ethereum Addresses<a class="headerlink" href="#ethereum-addresses" title="Link to this heading"></a></h3>
+<p>All addresses must be supplied in one of three ways:</p>
+<ul class="simple">
+<li><p>A 20-byte hexadecimal that is checksummed using the <a class="reference external" href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-55.md">EIP-55</a> spec.</p></li>
+<li><p>A 20-byte binary address (python bytes type).</p></li>
+<li><p>While connected to an Ethereum Name Service (ENS) supported chain, an ENS name
+(often in the form <code class="docutils literal notranslate"><span class="pre">myname.eth</span></code>).</p></li>
+</ul>
+</section>
+<section id="disabling-strict-bytes-type-checking">
+<h3>Disabling Strict Bytes Type Checking<a class="headerlink" href="#disabling-strict-bytes-type-checking" title="Link to this heading"></a></h3>
+<p>There is a boolean flag on the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> class and the <code class="docutils literal notranslate"><span class="pre">ENS</span></code> class that will disable
+strict bytes type checking. This allows bytes values of Python strings and allows byte
+strings less than the specified byte size, appropriately padding values that need
+padding. To disable stricter checks, set the <code class="docutils literal notranslate"><span class="pre">w3.strict_bytes_type_checking</span></code>
+(or <code class="docutils literal notranslate"><span class="pre">ns.strict_bytes_type_checking</span></code>) flag to <code class="docutils literal notranslate"><span class="pre">False</span></code>. This will no longer cause
+the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> / <code class="docutils literal notranslate"><span class="pre">ENS</span></code> instance to raise an error if a Python string is passed in
+without a &quot;0x&quot; prefix. It will also render valid byte strings or hex strings
+that are below the exact number of bytes specified by the ABI type by padding the value
+appropriately, according to the ABI type. See the <a class="reference internal" href="web3.contract.html#disable-strict-byte-check"><span class="std std-ref">Disabling Strict Checks for Bytes Types</span></a>
+section for an example on using the flag and more details.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>If a standalone <code class="docutils literal notranslate"><span class="pre">ENS</span></code> instance is instantiated from a <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance, i.e.
+<code class="docutils literal notranslate"><span class="pre">ns</span> <span class="pre">=</span> <span class="pre">ENS.from_web3(w3)</span></code>, it will inherit the value of the
+<code class="docutils literal notranslate"><span class="pre">w3.strict_bytes_type_checking</span></code> flag from the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance at the time of
+instantiation.</p>
+<p>Also of note, all modules on the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> class will inherit the value of this flag,
+since all modules use the parent <code class="docutils literal notranslate"><span class="pre">w3</span></code> object reference under the hood. This means
+that <code class="docutils literal notranslate"><span class="pre">w3.eth.w3.strict_bytes_type_checking</span></code> will always have the same value as
+<code class="docutils literal notranslate"><span class="pre">w3.strict_bytes_type_checking</span></code>.</p>
+</div>
+<p>For more details on the ABI
+specification, refer to the
+<a class="reference external" href="https://docs.soliditylang.org/en/latest/abi-spec.html">Solidity ABI Spec</a>.</p>
+</section>
+<section id="types-by-example">
+<h3>Types by Example<a class="headerlink" href="#types-by-example" title="Link to this heading"></a></h3>
+<p>Let's use a contrived contract to demonstrate input types in web3.py:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>contract ManyTypes {
+    // booleans
+    bool public b;
+
+    // unsigned ints
+    uint8 public u8;
+    uint256 public u256;
+    uint256[] public u256s;
+
+    // signed ints
+    int8 public i8;
+
+    // addresses
+    address public addr;
+    address[] public addrs;
+
+    // bytes
+    bytes1 public b1;
+
+    // structs
+    struct S {
+      address sa;
+      bytes32 sb;
+    }
+    mapping(address =&gt; S) addrStructs;
+
+    function updateBool(bool x) public { b = x; }
+    function updateUint8(uint8 x) public { u8 = x; }
+    function updateUint256(uint256 x) public { u256 = x; }
+    function updateUintArray(uint256[] memory x) public { u256s = x; }
+    function updateInt8(int8 x) public { i8 = x; }
+    function updateAddr(address x) public { addr = x; }
+    function updateBytes1(bytes1 x) public { b1 = x; }
+    function updateMapping(S memory x) public { addrStructs[x.sa] = x; }
+}
+</pre></div>
+</div>
+<section id="booleans">
+<h4>Booleans<a class="headerlink" href="#booleans" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">contract_instance</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">updateBool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="unsigned-integers">
+<h4>Unsigned Integers<a class="headerlink" href="#unsigned-integers" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">contract_instance</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">updateUint8</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+<span class="n">contract_instance</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">updateUint256</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">256</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+<span class="n">contract_instance</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">updateUintArray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="signed-integers">
+<h4>Signed Integers<a class="headerlink" href="#signed-integers" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">contract_instance</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">updateInt8</span><span class="p">(</span><span class="o">-</span><span class="mi">128</span><span class="p">)</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="addresses">
+<h4>Addresses<a class="headerlink" href="#addresses" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">contract_instance</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">updateAddr</span><span class="p">(</span><span class="s2">&quot;0x0000000000000000000000000000000000000000&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="bytes">
+<h4>Bytes<a class="headerlink" href="#bytes" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">contract_instance</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">updateBytes1</span><span class="p">(</span><span class="n">HexBytes</span><span class="p">(</span><span class="mi">255</span><span class="p">))</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="structs">
+<h4>Structs<a class="headerlink" href="#structs" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">contract_instance</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">updateMapping</span><span class="p">({</span><span class="s2">&quot;sa&quot;</span><span class="p">:</span> <span class="s2">&quot;0x0000000000000000000000000000000000000000&quot;</span><span class="p">,</span> <span class="s2">&quot;sb&quot;</span><span class="p">:</span> <span class="n">HexBytes</span><span class="p">(</span><span class="mi">123</span><span class="p">)})</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="how-can-i-optimize-ethereum-json-rpc-api-access">
+<h2>How can I optimize Ethereum JSON-RPC API access?<a class="headerlink" href="#how-can-i-optimize-ethereum-json-rpc-api-access" title="Link to this heading"></a></h2>
+<p>Your Ethereum node JSON-RPC API might be slow when fetching multiple and large requests, especially when running batch jobs. Here are some tips for how to speed up your web3.py application.</p>
+<ul class="simple">
+<li><p>Run your client locally, e.g., <a class="reference external" href="https://github.com/ethereum/go-ethereum">Go Ethereum</a> or <a class="reference external" href="https://github.com/ledgerwatch/turbo-geth">TurboGeth</a>. The network latency and speed are the major limiting factors for fast API access.</p></li>
+<li><p>Use IPC communication instead of HTTP/WebSockets. See <a class="reference internal" href="providers.html#choosing-provider"><span class="std std-ref">Choosing a Provider</span></a>.</p></li>
+<li><p>Use an optimised JSON decoder. A future iteration of web3.py may change the default decoder or provide an API to configure one, but for now, you may patch the provider class to use <a class="reference external" href="https://pypi.org/project/ujson/">ujson</a>.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;JSON-RPC decoding optimised for web3.py&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ujson</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.providers</span><span class="w"> </span><span class="kn">import</span> <span class="n">JSONBaseProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">RPCResponse</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fast_decode_rpc_response</span><span class="p">(</span><span class="n">raw_response</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RPCResponse</span><span class="p">:</span>
+    <span class="n">decoded</span> <span class="o">=</span> <span class="n">ujson</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">raw_response</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="n">RPCResponse</span><span class="p">,</span> <span class="n">decoded</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">patch_provider</span><span class="p">(</span><span class="n">provider</span><span class="p">:</span> <span class="n">JSONBaseProvider</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Monkey-patch web3.py provider for faster JSON decoding.</span>
+
+<span class="sd">    Call this on your provider after construction.</span>
+
+<span class="sd">    This greatly improves JSON-RPC API access speeds, when fetching</span>
+<span class="sd">    multiple and large responses.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">provider</span><span class="o">.</span><span class="n">decode_rpc_response</span> <span class="o">=</span> <span class="n">_fast_decode_rpc_response</span>
+</pre></div>
+</div>
+</section>
+<section id="why-am-i-getting-visual-c-or-cython-not-installed-error">
+<h2>Why am I getting Visual C++ or Cython not installed error?<a class="headerlink" href="#why-am-i-getting-visual-c-or-cython-not-installed-error" title="Link to this heading"></a></h2>
+<p>Some Windows users that do not have Microsoft Visual C++ version 14.0 or greater installed may see an error message
+when installing web3.py as shown below:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>error:<span class="w"> </span>Microsoft<span class="w"> </span>Visual<span class="w"> </span>C++<span class="w"> </span><span class="m">14</span>.0<span class="w"> </span>or<span class="w"> </span>greater<span class="w"> </span>is<span class="w"> </span>required.<span class="w"> </span>Get<span class="w"> </span>it<span class="w"> </span>with<span class="w"> </span><span class="s2">&quot;Microsoft C++ Build Tools&quot;</span>:<span class="w"> </span>https://visualstudio.microsoft.com/visual-cpp-build-tools/
+</pre></div>
+</div>
+<p>To fix this error, download and install Microsoft Visual C++ from here :</p>
+<p><a class="reference external" href="https://visualstudio.microsoft.com/downloads/#microsoft-visual-c-redistributable-for-visual-studio-2019">Microsoft Visual C++ Redistributable for Visual Studio</a></p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://aka.ms/vs/16/release/VC_redist.x64.exe">x64 Visual C++</a></p></li>
+<li><p><a class="reference external" href="https://aka.ms/vs/16/release/VC_redist.x86.exe">x86 Visual C++</a></p></li>
+<li><p><a class="reference external" href="https://aka.ms/vs/16/release/VC_redist.arm64.exe">ARM64 Visual C++</a></p></li>
+</ul>
+</section>
+<section id="how-do-i-convert-currency-denominations">
+<h2>How do I convert currency denominations?<a class="headerlink" href="#how-do-i-convert-currency-denominations" title="Link to this heading"></a></h2>
+<p>The following denominations are supported:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>denomination</p></td>
+<td><p>amount in wei</p></td>
+</tr>
+<tr class="row-even"><td><p>wei</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>kwei</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-even"><td><p>babbage</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-odd"><td><p>femtoether</p></td>
+<td><p>1000</p></td>
+</tr>
+<tr class="row-even"><td><p>mwei</p></td>
+<td><p>1000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>lovelace</p></td>
+<td><p>1000000</p></td>
+</tr>
+<tr class="row-even"><td><p>picoether</p></td>
+<td><p>1000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>gwei</p></td>
+<td><p>1000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>shannon</p></td>
+<td><p>1000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>nanoether</p></td>
+<td><p>1000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>nano</p></td>
+<td><p>1000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>szabo</p></td>
+<td><p>1000000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>microether</p></td>
+<td><p>1000000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>micro</p></td>
+<td><p>1000000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>finney</p></td>
+<td><p>1000000000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>milliether</p></td>
+<td><p>1000000000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>milli</p></td>
+<td><p>1000000000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>ether</p></td>
+<td><p>1000000000000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>kether</p></td>
+<td><p>1000000000000000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>grand</p></td>
+<td><p>1000000000000000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>mether</p></td>
+<td><p>1000000000000000000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>gether</p></td>
+<td><p>1000000000000000000000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>tether</p></td>
+<td><p>1000000000000000000000000000000</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can use the <code class="xref py py-meth docutils literal notranslate"><span class="pre">from_wei()</span></code> method
+to convert a balance to ether (or another denomination).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">from_wei</span><span class="p">(</span><span class="mi">3841357360894980500000001</span><span class="p">,</span> <span class="s1">&#39;ether&#39;</span><span class="p">)</span>
+<span class="go">Decimal(&#39;3841357.360894980500000001&#39;)</span>
+</pre></div>
+</div>
+<p>To convert back to wei, you can use the inverse function, <code class="xref py py-meth docutils literal notranslate"><span class="pre">to_wei()</span></code>.
+Note that Python's default floating point precision is insufficient for this
+use case, so it's necessary to cast the value to a
+<a class="reference external" href="https://docs.python.org/3/library/decimal.html">Decimal</a> if it isn't already.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">to_wei</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;3841357.360894980500000001&#39;</span><span class="p">),</span> <span class="s1">&#39;ether&#39;</span><span class="p">)</span>
+<span class="go">3841357360894980500000001</span>
+</pre></div>
+</div>
+<p>Best practice: If you need to work with multiple currency denominations, default
+to wei. A typical workflow may require a conversion from some denomination to
+wei, then from wei to whatever you need.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">to_wei</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;0.000000005&#39;</span><span class="p">),</span> <span class="s1">&#39;ether&#39;</span><span class="p">)</span>
+<span class="go">5000000000</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">from_wei</span><span class="p">(</span><span class="mi">5000000000</span><span class="p">,</span> <span class="s1">&#39;gwei&#39;</span><span class="p">)</span>
+<span class="go">Decimal(&#39;5&#39;)</span>
+</pre></div>
+</div>
+</section>
+<section id="how-do-i-adjust-the-log-levels">
+<h2>How do I adjust the log levels?<a class="headerlink" href="#how-do-i-adjust-the-log-levels" title="Link to this heading"></a></h2>
+<p>web3.py internally uses <a class="reference external" href="https://docs.python.org/3/library/logging.html">Python logging subsystem</a>.</p>
+<p>If you want to run your application logging in debug mode, below is an example of how to make some JSON-RPC traffic quieter.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">coloredlogs</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_logging</span><span class="p">(</span><span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup root logger and quiet some levels.&quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+
+    <span class="c1"># Set log format to display the logger name to hunt down verbose logging modules</span>
+    <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(name)-25s</span><span class="s2"> </span><span class="si">%(levelname)-8s</span><span class="s2"> </span><span class="si">%(message)s</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Use colored logging output for console with the coloredlogs package</span>
+    <span class="c1"># https://pypi.org/project/coloredlogs/</span>
+    <span class="n">coloredlogs</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">log_level</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="c1"># Disable logging of JSON-RPC requests and replies</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;web3.RequestManager&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;web3.providers.HTTPProvider&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+    <span class="c1"># logging.getLogger(&quot;web3.RequestManager&quot;).propagate = False</span>
+
+    <span class="c1"># Disable all internal debug logging of requests and urllib3</span>
+    <span class="c1"># E.g. HTTP traffic</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;requests&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;urllib3&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">logger</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="ens_overview.html" class="btn btn-neutral float-left" title="以太坊名称服务 (ENS)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="migration.html" class="btn btn-neutral float-right" title="迁移指南" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../code_of_conduct.rst:2
+msgid "Code of Conduct"
+msgstr "行为准则"
+
+#: ../../code_of_conduct.rst:5
+msgid "Our Pledge"
+msgstr "我们的承诺"
+
+#: ../../code_of_conduct.rst:7
+msgid ""
+"In the interest of fostering an open and welcoming environment, we as "
+"contributors and maintainers pledge to make participation in our project "
+"and our community a harassment-free experience for everyone, regardless "
+"of age, body size, disability, ethnicity, gender identity and expression,"
+" level of experience, education, socio-economic status, nationality, "
+"personal appearance, race, religion, or sexual identity and orientation."
+msgstr ""
+"为了促进一个开放和欢迎的环境，我们作为贡献者和维护者承诺，使我们的项目和社区成为一个无骚扰的体验，无论年龄、体型、残疾、种族、性别认同和表达、经验水平、教育、社会经济地位、国籍、个人外貌、宗教或性认同和性取向。"
+
+#: ../../code_of_conduct.rst:15
+msgid "Our Standards"
+msgstr "我们的标准"
+
+#: ../../code_of_conduct.rst:17
+msgid ""
+"Examples of behavior that contributes to creating a positive environment "
+"include:"
+msgstr "以下行为有助于营造积极的环境："
+
+#: ../../code_of_conduct.rst:20
+msgid "Using welcoming and inclusive language"
+msgstr "使用欢迎和包容的语言"
+
+#: ../../code_of_conduct.rst:21
+msgid "Being respectful of differing viewpoints and experiences"
+msgstr "尊重不同的观点和经历"
+
+#: ../../code_of_conduct.rst:22
+msgid "Gracefully accepting constructive criticism"
+msgstr "优雅地接受建设性的批评"
+
+#: ../../code_of_conduct.rst:23
+msgid "Focusing on what is best for the community"
+msgstr "专注于社区的最佳利益"
+
+#: ../../code_of_conduct.rst:24
+msgid "Showing empathy towards other community members"
+msgstr "对其他社区成员表示同情"
+
+#: ../../code_of_conduct.rst:26
+msgid "Examples of unacceptable behavior by participants include:"
+msgstr "参与者的不当行为包括："
+
+#: ../../code_of_conduct.rst:28
+msgid ""
+"The use of sexualized language or imagery and unwelcome sexual attention "
+"or advances"
+msgstr ""
+"使用性化语言或图像，以及不受欢迎的性关注或进展"
+
+
+#: ../../code_of_conduct.rst:30
+msgid "Trolling, insulting/derogatory comments, and personal or political attacks"
+msgstr "侮辱/贬低评论，以及个人或政治攻击"
+
+#: ../../code_of_conduct.rst:31
+msgid "Public or private harassment"
+msgstr "公共或私人骚扰"
+
+#: ../../code_of_conduct.rst:32
+msgid ""
+"Publishing others' private information, such as a physical or electronic "
+"address, without explicit permission"
+msgstr ""
+"发布他人的私人信息，如物理或电子地址，未经明确许可"
+
+#: ../../code_of_conduct.rst:34
+msgid ""
+"Other conduct which could reasonably be considered inappropriate in a "
+"professional setting"
+msgstr ""
+"其他可能被认为不适当的行为，如在专业环境中"
+
+#: ../../code_of_conduct.rst:38
+msgid "Our Responsibilities"
+msgstr "我们的责任"
+
+#: ../../code_of_conduct.rst:40
+msgid ""
+"Project maintainers are responsible for clarifying the standards of "
+"acceptable behavior and are expected to take appropriate and fair "
+"corrective action in response to any instances of unacceptable behavior."
+msgstr ""
+"项目维护者有责任澄清可接受的行为标准，并应采取适当和公平的纠正措施，以回应任何不当行为的情况。"
+
+#: ../../code_of_conduct.rst:44
+msgid ""
+"Project maintainers have the right and responsibility to remove, edit, or"
+" reject comments, commits, code, wiki edits, issues, and other "
+"contributions that are not aligned to this Code of Conduct, or to ban "
+"temporarily or permanently any contributor for other behaviors that they "
+"deem inappropriate, threatening, offensive, or harmful."
+msgstr ""
+"项目维护者有权和责任删除、编辑或拒绝与本行为准则不符的评论、提交、代码、wiki编辑、问题和其他贡献，或暂时或永久禁止任何被认为不适当、威胁、冒犯或有害的贡献者。"
+
+#: ../../code_of_conduct.rst:51
+msgid "Scope"
+msgstr "范围"
+
+#: ../../code_of_conduct.rst:53
+msgid ""
+"This Code of Conduct applies both within project spaces and in public "
+"spaces when an individual is representing the project or its community. "
+"Examples of representing a project or community include using an official"
+" project e-mail address, posting via an official social media account, or"
+" acting as an appointed representative at an online or offline event. "
+"Representation of a project may be further defined and clarified by "
+"project maintainers."
+msgstr ""
+"本行为准则适用于项目空间和公共空间，当个人代表项目或其社区时。代表项目的例子包括使用官方项目电子邮件地址、通过官方社交媒体账户发布、或作为在线或离线活动的指定代表。项目维护者可以进一步定义和澄清项目的代表性。"
+
+#: ../../code_of_conduct.rst:61
+msgid "Enforcement"
+msgstr "执行"
+
+#: ../../code_of_conduct.rst:63
+msgid ""
+"Instances of abusive, harassing, or otherwise unacceptable behavior may "
+"be reported by contacting the project team at snakecharmers@ethereum.org."
+" All complaints will be reviewed and investigated and will result in a "
+"response that is deemed necessary and appropriate to the circumstances. "
+"The project team is obligated to maintain confidentiality with regard to "
+"the reporter of an incident. Further details of specific enforcement "
+"policies may be posted separately."
+msgstr ""
+"任何形式的虐待、骚扰或其他不可接受的行为可以由项目团队通过 snakecharmers@ethereum.org 联系报告。所有投诉将被审查和调查，并根据情况需要和适当性作出回应。项目团队有义务对事件报告者保持保密。具体的执行政策细节可能单独发布。"
+
+#: ../../code_of_conduct.rst:70
+msgid ""
+"Project maintainers who do not follow or enforce the Code of Conduct in "
+"good faith may face temporary or permanent repercussions as determined by"
+" other members of the project's leadership."
+msgstr ""
+"不遵守或执行本行为准则的善意项目维护者可能会面临临时或永久性的后果，由项目领导层其他成员决定。"
+
+#: ../../code_of_conduct.rst:75
+msgid "Attribution"
+msgstr "归属"
+
+#: ../../code_of_conduct.rst:77
+msgid ""
+"This Code of Conduct is adapted from the `Contributor Covenant "
+"<https://www.contributor-covenant.org>`_, version 1.4, available at "
+"https://www.contributor-covenant.org/version/1/4/code-of-conduct.html"
+msgstr ""
+"本行为准则改编自 `Contributor Covenant"
+"<https://www.contributor-covenant.org>`_, 版本 1.4, 可在 "
+"https://www.contributor-covenant.org/version/1/4/code-of-conduct.html 查看。"

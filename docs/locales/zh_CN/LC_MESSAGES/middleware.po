@@ -1,0 +1,512 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../middleware.rst:4
+msgid "Middleware"
+msgstr "中间件"
+
+#: ../../middleware.rst:6
+msgid ""
+"``Web3`` is instantiated with layers of middleware by default. They sit "
+"between the public ``Web3`` methods and the :doc:`providers`, and are "
+"used to perform sanity checks, convert data types, enable ENS support, "
+"and more. Each layer can modify the request and/or response. While "
+"several middleware are enabled by default, others are available for "
+"optional use, and you're free to create your own!"
+msgstr ""
+
+#: ../../middleware.rst:12
+msgid ""
+"Each middleware layer gets invoked before the request reaches the "
+"provider, and then processes the result after the provider returns, in "
+"reverse order. However, it is possible for a middleware to return early "
+"from a call without the request ever getting to the provider (or even "
+"reaching the middleware that are in deeper layers)."
+msgstr ""
+
+#: ../../middleware.rst:21
+msgid "Configuring Middleware"
+msgstr ""
+
+#: ../../middleware.rst:23
+msgid ""
+"Middleware can be added, removed, replaced, and cleared at runtime. To "
+"make that easier, you can name the middleware for later reference."
+msgstr ""
+
+#: ../../middleware.rst:27
+msgid "Middleware Order"
+msgstr ""
+
+#: ../../middleware.rst:29
+msgid ""
+"Think of the middleware as being layered in an onion, where you initiate "
+"a web3.py request at the outermost layer of the onion, and the Ethereum "
+"node (like geth) receives and responds to the request inside the "
+"innermost layer of the onion. Here is a (simplified) diagram:"
+msgstr ""
+
+#: ../../middleware.rst:86
+msgid ""
+"The middleware are maintained in ``Web3.middleware_onion``. See below for"
+" the API."
+msgstr ""
+
+#: ../../middleware.rst:88
+msgid ""
+"When specifying middleware in a list, or retrieving the list of "
+"middleware, they will be returned in the order of outermost layer first "
+"and innermost layer last. In the above example, that means that "
+"``w3.middleware_onion.middleware`` would return the middleware in the "
+"order of: ``[2, 1, 0]``."
+msgstr ""
+
+#: ../../middleware.rst:97
+msgid "Middleware Stack API"
+msgstr ""
+
+#: ../../middleware.rst:99
+msgid "To add or remove items in different layers, use the following API:"
+msgstr ""
+
+#: ../../middleware.rst:103
+msgid ""
+"Middleware will be added to the outermost layer. That means the new "
+"middleware will modify the request first, and the response last. You can "
+"optionally name it with any hashable object, typically a string."
+msgstr ""
+
+#: ../../middleware.rst:116
+msgid "Inject a named middleware to an arbitrary layer."
+msgstr ""
+
+#: ../../middleware.rst:118
+msgid ""
+"The current implementation only supports injection at the innermost or "
+"outermost layers. Note that injecting to the outermost layer is "
+"equivalent to calling :meth:`Web3.middleware_onion.add` ."
+msgstr ""
+
+#: ../../middleware.rst:132
+msgid ""
+"Middleware will be removed from whatever layer it was in. If you added "
+"the middleware with a name, use the name to remove it. If you added the "
+"middleware as an object, use the object again later to remove it:"
+msgstr ""
+
+#: ../../middleware.rst:145
+msgid ""
+"Middleware will be replaced from whatever layer it was in. If the "
+"middleware was named, it will continue to have the same name. If it was "
+"un-named, then you will now reference it with the new middleware object."
+msgstr ""
+
+#: ../../middleware.rst:166
+msgid "Empty all the middleware, including the default ones."
+msgstr ""
+
+#: ../../middleware.rst:176
+msgid ""
+"Return all the current middleware for the ``Web3`` instance in the "
+"appropriate order for importing into a new ``Web3`` instance."
+msgstr ""
+
+#: ../../middleware.rst:194
+msgid "Instantiate with Custom Middleware"
+msgstr ""
+
+#: ../../middleware.rst:196
+msgid ""
+"Instead of working from the default list, you can specify a custom list "
+"of middleware when initializing Web3:"
+msgstr ""
+
+#: ../../middleware.rst:204
+msgid ""
+"This will *replace* the default middleware. To keep the default "
+"functionality, either use ``middleware_onion.add()`` from above, or add "
+"the default middleware to your list of new middleware."
+msgstr ""
+
+#: ../../middleware.rst:212
+msgid "Default Middleware"
+msgstr ""
+
+#: ../../middleware.rst:214
+msgid "The following middleware are included by default:"
+msgstr ""
+
+#: ../../middleware.rst:216
+msgid "``gas_price_strategy``"
+msgstr ""
+
+#: ../../middleware.rst:217
+msgid "``ens_name_to_address``"
+msgstr ""
+
+#: ../../middleware.rst:218
+msgid "``attrdict``"
+msgstr ""
+
+#: ../../middleware.rst:219
+msgid "``validation``"
+msgstr ""
+
+#: ../../middleware.rst:220
+msgid "``gas_estimate``"
+msgstr ""
+
+#: ../../middleware.rst:222
+msgid ""
+"The defaults are defined in the ``get_default_middleware()`` method in "
+"``web3/manager.py``."
+msgstr ""
+
+#: ../../middleware.rst:225
+msgid "AttributeDict"
+msgstr ""
+
+#: ../../middleware.rst:229
+msgid ""
+"This middleware recursively converts any dictionary type in the result of"
+" a call to an ``AttributeDict``. This enables dot-syntax access, like "
+"``eth.get_block('latest').number`` in addition to "
+"``eth.get_block('latest')['number']``."
+msgstr ""
+
+#: ../../middleware.rst:235
+msgid ""
+"Accessing a property via attribute breaks type hinting. For this reason, "
+"this feature is available as a middleware, which may be removed if "
+"desired."
+msgstr ""
+
+#: ../../middleware.rst:239
+msgid "ENS Name to Address Resolution"
+msgstr ""
+
+#: ../../middleware.rst:243
+msgid ""
+"This middleware converts Ethereum Name Service (ENS) names into the "
+"address that the name points to. For example "
+":meth:`w3.eth.send_transaction <web3.eth.Eth.send_transaction>` will "
+"accept .eth names in the 'from' and 'to' fields."
+msgstr ""
+
+#: ../../middleware.rst:248
+msgid ""
+"This middleware only converts ENS names on chains where the proper ENS "
+"contracts are deployed to support this functionality. All other cases "
+"will result in a ``NameNotFound`` error."
+msgstr ""
+
+#: ../../middleware.rst:253
+msgid "Gas Price Strategy"
+msgstr ""
+
+#: ../../middleware.rst:259
+msgid ""
+"Gas price strategy is only supported for legacy transactions. The London "
+"fork introduced ``maxFeePerGas`` and ``maxPriorityFeePerGas`` transaction"
+" parameters which should be used over ``gasPrice`` whenever possible."
+msgstr ""
+
+#: ../../middleware.rst:263
+msgid ""
+"This adds a ``gasPrice`` to transactions if applicable and when a gas "
+"price strategy has been set. See :ref:`Gas_Price` for information about "
+"how gas price is derived."
+msgstr ""
+
+#: ../../middleware.rst:267
+msgid "Buffered Gas Estimate"
+msgstr ""
+
+#: ../../middleware.rst:271
+msgid ""
+"This adds a gas estimate to transactions if ``gas`` is not present in the"
+" transaction parameters. Sets gas to: ``min(w3.eth.estimate_gas + "
+"gas_buffer, gas_limit)`` where the gas_buffer default is 100,000"
+msgstr ""
+
+#: ../../middleware.rst:277
+msgid "Validation"
+msgstr ""
+
+#: ../../middleware.rst:281
+msgid ""
+"This middleware includes block and transaction validators which perform "
+"validations for transaction parameters."
+msgstr ""
+
+#: ../../middleware.rst:286
+msgid "Optional Middleware"
+msgstr ""
+
+#: ../../middleware.rst:288
+msgid ""
+"``Web3`` includes optional middleware for common use cases. Below is a "
+"list of available middleware which are not enabled by default."
+msgstr ""
+
+#: ../../middleware.rst:292
+msgid "Stalecheck"
+msgstr ""
+
+#: ../../middleware.rst:296
+msgid ""
+"This middleware checks how stale the blockchain is, and interrupts calls "
+"with a failure if the blockchain is too old."
+msgstr ""
+
+#: ../../middleware.rst:299
+msgid ""
+"``allowable_delay`` is the length in seconds that the blockchain is "
+"allowed to be behind of ``time.time()``"
+msgstr ""
+
+#: ../../middleware.rst:302
+msgid ""
+"Because this middleware takes an argument, you must create the middleware"
+" with a method call."
+msgstr ""
+
+#: ../../middleware.rst:310
+msgid ""
+"If the latest block in the blockchain is older than 2 days in this "
+"example, then the middleware will raise a ``StaleBlockchain`` exception "
+"on every call except ``web3.eth.get_block()``."
+msgstr ""
+
+#: ../../middleware.rst:318
+msgid "Proof of Authority"
+msgstr ""
+
+#: ../../middleware.rst:323
+msgid ""
+"It is **crucial** that this middleware is injected at the 0th layer of "
+"the middleware onion, using "
+"``w3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)``, to "
+"guarantee it is the *first* middleware to process the response and modify"
+" the ``extraData`` field. This ensures it processes the field before any "
+"other middleware attempts to validate it."
+msgstr ""
+
+#: ../../middleware.rst:330
+msgid ""
+"``ExtraDataToPOAMiddleware`` is required to connect to ``geth --dev`` and"
+" may also be needed for other EVM compatible blockchains like Polygon or "
+"BNB Chain (Binance Smart Chain)."
+msgstr ""
+
+#: ../../middleware.rst:334
+msgid ""
+"If the middleware is not injected at the 0th layer of the middleware "
+"onion, you may get errors like the example below when interacting with "
+"your EVM node."
+msgstr ""
+
+#: ../../middleware.rst:344
+msgid ""
+"The easiest way to connect to a default ``geth --dev`` instance which "
+"loads the middleware is:"
+msgstr ""
+
+#: ../../middleware.rst:355
+msgid ""
+"This example connects to a local ``geth --dev`` instance on Linux with a "
+"unique IPC location and loads the middleware:"
+msgstr ""
+
+#: ../../middleware.rst:375
+msgid "Why is ``ExtraDataToPOAMiddleware`` necessary?"
+msgstr ""
+
+#: ../../middleware.rst:377
+msgid ""
+"There is no strong community consensus on a single Proof-of-Authority "
+"(PoA) standard yet. Some nodes have successful experiments running "
+"though. One is go-ethereum (geth), which uses a prototype PoA for its "
+"development mode and the Goerli test network."
+msgstr ""
+
+#: ../../middleware.rst:381
+msgid ""
+"Unfortunately, it does deviate from the yellow paper specification, which"
+" constrains the ``extraData`` field in each block to a maximum of "
+"32-bytes. Geth is one such example where PoA uses more than 32 bytes, so "
+"this middleware modifies the block data a bit before returning it."
+msgstr ""
+
+#: ../../middleware.rst:389
+msgid "Locally Managed Log and Block Filters"
+msgstr ""
+
+#: ../../middleware.rst:393
+msgid ""
+"This middleware provides an alternative to ethereum node managed filters."
+" When used, Log and Block filter logic are handled locally while using "
+"the same web3 filter api. Filter results are retrieved using JSON-RPC "
+"endpoints that don't rely on server state."
+msgstr ""
+
+#: ../../middleware.rst:412
+msgid "Signing"
+msgstr ""
+
+#: ../../middleware.rst:416
+msgid ""
+"This middleware automatically captures transactions, signs them, and "
+"sends them as raw transactions. The ``from`` field on the transaction, or"
+" ``w3.eth.default_account`` must be set to the address of the private key"
+" for this middleware to have any effect."
+msgstr ""
+
+#: ../../middleware.rst:420
+msgid "The ``build`` method for this middleware builder takes a single argument:"
+msgstr ""
+
+#: ../../middleware.rst:422
+msgid ""
+"``private_key_or_account`` A single private key or a tuple, list or set "
+"of private keys."
+msgstr ""
+
+#: ../../middleware.rst:424
+msgid "Keys can be in any of the following formats:"
+msgstr ""
+
+#: ../../middleware.rst:426
+msgid "An ``eth_account.LocalAccount`` object"
+msgstr ""
+
+#: ../../middleware.rst:427
+msgid "An ``eth_keys.PrivateKey`` object"
+msgstr ""
+
+#: ../../middleware.rst:428
+msgid "A raw private key as a hex string or byte string"
+msgstr ""
+
+#: ../../middleware.rst:431
+msgid ""
+"Since this middleware signs transactions, it must always run after any "
+"middleware that modifies the transaction. Therefore, it is recommended to"
+" inject the signing middleware at the 0th layer of the middleware onion "
+"using "
+"``w3.middleware_onion.inject(SignAndSendRawMiddlewareBuilder.build(...), "
+"layer=0)``. Ensure that any transaction-modifying middleware exists in a "
+"higher layer within the onion so that it runs before the signing "
+"middleware."
+msgstr ""
+
+#: ../../middleware.rst:439
+msgid ""
+"If used with ``ExtraDataToPOAMiddleware``, the injection order doesn't "
+"matter, as the ``extraData`` field isn't involved in transaction signing."
+" The key is ensuring ``SignAndSendRawMiddlewareBuilder`` runs after any "
+"middleware that modifies the transaction."
+msgstr ""
+
+#: ../../middleware.rst:455
+msgid ""
+":ref:`Hosted nodes<local_vs_hosted>` (like Infura or Alchemy) only "
+"support signed transactions. This often results in "
+"``send_raw_transaction`` being used repeatedly. Instead, we can automate "
+"this process with "
+"``SignAndSendRawMiddlewareBuilder.build(private_key_or_account)``."
+msgstr ""
+
+#: ../../middleware.rst:475
+msgid "Similarly, with AsyncWeb3:"
+msgstr ""
+
+#: ../../middleware.rst:492
+msgid ""
+"Now you can send a transaction from acct.address without having to build "
+"and sign each raw transaction."
+msgstr ""
+
+#: ../../middleware.rst:494
+msgid ""
+"When making use of this signing middleware, when sending dynamic fee "
+"transactions (recommended over legacy transactions), the transaction "
+"``type`` of ``2`` (or ``'0x2'``) is necessary. This is because "
+"transaction signing is validated based on the transaction ``type`` "
+"parameter. This value defaults to ``'0x2'`` when ``maxFeePerGas`` and / "
+"or ``maxPriorityFeePerGas`` are present as parameters in the transaction "
+"as these params imply a dynamic fee transaction. Since these values "
+"effectively replace the legacy ``gasPrice`` value, do not set a "
+"``gasPrice`` for dynamic fee transactions. Doing so will lead to "
+"validation issues."
+msgstr ""
+
+#: ../../middleware.rst:514
+msgid ""
+"A legacy transaction still works in the same way as it did before "
+"EIP-1559 was introduced:"
+msgstr ""
+
+#: ../../middleware.rst:527
+msgid "Creating Custom Middleware"
+msgstr ""
+
+#: ../../middleware.rst:529
+msgid ""
+"To write your own middleware, create a class and extend from the base "
+"``Web3Middleware`` class, then override only the parts of the middleware "
+"that make sense for your use case."
+msgstr ""
+
+#: ../../middleware.rst:532
+msgid ""
+"The Middleware API borrows from the Django middleware API introduced in "
+"version 1.10.0."
+msgstr ""
+
+#: ../../middleware.rst:535
+msgid ""
+"If all you need is to modify the params before a request is made, you can"
+" override the ``request_processor`` method, make the necessary tweaks to "
+"the params, and pass the arguments to the next element in the middleware "
+"stack. Need to do some processing on the response? Override the "
+"``response_processor`` method and return the modified response."
+msgstr ""
+
+#: ../../middleware.rst:540
+msgid "The pattern:"
+msgstr ""
+
+#: ../../middleware.rst:567
+msgid ""
+"If you wish to prevent making a call under certain conditions, you can "
+"override the ``wrap_make_request`` method. This allows for defining pre-"
+"request processing, skipping or making the request under certain "
+"conditions, as well as response processing before passing it to the next "
+"middleware."
+msgstr ""
+
+#: ../../middleware.rst:600
+msgid ""
+"Custom middleware can be added to the stack via the class itself, using "
+"the :ref:`middleware_stack_api`. The ``name`` kwarg is optional. For "
+"example:"
+msgstr ""

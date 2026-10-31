@@ -1,0 +1,164 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2016-2025, The Ethereum Foundation
+# This file is distributed under the same license as the web3.py package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: web3.py 7.13\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-06 10:49+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../quickstart.rst:4
+msgid "Quickstart"
+msgstr "快速开始"
+
+#: ../../quickstart.rst:8
+msgid ""
+"All code starting with a ``$`` is meant to run on your terminal. All code"
+" starting with a ``>>>`` is meant to run in a python interpreter, like "
+"`ipython <https://pypi.org/project/ipython/>`_."
+msgstr ""
+
+#: ../../quickstart.rst:13
+msgid "Installation"
+msgstr "安装"
+
+#: ../../quickstart.rst:15
+msgid ""
+"web3.py can be installed (preferably in a :ref:`virtualenv "
+"<setup_environment>`) using ``pip`` as follows:"
+msgstr ""
+
+
+#: ../../quickstart.rst:23
+msgid ""
+"If you run into problems during installation, you might have a broken "
+"environment. See the troubleshooting guide to :ref:`setting up a clean "
+"environment <setup_environment>`."
+msgstr ""
+
+#: ../../quickstart.rst:29
+msgid "Using Web3"
+msgstr "使用 Web3"
+
+#: ../../quickstart.rst:31
+msgid ""
+"This library depends on a connection to an Ethereum node. We call these "
+"connections *Providers* and there are several ways to configure them. The"
+" full details can be found in the :ref:`Providers<providers>` "
+"documentation. This Quickstart guide will highlight a couple of the most "
+"common use cases."
+msgstr ""
+
+#: ../../quickstart.rst:38
+msgid "Test Provider"
+msgstr ""
+
+#: ../../quickstart.rst:40
+msgid ""
+"If you're just learning the ropes or doing some quick prototyping, you "
+"can use a test provider, `eth-tester <https://github.com/ethereum/eth-"
+"tester>`_. This provider includes some accounts prepopulated with test "
+"ether and instantly includes each transaction into a block. web3.py makes"
+" this test provider available via ``EthereumTesterProvider``."
+msgstr ""
+
+#: ../../quickstart.rst:47
+msgid ""
+"The ``EthereumTesterProvider`` requires additional dependencies. Install "
+"them via ``pip install \"web3[tester]\"``, then import and instantiate "
+"the provider as seen below."
+msgstr ""
+
+#: ../../quickstart.rst:59
+msgid "Local Providers"
+msgstr ""
+
+#: ../../quickstart.rst:61
+msgid ""
+"The hardware requirements are `steep "
+"<https://ethereum.org/en/developers/docs/nodes-and-"
+"clients/run-a-node/#top>`_, but the safest way to interact with Ethereum "
+"is to run an Ethereum client on your own hardware. For locally run nodes,"
+" an IPC connection is the most secure option, but HTTP and websocket "
+"configurations are also available. By default, the popular `Geth client "
+"<https://geth.ethereum.org/>`_ exposes port ``8545`` to serve HTTP "
+"requests and ``8546`` for websocket requests. Connecting to this local "
+"node can be done as follows:"
+msgstr ""
+
+#: ../../quickstart.rst:101
+msgid "Remote Providers"
+msgstr ""
+
+#: ../../quickstart.rst:103
+msgid ""
+"The quickest way to interact with the Ethereum blockchain is to use a "
+"`remote node provider <https://ethereum.org/en/developers/docs/nodes-and-"
+"clients/nodes-as-a-service/#popular-node-services>`_. You can connect to "
+"a remote node by specifying the endpoint, just like the previous local "
+"node example:"
+msgstr ""
+
+#: ../../quickstart.rst:116
+msgid ""
+"This endpoint is provided by the remote node service, typically after you"
+" create an account."
+msgstr ""
+
+#: ../../quickstart.rst:122
+msgid "Getting Blockchain Info"
+msgstr ""
+
+#: ../../quickstart.rst:124
+msgid ""
+"It's time to start using web3.py! Once properly configured, the ``w3`` "
+"instance will allow you to interact with the Ethereum blockchain. Try "
+"getting all the information about the latest block:"
+msgstr ""
+
+#: ../../quickstart.rst:151
+msgid ""
+"web3.py can help you read block data, sign and send transactions, deploy "
+"and interact with contracts, and a number of other features."
+msgstr ""
+
+#: ../../quickstart.rst:154
+msgid "A few suggestions from here:"
+msgstr ""
+
+#: ../../quickstart.rst:156
+msgid "The :doc:`overview` page provides a summary of web3.py's features."
+msgstr ""
+
+#: ../../quickstart.rst:157
+msgid ""
+"The :class:`w3.eth <web3.eth.Eth>` API contains the most frequently used "
+"methods."
+msgstr ""
+
+#: ../../quickstart.rst:158
+msgid "A guide to :ref:`contracts` includes deployment and usage examples."
+msgstr ""
+
+#: ../../quickstart.rst:159
+msgid "The nuances of :doc:`transactions` are explained in another guide."
+msgstr ""
+
+#: ../../quickstart.rst:161
+msgid ""
+"It is recommended that your development environment have the "
+"``PYTHONWARNINGS=default`` environment variable set. Some deprecation "
+"warnings will not show up without this variable being set."
+msgstr ""

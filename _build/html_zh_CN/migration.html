@@ -1,0 +1,937 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>迁移指南 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Web3 API" href="web3.main.html" />
+    <link rel="prev" title="故障排除" href="troubleshooting.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">迁移指南</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#migrating-from-v6-to-v7">Migrating from v6 to v7</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#provider-updates">Provider Updates</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#websocketprovider">WebSocketProvider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#asyncipcprovider-non-breaking-feature">AsyncIPCProvider (non-breaking feature)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ethereumtesterprovider">EthereumTesterProvider</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#middlewares-middleware">Middlewares -&gt; Middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#class-based-middleware-model">Class-Based Middleware Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#middleware-builder-classes">Middleware Builder Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#middleware-renaming-and-removals">Middleware Renaming and Removals</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#abi-middleware">ABI Middleware</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#caching-middleware">Caching Middleware</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#result-generating-middleware">Result Generating Middleware</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#http-retry-request-middleware">HTTP Retry Request Middleware</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#normalize-request-parameters-middleware">Normalize Request Parameters Middleware</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#remaining-camelcase-snake-case-updates">Remaining camelCase -&gt; snake_case Updates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changes-to-exception-handling">Changes to Exception Handling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#json-rpc-error-handling">JSON-RPC Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#end-of-support-and-feature-removals">End of Support and Feature Removals</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#python-3-7-support-dropped">Python 3.7 Support Dropped</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ethpm-module-removed">EthPM Module Removed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geth-miner-namespace-removed">Geth Miner Namespace Removed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#geth-personal-namespace-removed">Geth Personal Namespace Removed</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#abi-types-removed">ABI Types Removed</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#miscellaneous-changes">Miscellaneous Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#migrating-from-v5-to-v6">Migrating from v5 to v6</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#strict-bytes-checking-by-default">Strict Bytes Checking by Default</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#snake-case">Snake Case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-3-10-and-3-11-support">Python 3.10 and 3.11 Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exceptions">Exceptions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#exceptions-inherit-from-a-base-class">Exceptions inherit from a base class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#validationerror">ValidationError</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#web3-class-split-into-web3-and-asyncweb3">Web3 class split into Web3 and AsyncWeb3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dict-to-attributedict-conversion-moved-to-middleware"><cite>dict</cite> to <cite>AttributeDict</cite> conversion moved to middleware</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-misc-changes">Other Misc Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#removals">Removals</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-notable-changes">Other notable changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#migrating-from-v4-to-v5">Migrating from v4 to v5</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-3-5-no-longer-supported">Python 3.5 no longer supported</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eth-abi-v1-no-longer-supported"><code class="docutils literal notranslate"><span class="pre">eth-abi</span></code> v1 no longer supported</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changes-to-base-api">Changes to base API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#json-rpc-updates">JSON-RPC Updates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#removed-methods">Removed Methods</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deprecated-methods">Deprecated Methods</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#deprecated-concisecontract-and-implicitcontract">Deprecated ConciseContract and ImplicitContract</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#manager-provider">Manager Provider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testnet-changes">Testnet Changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ens">ENS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#required-infura-api-key">Required Infura API Key</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#migrating-from-v3-to-v4">Migrating from v3 to v4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-2-to-python-3">Python 2 to Python 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filters">Filters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testrpcprovider-and-ethereumtesterprovider">TestRPCProvider and EthereumTesterProvider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changes-to-base-api-convenience-methods">Changes to base API convenience methods</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#web3-todecimal">Web3.toDecimal()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Removed Methods</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#provider-access">Provider Access</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#disambiguating-string-inputs">Disambiguating String Inputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#contracts">Contracts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#personal-api">Personal API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">迁移指南</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/migration.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="migration-guide">
+<h1>迁移指南<a class="headerlink" href="#migration-guide" title="Link to this heading"></a></h1>
+<section id="migrating-from-v6-to-v7">
+<span id="migrating-v6-to-v7"></span><h2>Migrating from v6 to v7<a class="headerlink" href="#migrating-from-v6-to-v7" title="Link to this heading"></a></h2>
+<p>web3.py follows <a class="reference external" href="http://semver.org">Semantic Versioning</a>, which means that
+version 7 introduced backwards-incompatible changes. If you're upgrading from
+web3.py <code class="docutils literal notranslate"><span class="pre">v6</span></code> or earlier, you can expect to need to make some changes. Refer
+to this guide for a summary of breaking changes when updating from <code class="docutils literal notranslate"><span class="pre">v6</span></code> to
+<code class="docutils literal notranslate"><span class="pre">v7</span></code>. If you are more than one major version behind, you should also review
+the migration guides for the versions in between.</p>
+<section id="provider-updates">
+<h3>Provider Updates<a class="headerlink" href="#provider-updates" title="Link to this heading"></a></h3>
+<section id="websocketprovider">
+<h4>WebSocketProvider<a class="headerlink" href="#websocketprovider" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">WebsocketProviderV2</span></code>, introduced in web3.py <code class="docutils literal notranslate"><span class="pre">v6</span></code>, has taken priority over the
+legacy <code class="docutils literal notranslate"><span class="pre">WebsocketProvider</span></code>. The <code class="docutils literal notranslate"><span class="pre">LegacyWebSocketProvider</span></code> has been deprecated in
+<code class="docutils literal notranslate"><span class="pre">v7</span></code> and is slated for removal in the next major version of the library. In summary:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">WebsocketProvider</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">LegacyWebSocketProvider</span></code> (and deprecated)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">WebsocketProviderV2</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">WebSocketProvider</span></code></p></li>
+</ul>
+<p>If migrating from <code class="docutils literal notranslate"><span class="pre">WebSocketProviderV2</span></code> to <code class="docutils literal notranslate"><span class="pre">WebSocketProvider</span></code>, you can expect the
+following changes:</p>
+<ul>
+<li><p>Instantiation no longer requires the <code class="docutils literal notranslate"><span class="pre">persistent_websocket</span></code> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># WebsocketsProviderV2:</span>
+<span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">persistent_websocket</span><span class="p">(</span><span class="n">WebsocketProviderV2</span><span class="p">(</span><span class="s1">&#39;...&#39;</span><span class="p">))</span>
+
+<span class="c1"># WebSocketProvider:</span>
+<span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="s1">&#39;...&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><p>Handling incoming subscription messages now occurs under a more flexible namespace:
+<code class="docutils literal notranslate"><span class="pre">socket</span></code>. The <code class="docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code> uses the same API to listen for messages via
+an IPC socket.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># WebsocketsProviderV2:</span>
+<span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">w3</span><span class="o">.</span><span class="n">ws</span><span class="o">.</span><span class="n">process_subscriptions</span><span class="p">():</span>
+  <span class="o">...</span>
+
+<span class="c1"># WebSocketProvider:</span>
+<span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">w3</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">process_subscriptions</span><span class="p">():</span>
+  <span class="o">...</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="asyncipcprovider-non-breaking-feature">
+<h4>AsyncIPCProvider (non-breaking feature)<a class="headerlink" href="#asyncipcprovider-non-breaking-feature" title="Link to this heading"></a></h4>
+<p>An asynchronous IPC provider, <code class="docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code>, is newly available in <code class="docutils literal notranslate"><span class="pre">v7</span></code>.
+This provider makes use of some of the same internals that the new <code class="docutils literal notranslate"><span class="pre">WebSocketProvider</span></code>
+introduced, allowing it to also support <code class="docutils literal notranslate"><span class="pre">eth_subscription</span></code>.</p>
+</section>
+<section id="ethereumtesterprovider">
+<h4>EthereumTesterProvider<a class="headerlink" href="#ethereumtesterprovider" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">EthereumTesterProvider</span></code> now returns <code class="docutils literal notranslate"><span class="pre">input</span></code> instead of <code class="docutils literal notranslate"><span class="pre">data</span></code> for <code class="docutils literal notranslate"><span class="pre">eth_getTransaction*</span></code>
+calls, as expected.</p>
+</section>
+</section>
+<section id="middlewares-middleware">
+<h3>Middlewares -&gt; Middleware<a class="headerlink" href="#middlewares-middleware" title="Link to this heading"></a></h3>
+<p>All references to <code class="docutils literal notranslate"><span class="pre">middlewares</span></code> have been replaced with the more grammatically
+correct <code class="docutils literal notranslate"><span class="pre">middleware</span></code>. Notably, this includes when a provider needs to be
+instantiated with custom middleware.</p>
+</section>
+<section id="class-based-middleware-model">
+<h3>Class-Based Middleware Model<a class="headerlink" href="#class-based-middleware-model" title="Link to this heading"></a></h3>
+<p>The middleware model has been changed to a class-based model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># v6 (no longer supported)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">pythonic_middleware</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pythonic_middleware</span><span class="p">)</span>
+
+<span class="c1"># v7</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonicMiddleware</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">PythonicMiddleware</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Previously, middleware were defined as functions that tightly wrapped the provider's
+<code class="docutils literal notranslate"><span class="pre">make_request</span></code> function, where transformations could be conditionally applied before
+and after the request was made.</p>
+<p>Now, middleware logic can be separated into <code class="docutils literal notranslate"><span class="pre">request_processor</span></code> and <code class="docutils literal notranslate"><span class="pre">response_processor</span></code>
+functions that enable pre-request and post-response logic, respectively. This change offers
+a simpler, clearer interface for defining middleware, gives more flexibility for
+asynchronous operations and also paved the way for supporting <a class="reference internal" href="web3.main.html#batch-requests"><span class="std std-ref">Batch Requests</span></a>.</p>
+<p>Major changes for migration are highlighted in this section. Consult the
+<a class="reference internal" href="middleware.html#middleware-internals"><span class="std std-ref">中间件</span></a> section of the documentation for specifics and examples on
+the new class-based design.</p>
+</section>
+<section id="middleware-builder-classes">
+<h3>Middleware Builder Classes<a class="headerlink" href="#middleware-builder-classes" title="Link to this heading"></a></h3>
+<p>In <code class="docutils literal notranslate"><span class="pre">v6</span></code>, certain middleware needed to be constructed with parameters. This was done
+by passing the parameters to a constructor method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># v6 (no longer supported)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">construct_sign_and_send_raw_middleware</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">construct_sign_and_send_raw_middleware</span><span class="p">(</span><span class="n">private_key</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>In the class-based <code class="docutils literal notranslate"><span class="pre">v7</span></code> middleware model, a middleware builder class is instantiated
+with the necessary parameters via the <code class="docutils literal notranslate"><span class="pre">build()</span></code> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># v7</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3.middleware</span><span class="w"> </span><span class="kn">import</span> <span class="n">SignAndSendRawMiddlewareBuilder</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">middleware_onion</span><span class="o">.</span><span class="n">inject</span><span class="p">(</span><span class="n">SignAndSendRawMiddlewareBuilder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">private_key</span><span class="p">),</span> <span class="n">layer</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="middleware-renaming-and-removals">
+<h3>Middleware Renaming and Removals<a class="headerlink" href="#middleware-renaming-and-removals" title="Link to this heading"></a></h3>
+<p>The following middleware have been renamed for generalization or clarity:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name_to_address_middleware</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">ENSNameToAddressMiddleware</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">geth_poa_middleware</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">ExtraDataToPOAMiddleware</span></code></p></li>
+</ul>
+<p>The following middleware have been removed:</p>
+<section id="abi-middleware">
+<h4>ABI Middleware<a class="headerlink" href="#abi-middleware" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">abi_middleware</span></code> is no longer necessary and has been removed. All of the functionality
+of the <code class="docutils literal notranslate"><span class="pre">abi_middleware</span></code> was already handled by web3.py's ABI formatters. For additional
+context: a bug in the ENS name-to-address middleware would override the formatters. Fixing
+this bug has removed the need for the <code class="docutils literal notranslate"><span class="pre">abi_middleware</span></code>.</p>
+</section>
+<section id="caching-middleware">
+<h4>Caching Middleware<a class="headerlink" href="#caching-middleware" title="Link to this heading"></a></h4>
+<p>The following middleware have been removed:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">simple_cache_middleware</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">latest_block_based_cache_middleware</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_based_cache_middleware</span></code></p></li>
+</ul>
+<p>All caching middleware has been removed in favor of a decorator/wrapper around the
+<code class="docutils literal notranslate"><span class="pre">make_request</span></code> methods of providers with configuration options on the provider class.
+The configuration options are outlined in the documentation in the
+<a class="reference internal" href="internals.html#request-caching"><span class="std std-ref">Request Caching</span></a> section.</p>
+<p>If desired, the previous caching middleware can be re-created using the new class-based
+middleware model overriding the <code class="docutils literal notranslate"><span class="pre">wrap_make_request</span></code> (or <code class="docutils literal notranslate"><span class="pre">async_wrap_make_request</span></code>)
+method in the middleware class.</p>
+</section>
+<section id="result-generating-middleware">
+<h4>Result Generating Middleware<a class="headerlink" href="#result-generating-middleware" title="Link to this heading"></a></h4>
+<p>The following middleware have been removed:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fixture_middleware</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">result_generator_middleware</span></code></p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">fixture_middleware</span></code> and <code class="docutils literal notranslate"><span class="pre">result_generator_middleware</span></code> which were used for
+testing/mocking purposes have been removed. These have been replaced internally by the
+<code class="docutils literal notranslate"><span class="pre">RequestMocker</span></code> class, utilized for testing via a <code class="docutils literal notranslate"><span class="pre">request_mocker</span></code> pytest fixture.</p>
+</section>
+<section id="http-retry-request-middleware">
+<h4>HTTP Retry Request Middleware<a class="headerlink" href="#http-retry-request-middleware" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">http_retry_request_middleware</span></code> has been removed in favor of a configuration
+option on the <code class="docutils literal notranslate"><span class="pre">HTTPProvider</span></code> and <code class="docutils literal notranslate"><span class="pre">AsyncHTTPProvider</span></code> classes. The configuration
+options are outlined in the documentation in the <a class="reference internal" href="internals.html#http-retry-requests"><span class="std std-ref">Retry Requests for HTTP Providers</span></a> section.</p>
+</section>
+<section id="normalize-request-parameters-middleware">
+<h4>Normalize Request Parameters Middleware<a class="headerlink" href="#normalize-request-parameters-middleware" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">normalize_request_parameters</span></code> middleware was not used anywhere internally and
+has been removed.</p>
+</section>
+</section>
+<section id="remaining-camelcase-snake-case-updates">
+<h3>Remaining camelCase -&gt; snake_case Updates<a class="headerlink" href="#remaining-camelcase-snake-case-updates" title="Link to this heading"></a></h3>
+<p>The following arguments have been renamed across the library from camelCase to
+snake_case in all methods where they are passed in as a kwarg.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fromBlock</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">from_block</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">toBlock</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">to_block</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">blockHash</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">block_hash</span></code></p></li>
+</ul>
+<p>Note that if a dictionary is used instead, say to a call such as <cite>eth_getLogs</cite>, the
+keys in the dictionary should be camelCase. This is because the dictionary is passed
+directly to the JSON-RPC request, where the keys are expected to be in camelCase.</p>
+</section>
+<section id="changes-to-exception-handling">
+<h3>Changes to Exception Handling<a class="headerlink" href="#changes-to-exception-handling" title="Link to this heading"></a></h3>
+<p>All Python standard library exceptions that were raised from within web3.py have
+been replaced with custom <code class="docutils literal notranslate"><span class="pre">Web3Exception</span></code> classes. This change allows for better
+control over exception handling, being able to distinguish between exceptions raised
+by web3.py and those raised from elsewhere in a codebase. The following exceptions
+have been replaced:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AssertionError</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Web3AssertionError</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ValueError</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Web3ValueError</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TypeError</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Web3TypeError</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">Web3AttributeError</span></code></p></li>
+</ul>
+<p>A new <code class="docutils literal notranslate"><span class="pre">MethodNotSupported</span></code> exception is now raised when a method is not supported by
+web3.py. This allows a user to distinguish between when a method is not available on
+the current provider, <code class="docutils literal notranslate"><span class="pre">MethodUnavailable</span></code>, and when a method is not supported by
+web3.py under certain conditions, <code class="docutils literal notranslate"><span class="pre">MethodNotSupported</span></code>.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">MismatchedABI</span></code> exception is now raised instead of a <code class="docutils literal notranslate"><span class="pre">Web3ValidationError</span></code> in
+cases where an ABI is not compatible with the data being passed to it. This change
+allows for more specific error handling when using certain ABI types.</p>
+<section id="json-rpc-error-handling">
+<h4>JSON-RPC Error Handling<a class="headerlink" href="#json-rpc-error-handling" title="Link to this heading"></a></h4>
+<p>Rather than a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> being replaced with a <code class="docutils literal notranslate"><span class="pre">Web3ValueError</span></code> when a JSON-RPC
+response comes back with an <code class="docutils literal notranslate"><span class="pre">error</span></code> object, a new <code class="docutils literal notranslate"><span class="pre">Web3RPCError</span></code> exception is
+now raised to provide more distinction for JSON-RPC error responses. Some previously
+existing exceptions now extend from this class since they too are related to JSON-RPC
+errors:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MethodUnavailable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BlockNotFound</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TransactionNotFound</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TransactionIndexingInProgress</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="end-of-support-and-feature-removals">
+<h3>End of Support and Feature Removals<a class="headerlink" href="#end-of-support-and-feature-removals" title="Link to this heading"></a></h3>
+<section id="python-3-7-support-dropped">
+<h4>Python 3.7 Support Dropped<a class="headerlink" href="#python-3-7-support-dropped" title="Link to this heading"></a></h4>
+<p>Python 3.7 support has been dropped in favor of Python 3.8+. Python 3.7 is no longer
+supported by the Python core team, and we want to focus our efforts on supporting
+the latest versions of Python.</p>
+</section>
+<section id="ethpm-module-removed">
+<h4>EthPM Module Removed<a class="headerlink" href="#ethpm-module-removed" title="Link to this heading"></a></h4>
+<p>The EthPM module has been removed from the library. It was not widely used and has not
+been functional since around October 2022. It was deprecated in <code class="docutils literal notranslate"><span class="pre">v6</span></code> and has been
+completely removed in <code class="docutils literal notranslate"><span class="pre">v7</span></code>.</p>
+<p>Types in the
+<a class="reference external" href="https://github.com/ethereum/eth-typing/blob/ef9c2d566b7747bb6799214e2c89006b8cde4c36/eth_typing/ethpm.py">eth_typing.ethpm</a>
+module have been deprecated and will be removed from <code class="docutils literal notranslate"><span class="pre">eth-typing</span></code> in the next major
+release.</p>
+</section>
+<section id="geth-miner-namespace-removed">
+<h4>Geth Miner Namespace Removed<a class="headerlink" href="#geth-miner-namespace-removed" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">geth.miner</span></code> namespace, deprecated in <code class="docutils literal notranslate"><span class="pre">v6</span></code>, has been removed in <code class="docutils literal notranslate"><span class="pre">v7</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">miner</span></code> namespace was used for managing the concept of a miner in geth. This is
+no longer a feature in geth and is planned for complete removal in the future, with
+Ethereum having transitioned to proof-of-stake.</p>
+</section>
+<section id="geth-personal-namespace-removed">
+<h4>Geth Personal Namespace Removed<a class="headerlink" href="#geth-personal-namespace-removed" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">geth.personal</span></code> namespace, deprecated in <code class="docutils literal notranslate"><span class="pre">v6</span></code>, has been removed in <code class="docutils literal notranslate"><span class="pre">v7</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">personal</span></code> namespace was used for managing accounts and keys and was deprecated
+in geth in <code class="docutils literal notranslate"><span class="pre">v1.11.0</span></code>. Geth has moved to using <code class="docutils literal notranslate"><span class="pre">clef</span></code> for account and key management.</p>
+</section>
+<section id="abi-types-removed">
+<h4>ABI Types Removed<a class="headerlink" href="#abi-types-removed" title="Link to this heading"></a></h4>
+<p>The type definitions for ABIs, deprecated in <code class="docutils literal notranslate"><span class="pre">v6</span></code>, have been removed in <code class="docutils literal notranslate"><span class="pre">v7</span></code>. New
+types have been introduced in the <code class="docutils literal notranslate"><span class="pre">eth_typing</span></code> <code class="docutils literal notranslate"><span class="pre">v5</span></code> package for ABIs. Improvements have
+been made to make required types more explicit and to offer better semantics.</p>
+<p>The following types from <code class="docutils literal notranslate"><span class="pre">web3.types</span></code> have been removed:
+- <code class="docutils literal notranslate"><span class="pre">ABIEventParams</span></code> is no longer available. Use <code class="docutils literal notranslate"><span class="pre">ABIComponentIndexed</span></code> from
+<code class="docutils literal notranslate"><span class="pre">eth_typing</span></code> to represent event input components.
+- <code class="docutils literal notranslate"><span class="pre">ABIEvent</span></code> now resides in <code class="docutils literal notranslate"><span class="pre">eth_typing</span></code>. <code class="docutils literal notranslate"><span class="pre">ABIEvent.type</span></code> and <code class="docutils literal notranslate"><span class="pre">ABIEvent.name</span></code>
+are now required fields.
+- <code class="docutils literal notranslate"><span class="pre">ABIFunctionComponents</span></code> and <code class="docutils literal notranslate"><span class="pre">ABIFunctionParams</span></code> are no longer available. Use
+<code class="docutils literal notranslate"><span class="pre">ABIComponent</span></code> from <code class="docutils literal notranslate"><span class="pre">eth_typing</span></code> to represent function input components.
+- <code class="docutils literal notranslate"><span class="pre">ABIFunction</span></code> now resides in <code class="docutils literal notranslate"><span class="pre">eth_typing</span></code>. <code class="docutils literal notranslate"><span class="pre">ABIFunction.type</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ABIFunction.name</span></code> are now required fields.
+- <code class="docutils literal notranslate"><span class="pre">ABIElement</span></code> now resides in <code class="docutils literal notranslate"><span class="pre">eth_typing</span></code> and represents a <code class="docutils literal notranslate"><span class="pre">Union</span></code> of all valid
+ABI element types, <code class="docutils literal notranslate"><span class="pre">ABICallable</span></code>, <code class="docutils literal notranslate"><span class="pre">ABIEvent</span></code> and <code class="docutils literal notranslate"><span class="pre">ABIError</span></code>.</p>
+</section>
+</section>
+<section id="miscellaneous-changes">
+<h3>Miscellaneous Changes<a class="headerlink" href="#miscellaneous-changes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LRU</span></code> has been removed from the library and dependency on <code class="docutils literal notranslate"><span class="pre">lru-dict</span></code> library was
+dropped.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CallOverride</span></code> type was changed to <code class="docutils literal notranslate"><span class="pre">StateOverride</span></code> since more methods than
+<code class="docutils literal notranslate"><span class="pre">eth_call</span></code> utilize the state override params.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">User-Agent</span></code> header was changed to a more readable format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BaseContractFunctions</span></code> iterator now returns instances of <code class="docutils literal notranslate"><span class="pre">ContractFunction</span></code> rather
+than the function names.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BaseContractFunction</span></code> class attribute <code class="docutils literal notranslate"><span class="pre">function_identifier</span></code> has been removed in
+favor of the <code class="docutils literal notranslate"><span class="pre">abi_element_identifier</span></code> attribute.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.contract.utils.call_contract_function()</span></code> no longer uses <code class="docutils literal notranslate"><span class="pre">fn_abi</span></code> as a
+parameter. Instead, the <code class="docutils literal notranslate"><span class="pre">abi_callable</span></code> parameter of type <code class="docutils literal notranslate"><span class="pre">ABICallable</span></code> is used.</p></li>
+<li><p>Beacon API filename change: <code class="docutils literal notranslate"><span class="pre">beacon/main.py</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">beacon/beacon.py</span></code>.</p></li>
+<li><p>The asynchronous version of <code class="docutils literal notranslate"><span class="pre">w3.eth.wait_for_transaction_receipt()</span></code> changes its
+signature to use <code class="docutils literal notranslate"><span class="pre">Optional[float]</span></code> instead of <code class="docutils literal notranslate"><span class="pre">float</span></code> since it may be <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_default_ipc_path()</span></code> and <code class="docutils literal notranslate"><span class="pre">get_dev_ipc_path()</span></code> now return the path value
+without checking if the <code class="docutils literal notranslate"><span class="pre">geth.ipc</span></code> file exists.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Web3.is_address()</span></code> returns <code class="docutils literal notranslate"><span class="pre">True</span></code> for non-checksummed addresses.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Contract.encodeABI()</span></code> has been renamed to <code class="docutils literal notranslate"><span class="pre">Contract.encode_abi()</span></code>. The <code class="docutils literal notranslate"><span class="pre">fn_name</span></code>
+argument has been changed to <code class="docutils literal notranslate"><span class="pre">abi_element_identifier</span></code>.</p></li>
+<li><p>JSON-RPC responses are now more strictly validated against the JSON-RPC 2.0
+specification while providing more informative error messages for invalid responses.</p></li>
+</ul>
+</section>
+</section>
+<section id="migrating-from-v5-to-v6">
+<span id="migrating-v5-to-v6"></span><h2>Migrating from v5 to v6<a class="headerlink" href="#migrating-from-v5-to-v6" title="Link to this heading"></a></h2>
+<p>web3.py follows <a class="reference external" href="http://semver.org">Semantic Versioning</a>, which means
+that version 6 introduced backwards-incompatible changes. If your
+project depends on web3.py v6, then you'll probably need to make some changes.</p>
+<p>Breaking Changes:</p>
+<section id="strict-bytes-checking-by-default">
+<h3>Strict Bytes Checking by Default<a class="headerlink" href="#strict-bytes-checking-by-default" title="Link to this heading"></a></h3>
+<p>web3.py v6 moved to requiring strict bytes checking by default. This means that if an
+ABI specifies a <code class="docutils literal notranslate"><span class="pre">bytes4</span></code> argument, web3.py will invalidate any entry that is not
+encodable as a bytes type with length of 4. This means only 0x-prefixed hex strings with
+a length of 4 and bytes types with a length of 4 will be considered valid. This removes
+doubt that comes from inferring values and assuming they should be padded.</p>
+<p>This behavior was previously available in via the <code class="docutils literal notranslate"><span class="pre">w3.enable_strict_bytes_checking()</span></code>
+method. This is now, however, a toggleable flag on the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance via the
+<code class="docutils literal notranslate"><span class="pre">w3.strict_bytes_type_checking</span></code> property. As outlined above, this property is set to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> by default but can be toggled on and off via the property's setter
+(e.g. <code class="docutils literal notranslate"><span class="pre">w3.strict_bytes_type_checking</span> <span class="pre">=</span> <span class="pre">False</span></code>).</p>
+</section>
+<section id="snake-case">
+<h3>Snake Case<a class="headerlink" href="#snake-case" title="Link to this heading"></a></h3>
+<p>web3.py v6 moved to the more Pythonic convention of snake_casing wherever
+possible. There are some exceptions to this pattern:</p>
+<ul class="simple">
+<li><p>Contract methods and events use whatever is listed in the ABI. If the smart contract
+convention is to use camelCase for method and event names, web3.py won't do
+any magic to convert it to snake_casing.</p></li>
+<li><p>Arguments to JSON-RPC methods. For example: transaction and filter
+parameters still use camelCasing. The reason for
+this is primarily due to error messaging. It would be confusing to pass in a
+snake_cased parameter and get an error message with a camelCased parameter.</p></li>
+<li><p>Data that is returned from JSON-RPC methods. For example:
+The keys in a transaction receipt will still be returned as camelCase.</p></li>
+</ul>
+</section>
+<section id="python-3-10-and-3-11-support">
+<h3>Python 3.10 and 3.11 Support<a class="headerlink" href="#python-3-10-and-3-11-support" title="Link to this heading"></a></h3>
+<p>Support for Python 3.10 and 3.11 is here. In order to support Python 3.10, we had to
+update the <code class="docutils literal notranslate"><span class="pre">websockets</span></code> dependency to v10+.</p>
+</section>
+<section id="exceptions">
+<h3>Exceptions<a class="headerlink" href="#exceptions" title="Link to this heading"></a></h3>
+<section id="exceptions-inherit-from-a-base-class">
+<h4>Exceptions inherit from a base class<a class="headerlink" href="#exceptions-inherit-from-a-base-class" title="Link to this heading"></a></h4>
+<p>In v5, some web3.py exceptions inherited from <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>, namely:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NoABIFunctionsFound</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NoABIFound</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NoABIEventsFound</span></code></p></li>
+</ul>
+<p>Others inherited from <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>, namely:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">InvalidAddress</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NameNotFound</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LogTopicError</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InvalidEventABI</span></code></p></li>
+</ul>
+<p>Now web3.py exceptions inherit from the same base <code class="docutils literal notranslate"><span class="pre">Web3Exception</span></code>.</p>
+<p>As such, any code that was expecting a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> or an <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code> from
+web3.py must update to expecting one of the exceptions listed above, or
+<code class="docutils literal notranslate"><span class="pre">Web3Exception</span></code>.</p>
+<p>Similarly, exceptions raised in the EthPM and ENS modules inherit from the base
+<code class="docutils literal notranslate"><span class="pre">EthPMException</span></code> and <code class="docutils literal notranslate"><span class="pre">ENSException</span></code>, respectively.</p>
+</section>
+<section id="validationerror">
+<h4>ValidationError<a class="headerlink" href="#validationerror" title="Link to this heading"></a></h4>
+<p>The Python dev tooling ecosystem is moving towards standardizing
+<code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>, so users know that they're catching the correct
+<code class="docutils literal notranslate"><span class="pre">ValidationError</span></code>. The base <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code> is imported from
+<code class="docutils literal notranslate"><span class="pre">eth_utils</span></code>. However, we also wanted to empower users to catch all errors emitted
+by a particular module. So we now have a <code class="docutils literal notranslate"><span class="pre">Web3ValidationError</span></code>, <code class="docutils literal notranslate"><span class="pre">EthPMValidationError</span></code>,
+and an <code class="docutils literal notranslate"><span class="pre">ENSValidationError</span></code> that all inherit from the generic
+<code class="docutils literal notranslate"><span class="pre">eth_utils.exceptions.ValidationError</span></code>.</p>
+</section>
+</section>
+<section id="web3-class-split-into-web3-and-asyncweb3">
+<h3>Web3 class split into Web3 and AsyncWeb3<a class="headerlink" href="#web3-class-split-into-web3-and-asyncweb3" title="Link to this heading"></a></h3>
+<p>The <cite>Web3</cite> class previously contained both sync and async methods. We've separated
+<cite>Web3</cite> and <cite>AsyncWeb3</cite> functionality to tighten up typing. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">AsyncWeb3</span>
+
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="o">&lt;</span><span class="n">provider</span><span class="o">.</span><span class="n">url</span><span class="o">&gt;</span><span class="p">))</span>
+<span class="n">async_w3</span> <span class="o">=</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">AsyncHTTPProvider</span><span class="p">(</span><span class="o">&lt;</span><span class="n">provider</span><span class="o">.</span><span class="n">url</span><span class="o">&gt;</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="dict-to-attributedict-conversion-moved-to-middleware">
+<h3><cite>dict</cite> to <cite>AttributeDict</cite> conversion moved to middleware<a class="headerlink" href="#dict-to-attributedict-conversion-moved-to-middleware" title="Link to this heading"></a></h3>
+<p><cite>Eth</cite> module data returned as key-value pairs was previously automatically converted to
+an <cite>AttributeDict</cite> by result formatters, which could cause problems with typing. This
+conversion has been moved to a default <cite>attrdict_middleware</cite> where it can be easily
+removed if necessary. See the <a class="reference external" href="web3.eth.html#web3.eth.Eth">Eth module</a> docs for more detail.</p>
+</section>
+<section id="other-misc-changes">
+<h3>Other Misc Changes<a class="headerlink" href="#other-misc-changes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">InfuraKeyNotFound</span></code> exception has been changed to <code class="docutils literal notranslate"><span class="pre">InfuraProjectIdNotFound</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SolidityError</span></code> has been removed in favor of <code class="docutils literal notranslate"><span class="pre">ContractLogicError</span></code></p></li>
+<li><p>When a method is unavailable from a node provider (i.e. a response error
+code of -32601 is returned), a <code class="docutils literal notranslate"><span class="pre">MethodUnavailable</span></code> error is
+now raised instead of <code class="docutils literal notranslate"><span class="pre">ValueError</span></code></p></li>
+<li><p>Logs' <cite>data</cite> field was previously formatted with <cite>to_ascii_if_bytes</cite>, now formatted to <cite>HexBytes</cite></p></li>
+<li><p>Receipts' <cite>type</cite> field was previously not formatted, now formatted with <cite>to_integer_if_hex</cite></p></li>
+</ul>
+</section>
+<section id="removals">
+<h3>Removals<a class="headerlink" href="#removals" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Removed unused IBAN module</p></li>
+<li><p>Removed <code class="docutils literal notranslate"><span class="pre">WEB3_INFURA_API_KEY</span></code> environment variable in favor of <code class="docutils literal notranslate"><span class="pre">WEB3_INFURA_PROJECT_ID</span></code></p></li>
+<li><p>Removed Kovan auto provider</p></li>
+<li><p>Removed deprecated <code class="docutils literal notranslate"><span class="pre">sha3</span></code> and <code class="docutils literal notranslate"><span class="pre">soliditySha3</span></code> methods in favor of <code class="docutils literal notranslate"><span class="pre">keccak</span></code> and <code class="docutils literal notranslate"><span class="pre">solidityKeccak</span></code></p></li>
+<li><p>Remove Parity Module and References</p></li>
+</ul>
+</section>
+<section id="other-notable-changes">
+<h3>Other notable changes<a class="headerlink" href="#other-notable-changes" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">ipfshttpclient</span></code> library is now opt-in via a web3 install extra.
+This only affects the ethpm ipfs backends, which rely on the library.</p></li>
+</ul>
+</section>
+</section>
+<section id="migrating-from-v4-to-v5">
+<span id="migrating-v4-to-v5"></span><h2>Migrating from v4 to v5<a class="headerlink" href="#migrating-from-v4-to-v5" title="Link to this heading"></a></h2>
+<p>Web3.py follows <a class="reference external" href="http://semver.org">Semantic Versioning</a>, which means
+that version 5 introduced backwards-incompatible changes. If your
+project depends on Web3.py v4, then you'll probably need to make some changes.</p>
+<p>Here are the most common required updates:</p>
+<section id="python-3-5-no-longer-supported">
+<h3>Python 3.5 no longer supported<a class="headerlink" href="#python-3-5-no-longer-supported" title="Link to this heading"></a></h3>
+<p>You will need to upgrade to either Python 3.6 or 3.7</p>
+</section>
+<section id="eth-abi-v1-no-longer-supported">
+<h3><code class="docutils literal notranslate"><span class="pre">eth-abi</span></code> v1 no longer supported<a class="headerlink" href="#eth-abi-v1-no-longer-supported" title="Link to this heading"></a></h3>
+<p>You will need to upgrade the <code class="docutils literal notranslate"><span class="pre">eth-abi</span></code> dependency to v2</p>
+</section>
+<section id="changes-to-base-api">
+<h3>Changes to base API<a class="headerlink" href="#changes-to-base-api" title="Link to this heading"></a></h3>
+<section id="json-rpc-updates">
+<h4>JSON-RPC Updates<a class="headerlink" href="#json-rpc-updates" title="Link to this heading"></a></h4>
+<p>In v4, JSON-RPC calls that looked up transactions or blocks and
+didn't find them, returned <code class="docutils literal notranslate"><span class="pre">None</span></code>. Now if a transaction or
+block is not found, a <code class="docutils literal notranslate"><span class="pre">BlockNotFound</span></code> or a <code class="docutils literal notranslate"><span class="pre">TransactionNotFound</span></code>
+error will be thrown as appropriate. This applies to the
+following web3 methods:</p>
+<ul class="simple">
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">getTransaction()</span></code> will throw a <code class="docutils literal notranslate"><span class="pre">TransactionNotFound</span></code> error</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">getTransactionReceipt()</span></code> will throw a <code class="docutils literal notranslate"><span class="pre">TransactionNotFound</span></code> error</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">getTransactionByBlock()</span></code> will throw a <code class="docutils literal notranslate"><span class="pre">TransactionNotFound</span></code> error</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">getTransactionCount()</span></code> will throw a <code class="docutils literal notranslate"><span class="pre">BlockNotFound</span></code> error</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">getBlock()</span></code> will throw a <code class="docutils literal notranslate"><span class="pre">BlockNotFound</span></code> error</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">getUncleCount()</span></code> will throw a <code class="docutils literal notranslate"><span class="pre">BlockNotFound</span></code> error</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">getUncleByBlock()</span></code> will throw a <code class="docutils literal notranslate"><span class="pre">BlockNotFound</span></code> error</p></li>
+</ul>
+</section>
+<section id="removed-methods">
+<h4>Removed Methods<a class="headerlink" href="#removed-methods" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">contract.buildTransaction</span></code> was removed for <code class="docutils literal notranslate"><span class="pre">contract.functions.buildTransaction.&lt;method</span> <span class="pre">name&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contract.deploy</span></code> was removed for <code class="docutils literal notranslate"><span class="pre">contract.constructor.transact</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contract.estimateGas</span></code> was removed for <code class="docutils literal notranslate"><span class="pre">contract.functions.&lt;method</span> <span class="pre">name&gt;.estimateGas</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contract.call</span></code> was removed for <code class="docutils literal notranslate"><span class="pre">contract.&lt;functions/events&gt;.&lt;method</span> <span class="pre">name&gt;.call</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contract.transact</span></code> was removed for <code class="docutils literal notranslate"><span class="pre">contract.&lt;functions/events&gt;.&lt;method</span> <span class="pre">name&gt;.transact</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">contract.eventFilter</span></code> was removed for <code class="docutils literal notranslate"><span class="pre">contract.events.&lt;event</span> <span class="pre">name&gt;.createFilter</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">middleware_stack</span></code> was renamed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">middleware_onion()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.miner.hashrate</span></code> was a duplicate of <code class="xref py py-meth docutils literal notranslate"><span class="pre">hashrate()</span></code> and was removed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.version.network</span></code> was a duplicate of <code class="xref py py-meth docutils literal notranslate"><span class="pre">version()</span></code> and was removed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.providers.tester.EthereumTesterProvider</span></code> and <code class="docutils literal notranslate"><span class="pre">web3.providers.tester.TestRPCProvider</span></code> have been removed for <a class="reference internal" href="providers.html#web3.providers.eth_tester.EthereumTesterProvider" title="web3.providers.eth_tester.EthereumTesterProvider"><code class="xref py py-meth docutils literal notranslate"><span class="pre">EthereumTesterProvider()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.eth.enableUnauditedFeatures</span></code> was removed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.txpool</span></code> was moved to <a class="reference internal" href="web3.geth.html#module-web3.geth.txpool" title="web3.geth.txpool"><code class="xref py py-meth docutils literal notranslate"><span class="pre">txpool()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.version.node</span></code> was removed for <code class="docutils literal notranslate"><span class="pre">web3.clientVersion</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.version.ethereum</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">protocolVersion()</span></code></p></li>
+<li><p>Relocated personal RPC endpoints to reflect Parity and Geth implementations:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.personal.listAccounts</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">listAccounts()</span></code> or <code class="xref py py-meth docutils literal notranslate"><span class="pre">listAccounts()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.personal.importRawKey</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">importRawKey()</span></code> or <code class="xref py py-meth docutils literal notranslate"><span class="pre">importRawKey()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.personal.newAccount</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">newAccount()</span></code> or <code class="xref py py-meth docutils literal notranslate"><span class="pre">newAccount()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.personal.lockAccount</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">lockAccount()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.personal.unlockAccount</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">unlockAccount()</span></code> or <code class="xref py py-meth docutils literal notranslate"><span class="pre">unlockAccount()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.personal.sendTransaction</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">sendTransaction()</span></code> or <code class="xref py py-meth docutils literal notranslate"><span class="pre">sendTransaction()</span></code></p></li>
+</ul>
+</li>
+<li><p>Relocated <code class="docutils literal notranslate"><span class="pre">web3.admin</span></code> module to <code class="docutils literal notranslate"><span class="pre">web3.geth</span></code> namespace</p></li>
+<li><p>Relocated <code class="docutils literal notranslate"><span class="pre">web3.miner</span></code> module to <code class="docutils literal notranslate"><span class="pre">web3.geth</span></code> namespace</p></li>
+</ul>
+</section>
+<section id="deprecated-methods">
+<h4>Deprecated Methods<a class="headerlink" href="#deprecated-methods" title="Link to this heading"></a></h4>
+<p>Expect the following methods to be removed in v6:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.sha3</span></code> was deprecated for <code class="xref py py-meth docutils literal notranslate"><span class="pre">keccak()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.soliditySha3</span></code> was deprecated for <code class="xref py py-meth docutils literal notranslate"><span class="pre">solidityKeccak()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">chainId()</span></code> was deprecated for <code class="xref py py-meth docutils literal notranslate"><span class="pre">chainId()</span></code>.
+Follow issue <a class="reference external" href="https://github.com/ethereum/web3.py/issues/1293">#1293</a> for details</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">web3.eth.getCompilers()</span></code> was deprecated and will not be replaced</p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">getTransactionFromBlock()</span></code> was deprecated for <code class="xref py py-meth docutils literal notranslate"><span class="pre">getTransactionByBlock()</span></code></p></li>
+</ul>
+</section>
+<section id="deprecated-concisecontract-and-implicitcontract">
+<h4>Deprecated ConciseContract and ImplicitContract<a class="headerlink" href="#deprecated-concisecontract-and-implicitcontract" title="Link to this heading"></a></h4>
+<p>The ConciseContract and ImplicitContract have been deprecated and will be removed in v6.</p>
+<p>ImplicitContract instances will need to use the verbose syntax. For example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">contract.functions.&lt;function</span> <span class="pre">name&gt;.transact({})</span></code></p>
+<p>ConciseContract has been replaced with the ContractCaller API. Instead of using the ConciseContract factory, you can now use:</p>
+<p><code class="docutils literal notranslate"><span class="pre">contract.caller.&lt;function_name&gt;</span></code></p>
+<p>or the classic contract syntax:</p>
+<p><code class="docutils literal notranslate"><span class="pre">contract.functions.&lt;function</span> <span class="pre">name&gt;.call()</span></code>.</p>
+<p>Some more concrete examples can be found in the <a class="reference external" href="https://web3py.readthedocs.io/en/stable/web3.contract.html#contractcaller">ContractCaller docs</a></p>
+</section>
+</section>
+<section id="manager-provider">
+<h3>Manager Provider<a class="headerlink" href="#manager-provider" title="Link to this heading"></a></h3>
+<p>In v5, only a single provider will be allowed. While allowing
+multiple providers is a feature we'd like to support in the future,
+the way that multiple providers was handled in v4 wasn't ideal.
+The only thing they could do was fall back. There was no mechanism for any
+round robin, nor was there any control around which provider
+was chosen. Eventually, the idea is to expand the Manager API
+to support injecting custom logic into the provider selection process.</p>
+<p>For now, <code class="docutils literal notranslate"><span class="pre">manager.providers</span></code> has changed to <code class="docutils literal notranslate"><span class="pre">manager.provider</span></code>.
+Similarly, instances of <code class="docutils literal notranslate"><span class="pre">web3.providers</span></code> have been changed to
+<code class="docutils literal notranslate"><span class="pre">web3.provider</span></code>.</p>
+</section>
+<section id="testnet-changes">
+<h3>Testnet Changes<a class="headerlink" href="#testnet-changes" title="Link to this heading"></a></h3>
+<p>Web3.py will no longer automatically look up a testnet connection
+in IPCProvider.</p>
+</section>
+<section id="ens">
+<h3>ENS<a class="headerlink" href="#ens" title="Link to this heading"></a></h3>
+<p>Web3.py has stopped inferring the <code class="docutils literal notranslate"><span class="pre">.eth</span></code> TLD on domain names.
+If a domain name is used instead of an address, you'll need
+to specify the TLD. An <code class="docutils literal notranslate"><span class="pre">InvalidTLD</span></code> error will be thrown if
+the TLD is missing.</p>
+</section>
+<section id="required-infura-api-key">
+<h3>Required Infura API Key<a class="headerlink" href="#required-infura-api-key" title="Link to this heading"></a></h3>
+<p>In order to interact with Infura after March 27, 2019, you'll need to set an
+environment variable called <code class="docutils literal notranslate"><span class="pre">WEB3_INFURA_PROJECT_ID</span></code>. You can get a
+project id by visiting <a class="reference external" href="https://infura.io/register">https://infura.io/register</a>.</p>
+</section>
+</section>
+<section id="migrating-from-v3-to-v4">
+<h2>Migrating from v3 to v4<a class="headerlink" href="#migrating-from-v3-to-v4" title="Link to this heading"></a></h2>
+<p>Web3.py follows <a class="reference external" href="http://semver.org">Semantic Versioning</a>, which means
+that version 4 introduced backwards-incompatible changes. If your
+project depends on Web3.py v3, then you'll probably need to make some changes.</p>
+<p>Here are the most common required updates:</p>
+<section id="python-2-to-python-3">
+<h3>Python 2 to Python 3<a class="headerlink" href="#python-2-to-python-3" title="Link to this heading"></a></h3>
+<p>Only Python 3 is supported in v4. If you are running in Python 2,
+it's time to upgrade. We recommend using <cite>2to3</cite> which can make
+most of your code compatible with Python 3, automatically.</p>
+<p>The most important update, relevant to Web3.py, is the new <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a>
+type. It is used regularly, throughout the library, whenever dealing with data
+that is not guaranteed to be text.</p>
+<p>Many different methods in Web3.py accept text or binary data, like contract methods,
+transaction details, and cryptographic functions. The following example
+uses <code class="xref py py-meth docutils literal notranslate"><span class="pre">sha3()</span></code>, but the same pattern applies elsewhere.</p>
+<p>In v3 &amp; Python 2, you might have calculated the hash of binary data this way:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">sha3</span><span class="p">(</span><span class="s1">&#39;I</span><span class="se">\xe2\x99\xa5</span><span class="s1">SF&#39;</span><span class="p">)</span>
+<span class="go">&#39;0x50a826df121f4d076a3686d74558f40082a8e70b3469d8e9a16ceb2a79102e5e&#39;</span>
+</pre></div>
+</div>
+<p>Or, you might have calculated the hash of text data this way:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">sha3</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;I♥SF&#39;</span><span class="p">)</span>
+<span class="go">&#39;0x50a826df121f4d076a3686d74558f40082a8e70b3469d8e9a16ceb2a79102e5e&#39;</span>
+</pre></div>
+</div>
+<p>After switching to Python 3, these would instead be executed as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">sha3</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;I</span><span class="se">\xe2\x99\xa5</span><span class="s1">SF&#39;</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0x50a826df121f4d076a3686d74558f40082a8e70b3469d8e9a16ceb2a79102e5e&#39;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Web3</span><span class="o">.</span><span class="n">sha3</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;I♥SF&#39;</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0x50a826df121f4d076a3686d74558f40082a8e70b3469d8e9a16ceb2a79102e5e&#39;)</span>
+</pre></div>
+</div>
+<p>Note that the return value is different too: you can treat <a class="reference external" href="https://hexbytes.readthedocs.io/en/latest/hexbytes.html#hexbytes.main.HexBytes" title="（在 HexBytes v1.3）"><code class="xref py py-class docutils literal notranslate"><span class="pre">hexbytes.main.HexBytes</span></code></a>
+like any other bytes value, but the representation on the console shows you the hex encoding of
+those bytes, for easier visual comparison.</p>
+<p>It takes a little getting used to, but the new py3 types are much better. We promise.</p>
+</section>
+<section id="filters">
+<h3>Filters<a class="headerlink" href="#filters" title="Link to this heading"></a></h3>
+<p>Filters usually don't work quite the way that people want them to.</p>
+<p>The first step toward fixing them was to simplify them by removing the polling
+logic. Now, you must request an update on your filters explicitly. That
+means that any exceptions during the request will bubble up into your code.</p>
+<p>In v3, those exceptions (like &quot;filter is not found&quot;) were swallowed silently
+in the automated polling logic. Here was the invocation for
+printing out new block hashes as they appear:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">new_block_callback</span><span class="p">(</span><span class="n">block_hash</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;New Block: </span><span class="si">{</span><span class="n">block_hash</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_block_filter</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_block_filter</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="n">new_block_callback</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In v4, that same logic:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">new_block_filter</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">block_hash</span> <span class="ow">in</span> <span class="n">new_block_filter</span><span class="o">.</span><span class="n">get_new_entries</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;New Block: </span><span class="si">{</span><span class="n">block_hash</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The caller is responsible for polling the results from <code class="docutils literal notranslate"><span class="pre">get_new_entries()</span></code>.
+See <a class="reference internal" href="filters.html#asynchronous-filters"><span class="std std-ref">Asynchronous Filter Polling</span></a> for examples of filter-event handling with web3 v4.</p>
+</section>
+<section id="testrpcprovider-and-ethereumtesterprovider">
+<h3>TestRPCProvider and EthereumTesterProvider<a class="headerlink" href="#testrpcprovider-and-ethereumtesterprovider" title="Link to this heading"></a></h3>
+<p>These providers are fairly uncommon. If you don't recognize the names,
+you can probably skip the section.</p>
+<p>However, if you were using web3.py for testing contracts,
+you might have been using TestRPCProvider or EthereumTesterProvider.</p>
+<p>In v4 there is a new <code class="xref py py-class docutils literal notranslate"><span class="pre">EthereumTesterProvider</span></code>, and the old v3 implementation has been
+removed. Web3.py v4 uses <code class="xref py py-class docutils literal notranslate"><span class="pre">eth_tester.main.EthereumTester</span></code> under the hood, instead
+of eth-testrpc. While <code class="docutils literal notranslate"><span class="pre">eth-tester</span></code> is still in beta, many parts are
+already in better shape than testrpc, so we decided to replace it in v4.</p>
+<p>If you were using TestRPC, or were explicitly importing EthereumTesterProvider, like:
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">web3.providers.tester</span> <span class="pre">import</span> <span class="pre">EthereumTesterProvider</span></code>, then you will need to update.</p>
+<p>With v4 you should import with <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">web3</span> <span class="pre">import</span> <span class="pre">EthereumTesterProvider</span></code>. As before, you'll
+need to install Web3.py with the <code class="docutils literal notranslate"><span class="pre">tester</span></code> extra to get these features, like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>web3<span class="o">[</span>tester<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+<section id="changes-to-base-api-convenience-methods">
+<h3>Changes to base API convenience methods<a class="headerlink" href="#changes-to-base-api-convenience-methods" title="Link to this heading"></a></h3>
+<section id="web3-todecimal">
+<h4>Web3.toDecimal()<a class="headerlink" href="#web3-todecimal" title="Link to this heading"></a></h4>
+<p>In v4 <code class="docutils literal notranslate"><span class="pre">Web3.toDecimal()</span></code> is renamed: <code class="xref py py-meth docutils literal notranslate"><span class="pre">toInt()</span></code> for improved clarity. It does not return a <a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">decimal.Decimal</span></code></a>, it returns an <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>.</p>
+</section>
+<section id="id5">
+<h4>Removed Methods<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Web3.toUtf8</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">toText()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Web3.fromUtf8</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">toHex()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Web3.toAscii</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">toBytes()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Web3.fromAscii</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">toHex()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Web3.fromDecimal</span></code> was removed for <code class="xref py py-meth docutils literal notranslate"><span class="pre">toHex()</span></code>.</p></li>
+</ul>
+</section>
+</section>
+<section id="provider-access">
+<h3>Provider Access<a class="headerlink" href="#provider-access" title="Link to this heading"></a></h3>
+<p>In v4, <code class="docutils literal notranslate"><span class="pre">w3.currentProvider</span></code> was removed, in favor of <code class="docutils literal notranslate"><span class="pre">w3.providers</span></code>.</p>
+</section>
+<section id="disambiguating-string-inputs">
+<h3>Disambiguating String Inputs<a class="headerlink" href="#disambiguating-string-inputs" title="Link to this heading"></a></h3>
+<p>There are a number of places where an arbitrary string input might be either
+a byte-string that has been hex-encoded, or unicode characters in text.
+These are named <code class="docutils literal notranslate"><span class="pre">hexstr</span></code> and <code class="docutils literal notranslate"><span class="pre">text</span></code> in Web3.py.
+You specify which kind of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> you have by using the appropriate
+keyword argument. See examples in <a class="reference internal" href="web3.main.html#overview-type-conversions"><span class="std std-ref">Encoding and Decoding Helpers</span></a>.</p>
+<p>In v3, some methods accepted a <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> as the first positional argument.
+In v4, you must pass strings as one of <code class="docutils literal notranslate"><span class="pre">hexstr</span></code> or <code class="docutils literal notranslate"><span class="pre">text</span></code> keyword arguments.</p>
+<p>Notable methods that no longer accept ambiguous strings:</p>
+<ul class="simple">
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">sha3()</span></code></p></li>
+<li><p><code class="xref py py-meth docutils literal notranslate"><span class="pre">toBytes()</span></code></p></li>
+</ul>
+</section>
+<section id="contracts">
+<h3>Contracts<a class="headerlink" href="#contracts" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>When a contract returns the ABI type <code class="docutils literal notranslate"><span class="pre">string</span></code>, Web3.py v4 now returns a <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>
+value by decoding the underlying bytes using UTF-8.</p></li>
+<li><p>When a contract returns the ABI type <code class="docutils literal notranslate"><span class="pre">bytes</span></code> (of any length),
+Web3.py v4 now returns a <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> value</p></li>
+</ul>
+</section>
+<section id="personal-api">
+<h3>Personal API<a class="headerlink" href="#personal-api" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">w3.personal.signAndSendTransaction</span></code> is no longer available. Use
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">w3.personal.sendTransaction()</span></code> instead.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="troubleshooting.html" class="btn btn-neutral float-left" title="故障排除" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="web3.main.html" class="btn btn-neutral float-right" title="Web3 API" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

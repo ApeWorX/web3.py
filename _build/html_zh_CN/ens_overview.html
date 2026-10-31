@@ -1,0 +1,515 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>以太坊名称服务 (ENS) &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="故障排除" href="troubleshooting.html" />
+    <link rel="prev" title="Web3 内部实现" href="internals.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">以太坊名称服务 (ENS)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ens.strict_bytes_type_checking"><code class="docutils literal notranslate"><span class="pre">ens.strict_bytes_type_checking</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#name-info">Name Info</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#get-the-address-for-an-ens-name">Get the Address for an ENS Name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#get-the-ens-name-for-an-address">Get the ENS Name for an Address</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#get-the-owner-of-a-name">Get the Owner of a Name</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#set-up-your-name-and-address">Set Up Your Name and Address</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#link-a-name-to-an-address">Link a Name to an Address</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#link-an-address-to-a-name">Link an Address to a Name</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#text-records">Text Records</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#set-text-metadata-for-an-ens-record">Set Text Metadata for an ENS Record</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#read-text-metadata-for-an-ens-record">Read Text Metadata for an ENS Record</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#working-with-resolvers">Working With Resolvers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#get-the-resolver-for-an-ens-record">Get the Resolver for an ENS Record</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#wildcard-resolution-support">Wildcard Resolution Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">以太坊名称服务 (ENS)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ens_overview.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="ethereum-name-service-ens">
+<span id="ens-overview"></span><h1>以太坊名称服务 (ENS)<a class="headerlink" href="#ethereum-name-service-ens" title="Link to this heading"></a></h1>
+<p>The Ethereum Name Service (ENS) is analogous to the Domain Name Service. It
+enables users and developers to use human-friendly names in place of error-prone
+hexadecimal addresses, content hashes, and more.</p>
+<p>The <a class="reference internal" href="ens.html#module-ens" title="ens"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ens</span></code></a> module is included with web3.py. It provides an interface to look up
+domains and addresses, add resolver records, or get and set metadata.</p>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading"></a></h2>
+<p>Create an <code class="xref py py-class docutils literal notranslate"><span class="pre">ENS</span></code> object (named <code class="docutils literal notranslate"><span class="pre">ns</span></code> below) in one of three ways:</p>
+<ol class="arabic simple">
+<li><p>Automatic detection</p></li>
+<li><p>Specify an instance of a <a class="reference internal" href="providers.html#providers"><span class="std std-ref">provider</span></a></p></li>
+<li><p>From an existing <a class="reference internal" href="web3.main.html#web3.Web3" title="web3.Web3"><code class="xref py py-class docutils literal notranslate"><span class="pre">web3.Web3</span></code></a> object</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># automatic detection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ens.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">ns</span>
+
+<span class="c1"># or, with a provider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">IPCProvider</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ens</span><span class="w"> </span><span class="kn">import</span> <span class="n">ENS</span>
+
+<span class="n">provider</span> <span class="o">=</span> <span class="n">IPCProvider</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">ns</span> <span class="o">=</span> <span class="n">ENS</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+
+<span class="c1"># or, with a w3 instance</span>
+<span class="c1"># Note: This inherits the w3 middleware from the w3 instance and adds a stalecheck middleware to the middleware onion.</span>
+<span class="c1"># It also inherits the provider and codec from the w3 instance, as well as the ``strict_bytes_type_checking`` flag value.</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ens</span><span class="w"> </span><span class="kn">import</span> <span class="n">ENS</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">ns</span> <span class="o">=</span> <span class="n">ENS</span><span class="o">.</span><span class="n">from_web3</span><span class="p">(</span><span class="n">w3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Asynchronous support is available via the <code class="docutils literal notranslate"><span class="pre">AsyncENS</span></code> module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ens</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncENS</span>
+
+<span class="n">ns</span> <span class="o">=</span> <span class="n">AsyncENS</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that an <code class="docutils literal notranslate"><span class="pre">ens</span></code> module instance is also available on the <code class="docutils literal notranslate"><span class="pre">w3</span></code> instance.
+The first time it's used, web3.py will create the  <code class="docutils literal notranslate"><span class="pre">ens</span></code> instance using
+<code class="docutils literal notranslate"><span class="pre">ENS.from_web3(w3)</span></code> or <code class="docutils literal notranslate"><span class="pre">AsyncENS.from_web3(w3)</span></code> as appropriate.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># instantiate w3 instance</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">IPCProvider</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">IPCProvider</span><span class="p">(</span><span class="o">...</span><span class="p">))</span>
+
+<span class="c1"># use the module</span>
+<span class="n">w3</span><span class="o">.</span><span class="n">ens</span><span class="o">.</span><span class="n">address</span><span class="p">(</span><span class="s1">&#39;ethereum.eth&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ens.strict_bytes_type_checking">
+<span class="sig-prename descclassname"><span class="pre">ens.</span></span><span class="sig-name descname"><span class="pre">strict_bytes_type_checking</span></span><a class="headerlink" href="#ens.strict_bytes_type_checking" title="Link to this definition"></a></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">ENS</span></code> instance has a <code class="docutils literal notranslate"><span class="pre">strict_bytes_type_checking</span></code> flag that toggles the flag
+with the same name on the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance attached to the <code class="docutils literal notranslate"><span class="pre">ENS</span></code> instance.
+You may disable the stricter bytes type checking that is loaded by default using
+this flag. For more examples, see <a class="reference internal" href="web3.contract.html#disable-strict-byte-check"><span class="std std-ref">Disabling Strict Checks for Bytes Types</span></a></p>
+<p>If instantiating a standalone ENS instance using <code class="docutils literal notranslate"><span class="pre">ENS.from_web3()</span></code>, the ENS
+instance will inherit the value of the flag on the Web3 instance at time of
+instantiation.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ens</span><span class="w"> </span><span class="kn">import</span> <span class="n">ENS</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">())</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">w3</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span>  <span class="c1"># assert strict by default</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>  <span class="c1"># zero-padded, so encoded to: b&#39;1\x00&#39;</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ns</span> <span class="o">=</span> <span class="n">ENS</span><span class="o">.</span><span class="n">from_web3</span><span class="p">(</span><span class="n">w3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assert inherited from w3 at time of instantiation via ENS.from_web3()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ns</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span> <span class="ow">is</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ns</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assert these are now separate instances</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ns</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ns</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># assert w3 flag value remains</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">w3</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span> <span class="ow">is</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>However, if accessing the <code class="docutils literal notranslate"><span class="pre">ENS</span></code> class via the <code class="docutils literal notranslate"><span class="pre">Web3</span></code> instance as a module
+(<code class="docutils literal notranslate"><span class="pre">w3.ens</span></code>), since all modules use the same <code class="docutils literal notranslate"><span class="pre">Web3</span></code> object reference
+under the hood (the parent <code class="docutils literal notranslate"><span class="pre">w3</span></code> object), changing the
+<code class="docutils literal notranslate"><span class="pre">strict_bytes_type_checking</span></code> flag value on <code class="docutils literal notranslate"><span class="pre">w3</span></code> also changes the flag state
+for <code class="docutils literal notranslate"><span class="pre">w3.ens.w3</span></code> and all modules.</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">())</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">w3</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span>  <span class="c1"># assert strict by default</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">False</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>  <span class="c1"># zero-padded, so encoded to: b&#39;1\x00&#39;</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">w3</span> <span class="o">==</span> <span class="n">w3</span><span class="o">.</span><span class="n">ens</span><span class="o">.</span><span class="n">w3</span>  <span class="c1"># assert same object</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="ow">not</span> <span class="n">w3</span><span class="o">.</span><span class="n">ens</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">ens</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># sanity check on eth module as well</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="ow">not</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">strict_bytes_type_checking</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">w3</span><span class="o">.</span><span class="n">is_encodable</span><span class="p">(</span><span class="s1">&#39;bytes2&#39;</span><span class="p">,</span> <span class="sa">b</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<section id="name-info">
+<h3>Name Info<a class="headerlink" href="#name-info" title="Link to this heading"></a></h3>
+<section id="get-the-address-for-an-ens-name">
+<span id="ens-get-address"></span><h4>Get the Address for an ENS Name<a class="headerlink" href="#get-the-address-for-an-ens-name" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ens.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">ns</span>
+<span class="n">eth_address</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">address</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">eth_address</span> <span class="o">==</span> <span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">ENS</span></code> module has no opinion as to which <strong>TLD (Top Level Domain)</strong> you can use,
+but will not infer a TLD if it is not provided with the name.</p>
+<section id="multichain-address-resolution">
+<h5>Multichain Address Resolution<a class="headerlink" href="#multichain-address-resolution" title="Link to this heading"></a></h5>
+<p><a class="reference external" href="https://docs.ens.domains/ensip/9">ENSIP-9</a>
+introduced multichain address resolution, allowing users to resolve addresses from
+different chains, specified by the coin type index from
+<a class="reference external" href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">SLIP44</a>. The
+<code class="docutils literal notranslate"><span class="pre">address()</span></code> method on the <code class="docutils literal notranslate"><span class="pre">ENS</span></code> class supports multichain address resolution via
+the <code class="docutils literal notranslate"><span class="pre">coin_type</span></code> keyword argument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ens.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">ns</span>
+<span class="n">eth_address</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">address</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">,</span> <span class="n">coin_type</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>  <span class="c1"># ETH is coin_type 60</span>
+<span class="k">assert</span> <span class="n">eth_address</span> <span class="o">==</span> <span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="get-the-ens-name-for-an-address">
+<h4>Get the ENS Name for an Address<a class="headerlink" href="#get-the-ens-name-for-an-address" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">domain</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span><span class="p">)</span>
+
+<span class="c1"># name() also accepts the bytes version of the address</span>
+<span class="k">assert</span> <span class="n">ns</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\xfe\x89\xcc</span><span class="s1">z</span><span class="se">\xbb</span><span class="s1">,A</span><span class="se">\x83</span><span class="s1">h:</span><span class="se">\xb7\x16</span><span class="s1">S</span><span class="se">\xc4\xcd\xc9\xb0</span><span class="s1">-D</span><span class="se">\xb7</span><span class="s1">&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">domain</span>
+
+<span class="c1"># confirm that the name resolves back to the address that you looked up:</span>
+<span class="k">assert</span> <span class="n">ns</span><span class="o">.</span><span class="n">address</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>For accuracy, and as a recommendation from the ENS documentation on
+<a class="reference external" href="https://docs.ens.domains/web/resolution#reverse-resolution">reverse resolution</a>,
+the <code class="docutils literal notranslate"><span class="pre">ENS</span></code> module now verifies that the forward resolution matches the address with every call to get the
+<code class="docutils literal notranslate"><span class="pre">name()</span></code> for an address. This is the only sure way to know whether the reverse resolution is correct. Anyone can
+claim any name, only forward resolution implies that the owner of the name gave their stamp of approval.</p>
+</div>
+</section>
+<section id="get-the-owner-of-a-name">
+<h4>Get the Owner of a Name<a class="headerlink" href="#get-the-owner-of-a-name" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">eth_address</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">owner</span><span class="p">(</span><span class="s1">&#39;exchange.eth&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="set-up-your-name-and-address">
+<h3>Set Up Your Name and Address<a class="headerlink" href="#set-up-your-name-and-address" title="Link to this heading"></a></h3>
+<section id="link-a-name-to-an-address">
+<h4>Link a Name to an Address<a class="headerlink" href="#link-a-name-to-an-address" title="Link to this heading"></a></h4>
+<p>You can set up your name so that <code class="xref py py-meth docutils literal notranslate"><span class="pre">address()</span></code> will show the address it points to. In order to do so,
+you must already be the owner of the domain (or its parent).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">setup_address</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">,</span> <span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the common case where you want to point the name to the owning address, you can skip the address.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">setup_address</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can claim arbitrarily deep subdomains.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">setup_address</span><span class="p">(</span><span class="s1">&#39;supreme.executive.power.derives.from.a.mandate.from.the.masses.ens.eth&#39;</span><span class="p">)</span>
+
+<span class="c1"># wait for the transaction to be mined, then:</span>
+<span class="k">assert</span> <span class="p">(</span>
+    <span class="n">ns</span><span class="o">.</span><span class="n">address</span><span class="p">(</span><span class="s1">&#39;supreme.executive.power.derives.from.a.mandate.from.the.masses.ens.eth&#39;</span><span class="p">)</span>
+    <span class="o">==</span> <span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>Gas costs scale up with the number of subdomains!</p>
+</div>
+<section id="multichain-address-support">
+<h5>Multichain Address Support<a class="headerlink" href="#multichain-address-support" title="Link to this heading"></a></h5>
+<p><a class="reference external" href="https://docs.ens.domains/ensip/9">ENSIP-9</a>
+introduced multichain address resolution, allowing users to resolve addresses from
+different chains, specified by the coin type index from
+<a class="reference external" href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">SLIP44</a>. The
+<code class="docutils literal notranslate"><span class="pre">setup_address()</span></code> method on the <code class="docutils literal notranslate"><span class="pre">ENS</span></code> class supports multichain address setup
+via the <code class="docutils literal notranslate"><span class="pre">coin_type</span></code> keyword argument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ens.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">ns</span>
+<span class="n">ns</span><span class="o">.</span><span class="n">setup_address</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">,</span> <span class="n">coin_type</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>  <span class="c1"># ETH is coin_type 60</span>
+<span class="k">assert</span> <span class="n">ns</span><span class="o">.</span><span class="n">address</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">,</span> <span class="n">coin_type</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="link-an-address-to-a-name">
+<h4>Link an Address to a Name<a class="headerlink" href="#link-an-address-to-a-name" title="Link to this heading"></a></h4>
+<p>You can set up your address so that <code class="xref py py-meth docutils literal notranslate"><span class="pre">name()</span></code> will show the name that points to it.</p>
+<p>This is like Caller ID. It enables you and others to take an account and determine what name points to it. Sometimes
+this is referred to as &quot;reverse&quot; resolution. The ENS Reverse Resolver is used for this functionality.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">setup_name</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">,</span> <span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you don't supply the address, <code class="xref py py-meth docutils literal notranslate"><span class="pre">setup_name()</span></code> will assume you want the
+address returned by <code class="xref py py-meth docutils literal notranslate"><span class="pre">address()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">setup_name</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the name doesn't already point to an address, <code class="xref py py-meth docutils literal notranslate"><span class="pre">setup_name()</span></code> will
+call <code class="xref py py-meth docutils literal notranslate"><span class="pre">setup_address()</span></code> for you.</p>
+<p>Wait for the transaction to be mined, then:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">ns</span><span class="o">.</span><span class="n">name</span><span class="p">(</span><span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ens.eth&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="text-records">
+<h3>Text Records<a class="headerlink" href="#text-records" title="Link to this heading"></a></h3>
+<section id="set-text-metadata-for-an-ens-record">
+<h4>Set Text Metadata for an ENS Record<a class="headerlink" href="#set-text-metadata-for-an-ens-record" title="Link to this heading"></a></h4>
+<p>As the owner of an ENS record, you can add text metadata.
+A list of supported fields can be found in the
+<a class="reference external" href="https://docs.ens.domains/resolvers/public#get-text-data">ENS documentation</a>.
+You'll need to setup the address first, and then the text can be set:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ns</span><span class="o">.</span><span class="n">setup_address</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">,</span> <span class="s1">&#39;0xFe89cc7aBB2C4183683ab71653C4cdc9B02D44b7&#39;</span><span class="p">)</span>
+<span class="n">ns</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;https://example.com&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A transaction dictionary can be passed as the last argument if desired:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">transaction_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="s1">&#39;0x123...&#39;</span><span class="p">}</span>
+<span class="n">ns</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;https://example.com&#39;</span><span class="p">,</span> <span class="n">transaction_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the transaction dictionary is not passed, sensible defaults will be used, and if
+a transaction dictionary is passed but does not have a <code class="docutils literal notranslate"><span class="pre">from</span></code> value,
+the default will be the <code class="docutils literal notranslate"><span class="pre">owner</span></code>.</p>
+</section>
+<section id="read-text-metadata-for-an-ens-record">
+<h4>Read Text Metadata for an ENS Record<a class="headerlink" href="#read-text-metadata-for-an-ens-record" title="Link to this heading"></a></h4>
+<p>Anyone can read the data from an ENS Record:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">get_text</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">,</span> <span class="s1">&#39;url&#39;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">url</span> <span class="o">==</span> <span class="s1">&#39;https://example.com&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="working-with-resolvers">
+<h3>Working With Resolvers<a class="headerlink" href="#working-with-resolvers" title="Link to this heading"></a></h3>
+<section id="get-the-resolver-for-an-ens-record">
+<h4>Get the Resolver for an ENS Record<a class="headerlink" href="#get-the-resolver-for-an-ens-record" title="Link to this heading"></a></h4>
+<p>You can get the resolver for an ENS name via the <code class="xref py py-meth docutils literal notranslate"><span class="pre">resolver()</span></code> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">resolver</span> <span class="o">=</span> <span class="n">ns</span><span class="o">.</span><span class="n">resolver</span><span class="p">(</span><span class="s1">&#39;ens.eth&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resolver</span><span class="o">.</span><span class="n">address</span>
+<span class="go">&#39;0x5B2063246F2191f18F2675ceDB8b28102e957458&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="wildcard-resolution-support">
+<h2>Wildcard Resolution Support<a class="headerlink" href="#wildcard-resolution-support" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ENS</span></code> module supports Wildcard Resolution for resolvers that implement the <code class="docutils literal notranslate"><span class="pre">ExtendedResolver</span></code> interface
+as described in <a class="reference external" href="https://docs.ens.domains/ensip/10">ENSIP-10</a>.
+Resolvers that implement the extended resolver interface should return <code class="docutils literal notranslate"><span class="pre">True</span></code> when calling the
+<code class="docutils literal notranslate"><span class="pre">supportsInterface()</span></code> function with the extended resolver interface id <code class="docutils literal notranslate"><span class="pre">&quot;0x9061b923&quot;</span></code> and should resolve subdomains
+to a unique address.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="internals.html" class="btn btn-neutral float-left" title="Web3 内部实现" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="故障排除" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

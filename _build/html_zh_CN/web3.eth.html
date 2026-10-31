@@ -1,0 +1,1683 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>web3.eth API &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="Beacon API" href="web3.beacon.html" />
+    <link rel="prev" title="Web3 API" href="web3.main.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">Release Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">Transactions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">Events and Logs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">Event Subscriptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 Internals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">Ethereum Name Service (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migration Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">web3.eth API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#web3.eth.Eth"><code class="docutils literal notranslate"><span class="pre">Eth</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#properties">Properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.default_account"><code class="docutils literal notranslate"><span class="pre">Eth.default_account</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.default_block"><code class="docutils literal notranslate"><span class="pre">Eth.default_block</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.syncing"><code class="docutils literal notranslate"><span class="pre">Eth.syncing</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.max_priority_fee"><code class="docutils literal notranslate"><span class="pre">Eth.max_priority_fee</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.gas_price"><code class="docutils literal notranslate"><span class="pre">Eth.gas_price</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.accounts"><code class="docutils literal notranslate"><span class="pre">Eth.accounts</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.block_number"><code class="docutils literal notranslate"><span class="pre">Eth.block_number</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.chain_id"><code class="docutils literal notranslate"><span class="pre">Eth.chain_id</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#methods">Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_balance"><code class="docutils literal notranslate"><span class="pre">Eth.get_balance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_block_number"><code class="docutils literal notranslate"><span class="pre">Eth.get_block_number()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_storage_at"><code class="docutils literal notranslate"><span class="pre">Eth.get_storage_at()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.blob_base_fee"><code class="docutils literal notranslate"><span class="pre">Eth.blob_base_fee()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_proof"><code class="docutils literal notranslate"><span class="pre">Eth.get_proof()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_code"><code class="docutils literal notranslate"><span class="pre">Eth.get_code()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_block"><code class="docutils literal notranslate"><span class="pre">Eth.get_block()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_block_transaction_count"><code class="docutils literal notranslate"><span class="pre">Eth.get_block_transaction_count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_uncle_by_block"><code class="docutils literal notranslate"><span class="pre">Eth.get_uncle_by_block()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_uncle_count"><code class="docutils literal notranslate"><span class="pre">Eth.get_uncle_count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_transaction"><code class="docutils literal notranslate"><span class="pre">Eth.get_transaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_raw_transaction"><code class="docutils literal notranslate"><span class="pre">Eth.get_raw_transaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_transaction_by_block"><code class="docutils literal notranslate"><span class="pre">Eth.get_transaction_by_block()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_raw_transaction_by_block"><code class="docutils literal notranslate"><span class="pre">Eth.get_raw_transaction_by_block()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.wait_for_transaction_receipt"><code class="docutils literal notranslate"><span class="pre">Eth.wait_for_transaction_receipt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_transaction_receipt"><code class="docutils literal notranslate"><span class="pre">Eth.get_transaction_receipt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_transaction_count"><code class="docutils literal notranslate"><span class="pre">Eth.get_transaction_count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.send_transaction"><code class="docutils literal notranslate"><span class="pre">Eth.send_transaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.sign_transaction"><code class="docutils literal notranslate"><span class="pre">Eth.sign_transaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.send_raw_transaction"><code class="docutils literal notranslate"><span class="pre">Eth.send_raw_transaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.replace_transaction"><code class="docutils literal notranslate"><span class="pre">Eth.replace_transaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.modify_transaction"><code class="docutils literal notranslate"><span class="pre">Eth.modify_transaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.sign"><code class="docutils literal notranslate"><span class="pre">Eth.sign()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.sign_typed_data"><code class="docutils literal notranslate"><span class="pre">Eth.sign_typed_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.call"><code class="docutils literal notranslate"><span class="pre">Eth.call()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.simulateV1"><code class="docutils literal notranslate"><span class="pre">Eth.simulateV1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.create_access_list"><code class="docutils literal notranslate"><span class="pre">Eth.create_access_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.fee_history"><code class="docutils literal notranslate"><span class="pre">Eth.fee_history()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.estimate_gas"><code class="docutils literal notranslate"><span class="pre">Eth.estimate_gas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.generate_gas_price"><code class="docutils literal notranslate"><span class="pre">Eth.generate_gas_price()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.set_gas_price_strategy"><code class="docutils literal notranslate"><span class="pre">Eth.set_gas_price_strategy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.subscribe"><code class="docutils literal notranslate"><span class="pre">Eth.subscribe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.unsubscribe"><code class="docutils literal notranslate"><span class="pre">Eth.unsubscribe()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#filters">Filters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.filter"><code class="docutils literal notranslate"><span class="pre">Eth.filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_filter_changes"><code class="docutils literal notranslate"><span class="pre">Eth.get_filter_changes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_filter_logs"><code class="docutils literal notranslate"><span class="pre">Eth.get_filter_logs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.uninstall_filter"><code class="docutils literal notranslate"><span class="pre">Eth.uninstall_filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.get_logs"><code class="docutils literal notranslate"><span class="pre">Eth.get_logs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#contracts">Contracts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.contract"><code class="docutils literal notranslate"><span class="pre">Eth.contract()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web3.eth.Eth.set_contract_factory"><code class="docutils literal notranslate"><span class="pre">Eth.set_contract_factory()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas Price API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">Constants</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">Resources and Learning Material</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">Code of Conduct</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">web3.eth API</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/web3.eth.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-web3.eth">
+<span id="web3-eth-api"></span><span id="web3-eth"></span><h1>web3.eth API<a class="headerlink" href="#module-web3.eth" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="web3.eth.Eth">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">web3.eth.</span></span><span class="sig-name descname"><span class="pre">Eth</span></span><a class="headerlink" href="#web3.eth.Eth" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">web3.eth</span></code> object exposes the following properties and methods to
+interact with the RPC APIs under the <code class="docutils literal notranslate"><span class="pre">eth_</span></code> namespace.</p>
+<p>By default, when a property or method returns a mapping of keys to values, it
+will return an <code class="docutils literal notranslate"><span class="pre">AttributeDict</span></code> which acts like a <code class="docutils literal notranslate"><span class="pre">dict</span></code> but you can
+access the keys as attributes and cannot modify its fields. For example,
+you can find the latest block number in these two ways:</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">block</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+<span class="go">AttributeDict({</span>
+<span class="go">  &#39;hash&#39;: &#39;0xe8ad537a261e6fff80d551d8d087ee0f2202da9b09b64d172a5f45e818eb472a&#39;,</span>
+<span class="go">  &#39;number&#39;: 4022281,</span>
+<span class="go">  # ... etc ...</span>
+<span class="go">})</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">]</span>
+<span class="go">4022281</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block</span><span class="o">.</span><span class="n">number</span>
+<span class="go">4022281</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">block</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="mi">4022282</span>
+<span class="go">Traceback # ... etc ...</span>
+<span class="go">TypeError: This data is immutable -- create a copy instead of modifying</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>This feature is available via the <code class="docutils literal notranslate"><span class="pre">AttributeDictMiddleware</span></code> which is a default
+middleware.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Accessing an <code class="docutils literal notranslate"><span class="pre">AttributeDict</span></code> property via attribute will break type hinting. If
+typing is crucial for your application, accessing via key / value, as well as
+removing the <code class="docutils literal notranslate"><span class="pre">AttributeDictMiddleware</span></code> altogether, may be desired.</p>
+</div>
+<section id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Link to this heading"></a></h2>
+<p>The following properties are available on the <code class="docutils literal notranslate"><span class="pre">web3.eth</span></code> namespace.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.eth.Eth.default_account">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">default_account</span></span><a class="headerlink" href="#web3.eth.Eth.default_account" title="Link to this definition"></a></dt>
+<dd><p>The ethereum address that will be used as the default <code class="docutils literal notranslate"><span class="pre">from</span></code> address for
+all transactions. Defaults to empty.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.eth.Eth.default_block">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">default_block</span></span><a class="headerlink" href="#web3.eth.Eth.default_block" title="Link to this definition"></a></dt>
+<dd><p>The default block number that will be used for any RPC methods that accept
+a block identifier. Defaults to <code class="docutils literal notranslate"><span class="pre">'latest'</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.eth.Eth.syncing">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">syncing</span></span><a class="headerlink" href="#web3.eth.Eth.syncing" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_syncing</span></code> RPC Method</p></li>
+</ul>
+<p>Returns either <code class="docutils literal notranslate"><span class="pre">False</span></code> if the node is not syncing or a dictionary
+showing sync status.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">syncing</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    &#39;currentBlock&#39;: 2177557,</span>
+<span class="go">    &#39;highestBlock&#39;: 2211611,</span>
+<span class="go">    &#39;knownStates&#39;: 0,</span>
+<span class="go">    &#39;pulledStates&#39;: 0,</span>
+<span class="go">    &#39;startingBlock&#39;: 2177365,</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.eth.Eth.max_priority_fee">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">max_priority_fee</span></span><a class="headerlink" href="#web3.eth.Eth.max_priority_fee" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_maxPriorityFeePerGas</span></code> RPC Method</p></li>
+</ul>
+<p>Returns a suggestion for a max priority fee for dynamic fee transactions in Wei.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">max_priority_fee</span>
+<span class="go">2000000000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.eth.Eth.gas_price">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">gas_price</span></span><a class="headerlink" href="#web3.eth.Eth.gas_price" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_gasPrice</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the current gas price in Wei.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">gas_price</span>
+<span class="go">20000000000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.eth.Eth.accounts">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">accounts</span></span><a class="headerlink" href="#web3.eth.Eth.accounts" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_accounts</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the list of known accounts.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">accounts</span>
+<span class="go">[&#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.eth.Eth.block_number">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">block_number</span></span><a class="headerlink" href="#web3.eth.Eth.block_number" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_blockNumber</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the number of the most recent block</p>
+<p>Alias for <a class="reference internal" href="#web3.eth.Eth.get_block_number" title="web3.eth.Eth.get_block_number"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_block_number()</span></code></a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">block_number</span>
+<span class="go">2206939</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="web3.eth.Eth.chain_id">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">chain_id</span></span><a class="headerlink" href="#web3.eth.Eth.chain_id" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_chainId</span></code> RPC Method</p></li>
+</ul>
+<p>Returns an integer value for the currently configured &quot;Chain Id&quot; value introduced in <a class="reference external" href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md">EIP-155</a>. Returns <code class="docutils literal notranslate"><span class="pre">None</span></code> if no Chain Id is available.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">chain_id</span>
+<span class="go">61</span>
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>This property gets called frequently in validation middleware, but <cite>eth_chainId</cite>
+is an allowed method for caching by default. Simply turn on request caching to
+avoid repeated calls to this method.</p>
+<blockquote>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">cache_allowed_requests</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+</dd></dl>
+
+</section>
+<section id="methods">
+<span id="web3-eth-methods"></span><h2>Methods<a class="headerlink" href="#methods" title="Link to this heading"></a></h2>
+<p>The following methods are available on the <code class="docutils literal notranslate"><span class="pre">web3.eth</span></code> namespace.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_balance">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_balance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">eth.default_block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_balance" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getBalance</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the balance of the given <code class="docutils literal notranslate"><span class="pre">account</span></code> at the block specified by
+<code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">account</span></code> may be a checksum address or an ENS name</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_balance</span><span class="p">(</span><span class="s1">&#39;0xd3CdA913deB6f67967B99D67aCDFa1712C293601&#39;</span><span class="p">)</span>
+<span class="go">77320681768999138915</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_block_number">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_block_number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_block_number" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_blockNumber</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the number of the most recent block.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block_number</span><span class="p">()</span>
+<span class="go">2206939</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_storage_at">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_storage_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">eth.default_block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_storage_at" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getStorageAt</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the value from a storage position for the given <code class="docutils literal notranslate"><span class="pre">account</span></code> at the
+block specified by <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">account</span></code> may be a checksum address or an ENS name</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_storage_at</span><span class="p">(</span><span class="s1">&#39;0x6C8f2A135f6ed072DE4503Bd7C4999a1a17F824B&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">&#39;0x00000000000000000000000000000000000000000000000000120a0b063499d4&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.blob_base_fee">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">blob_base_fee</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.blob_base_fee" title="Link to this definition"></a></dt>
+<dd><p>Fetches the expected base fee for blobs in the next block.</p>
+<ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_blobBaseFee</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the expected base fee in Wei.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">blob_base_fee</span><span class="p">()</span>
+<span class="go">537070730</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_proof">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_proof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">positions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">eth.default_block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_proof" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getProof</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the values from an array of storage positions for the given <code class="docutils literal notranslate"><span class="pre">account</span></code> at the
+block specified by <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">account</span></code> may be a checksum address or an ENS name</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_proof</span><span class="p">(</span><span class="s1">&#39;0x6C8f2A135f6ed072DE4503Bd7C4999a1a17F824B&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3391</span><span class="p">)</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    &#39;address&#39;: &#39;0x4CB06C43fcdABeA22541fcF1F856A6a296448B6c&#39;,</span>
+<span class="go">    &#39;accountProof&#39;: [&#39;0xf90211a03841a7ddd65c70c94b8efa79190d00f0ab134b26f18dcad508f60a7e74559d0ba0464b07429a05039e22931492d6c6251a860c018ea390045d596b1ac11b5c7aa7a011f4b89823a03c9c4b5a8ab079ee1bc0e2a83a508bb7a5dc7d7fb4f2e95d3186a0b5f7c51c3b2d51d97f171d2b38a4df1a7c0acc5eb0de46beeff4d07f5ed20e19a0b591a2ce02367eda31cf2d16eca7c27fd44dbf0864b64ea8259ad36696eb2a04a02b646a7552b8392ae94263757f699a27d6e9176b4c06b9fc0a722f893b964795a02df05d68bceb88eebf68aafde61d10ab942097afc1c58b8435ffd3895358a742a0c2f16143c4d1db03276c433696dddb3e9f3b113bcd854b127962262e98f43147a0828820316cc02bfefd899aba41340659fd06df1e0a0796287ec2a4110239f6d2a050496598670b04df7bbff3718887fa36437d6d8c7afb4eff86f76c5c7097dcc4a0c14e9060c6b3784e35b9e6ae2ad2984142a75910ccc89eb89dc1e2f44b6c58c2a009804db571d0ce07913e1cbacc4f1dc4fb8265c936f5c612e3a47e91c64d8e9fa063d96f38b3cb51b1665c6641e25ffe24803f2941e5df79942f6a53b7169647e4a0899f71abb18c6c956118bf567fac629b75f7e9526873e429d3d8abb6dbb58021a00fd717235298742623c0b3cafb3e4bd86c0b5ab1f71097b4dd19f3d6925d758da0096437146c16097f2ccc1d3e910d65a4132803baee2249e72c8bf0bcaaeb37e580&#39;,</span>
+<span class="go">                     &#39;0xf90151a097b17a89fd2c03ee98cb6459c08f51b269da5cee46650e84470f62bf83b43efe80a03b269d284a4c3cf8f8deacafb637c6d77f607eec8d75e8548d778e629612310480a01403217a7f1416830c870087c524dabade3985271f6f369a12b010883c71927aa0f592ac54c879817389663be677166f5022943e2fe1b52617a1d15c2f353f27dda0ac8d015a9e668f5877fcc391fae33981c00577096f0455b42df4f8e8089ece24a003ba34a13e2f2fb4bf7096540b42d4955c5269875b9cf0f7b87632585d44c9a580a0b179e3230b07db294473ae57f0170262798f8c551c755b5665ace1215cee10ca80a0552d24252639a6ae775aa1df700ffb92c2411daea7286f158d44081c8172d072a0772a87d08cf38c4c68bfde770968571abd16fd3835cb902486bd2e515d53c12d80a0413774f3d900d2d2be7a3ad999ffa859a471dc03a74fb9a6d8275455f5496a548080&#39;,</span>
+<span class="go">                     &#39;0xf869a020d13b52a61d3c1325ce3626a51418adebd6323d4840f1bdd93906359d11c933b846f8440180a01ab7c0b0a2a4bbb5a1495da8c142150891fc64e0c321e1feb70bd5f881951f7ea0551332d96d085185ab4019ad8bcf89c45321e136c261eb6271e574a2edf1461f&#39;</span>
+<span class="go">                     ],</span>
+<span class="go">    &#39;balance&#39;: 0,</span>
+<span class="go">    &#39;codeHash&#39;: &#39;0x551332d96d085185ab4019ad8bcf89c45321e136c261eb6271e574a2edf1461f&#39;,</span>
+<span class="go">    &#39;nonce&#39;: 1,</span>
+<span class="go">    &#39;storageHash&#39;: &#39;0x1ab7c0b0a2a4bbb5a1495da8c142150891fc64e0c321e1feb70bd5f881951f7e&#39;,</span>
+<span class="go">    &#39;storageProof&#39;: [</span>
+<span class="go">        AttributeDict({</span>
+<span class="go">            &#39;key&#39;: &#39;0x00&#39;,</span>
+<span class="go">            &#39;value&#39;: &#39;0x48656c6c6f00000000000000000000000000000000000000000000000000000a&#39;,</span>
+<span class="go">            &#39;proof&#39;: [&#39;0xf9019180a01ace80e7bed79fbadbe390876bd1a7d9770edf9462049ef8f4b555d05715d53ea049347a3c2eac6525a3fd7e3454dab19d73b4adeb9aa27d29493b9843f3f88814a085079b4abcd07fd4a5d6c52d35f4c4574aecc85830e90c478ca8c18fcbe590de80a02e3f8ad7ea29e784007f51852b9c3e470aef06b11bac32586a8b691134e4c27da064d2157a14bc31f195f73296ea4dcdbe7698edbf3ca81c44bf7730179d98d94ca09e7dc2597c9b7f72ddf84d7eebb0fe2a2fa2ab54fe668cd14fee44d9b40b1a53a0aa5d4acc7ac636d16bc9655556770bc325e1901fb62dc53770ef9110009e080380a0d5fde962bd2fb5326ddc7a9ca7fe0ee47c5bb3227f838b6d73d3299c22457596a08691410eff46b88f929ef649ea25025f62a5362ca8dc8876e5e1f4fc8e79256d80a0673e88d3a8a4616f676793096b5ae87cff931bd20fb8dd466f97809a1126aad8a08b774a45c2273553e2daf4bbc3a8d44fb542ea29b6f125098f79a4d211b3309ca02fed3139c1791269acb9365eddece93e743900eba6b42a6a8614747752ba268f80&#39;,</span>
+<span class="go">                      &#39;0xf891808080a0c7d094301e0c54da37b696d85f72de5520b224ab2cf4f045d8db1a3374caf0488080a0fc5581783bfe27fab9423602e1914d719fd71433e9d7dd63c95fe7e58d10c9c38080a0c64f346fc7a21f6679cba8abdf37ca2de8c4fcd8f8bcaedb261b5f77627c93908080808080a0ddef2936a67a3ac7d3d4ff15a935a45f2cc4976c8f0310aed85daf763780e2b480&#39;,</span>
+<span class="go">                      &#39;0xf843a0200decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563a1a048656c6c6f00000000000000000000000000000000000000000000000000000a&#39;</span>
+<span class="go">                      ]</span>
+<span class="go">        })</span>
+<span class="go">    ]</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Merkle proof verification using py-trie.</p></li>
+</ul>
+<p>The following example verifies that the values returned in the <code class="docutils literal notranslate"><span class="pre">AttributeDict</span></code>
+are included in the state of given trie <code class="docutils literal notranslate"><span class="pre">root</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">eth_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">keccak</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rlp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rlp.sedes</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Binary</span><span class="p">,</span>
+    <span class="n">big_endian_int</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">trie</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">HexaryTrie</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">web3._utils.encoding</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">pad_bytes</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">format_proof_nodes</span><span class="p">(</span><span class="n">proof</span><span class="p">):</span>
+    <span class="n">trie_proof</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">rlp_node</span> <span class="ow">in</span> <span class="n">proof</span><span class="p">:</span>
+        <span class="n">trie_proof</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rlp</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">rlp_node</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">trie_proof</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_eth_get_proof</span><span class="p">(</span><span class="n">proof</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+    <span class="n">trie_root</span> <span class="o">=</span> <span class="n">Binary</span><span class="o">.</span><span class="n">fixed_length</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">allow_empty</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">hash32</span> <span class="o">=</span> <span class="n">Binary</span><span class="o">.</span><span class="n">fixed_length</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">_Account</span><span class="p">(</span><span class="n">rlp</span><span class="o">.</span><span class="n">Serializable</span><span class="p">):</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="p">(</span><span class="s1">&#39;nonce&#39;</span><span class="p">,</span> <span class="n">big_endian_int</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s1">&#39;balance&#39;</span><span class="p">,</span> <span class="n">big_endian_int</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s1">&#39;storage&#39;</span><span class="p">,</span> <span class="n">trie_root</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s1">&#39;code_hash&#39;</span><span class="p">,</span> <span class="n">hash32</span><span class="p">)</span>
+                <span class="p">]</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">_Account</span><span class="p">(</span>
+        <span class="n">proof</span><span class="o">.</span><span class="n">nonce</span><span class="p">,</span> <span class="n">proof</span><span class="o">.</span><span class="n">balance</span><span class="p">,</span> <span class="n">proof</span><span class="o">.</span><span class="n">storageHash</span><span class="p">,</span> <span class="n">proof</span><span class="o">.</span><span class="n">codeHash</span>
+    <span class="p">)</span>
+    <span class="n">rlp_account</span> <span class="o">=</span> <span class="n">rlp</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">acc</span><span class="p">)</span>
+    <span class="n">trie_key</span> <span class="o">=</span> <span class="n">keccak</span><span class="p">(</span><span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="n">proof</span><span class="o">.</span><span class="n">address</span><span class="p">[</span><span class="mi">2</span><span class="p">:]))</span>
+
+    <span class="k">assert</span> <span class="n">rlp_account</span> <span class="o">==</span> <span class="n">HexaryTrie</span><span class="o">.</span><span class="n">get_from_proof</span><span class="p">(</span>
+        <span class="n">root</span><span class="p">,</span> <span class="n">trie_key</span><span class="p">,</span> <span class="n">format_proof_nodes</span><span class="p">(</span><span class="n">proof</span><span class="o">.</span><span class="n">accountProof</span><span class="p">)</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Failed to verify account proof </span><span class="si">{</span><span class="n">proof</span><span class="o">.</span><span class="n">address</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">for</span> <span class="n">storage_proof</span> <span class="ow">in</span> <span class="n">proof</span><span class="o">.</span><span class="n">storageProof</span><span class="p">:</span>
+        <span class="n">trie_key</span> <span class="o">=</span> <span class="n">keccak</span><span class="p">(</span><span class="n">pad_bytes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">storage_proof</span><span class="o">.</span><span class="n">key</span><span class="p">))</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">proof</span><span class="o">.</span><span class="n">storageHash</span>
+        <span class="k">if</span> <span class="n">storage_proof</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">:</span>
+            <span class="n">rlp_value</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rlp_value</span> <span class="o">=</span> <span class="n">rlp</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">storage_proof</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">rlp_value</span> <span class="o">==</span> <span class="n">HexaryTrie</span><span class="o">.</span><span class="n">get_from_proof</span><span class="p">(</span>
+            <span class="n">root</span><span class="p">,</span> <span class="n">trie_key</span><span class="p">,</span> <span class="n">format_proof_nodes</span><span class="p">(</span><span class="n">storage_proof</span><span class="o">.</span><span class="n">proof</span><span class="p">)</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Failed to verify storage proof </span><span class="si">{</span><span class="n">storage_proof</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="n">block</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">3391</span><span class="p">)</span>
+<span class="n">proof</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_proof</span><span class="p">(</span><span class="s1">&#39;0x6C8f2A135f6ed072DE4503Bd7C4999a1a17F824B&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">3391</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">verify_eth_get_proof</span><span class="p">(</span><span class="n">proof</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">stateRoot</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_code">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">eth.default_block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_code" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getCode</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the bytecode for the given <code class="docutils literal notranslate"><span class="pre">account</span></code> at the block specified by
+<code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">account</span></code> may be a checksum address or an ENS name</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># For a contract address.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_code</span><span class="p">(</span><span class="s1">&#39;0x6C8f2A135f6ed072DE4503Bd7C4999a1a17F824B&#39;</span><span class="p">)</span>
+<span class="s1">&#39;0x6060604052361561027c5760e060020a60003504630199.....&#39;</span>
+<span class="c1"># For a private key address.</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_code</span><span class="p">(</span><span class="s1">&#39;0xd3CdA913deB6f67967B99D67aCDFa1712C293601&#39;</span><span class="p">)</span>
+<span class="s1">&#39;0x&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_block">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">eth.default_block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_transactions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_block" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getBlockByNumber</span></code> or <code class="docutils literal notranslate"><span class="pre">eth_getBlockByHash</span></code> RPC Methods</p></li>
+</ul>
+<p>Returns the block specified by <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.  Delegates to
+<code class="docutils literal notranslate"><span class="pre">eth_getBlockByNumber</span></code> if <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code> is an integer or one of
+the predefined block parameters <code class="docutils literal notranslate"><span class="pre">'latest',</span> <span class="pre">'earliest',</span> <span class="pre">'pending',</span>
+<span class="pre">'safe',</span> <span class="pre">'finalized'</span></code> - otherwise delegates to <code class="docutils literal notranslate"><span class="pre">eth_getBlockByHash</span></code>.
+Throws <code class="docutils literal notranslate"><span class="pre">BlockNotFound</span></code> error if the block is not found.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">full_transactions</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code> then the <code class="docutils literal notranslate"><span class="pre">'transactions'</span></code> key will
+contain full transactions objects.  Otherwise it will be an array of
+transaction hashes.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="mi">2000000</span><span class="p">)</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    &#39;difficulty&#39;: 49824742724615,</span>
+<span class="go">    &#39;extraData&#39;: &#39;0xe4b883e5bda9e7a59ee4bb99e9b1bc&#39;,</span>
+<span class="go">    &#39;gasLimit&#39;: 4712388,</span>
+<span class="go">    &#39;gasUsed&#39;: 21000,</span>
+<span class="go">    &#39;hash&#39;: &#39;0xc0f4906fea23cf6f3cce98cb44e8e1449e455b28d684dfa9ff65426495584de6&#39;,</span>
+<span class="go">    &#39;logsBloom&#39;: &#39;0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000&#39;,</span>
+<span class="go">    &#39;miner&#39;: &#39;0x61c808d82a3ac53231750dadc13c777b59310bd9&#39;,</span>
+<span class="go">    &#39;nonce&#39;: &#39;0x3b05c6d5524209f1&#39;,</span>
+<span class="go">    &#39;number&#39;: 2000000,</span>
+<span class="go">    &#39;parentHash&#39;: &#39;0x57ebf07eb9ed1137d41447020a25e51d30a0c272b5896571499c82c33ecb7288&#39;,</span>
+<span class="go">    &#39;receiptsRoot&#39;: &#39;0x84aea4a7aad5c5899bd5cfc7f309cc379009d30179316a2a7baa4a2ea4a438ac&#39;,</span>
+<span class="go">    &#39;sha3Uncles&#39;: &#39;0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347&#39;,</span>
+<span class="go">    &#39;size&#39;: 650,</span>
+<span class="go">    &#39;stateRoot&#39;: &#39;0x96dbad955b166f5119793815c36f11ffa909859bbfeb64b735cca37cbf10bef1&#39;,</span>
+<span class="go">    &#39;timestamp&#39;: 1470173578,</span>
+<span class="go">    &#39;totalDifficulty&#39;: 44010101827705409388,</span>
+<span class="go">    &#39;transactions&#39;: [&#39;0xc55e2b90168af6972193c1f86fa4d7d7b31a29c156665d15b9cd48618b5177ef&#39;],</span>
+<span class="go">    &#39;transactionsRoot&#39;: &#39;0xb31f174d27b99cdae8e746bd138a01ce60d8dd7b224f7c60845914def05ecc58&#39;,</span>
+<span class="go">    &#39;uncles&#39;: [],</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_block_transaction_count">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_block_transaction_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_block_transaction_count" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getBlockTransactionCountByNumber</span></code> or
+<code class="docutils literal notranslate"><span class="pre">eth_getBlockTransactionCountByHash</span></code> RPC Methods</p></li>
+</ul>
+<p>Returns the number of transactions in the block specified by
+<code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.  Delegates to
+<code class="docutils literal notranslate"><span class="pre">eth_getBlockTransactionCountByNumber</span></code> if <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code> is an
+integer or one of the predefined block parameters <code class="docutils literal notranslate"><span class="pre">'latest',</span> <span class="pre">'earliest',</span>
+<span class="pre">'pending',</span> <span class="pre">'safe',</span> <span class="pre">'finalized'</span></code>,
+otherwise delegates to <code class="docutils literal notranslate"><span class="pre">eth_getBlockTransactionCountByHash</span></code>.
+Throws <code class="docutils literal notranslate"><span class="pre">BlockNotFoundError</span></code> if transactions are not found.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block_transaction_count</span><span class="p">(</span><span class="mi">46147</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block_transaction_count</span><span class="p">(</span><span class="s1">&#39;0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd&#39;</span><span class="p">)</span>  <span class="c1"># block 46147</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_uncle_by_block">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_uncle_by_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncle_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_uncle_by_block" title="Link to this definition"></a></dt>
+<dd><div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>Deprecated. Will be removed in v8.</p>
+</div>
+<ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getUncleByBlockHashAndIndex</span></code> or
+<code class="docutils literal notranslate"><span class="pre">eth_getUncleByBlockNumberAndIndex</span></code> RPC methods</p></li>
+</ul>
+<p>Returns the uncle at the index specified by <code class="docutils literal notranslate"><span class="pre">uncle_index</span></code>
+from the block specified by <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.  Delegates to
+<code class="docutils literal notranslate"><span class="pre">eth_getUncleByBlockNumberAndIndex</span></code> if <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code> is an
+integer or one of the predefined block parameters <code class="docutils literal notranslate"><span class="pre">'latest',</span> <span class="pre">'earliest',</span>
+<span class="pre">'pending'</span></code>, otherwise delegates to
+<code class="docutils literal notranslate"><span class="pre">eth_getUncleByBlockHashAndIndex</span></code>. Throws <code class="docutils literal notranslate"><span class="pre">BlockNotFound</span></code> if the block is not found.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_uncle_by_block</span><span class="p">(</span><span class="mi">56160</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">AttributeDict({</span>
+<span class="go">  &#39;author&#39;: &#39;0xbe4532e1b1db5c913cf553be76180c1777055403&#39;,</span>
+<span class="go">  &#39;difficulty&#39;: &#39;0x17dd9ca0afe&#39;,</span>
+<span class="go">  &#39;extraData&#39;: &#39;0x476574682f686261722f76312e302e312f6c696e75782f676f312e342e32&#39;,</span>
+<span class="go">  &#39;gasLimit&#39;: &#39;0x2fefd8&#39;,</span>
+<span class="go">  &#39;gasUsed&#39;: &#39;0x0&#39;,</span>
+<span class="go">  &#39;hash&#39;: &#39;0xc78c35720d930f9ef34b4e6fb9d02ffec936f9b02a8f0fa858456e4afd4d5614&#39;,</span>
+<span class="go">  &#39;logsBloom&#39;:&#39;0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000&#39;,</span>
+<span class="go">  &#39;miner&#39;: &#39;0xbe4532e1b1db5c913cf553be76180c1777055403&#39;,</span>
+<span class="go">  &#39;mixHash&#39;: &#39;0x041e14603f35a82f6023802fec96ef760433292434a39787514f140950597e5e&#39;,</span>
+<span class="go">  &#39;nonce&#39;: &#39;0x5d2b7e3f1af09995&#39;,</span>
+<span class="go">  &#39;number&#39;: &#39;0xdb5e&#39;,</span>
+<span class="go">  &#39;parentHash&#39;: &#39;0xcc30e8a9b15c548d5bf113c834143a8f0e1909fbfea96b2a208dc154293a78cf&#39;,</span>
+<span class="go">  &#39;receiptsRoot&#39;: &#39;0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421&#39;,</span>
+<span class="go">  &#39;sealFields&#39;: [&#39;0xa0041e14603f35a82f6023802fec96ef760433292434a39787514f140950597e5e&#39;, &#39;0x885d2b7e3f1af09995&#39;],</span>
+<span class="go">  &#39;sha3Uncles&#39;: &#39;0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347&#39;,</span>
+<span class="go">  &#39;size&#39;: None, &#39;stateRoot&#39;: &#39;0x8ce2b1bf8e25a06a8ca34c647ff5fd0fa48ac725cc07f657ae1645ab8ef68c91&#39;,</span>
+<span class="go">  &#39;timestamp&#39;: &#39;0x55c6a972&#39;,</span>
+<span class="go">  &#39;totalDifficulty&#39;: &#39;0xce4c4f0a0b810b&#39;,</span>
+<span class="go">  &#39;transactions&#39;: [],</span>
+<span class="go">  &#39;transactionsRoot&#39;: &#39;0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421&#39;,</span>
+<span class="go">  &#39;uncles&#39;: []</span>
+<span class="go">})</span>
+
+<span class="go"># You can also refer to the block by hash:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_uncle_by_block</span><span class="p">(</span><span class="s1">&#39;0x685b2226cbf6e1f890211010aa192bf16f0a0cba9534264a033b023d7367b845&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    ...</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_uncle_count">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_uncle_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_uncle_count" title="Link to this definition"></a></dt>
+<dd><div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>Deprecated. Will be removed in v8.</p>
+</div>
+<ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getUncleCountByBlockHash</span></code> or
+<code class="docutils literal notranslate"><span class="pre">eth_getUncleCountByBlockNumber</span></code> RPC methods</p></li>
+</ul>
+<p>Returns the (integer) number of uncles associated with the block specified by <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.
+Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getUncleCountByBlockNumber</span></code> if <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code> is an
+integer or one of the predefined block parameters <code class="docutils literal notranslate"><span class="pre">'latest',</span> <span class="pre">'earliest',</span>
+<span class="pre">'pending'</span></code>, otherwise delegates to <code class="docutils literal notranslate"><span class="pre">eth_getUncleCountByBlockHash</span></code>.
+Throws <code class="docutils literal notranslate"><span class="pre">BlockNotFound</span></code> if the block is not found.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_uncle_count</span><span class="p">(</span><span class="mi">56160</span><span class="p">)</span>
+<span class="go">1</span>
+
+<span class="go"># You can also refer to the block by hash:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_uncle_count</span><span class="p">(</span><span class="s1">&#39;0x685b2226cbf6e1f890211010aa192bf16f0a0cba9534264a033b023d7367b845&#39;</span><span class="p">)</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_transaction">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_hash</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_transaction" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getTransactionByHash</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the transaction specified by <code class="docutils literal notranslate"><span class="pre">transaction_hash</span></code>. If the transaction cannot be found throws <code class="xref py py-class docutils literal notranslate"><span class="pre">web3.exceptions.TransactionNotFound</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="s1">&#39;0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&#39;</span><span class="p">)</span>
+<span class="go">AttributeDict({&#39;blockHash&#39;: HexBytes(&#39;0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd&#39;),</span>
+<span class="go">    &#39;blockNumber&#39;: 46147,</span>
+<span class="go">    &#39;from&#39;: &#39;0xA1E4380A3B1f749673E270229993eE55F35663b4&#39;,</span>
+<span class="go">    &#39;gas&#39;: 21000,</span>
+<span class="go">    &#39;gasPrice&#39;: 50000000000000,</span>
+<span class="go">    &#39;hash&#39;: HexBytes(&#39;0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&#39;),</span>
+<span class="go">    &#39;input&#39;: HexBytes(&#39;0x&#39;),</span>
+<span class="go">    &#39;nonce&#39;: 0,</span>
+<span class="go">     &#39;r&#39;: HexBytes(&#39;0x88ff6cf0fefd94db46111149ae4bfc179e9b94721fffd821d38d16464b3f71d0&#39;),</span>
+<span class="go">     &#39;s&#39;: HexBytes(&#39;0x45e0aff800961cfce805daef7016b9b675c137a6a41a548f7b60a3484c06a33a&#39;),</span>
+<span class="go">     &#39;to&#39;: &#39;0x5DF9B87991262F6BA471F09758CDE1c0FC1De734&#39;,</span>
+<span class="go">     &#39;transactionIndex&#39;: 0,</span>
+<span class="go">     &#39;type&#39;: 0,</span>
+<span class="go">     &#39;v&#39;: 28,</span>
+<span class="go">     &#39;value&#39;: 31337</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_raw_transaction">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_raw_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_hash</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_raw_transaction" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getRawTransactionByHash</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the raw form of transaction specified by <code class="docutils literal notranslate"><span class="pre">transaction_hash</span></code>.</p>
+<p>If no transaction is found, <code class="docutils literal notranslate"><span class="pre">TransactionNotFound</span></code> is raised.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_raw_transaction</span><span class="p">(</span><span class="s1">&#39;0x86fbfe56cce542ff0a2a2716c31675a0c9c43701725c4a751d20ee2ddf8a733d&#39;</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0xf86907843b9aca0082520894dc544d1aa88ff8bbd2f2aec754b1f1e99e1812fd018086eecac466e115a0f9db4e25484b28f486b247a372708d4cd0643fc63e604133afac577f4cc1eab8a044841d84e799d4dc18ba146816a937e8a0be8bc296bd8bb8aea126de5e627e06&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_transaction_by_block">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_transaction_by_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_transaction_by_block" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getTransactionByBlockNumberAndIndex</span></code> or
+<code class="docutils literal notranslate"><span class="pre">eth_getTransactionByBlockHashAndIndex</span></code> RPC Methods</p></li>
+</ul>
+<p>Returns the transaction at the index specified by <code class="docutils literal notranslate"><span class="pre">transaction_index</span></code>
+from the block specified by <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.  Delegates to
+<code class="docutils literal notranslate"><span class="pre">eth_getTransactionByBlockNumberAndIndex</span></code> if <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code> is an
+integer or one of the predefined block parameters <code class="docutils literal notranslate"><span class="pre">'latest',</span> <span class="pre">'earliest',</span>
+<span class="pre">'pending',</span> <span class="pre">'safe',</span> <span class="pre">'finalized'</span></code>, otherwise delegates to
+<code class="docutils literal notranslate"><span class="pre">eth_getTransactionByBlockHashAndIndex</span></code>.
+If a transaction is not found at specified arguments, throws <code class="xref py py-class docutils literal notranslate"><span class="pre">web3.exceptions.TransactionNotFound</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction_by_block</span><span class="p">(</span><span class="mi">46147</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    &#39;blockHash&#39;: &#39;0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd&#39;,</span>
+<span class="go">    &#39;blockNumber&#39;: 46147,</span>
+<span class="go">    &#39;from&#39;: &#39;0xA1E4380A3B1f749673E270229993eE55F35663b4&#39;,</span>
+<span class="go">    &#39;gas&#39;: 21000,</span>
+<span class="go">    &#39;gasPrice&#39;: None,</span>
+<span class="go">    &#39;hash&#39;: &#39;0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&#39;,</span>
+<span class="go">    &#39;input&#39;: &#39;0x&#39;,</span>
+<span class="go">    &#39;maxFeePerGas&#39;: 2000000000,</span>
+<span class="go">    &#39;maxPriorityFeePerGas&#39;: 1000000000,</span>
+<span class="go">    &#39;nonce&#39;: 0,</span>
+<span class="go">    &#39;to&#39;: &#39;0x5DF9B87991262F6BA471F09758CDE1c0FC1De734&#39;,</span>
+<span class="go">    &#39;transactionIndex&#39;: 0,</span>
+<span class="go">    &#39;value&#39;: 31337,</span>
+<span class="go">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction_by_block</span><span class="p">(</span><span class="s1">&#39;0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    &#39;blockHash&#39;: &#39;0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd&#39;,</span>
+<span class="go">    &#39;blockNumber&#39;: 46147,</span>
+<span class="go">    &#39;from&#39;: &#39;0xA1E4380A3B1f749673E270229993eE55F35663b4&#39;,</span>
+<span class="go">    &#39;gas&#39;: 21000,</span>
+<span class="go">    &#39;gasPrice&#39;: None,</span>
+<span class="go">    &#39;hash&#39;: &#39;0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&#39;,</span>
+<span class="go">    &#39;input&#39;: &#39;0x&#39;,</span>
+<span class="go">    &#39;maxFeePerGas&#39;: 2000000000,</span>
+<span class="go">    &#39;maxPriorityFeePerGas&#39;: 1000000000,</span>
+<span class="go">    &#39;nonce&#39;: 0,</span>
+<span class="go">    &#39;to&#39;: &#39;0x5DF9B87991262F6BA471F09758CDE1c0FC1De734&#39;,</span>
+<span class="go">    &#39;transactionIndex&#39;: 0,</span>
+<span class="go">    &#39;value&#39;: 31337,</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_raw_transaction_by_block">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_raw_transaction_by_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transaction_index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_raw_transaction_by_block" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getRawTransactionByBlockNumberAndIndex</span></code> or
+<code class="docutils literal notranslate"><span class="pre">eth_getRawTransactionByBlockHashAndIndex</span></code> RPC Methods</p></li>
+</ul>
+<p>Returns the raw transaction at the index specified by <code class="docutils literal notranslate"><span class="pre">transaction_index</span></code>
+from the block specified by <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.  Delegates to
+<code class="docutils literal notranslate"><span class="pre">eth_getRawTransactionByBlockNumberAndIndex</span></code> if <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code> is an
+integer or one of the predefined block parameters <code class="docutils literal notranslate"><span class="pre">'latest',</span> <span class="pre">'earliest',</span>
+<span class="pre">'pending',</span> <span class="pre">'safe',</span> <span class="pre">'finalized'</span></code>, otherwise delegates to
+<code class="docutils literal notranslate"><span class="pre">eth_getRawTransactionByBlockHashAndIndex</span></code>.
+If a transaction is not found at specified arguments, throws <code class="xref py py-class docutils literal notranslate"><span class="pre">web3.exceptions.TransactionNotFound</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_raw_transaction_by_block</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0x02f87582053901843b9aca00843b9aca008301d8a894e2dfcfa89a45abdc3de91f7a2844b276b8451d2e888ac7230489e8000080c001a028dcd2e11682288c00237f377280bc6a478a6b27e9c2d745262152add1b1dfcba04e7a33b7ce2a37fc3cd3af7bdc7d7beff721664d56508defa188df35afd77c2c&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_raw_transaction_by_block</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0x02f87582053901843b9aca00843b9aca008301d8a894e2dfcfa89a45abdc3de91f7a2844b276b8451d2e888ac7230489e8000080c001a028dcd2e11682288c00237f377280bc6a478a6b27e9c2d745262152add1b1dfcba04e7a33b7ce2a37fc3cd3af7bdc7d7beff721664d56508defa188df35afd77c2c&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_raw_transaction_by_block</span><span class="p">(</span><span class="s1">&#39;0xca609fb606a04ce6aaec76415cd0b9d8c2bc83ad2a4d17db7fd403ee7d97bf40&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0x02f87582053901843b9aca00843b9aca008301d8a894e2dfcfa89a45abdc3de91f7a2844b276b8451d2e888ac7230489e8000080c001a028dcd2e11682288c00237f377280bc6a478a6b27e9c2d745262152add1b1dfcba04e7a33b7ce2a37fc3cd3af7bdc7d7beff721664d56508defa188df35afd77c2c&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.wait_for_transaction_receipt">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">wait_for_transaction_receipt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_hash</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poll_latency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.wait_for_transaction_receipt" title="Link to this definition"></a></dt>
+<dd><p>Waits for the transaction specified by <code class="docutils literal notranslate"><span class="pre">transaction_hash</span></code> to be included in a block, then
+returns its transaction receipt.</p>
+<p>Optionally, specify a <code class="docutils literal notranslate"><span class="pre">timeout</span></code> in seconds. If timeout elapses before the transaction
+is added to a block, then <a class="reference internal" href="#web3.eth.Eth.wait_for_transaction_receipt" title="web3.eth.Eth.wait_for_transaction_receipt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_transaction_receipt()</span></code></a> raises a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">web3.exceptions.TimeExhausted</span></code> exception.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">wait_for_transaction_receipt</span><span class="p">(</span><span class="s1">&#39;0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&#39;</span><span class="p">)</span>
+<span class="go"># If transaction is not yet in a block, time passes, while the thread sleeps...</span>
+<span class="go"># ...</span>
+<span class="go"># Then when the transaction is added to a block, its receipt is returned:</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    &#39;blockHash&#39;: HexBytes(&#39;0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd&#39;),</span>
+<span class="go">    &#39;blockNumber&#39;: 46147,</span>
+<span class="go">    &#39;contractAddress&#39;: None,</span>
+<span class="go">    &#39;cumulativeGasUsed&#39;: 21000,</span>
+<span class="go">    &#39;from&#39;: &#39;0xA1E4380A3B1f749673E270229993eE55F35663b4&#39;,</span>
+<span class="go">    &#39;gasUsed&#39;: 21000,</span>
+<span class="go">    &#39;logs&#39;: [],</span>
+<span class="go">    &#39;logsBloom&#39;: HexBytes(&#39;0x000000000000000000000000000000000000000000000000...0000&#39;),</span>
+<span class="go">    &#39;status&#39;: 1,</span>
+<span class="go">    &#39;to&#39;: &#39;0x5DF9B87991262F6BA471F09758CDE1c0FC1De734&#39;,</span>
+<span class="go">    &#39;transactionHash&#39;: HexBytes(&#39;0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&#39;),</span>
+<span class="go">    &#39;transactionIndex&#39;: 0,</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_transaction_receipt">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_transaction_receipt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_hash</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_transaction_receipt" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getTransactionReceipt</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the transaction receipt specified by <code class="docutils literal notranslate"><span class="pre">transaction_hash</span></code>.  If the transaction cannot be found throws <code class="xref py py-class docutils literal notranslate"><span class="pre">web3.exceptions.TransactionNotFound</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">status</span></code> in response equals 1 the transaction was successful. If it is equals 0 the transaction was reverted by EVM.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction_receipt</span><span class="p">(</span><span class="s1">&#39;0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&#39;</span><span class="p">)</span>  <span class="c1"># not yet mined</span>
+<span class="go">Traceback # ... etc ...</span>
+<span class="go">TransactionNotFound: Transaction with hash: 0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060 not found.</span>
+
+<span class="go"># wait for it to be mined....</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction_receipt</span><span class="p">(</span><span class="s1">&#39;0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&#39;</span><span class="p">)</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    &#39;blockHash&#39;: &#39;0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd&#39;,</span>
+<span class="go">    &#39;blockNumber&#39;: 46147,</span>
+<span class="go">    &#39;contractAddress&#39;: None,</span>
+<span class="go">    &#39;cumulativeGasUsed&#39;: 21000,</span>
+<span class="go">    &#39;from&#39;: &#39;0xA1E4380A3B1f749673E270229993eE55F35663b4&#39;,</span>
+<span class="go">    &#39;gasUsed&#39;: 21000,</span>
+<span class="go">    &#39;logs&#39;: [],</span>
+<span class="go">    &#39;logsBloom&#39;: &#39;0x000000000000000000000000000000000000000000000000...0000&#39;,</span>
+<span class="go">    &#39;status&#39;: 1, # 0 or 1</span>
+<span class="go">    &#39;to&#39;: &#39;0x5DF9B87991262F6BA471F09758CDE1c0FC1De734&#39;,</span>
+<span class="go">    &#39;transactionHash&#39;: &#39;0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060&#39;,</span>
+<span class="go">    &#39;transactionIndex&#39;: 0,</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_transaction_count">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_transaction_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">web3.eth.default_block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_transaction_count" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getTransactionCount</span></code> RPC Method</p></li>
+</ul>
+<p>Returns the number of transactions that have been sent from <code class="docutils literal notranslate"><span class="pre">account</span></code> as
+of the block specified by <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">account</span></code> may be a checksum address or an ENS name</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_transaction_count</span><span class="p">(</span><span class="s1">&#39;0xd3CdA913deB6f67967B99D67aCDFa1712C293601&#39;</span><span class="p">)</span>
+<span class="go">340</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.send_transaction">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">send_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.send_transaction" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_sendTransaction</span></code> RPC Method</p></li>
+</ul>
+<p>Signs and sends the given <code class="docutils literal notranslate"><span class="pre">transaction</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">transaction</span></code> parameter should be a dictionary with the following fields.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">from</span></code>: <code class="docutils literal notranslate"><span class="pre">bytes</span> <span class="pre">or</span> <span class="pre">text</span></code>, checksum address or ENS name - (optional, default:
+<code class="docutils literal notranslate"><span class="pre">web3.eth.defaultAccount</span></code>) The address the transaction is sent from.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">to</span></code>: <code class="docutils literal notranslate"><span class="pre">bytes</span> <span class="pre">or</span> <span class="pre">text</span></code>, checksum address or ENS name - (optional when creating new
+contract) The address the transaction is directed to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gas</span></code>: <code class="docutils literal notranslate"><span class="pre">integer</span></code> - (optional) Integer of the gas
+provided for the transaction execution. It will return unused gas.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxFeePerGas</span></code>: <code class="docutils literal notranslate"><span class="pre">integer</span> <span class="pre">or</span> <span class="pre">hex</span></code> - (optional) maximum amount you're willing
+to pay, inclusive of <code class="docutils literal notranslate"><span class="pre">baseFeePerGas</span></code> and <code class="docutils literal notranslate"><span class="pre">maxPriorityFeePerGas</span></code>. The difference
+between <code class="docutils literal notranslate"><span class="pre">maxFeePerGas</span></code> and <code class="docutils literal notranslate"><span class="pre">baseFeePerGas</span> <span class="pre">+</span> <span class="pre">maxPriorityFeePerGas</span></code> is refunded
+to the user.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxPriorityFeePerGas</span></code>: <code class="docutils literal notranslate"><span class="pre">integer</span> <span class="pre">or</span> <span class="pre">hex</span></code> - (optional) the part of the fee
+that goes to the miner</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gasPrice</span></code>: <code class="docutils literal notranslate"><span class="pre">integer</span></code> - Integer of the gasPrice used for each paid gas
+<strong>LEGACY</strong> - unless you have a good reason to use <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code>, use <code class="docutils literal notranslate"><span class="pre">maxFeePerGas</span></code>
+and <code class="docutils literal notranslate"><span class="pre">maxPriorityFeePerGas</span></code> instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">value</span></code>: <code class="docutils literal notranslate"><span class="pre">integer</span></code> - (optional) Integer of the value send with this
+transaction</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: <code class="docutils literal notranslate"><span class="pre">bytes</span> <span class="pre">or</span> <span class="pre">text</span></code> - The compiled code of a contract OR the hash
+of the invoked method signature and encoded parameters. For details see
+<a class="reference external" href="https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI">Ethereum Contract ABI</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nonce</span></code>: <code class="docutils literal notranslate"><span class="pre">integer</span></code> - (optional) Integer of a nonce. This allows to
+overwrite your own pending transactions that use the same nonce.</p></li>
+</ul>
+<p>If the <code class="docutils literal notranslate"><span class="pre">transaction</span></code> specifies a <code class="docutils literal notranslate"><span class="pre">data</span></code> value but does not specify
+<code class="docutils literal notranslate"><span class="pre">gas</span></code> then the <code class="docutils literal notranslate"><span class="pre">gas</span></code> value will be populated using the
+<a class="reference internal" href="#web3.eth.Eth.estimate_gas" title="web3.eth.Eth.estimate_gas"><code class="xref py py-meth docutils literal notranslate"><span class="pre">estimate_gas()</span></code></a> function with an additional buffer of <code class="docutils literal notranslate"><span class="pre">100000</span></code>
+gas up to the <code class="docutils literal notranslate"><span class="pre">gasLimit</span></code> of the latest block.  In the event that the
+value returned by <a class="reference internal" href="#web3.eth.Eth.estimate_gas" title="web3.eth.Eth.estimate_gas"><code class="xref py py-meth docutils literal notranslate"><span class="pre">estimate_gas()</span></code></a> method is greater than the
+<code class="docutils literal notranslate"><span class="pre">gasLimit</span></code> a <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># simple example (web3.py and / or client determines gas and fees, typically defaults to a dynamic fee transaction post London fork)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">({</span>
+  <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+  <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">12345</span>
+<span class="p">})</span>
+
+<span class="c1"># Dynamic fee transaction, introduced by EIP-1559:</span>
+<span class="n">HexBytes</span><span class="p">(</span><span class="s1">&#39;0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">({</span>
+  <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+  <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">12345</span><span class="p">,</span>
+  <span class="s1">&#39;gas&#39;</span><span class="p">:</span> <span class="mi">21000</span><span class="p">,</span>
+  <span class="s1">&#39;maxFeePerGas&#39;</span><span class="p">:</span> <span class="n">web3</span><span class="o">.</span><span class="n">to_wei</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="s1">&#39;gwei&#39;</span><span class="p">),</span>
+  <span class="s1">&#39;maxPriorityFeePerGas&#39;</span><span class="p">:</span> <span class="n">web3</span><span class="o">.</span><span class="n">to_wei</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;gwei&#39;</span><span class="p">),</span>
+<span class="p">})</span>
+<span class="n">HexBytes</span><span class="p">(</span><span class="s1">&#39;0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331&#39;</span><span class="p">)</span>
+
+<span class="c1"># Legacy transaction (less efficient)</span>
+<span class="n">HexBytes</span><span class="p">(</span><span class="s1">&#39;0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">({</span>
+  <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+  <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">12345</span><span class="p">,</span>
+  <span class="s1">&#39;gas&#39;</span><span class="p">:</span> <span class="mi">21000</span><span class="p">,</span>
+  <span class="s1">&#39;gasPrice&#39;</span><span class="p">:</span> <span class="n">web3</span><span class="o">.</span><span class="n">to_wei</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;gwei&#39;</span><span class="p">),</span>
+<span class="p">})</span>
+<span class="n">HexBytes</span><span class="p">(</span><span class="s1">&#39;0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.sign_transaction">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">sign_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.sign_transaction" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_signTransaction</span></code> RPC Method.</p></li>
+</ul>
+<p>Returns a transaction that's been signed by the node's private key, but not yet submitted.
+The signed tx can be submitted with <code class="docutils literal notranslate"><span class="pre">Eth.send_raw_transaction</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signed_txn</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+<span class="go">    nonce=w3.eth.get_transaction_count(w3.eth.accounts[0]),</span>
+<span class="go">    maxFeePerGas=2000000000,</span>
+<span class="go">    maxPriorityFeePerGas=1000000000,</span>
+<span class="go">    gas=100000,</span>
+<span class="go">    to=&#39;0xd3CdA913deB6f67967B99D67aCDFa1712C293601&#39;,</span>
+<span class="go">    value=1,</span>
+<span class="go">    data=b&#39;&#39;,</span>
+<span class="go">    )</span>
+<span class="go">)</span>
+<span class="go">b&quot;\xf8d\x80\x85\x040\xe24\x00\x82R\x08\x94\xdcTM\x1a\xa8\x8f\xf8\xbb\xd2\xf2\xae\xc7T\xb1\xf1\xe9\x9e\x18\x12\xfd\x01\x80\x1b\xa0\x11\r\x8f\xee\x1d\xe5=\xf0\x87\x0en\xb5\x99\xed;\xf6\x8f\xb3\xf1\xe6,\x82\xdf\xe5\x97lF|\x97%;\x15\xa04P\xb7=*\xef \t\xf0&amp;\xbc\xbf\tz%z\xe7\xa3~\xb5\xd3\xb7=\xc0v\n\xef\xad+\x98\xe3&#39;&quot;  # noqa: E501</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.send_raw_transaction">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">send_raw_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_transaction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.send_raw_transaction" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_sendRawTransaction</span></code> RPC Method</p></li>
+</ul>
+<p>Sends a signed and serialized transaction. Returns the transaction hash as a HexBytes object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">signed_txn</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">sign_transaction</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span>
+<span class="go">    nonce=w3.eth.get_transaction_count(public_address_of_senders_account),</span>
+<span class="go">    maxFeePerGas=3000000000,</span>
+<span class="go">    maxPriorityFeePerGas=2000000000,</span>
+<span class="go">    gas=100000,</span>
+<span class="go">    to=&#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;,</span>
+<span class="go">    value=12345,</span>
+<span class="go">    data=b&#39;&#39;,</span>
+<span class="go">    type=2,  # (optional) the type is now implicitly set based on appropriate transaction params</span>
+<span class="go">    chainId=1,</span>
+<span class="go">  ),</span>
+<span class="go">  private_key_for_senders_account,</span>
+<span class="go">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_raw_transaction</span><span class="p">(</span><span class="n">signed_txn</span><span class="o">.</span><span class="n">raw_transaction</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.replace_transaction">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">replace_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_hash</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_transaction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.replace_transaction" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_sendTransaction</span></code> RPC Method</p></li>
+</ul>
+<p>Sends a transaction that replaces the transaction with <code class="docutils literal notranslate"><span class="pre">transaction_hash</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">transaction_hash</span></code> must be the hash of a pending transaction.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">new_transaction</span></code> parameter should be a dictionary with transaction fields
+as required by <a class="reference internal" href="#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a>. It will be used to entirely
+replace the transaction of <code class="docutils literal notranslate"><span class="pre">transaction_hash</span></code> without using any of the pending
+transaction's values.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">new_transaction</span></code> specifies a <code class="docutils literal notranslate"><span class="pre">nonce</span></code> value, it must match the pending
+transaction's nonce.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">new_transaction</span></code> specifies <code class="docutils literal notranslate"><span class="pre">maxFeePerGas</span></code> and <code class="docutils literal notranslate"><span class="pre">maxPriorityFeePerGas</span></code>
+values, they must be greater than the pending transaction's values for each field,
+respectively.</p>
+<ul class="simple">
+<li><p>Legacy Transaction Support (Less Efficient - Not Recommended)</p></li>
+</ul>
+<p>If the pending transaction specified a <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code> value (legacy transaction), the
+<code class="docutils literal notranslate"><span class="pre">gasPrice</span></code> value for the <code class="docutils literal notranslate"><span class="pre">new_transaction</span></code> must be greater than the pending
+transaction's <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code>.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">new_transaction</span></code> does not specify any of <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code>, <code class="docutils literal notranslate"><span class="pre">maxFeePerGas</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">maxPriorityFeePerGas</span></code> values, one of the following will happen:</p>
+<ul class="simple">
+<li><p>If the pending transaction has a <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code> value, this value will be used with a
+multiplier of 1.125 - This is typically the minimum <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code> increase a node requires
+before it accepts a replacement transaction.</p></li>
+<li><p>If a gas price strategy is set, the <code class="docutils literal notranslate"><span class="pre">gasPrice</span></code> value from the gas price
+strategy(See <a class="reference internal" href="gas_price.html#gas-price"><span class="std std-ref">Gas Price API</span></a>) will be used.</p></li>
+<li><p>If none of the above, the client will ultimately decide appropriate values for <code class="docutils literal notranslate"><span class="pre">maxFeePerGas</span></code>
+and <code class="docutils literal notranslate"><span class="pre">maxPriorityFeePerGas</span></code>. These will likely be default values and may result in an
+unsuccessful replacement of the pending transaction.</p></li>
+</ul>
+<p>This method returns the transaction hash of the replacement transaction as a HexBytes object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tx</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">({</span>
+<span class="go">        &#39;to&#39;: &#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;,</span>
+<span class="go">        &#39;from&#39;: web3.eth.accounts[0],</span>
+<span class="go">        &#39;value&#39;: 1000</span>
+<span class="go">    })</span>
+<span class="go">HexBytes(&#39;0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">replace_transaction</span><span class="p">(</span><span class="s1">&#39;0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331&#39;</span><span class="p">,</span> <span class="p">{</span>
+<span class="go">        &#39;to&#39;: &#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;,</span>
+<span class="go">        &#39;from&#39;: web3.eth.accounts[0],</span>
+<span class="go">        &#39;value&#39;: 2000</span>
+<span class="go">    })</span>
+<span class="go">HexBytes(&#39;0x4177e670ec6431606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1528989&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.modify_transaction">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">modify_transaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_hash</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">transaction_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.modify_transaction" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_sendTransaction</span></code> RPC Method</p></li>
+</ul>
+<p>Sends a transaction that modifies the transaction with <code class="docutils literal notranslate"><span class="pre">transaction_hash</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">transaction_params</span></code> are keyword arguments that correspond to valid transaction
+parameters as required by <a class="reference internal" href="#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a>. The parameter values
+will override the pending transaction's values to create the replacement transaction
+to send.</p>
+<p>The same validation and defaulting rules of <a class="reference internal" href="#web3.eth.Eth.replace_transaction" title="web3.eth.Eth.replace_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">replace_transaction()</span></code></a> apply.</p>
+<p>This method returns the transaction hash of the newly modified transaction as a HexBytes object.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tx</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">send_transaction</span><span class="p">({</span>
+<span class="go">        &#39;to&#39;: &#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;,</span>
+<span class="go">        &#39;from&#39;: web3.eth.accounts[0],</span>
+<span class="go">        &#39;value&#39;: 1000</span>
+<span class="go">    })</span>
+<span class="go">HexBytes(&#39;0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">modify_transaction</span><span class="p">(</span><span class="s1">&#39;0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="go">HexBytes(&#39;0xec6434e6701771606e55d6b4ca35a1a6b75ee3d73315145a921026d15299d05&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.sign">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hexstr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.sign" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_sign</span></code> RPC Method</p></li>
+</ul>
+<p>Caller must specify exactly one of: <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">hexstr</span></code>, or <code class="docutils literal notranslate"><span class="pre">text</span></code>.</p>
+<p>Signs the given data with the private key of the given <code class="docutils literal notranslate"><span class="pre">account</span></code>.
+The account must be unlocked.</p>
+<p><code class="docutils literal notranslate"><span class="pre">account</span></code> may be a checksum address or an ENS name</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span>
+<span class="go">      &#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;,</span>
+<span class="go">      text=&#39;some-text-tö-sign&#39;)</span>
+<span class="go">&#39;0x1a8bbe6eab8c72a219385681efefe565afd3accee35f516f8edf5ae82208fbd45a58f9f9116d8d88ba40fcd29076d6eada7027a3b412a9db55a0164547810cc401&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span>
+<span class="go">      &#39;0x582AC4D8929f58c217d4a52aDD361AE470a8a4cD&#39;,</span>
+<span class="go">      data=b&#39;some-text-t\xc3\xb6-sign&#39;)</span>
+<span class="go">&#39;0x1a8bbe6eab8c72a219385681efefe565afd3accee35f516f8edf5ae82208fbd45a58f9f9116d8d88ba40fcd29076d6eada7027a3b412a9db55a0164547810cc401&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span>
+<span class="go">      &#39;0xd3CdA913deB6f67967B99D67aCDFa1712C293601&#39;,</span>
+<span class="go">      hexstr=&#39;0x736f6d652d746578742d74c3b62d7369676e&#39;)</span>
+<span class="go">&#39;0x1a8bbe6eab8c72a219385681efefe565afd3accee35f516f8edf5ae82208fbd45a58f9f9116d8d88ba40fcd29076d6eada7027a3b412a9db55a0164547810cc401&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.sign_typed_data">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">sign_typed_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jsonMessage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.sign_typed_data" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_signTypedData</span></code> RPC Method</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="docutils literal notranslate"><span class="pre">eth_signTypedData</span></code> is not currently supported by any major client (Besu, Erigon, Geth, or Nethermind)</p>
+</div>
+<p>Please note that the <code class="docutils literal notranslate"><span class="pre">jsonMessage</span></code> argument is the loaded JSON Object
+and <strong>NOT</strong> the JSON String itself.</p>
+<p>Signs the <code class="docutils literal notranslate"><span class="pre">Structured</span> <span class="pre">Data</span></code> (or <code class="docutils literal notranslate"><span class="pre">Typed</span> <span class="pre">Data</span></code>) with the private key of the given <code class="docutils literal notranslate"><span class="pre">account</span></code>.
+The account must be unlocked.</p>
+<p><code class="docutils literal notranslate"><span class="pre">account</span></code> may be a checksum address or an ENS name</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.call">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">web3.eth.default_block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_override</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ccip_read_enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.call" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_call</span></code> RPC Method</p></li>
+</ul>
+<p>Executes the given transaction locally without creating a new transaction
+on the blockchain.  Returns the return value of the executed contract.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">transaction</span></code> parameter is handled in the same manner as the
+<a class="reference internal" href="#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myContract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">setVar</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">transact</span><span class="p">()</span>
+<span class="go">HexBytes(&#39;0x79af0c7688afba7588c32a61565fd488c422da7b5773f95b242ea66d3d20afda&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myContract</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">getVar</span><span class="p">()</span><span class="o">.</span><span class="n">call</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="go"># The above call equivalent to the raw call:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">call</span><span class="p">({</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;gas&#39;</span><span class="p">:</span> <span class="mi">21736</span><span class="p">,</span> <span class="s1">&#39;maxFeePerGas&#39;</span><span class="p">:</span> <span class="mi">2000000000</span><span class="p">,</span> <span class="s1">&#39;maxPriorityFeePerGas&#39;</span><span class="p">:</span> <span class="mi">1000000000</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0xc305c901078781C232A2a521C2aF7980f8385ee9&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="s1">&#39;0x477a5c98&#39;</span><span class="p">})</span>
+<span class="go">HexBytes(&#39;0x0000000000000000000000000000000000000000000000000000000000000001&#39;)</span>
+</pre></div>
+</div>
+<p>In most cases it is better to make contract function call through the <a class="reference internal" href="web3.contract.html#web3.contract.Contract" title="web3.contract.Contract"><code class="xref py py-class docutils literal notranslate"><span class="pre">web3.contract.Contract</span></code></a> interface.</p>
+<p>Overriding state is a debugging feature available in Geth clients.
+View their <a class="reference external" href="https://geth.ethereum.org/docs/rpc/ns-eth#3-object---state-override-set">usage documentation</a>
+for a list of possible parameters.</p>
+<p><a class="reference external" href="https://eips.ethereum.org/EIPS/eip-3668">EIP-3668</a> introduced support for the <code class="docutils literal notranslate"><span class="pre">OffchainLookup</span></code> revert / CCIP
+Read support. In order to properly handle a call to a contract function that reverts with an <code class="docutils literal notranslate"><span class="pre">OffchainLookup</span></code>
+error for offchain data retrieval, the <code class="docutils literal notranslate"><span class="pre">ccip_read_enabled</span></code> flag has been added to the <code class="docutils literal notranslate"><span class="pre">eth_call</span></code> method.
+<code class="docutils literal notranslate"><span class="pre">ccip_read_enabled</span></code> is optional, yielding the default value for CCIP Read on calls to a global
+<code class="docutils literal notranslate"><span class="pre">global_ccip_read_enabled</span></code> flag on the provider which is set to <code class="docutils literal notranslate"><span class="pre">True</span></code> by default. This means CCIP Read is
+enabled by default for calls, as is recommended in EIP-3668. Therefore, calls to contract functions that revert with
+an <code class="docutils literal notranslate"><span class="pre">OffchainLookup</span></code> will be handled appropriately by default.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ccip_read_enabled</span></code> flag on the call will always override the value of the global flag on the provider for
+explicit control over specific calls. If the flag on the call is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, the call will raise the
+<code class="docutils literal notranslate"><span class="pre">OffchainLookup</span></code> instead of properly handling the exception according to EIP-3668. This may be useful for
+&quot;preflighting&quot; a transaction with a call (see <a class="reference internal" href="web3.contract.html#ccip-read-example"><span class="std std-ref">CCIP Read support for offchain lookup</span></a> within the examples section).</p>
+<p>If the function called results in a <code class="docutils literal notranslate"><span class="pre">revert</span></code> error, a <code class="docutils literal notranslate"><span class="pre">ContractLogicError</span></code> will be raised.
+If there is an error message with the error, web3.py attempts to parse the
+message that comes back and return it to the user as the error string.
+As of v6.3.0, the raw data is also returned and
+can be accessed via the <code class="docutils literal notranslate"><span class="pre">data</span></code> attribute on <code class="docutils literal notranslate"><span class="pre">ContractLogicError</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.simulateV1">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">simulateV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.simulateV1" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_simulateV1</span></code> RPC Method</p></li>
+</ul>
+<p>Executes a simulation for the given payload at the given block. Returns the simulation results.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">simulateV1</span><span class="p">(</span>
+<span class="gp">... </span>  <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;blockStateCalls&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="gp">... </span>      <span class="p">{</span>
+<span class="gp">... </span>        <span class="s2">&quot;blockOverrides&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">... </span>          <span class="s2">&quot;baseFeePerGas&quot;</span><span class="p">:</span> <span class="n">Wei</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="p">},</span>
+<span class="gp">... </span>        <span class="s2">&quot;stateOverrides&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">... </span>          <span class="s2">&quot;0xc100000000000000000000000000000000000000&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">... </span>            <span class="s2">&quot;balance&quot;</span><span class="p">:</span> <span class="n">Wei</span><span class="p">(</span><span class="mi">500000000</span><span class="p">),</span>
+<span class="gp">... </span>          <span class="p">}</span>
+<span class="gp">... </span>        <span class="p">},</span>
+<span class="gp">... </span>        <span class="s2">&quot;calls&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="gp">... </span>          <span class="p">{</span>
+<span class="gp">... </span>            <span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="s2">&quot;0xc100000000000000000000000000000000000000&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="s2">&quot;0xc100000000000000000000000000000000000000&quot;</span><span class="p">,</span>
+<span class="gp">... </span>            <span class="s2">&quot;maxFeePerGas&quot;</span><span class="p">:</span> <span class="n">Wei</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<span class="gp">... </span>            <span class="s2">&quot;maxPriorityFeePerGas&quot;</span><span class="p">:</span> <span class="n">Wei</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<span class="gp">... </span>          <span class="p">}</span>
+<span class="gp">... </span>        <span class="p">],</span>
+<span class="gp">... </span>      <span class="p">}</span>
+<span class="gp">... </span>    <span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;validation&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;traceTransfers&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>  <span class="p">},</span>
+<span class="gp">... </span>  <span class="s2">&quot;latest&quot;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">[AttributeDict({</span>
+<span class="go">  &#39;baseFeePerGas&#39;: 10,</span>
+<span class="go">  &#39;blobGasUsed&#39;: 0,</span>
+<span class="go">  &#39;calls&#39;: [AttributeDict({</span>
+<span class="go">    &#39;returnData&#39;: HexBytes(&#39;0x&#39;),</span>
+<span class="go">    &#39;logs&#39;: [],</span>
+<span class="go">    &#39;gasUsed&#39;: 21000,</span>
+<span class="go">    &#39;status&#39;: 1</span>
+<span class="go">  })],</span>
+<span class="go">  &#39;difficulty&#39;: 0,</span>
+<span class="go">  &#39;excessBlobGas&#39;: 0,</span>
+<span class="go">  &#39;extraData&#39;: HexBytes(&#39;0x&#39;),</span>
+<span class="go">  &#39;gasLimit&#39;: 983527531,</span>
+<span class="go">  &#39;gasUsed&#39;: 21000,</span>
+<span class="go">  &#39;hash&#39;: HexBytes(&#39;0xb2dba64c905dea42e940d67b8e0f44019f4a61c4833a9cba99c426b748d9e1a4&#39;),</span>
+<span class="go">  &#39;logsBloom&#39;: HexBytes(&#39;0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000&#39;),</span>
+<span class="go">  &#39;miner&#39;: &#39;0x0000000000000000000000000000000000000000&#39;,</span>
+<span class="go">  &#39;mixHash&#39;: HexBytes(&#39;0x0000000000000000000000000000000000000000000000000000000000000000&#39;),</span>
+<span class="go">  &#39;nonce&#39;: HexBytes(&#39;0x0000000000000000&#39;),</span>
+<span class="go">  &#39;number&#39;: 18,</span>
+<span class="go">  &#39;parentBeaconBlockRoot&#39;: HexBytes(&#39;0x0000000000000000000000000000000000000000000000000000000000000000&#39;),</span>
+<span class="go">  &#39;parentHash&#39;: HexBytes(&#39;0x71d32db179a1291de86b5f7fa15224292ef9ee6ebb3fa62484896601d9f20d5f&#39;),</span>
+<span class="go">  &#39;receiptsRoot&#39;: HexBytes(&#39;0xf78dfb743fbd92ade140711c8bbc542b5e307f0ab7984eff35d751969fe57efa&#39;),</span>
+<span class="go">  &#39;sha3Uncles&#39;: HexBytes(&#39;0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347&#39;),</span>
+<span class="go">  &#39;size&#39;: 626,</span>
+<span class="go">  &#39;stateRoot&#39;: HexBytes(&#39;0xbbbe846b616911d13780f58f500f8948e0878ba6f55cae7432da915cab3ba2b6&#39;),</span>
+<span class="go">  &#39;timestamp&#39;: 1739921487,</span>
+<span class="go">  &#39;transactions&#39;: [HexBytes(&#39;0xfd801060af398c615f1ffb61586604aaf4fc688615cb1ff088531638a9b9e8e6&#39;)],</span>
+<span class="go">  &#39;transactionsRoot&#39;: HexBytes(&#39;0xa6bc01d7707e94b62dccb8d097df1db25d6b44fad35463ecc99c9e5822e7aa5f&#39;),</span>
+<span class="go">  &#39;uncles&#39;: [],</span>
+<span class="go">  &#39;withdrawals&#39;: [],</span>
+<span class="go">  &#39;withdrawalsRoot&#39;: HexBytes(&#39;0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421&#39;)</span>
+<span class="go">})]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.create_access_list">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">create_access_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">web3.eth.default_block</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.create_access_list" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_createAccessList</span></code> RPC Method</p></li>
+</ul>
+<p>This method creates an <a class="reference external" href="https://eips.ethereum.org/EIPS/eip-2930">EIP-2930</a> type <code class="docutils literal notranslate"><span class="pre">accessList</span></code> based on a given
+<code class="docutils literal notranslate"><span class="pre">transaction</span></code>. The <code class="docutils literal notranslate"><span class="pre">accessList</span></code> contains all storage slots and addresses read and written by the transaction,
+except for the sender account and the precompiles. This method uses the same <code class="docutils literal notranslate"><span class="pre">transaction</span></code> call object and
+<code class="docutils literal notranslate"><span class="pre">block_identifier</span></code> object as <a class="reference internal" href="#web3.eth.Eth.call" title="web3.eth.Eth.call"><code class="xref py py-meth docutils literal notranslate"><span class="pre">call()</span></code></a>. An <code class="docutils literal notranslate"><span class="pre">accessList</span></code> can be used to access contracts that
+became inaccessible due to gas cost increases.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">transaction</span></code> parameter is handled in the same manner as the
+<a class="reference internal" href="#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a> method.
+The optional <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code> parameter is a block_number or <code class="docutils literal notranslate"><span class="pre">latest</span></code> or <code class="docutils literal notranslate"><span class="pre">pending</span></code>. Default is <code class="docutils literal notranslate"><span class="pre">latest</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">create_access_list</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span>
+<span class="gp">... </span>        <span class="s2">&quot;to&quot;</span><span class="p">:</span> <span class="n">to_checksum_address</span><span class="p">(</span><span class="s2">&quot;0xF0109fC8DF283027b6285cc889F5aA624EaC1F55&quot;</span><span class="p">),</span>
+<span class="gp">... </span>        <span class="s2">&quot;gasPrice&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="o">**</span><span class="mi">11</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;0x608060806080608155&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">},</span>
+<span class="gp">... </span>    <span class="s2">&quot;pending&quot;</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    &quot;accessList&quot;: [</span>
+<span class="go">        AttributeDict({</span>
+<span class="go">            &quot;address&quot;: &quot;0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe&quot;,</span>
+<span class="go">            &quot;storageKeys&quot;: [</span>
+<span class="go">                &quot;0x0000000000000000000000000000000000000000000000000000000000000003&quot;,</span>
+<span class="go">                &quot;0x0000000000000000000000000000000000000000000000000000000000000007&quot;,</span>
+<span class="go">            ]</span>
+<span class="go">        }),</span>
+<span class="go">        AttributeDict({</span>
+<span class="go">            &quot;address&quot;: &quot;0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413&quot;,</span>
+<span class="go">            &quot;storageKeys&quot;: []</span>
+<span class="go">        }),</span>
+<span class="go">    ],</span>
+<span class="go">    &quot;gasUsed&quot;: 21000</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+<p>The method <code class="docutils literal notranslate"><span class="pre">eth_createAccessList</span></code> returns a list of addresses and storage keys used by the transaction, plus the gas
+consumed when the <code class="docutils literal notranslate"><span class="pre">accessList</span></code> is included. Like <code class="docutils literal notranslate"><span class="pre">eth_estimateGas</span></code>, this is an estimation; the list could change when
+the transaction is actually finalized. Adding an <code class="docutils literal notranslate"><span class="pre">accessList</span></code> to your transaction does not necessarily result in lower
+gas usage compared to a transaction without an <code class="docutils literal notranslate"><span class="pre">accessList</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.fee_history">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">fee_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newest_block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_percentiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.fee_history" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_feeHistory</span></code> RPC Method</p></li>
+</ul>
+<p>Returns transaction fee data for up to 1,024 blocks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="（在 Python v3.13）"><em>int</em></a><em> or </em><em>hexstring</em>) -- The number of blocks in the requested range. Depending on the client, this
+value should be either a <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> between 1 and 1024 or a hexstring.
+Less than requested may be returned if not all blocks are available.</p></li>
+<li><p><strong>newest_block</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="（在 Python v3.13）"><em>int</em></a><em> or </em><em>BlockParams</em>) -- The newest, highest-numbered, block in the requested range. This value may be an
+<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> or one of the predefined block parameters <code class="docutils literal notranslate"><span class="pre">'latest'</span></code>, <code class="docutils literal notranslate"><span class="pre">'earliest'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'pending'</span></code>.</p></li>
+<li><p><strong>reward_percentiles</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="（在 Python v3.13）"><em>float</em></a><em>] or </em><em>None</em>) -- <em>(optional)</em> A monotonically increasing list of percentile <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a> values to
+sample from each block's effective priority fees per gas in ascending order, weighted by gas used.</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">AttributeDict</span></code> containing the following keys:</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p><strong>oldestBlock</strong> <em>(int)</em> -- The oldest, lowest-numbered, block in the range requested as a <code class="docutils literal notranslate"><span class="pre">BlockNumber</span></code> type
+with <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="（在 Python v3.13）"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> value.</p></li>
+<li><p><strong>baseFeePerGas</strong> <em>(List[Wei])</em> -- An array of block base fees per gas. This includes the next block after the
+newest of the returned range, because this value can be derived from the newest block. Zeroes are returned for
+pre-EIP-1559 blocks.</p></li>
+<li><p><strong>gasUsedRatio</strong> <em>(List[float])</em> -- An array of <code class="docutils literal notranslate"><span class="pre">gasUsed</span></code>/<code class="docutils literal notranslate"><span class="pre">gasLimit</span></code> float values for the requested blocks.</p></li>
+<li><p><strong>reward</strong> <em>(List[List[Wei]])</em> -- <em>(optional)</em> A two-dimensional array of effective priority fees per gas at the
+requested block percentiles.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">fee_history</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;latest&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+<span class="go">AttributeDict({</span>
+<span class="go">    &#39;oldestBlock&#39;: 3,</span>
+<span class="go">    &#39;reward&#39;: [[220, 7145389], [1000000, 6000213], [550, 550], [125, 12345678]],</span>
+<span class="go">    &#39;baseFeePerGas&#39;: [202583058, 177634473, 155594425, 136217133, 119442408],</span>
+<span class="go">    &#39;gasUsedRatio&#39;: [0.007390479689642084, 0.0036988514889990873, 0.0018512333048507866, 0.00741217041320997]</span>
+<span class="go">})</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.estimate_gas">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">estimate_gas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state_override</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.estimate_gas" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_estimateGas</span></code> RPC Method</p></li>
+</ul>
+<p>Executes the given transaction locally without creating a new transaction
+on the blockchain.  Returns amount of gas consumed by execution which can
+be used as a gas estimate.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">transaction</span></code> and <code class="docutils literal notranslate"><span class="pre">block_identifier</span></code> parameters are handled in the
+same manner as the <a class="reference internal" href="#web3.eth.Eth.send_transaction" title="web3.eth.Eth.send_transaction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">send_transaction()</span></code></a> method.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">state_override</span></code> is useful when there is a chain of transaction calls.
+It overrides state so that the gas estimate of a transaction is accurate in
+cases where prior calls produce side effects.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">estimate_gas</span><span class="p">({</span><span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;0xd3CdA913deB6f67967B99D67aCDFa1712C293601&#39;</span><span class="p">,</span> <span class="s1">&#39;from&#39;</span><span class="p">:</span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">accounts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="mi">12345</span><span class="p">})</span>
+<span class="go">21000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.generate_gas_price">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">generate_gas_price</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transaction_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.generate_gas_price" title="Link to this definition"></a></dt>
+<dd><p>Uses the selected gas price strategy to calculate a gas price. This method
+returns the gas price denominated in wei.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">transaction_params</span></code> argument is optional however some gas price strategies
+may require it to be able to produce a gas price.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">generate_gas_price</span><span class="p">()</span>
+<span class="go">20000000000</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>For information about how gas price can be customized in web3 see
+<a class="reference internal" href="gas_price.html#gas-price"><span class="std std-ref">Gas Price API</span></a>.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.set_gas_price_strategy">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">set_gas_price_strategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gas_price_strategy</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.set_gas_price_strategy" title="Link to this definition"></a></dt>
+<dd><p>Set the selected gas price strategy. It must be a method of the signature
+<code class="docutils literal notranslate"><span class="pre">(web3,</span> <span class="pre">transaction_params)</span></code> and return a gas price denominated in wei.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.subscribe">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">subscribe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subscription_identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subscription_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.subscribe" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_subscribe</span></code> RPC Method</p></li>
+</ul>
+<p>Only available on persistent connection providers:
+<a class="reference internal" href="providers.html#web3.providers.persistent.WebSocketProvider" title="web3.providers.persistent.WebSocketProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProvider</span></code></a> and
+<a class="reference internal" href="providers.html#web3.providers.persistent.AsyncIPCProvider" title="web3.providers.persistent.AsyncIPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code></a>.</p>
+<p>Returns a subscription ID that can be used to track a particular subscription to, or unsubscribe from, an event.
+For usage examples see the docs on <a class="reference internal" href="providers.html#subscription-examples"><span class="std std-ref">Using Persistent Connection Providers</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">subscription_id</span> <span class="o">=</span> <span class="k">await</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s1">&#39;newHeaders&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">subscription_id</span>
+<span class="go">&#39;0xbd63bb89e7475591a0a6fc9014307bc4&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.unsubscribe">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">unsubscribe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subscription_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.unsubscribe" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_unsubscribe</span></code> RPC Method</p></li>
+</ul>
+<p>Only available on persistent connection providers:
+<a class="reference internal" href="providers.html#web3.providers.persistent.WebSocketProvider" title="web3.providers.persistent.WebSocketProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">WebSocketProvider</span></code></a> and
+<a class="reference internal" href="providers.html#web3.providers.persistent.AsyncIPCProvider" title="web3.providers.persistent.AsyncIPCProvider"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIPCProvider</span></code></a>.</p>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">True</span></code> if successfully unsubscribed. For usage examples see the docs on
+<a class="reference internal" href="providers.html#subscription-examples"><span class="std std-ref">Using Persistent Connection Providers</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">unsubscribe</span><span class="p">(</span><span class="n">subscription_id</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="filters">
+<h2>Filters<a class="headerlink" href="#filters" title="Link to this heading"></a></h2>
+<p>The following methods are available on the <code class="docutils literal notranslate"><span class="pre">web3.eth</span></code> object for interacting
+with the filtering API.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.filter">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.filter" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_newFilter</span></code>, <code class="docutils literal notranslate"><span class="pre">eth_newBlockFilter</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">eth_newPendingTransactionFilter</span></code> RPC Methods.</p></li>
+</ul>
+<p>This method delegates to one of three RPC methods depending on the value of
+<code class="docutils literal notranslate"><span class="pre">filter_params</span></code>.</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">filter_params</span></code> is the string <code class="docutils literal notranslate"><span class="pre">'pending'</span></code> then a new filter is
+registered using the <code class="docutils literal notranslate"><span class="pre">eth_newPendingTransactionFilter</span></code> RPC method.
+This will create a new filter that will be called for each new unmined
+transaction that the node receives.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">filter_params</span></code> is the string <code class="docutils literal notranslate"><span class="pre">'latest'</span></code> then a new filter is
+registered using the <code class="docutils literal notranslate"><span class="pre">eth_newBlockFilter</span></code> RPC method.  This will create
+a new filter that will be called each time the node receives a new block.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">filter_params</span></code> is a dictionary then a new filter is registered
+using the <code class="docutils literal notranslate"><span class="pre">eth_newFilter</span></code> RPC method.  This will create a new filter
+that will be called for all log entries that match the provided
+<code class="docutils literal notranslate"><span class="pre">filter_params</span></code>.</p></li>
+</ul>
+<p>This method returns a <code class="docutils literal notranslate"><span class="pre">web3.utils.filters.Filter</span></code> object which can then
+be used to either directly fetch the results of the filter or to register
+callbacks which will be called with each result of the filter.</p>
+<p>When creating a new log filter, the <code class="docutils literal notranslate"><span class="pre">filter_params</span></code> should be a
+dictionary with the following keys. Note that the keys are camel-cased
+strings, as is expected in a JSON-RPC request.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fromBlock</span></code>: <code class="docutils literal notranslate"><span class="pre">integer/tag</span></code> - (optional, default: &quot;latest&quot;) Integer
+block number, or one of predefined block identifiers
+&quot;latest&quot;, &quot;pending&quot;, &quot;earliest&quot;, &quot;safe&quot;, or &quot;finalized&quot;.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">toBlock</span></code>: <code class="docutils literal notranslate"><span class="pre">integer/tag</span></code> - (optional, default: &quot;latest&quot;) Integer
+block number, or one of predefined block identifiers
+&quot;latest&quot;, &quot;pending&quot;, &quot;earliest&quot;, &quot;safe&quot;, or &quot;finalized&quot;.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">address</span></code>: <code class="docutils literal notranslate"><span class="pre">string</span></code> or list of <code class="docutils literal notranslate"><span class="pre">strings</span></code>, each 20 Bytes -
+(optional) Contract address or a list of addresses from which logs should
+originate.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">topics</span></code>: list of 32 byte <code class="docutils literal notranslate"><span class="pre">strings</span></code> or <code class="docutils literal notranslate"><span class="pre">null</span></code> - (optional) Array of
+topics that should be used for filtering.  Topics are order-dependent.
+This parameter can also be a list of topic lists in which case filtering
+will match any of the provided topic arrays.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Though <code class="docutils literal notranslate"><span class="pre">&quot;latest&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;safe&quot;</span></code> block identifiers are not yet part of the
+specifications for <code class="docutils literal notranslate"><span class="pre">eth_newFilter</span></code>, they are supported by web3.py and may or
+may not yield expected results depending on the node being accessed.</p>
+</div>
+<p>See <a class="reference internal" href="filters.html"><span class="doc">Events and Logs</span></a> for more information about filtering.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+<span class="go">&lt;BlockFilter at 0x10b72dc28&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;pending&#39;</span><span class="p">)</span>
+<span class="go">&lt;TransactionFilter at 0x10b780340&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">({</span><span class="s1">&#39;fromBlock&#39;</span><span class="p">:</span> <span class="mi">1000000</span><span class="p">,</span> <span class="s1">&#39;toBlock&#39;</span><span class="p">:</span> <span class="mi">1000100</span><span class="p">,</span> <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="s1">&#39;0x6C8f2A135f6ed072DE4503Bd7C4999a1a17F824B&#39;</span><span class="p">})</span>
+<span class="go">&lt;LogFilter at 0x10b7803d8&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_filter_changes">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_filter_changes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_filter_changes" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getFilterChanges</span></code> RPC Method.</p></li>
+</ul>
+<p>Returns all new entries which occurred since the last call to this method
+for the given <code class="docutils literal notranslate"><span class="pre">filter_id</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">filter</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_filter_changes</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">filter_id</span><span class="p">)</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;address&#39;: &#39;0xDc3A9Db694BCdd55EBaE4A89B22aC6D12b3F0c24&#39;,</span>
+<span class="go">        &#39;blockHash&#39;: &#39;0xb72256286ca528e09022ffd408856a73ef90e7216ac560187c6e43b4c4efd2f0&#39;,</span>
+<span class="go">        &#39;blockNumber&#39;: 2217196,</span>
+<span class="go">        &#39;data&#39;: &#39;0x0000000000000000000000000000000000000000000000000000000000000001&#39;,</span>
+<span class="go">        &#39;logIndex&#39;: 0,</span>
+<span class="go">        &#39;topics&#39;: [&#39;0xe65b00b698ba37c614af350761c735c5f4a82b4ab365a1f1022d49d9dfc8e930&#39;,</span>
+<span class="go">        &#39;0x000000000000000000000000754c50465885f1ed1fa1a55b95ee8ecf3f1f4324&#39;,</span>
+<span class="go">        &#39;0x296c7fb6ccafa3e689950b947c2895b07357c95b066d5cdccd58c301f41359a3&#39;],</span>
+<span class="go">        &#39;transactionHash&#39;: &#39;0xfe1289fd3915794b99702202f65eea2e424b2f083a12749d29b4dd51f6dce40d&#39;,</span>
+<span class="go">        &#39;transactionIndex&#39;: 1,</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_filter_logs">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_filter_logs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_filter_logs" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_getFilterLogs</span></code> RPC Method.</p></li>
+</ul>
+<p>Returns all entries for the given <code class="docutils literal notranslate"><span class="pre">filter_id</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">filter</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_filter_logs</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">filter_id</span><span class="p">)</span>
+<span class="go">[</span>
+<span class="go">    {</span>
+<span class="go">        &#39;address&#39;: &#39;0xDc3A9Db694BCdd55EBaE4A89B22aC6D12b3F0c24&#39;,</span>
+<span class="go">        &#39;blockHash&#39;: &#39;0xb72256286ca528e09022ffd408856a73ef90e7216ac560187c6e43b4c4efd2f0&#39;,</span>
+<span class="go">        &#39;blockNumber&#39;: 2217196,</span>
+<span class="go">        &#39;data&#39;: &#39;0x0000000000000000000000000000000000000000000000000000000000000001&#39;,</span>
+<span class="go">        &#39;logIndex&#39;: 0,</span>
+<span class="go">        &#39;topics&#39;: [&#39;0xe65b00b698ba37c614af350761c735c5f4a82b4ab365a1f1022d49d9dfc8e930&#39;,</span>
+<span class="go">        &#39;0x000000000000000000000000754c50465885f1ed1fa1a55b95ee8ecf3f1f4324&#39;,</span>
+<span class="go">        &#39;0x296c7fb6ccafa3e689950b947c2895b07357c95b066d5cdccd58c301f41359a3&#39;],</span>
+<span class="go">        &#39;transactionHash&#39;: &#39;0xfe1289fd3915794b99702202f65eea2e424b2f083a12749d29b4dd51f6dce40d&#39;,</span>
+<span class="go">        &#39;transactionIndex&#39;: 1,</span>
+<span class="go">    },</span>
+<span class="go">    ...</span>
+<span class="go">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.uninstall_filter">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">uninstall_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.uninstall_filter" title="Link to this definition"></a></dt>
+<dd><ul class="simple">
+<li><p>Delegates to <code class="docutils literal notranslate"><span class="pre">eth_uninstallFilter</span></code> RPC Method.</p></li>
+</ul>
+<p>Uninstalls the filter specified by the given <code class="docutils literal notranslate"><span class="pre">filter_id</span></code>.  Returns
+boolean as to whether the filter was successfully uninstalled.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">filter</span> <span class="o">=</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">filter</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">uninstall_filter</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">filter_id</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">uninstall_filter</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">filter_id</span><span class="p">)</span>
+<span class="go">False  # already uninstalled.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.get_logs">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">get_logs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.get_logs" title="Link to this definition"></a></dt>
+<dd><p>This is the equivalent of: creating a new
+filter, running <a class="reference internal" href="#web3.eth.Eth.get_filter_logs" title="web3.eth.Eth.get_filter_logs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_filter_logs()</span></code></a>, and then uninstalling the filter. See
+<a class="reference internal" href="#web3.eth.Eth.filter" title="web3.eth.Eth.filter"><code class="xref py py-meth docutils literal notranslate"><span class="pre">filter()</span></code></a> for details on allowed filter parameters.</p>
+</dd></dl>
+
+</section>
+<section id="contracts">
+<h2>Contracts<a class="headerlink" href="#contracts" title="Link to this heading"></a></h2>
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.contract">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">contract</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contract_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ContractFactoryClass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Contract</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">contract_factory_kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.contract" title="Link to this definition"></a></dt>
+<dd><p>If <code class="docutils literal notranslate"><span class="pre">address</span></code> is provided, then this method will return an instance of the
+contract defined by <code class="docutils literal notranslate"><span class="pre">abi</span></code>. The address may be a checksum string,
+or an ENS name like <code class="docutils literal notranslate"><span class="pre">'mycontract.eth'</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="n">contract</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s1">&#39;0x000000000000000000000000000000000000dEaD&#39;</span><span class="p">,</span> <span class="n">abi</span><span class="o">=...</span><span class="p">)</span>
+
+<span class="c1"># alternatively:</span>
+<span class="n">contract</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s1">&#39;mycontract.eth&#39;</span><span class="p">,</span> <span class="n">abi</span><span class="o">=...</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>If you use an ENS name to initialize a contract, the contract will be looked up by
+name on each use. If the name could ever change maliciously, first
+<a class="reference internal" href="ens_overview.html#ens-get-address"><span class="std std-ref">Get the Address for an ENS Name</span></a>, and then create the contract with the checksum address.</p>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">address</span></code> is <em>not</em> provided, the newly created contract class will be returned. That
+class will then be initialized by supplying the address.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span>
+
+<span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+
+<span class="n">Contract</span> <span class="o">=</span> <span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">contract</span><span class="p">(</span><span class="n">abi</span><span class="o">=...</span><span class="p">)</span>
+
+<span class="c1"># later, initialize contracts with the same metadata at different addresses:</span>
+<span class="n">contract1</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s1">&#39;0x000000000000000000000000000000000000dEaD&#39;</span><span class="p">)</span>
+<span class="n">contract2</span> <span class="o">=</span> <span class="n">Contract</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="s1">&#39;mycontract.eth&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">contract_name</span></code> will be used as the name of the contract class.  If it is
+<code class="docutils literal notranslate"><span class="pre">None</span></code> then the name of the <code class="docutils literal notranslate"><span class="pre">ContractFactoryClass</span></code> will be used.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ContractFactoryClass</span></code> will be used as the base Contract class.</p>
+<p>The following arguments are accepted for contract class creation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>abi</strong> (<em>ABI</em>) -- Application Binary Interface. Usually provided since an <code class="docutils literal notranslate"><span class="pre">abi</span></code> is required to interact with any contract.</p></li>
+<li><p><strong>asm</strong> -- Assembly code generated by the compiler</p></li>
+<li><p><strong>ast</strong> -- Abstract Syntax Tree of the contract generated by the compiler</p></li>
+<li><p><strong>bytecode</strong> -- Bytecode of the contract generated by the compiler</p></li>
+<li><p><strong>bytecode_runtime</strong> -- Bytecode stored at the contract address, excludes the constructor and initialization code</p></li>
+<li><p><strong>clone_bin</strong></p></li>
+<li><p><strong>dev_doc</strong></p></li>
+<li><p><strong>decode_tuples</strong> -- Optionally convert tuples/structs to named tuples</p></li>
+<li><p><strong>interface</strong></p></li>
+<li><p><strong>metadata</strong> -- Contract Metadata generated by the compiler</p></li>
+<li><p><strong>opcodes</strong> -- Opcodes for the contract generated by the compiler</p></li>
+<li><p><strong>src_map</strong></p></li>
+<li><p><strong>src_map_runtime</strong></p></li>
+<li><p><strong>user_doc</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p>Instance of the contract</p>
+</dd>
+<dt class="field-odd">返回类型<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="web3.contract.html#web3.contract.Contract" title="web3.contract.Contract">Contract</a></p>
+</dd>
+<dt class="field-even">抛出<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="（在 Python v3.13）"><strong>TypeError</strong></a> -- If the address is not provided</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="（在 Python v3.13）"><strong>AttributeError</strong></a> -- If the contract class is not initialized</p></li>
+</ul>
+</dd>
+</dl>
+<p>See the <a class="reference internal" href="web3.contract.html"><span class="doc">Contracts</span></a> documentation for more information about Contracts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="web3.eth.Eth.set_contract_factory">
+<span class="sig-prename descclassname"><span class="pre">Eth.</span></span><span class="sig-name descname"><span class="pre">set_contract_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contractFactoryClass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#web3.eth.Eth.set_contract_factory" title="Link to this definition"></a></dt>
+<dd><p>Modify the default contract factory from <code class="docutils literal notranslate"><span class="pre">Contract</span></code> to <code class="docutils literal notranslate"><span class="pre">contractFactoryClass</span></code>.
+Future calls to <code class="docutils literal notranslate"><span class="pre">Eth.contract()</span></code> will then default to <code class="docutils literal notranslate"><span class="pre">contractFactoryClass</span></code>.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="web3.main.html" class="btn btn-neutral float-left" title="Web3 API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="web3.beacon.html" class="btn btn-neutral float-right" title="Beacon API" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

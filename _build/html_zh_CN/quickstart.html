@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>快速开始 &mdash; web3.py 7.13.0 文档</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/toggle.css?v=255ab139" />
+      <link rel="stylesheet" type="text/css" href="_static/css/banner.css?v=3691352e" />
+
+
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e1264167"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=beaddf03"></script>
+      <script src="_static/js/matomo.js?v=9fa6000d"></script>
+      <script src="_static/js/toggle.js?v=6fec00b1"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="next" title="概览" href="overview.html" />
+    <link rel="prev" title="gm（早安）" href="index.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="index.html" class="icon icon-home">
+            web3.py
+          </a>
+<div role="search">
+  <form
+    id="rtd-search-form"
+    class="wy-form"
+    action="search.html"
+    method="get"
+  >
+    <input type="text" name="q" placeholder="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+
+<div class="search-banner-wrapper">
+  <a href="https://forms.gle/PAyV3QH9XH6WrzSaA">
+    <img
+      src="_static/banner/feedback.png"
+      alt="Feedback Form"
+    />
+  </a>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+              <p class="caption" role="heading"><span class="caption-text">介绍</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">快速开始</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">安装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-web3">使用 Web3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#test-provider">Test Provider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#local-providers">Local Providers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#remote-providers">Remote Providers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-blockchain-info">Getting Blockchain Info</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">概览</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release_notes.html">发布说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">指南</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="providers.html">提供者</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.account.html">Accounts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transactions.html">交易</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.contract.html">Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filters.html">事件和日志</a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscriptions.html">事件订阅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">中间件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">Web3 内部实现</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens_overview.html">以太坊名称服务 (ENS)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">故障排除</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">迁移指南</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="web3.main.html">Web3 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.eth.html">web3.eth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.beacon.html">Beacon API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.net.html">Net API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.geth.html">Geth API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.tracing.html">Tracing API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="web3.utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gas_price.html">Gas 价格 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ens.html">ENS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constants.html">常量</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">社区</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="resources.html">资源和学习材料</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code_of_conduct.html">行为准则</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">web3.py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">快速开始</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quickstart.rst.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="quickstart">
+<span id="id1"></span><h1>快速开始<a class="headerlink" href="#quickstart" title="Link to this heading"></a></h1>
+<nav class="contents local" id="id2">
+<ul class="simple">
+<li><p><a class="reference internal" href="#installation" id="id3">安装</a></p></li>
+<li><p><a class="reference internal" href="#using-web3" id="id4">使用 Web3</a></p>
+<ul>
+<li><p><a class="reference internal" href="#test-provider" id="id5">Test Provider</a></p></li>
+<li><p><a class="reference internal" href="#local-providers" id="id6">Local Providers</a></p></li>
+<li><p><a class="reference internal" href="#remote-providers" id="id7">Remote Providers</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#getting-blockchain-info" id="id8">Getting Blockchain Info</a></p></li>
+</ul>
+</nav>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>All code starting with a <code class="docutils literal notranslate"><span class="pre">$</span></code> is meant to run on your terminal.
+All code starting with a <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span></code> is meant to run in a python interpreter,
+like <a class="reference external" href="https://pypi.org/project/ipython/">ipython</a>.</p>
+</div>
+<section id="installation">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">安装</a><a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>web3.py can be installed (preferably in a <a class="reference internal" href="troubleshooting.html#setup-environment"><span class="std std-ref">virtualenv</span></a>)
+using <code class="docutils literal notranslate"><span class="pre">pip</span></code> as follows:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>web3
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>If you run into problems during installation, you might have a
+broken environment. See the troubleshooting guide to <a class="reference internal" href="troubleshooting.html#setup-environment"><span class="std std-ref">setting up a
+clean environment</span></a>.</p>
+</div>
+</section>
+<section id="using-web3">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">使用 Web3</a><a class="headerlink" href="#using-web3" title="Link to this heading"></a></h2>
+<p>This library depends on a connection to an Ethereum node. We call these connections
+<em>Providers</em> and there are several ways to configure them. The full details can be found
+in the <a class="reference internal" href="providers.html#providers"><span class="std std-ref">Providers</span></a> documentation. This Quickstart guide will highlight
+a couple of the most common use cases.</p>
+<section id="test-provider">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Test Provider</a><a class="headerlink" href="#test-provider" title="Link to this heading"></a></h3>
+<p>If you're just learning the ropes or doing some quick prototyping, you can use a test
+provider, <a class="reference external" href="https://github.com/ethereum/eth-tester">eth-tester</a>. This provider includes
+some accounts prepopulated with test ether and instantly includes each transaction into a block.
+web3.py makes this test provider available via <code class="docutils literal notranslate"><span class="pre">EthereumTesterProvider</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">EthereumTesterProvider</span></code> requires additional dependencies. Install them via
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;web3[tester]&quot;</span></code>, then import and instantiate the provider as seen below.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">EthereumTesterProvider</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">EthereumTesterProvider</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</section>
+<section id="local-providers">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Local Providers</a><a class="headerlink" href="#local-providers" title="Link to this heading"></a></h3>
+<p>The hardware requirements are <a class="reference external" href="https://ethereum.org/en/developers/docs/nodes-and-clients/run-a-node/#top">steep</a>,
+but the safest way to interact with Ethereum is to run an Ethereum client on your own hardware.
+For locally run nodes, an IPC connection is the most secure option, but HTTP and
+websocket configurations are also available. By default, the popular <a class="reference external" href="https://geth.ethereum.org/">Geth client</a>
+exposes port <code class="docutils literal notranslate"><span class="pre">8545</span></code> to serve HTTP requests and <code class="docutils literal notranslate"><span class="pre">8546</span></code> for websocket requests. Connecting
+to this local node can be done as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">AsyncWeb3</span>
+
+<span class="go"># IPCProvider:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">IPCProvider</span><span class="p">(</span><span class="s1">&#39;./path/to/filename.ipc&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+
+<span class="go"># HTTPProvider:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s1">&#39;http://127.0.0.1:8545&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+
+<span class="go"># AsyncHTTPProvider:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">AsyncHTTPProvider</span><span class="p">(</span><span class="s1">&#39;http://127.0.0.1:8545&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+
+<span class="go"># -- Persistent Connection Providers -- #</span>
+
+<span class="go"># WebSocketProvider:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="s1">&#39;ws://127.0.0.1:8546&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+
+<span class="go"># AsyncIPCProvider:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">AsyncIPCProvider</span><span class="p">(</span><span class="s1">&#39;./path/to/filename.ipc&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">await</span> <span class="n">w3</span><span class="o">.</span><span class="n">is_connected</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</section>
+<section id="remote-providers">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Remote Providers</a><a class="headerlink" href="#remote-providers" title="Link to this heading"></a></h3>
+<p>The quickest way to interact with the Ethereum blockchain is to use a <a class="reference external" href="https://ethereum.org/en/developers/docs/nodes-and-clients/nodes-as-a-service/#popular-node-services">remote node provider</a>.
+You can connect to a remote node by specifying the endpoint, just like the previous local node example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">web3</span><span class="w"> </span><span class="kn">import</span> <span class="n">Web3</span><span class="p">,</span> <span class="n">AsyncWeb3</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">Web3</span><span class="p">(</span><span class="n">Web3</span><span class="o">.</span><span class="n">HTTPProvider</span><span class="p">(</span><span class="s1">&#39;https://&lt;your-provider-url&gt;&#39;</span><span class="p">))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">AsyncHTTPProvider</span><span class="p">(</span><span class="s1">&#39;https://&lt;your-provider-url&gt;&#39;</span><span class="p">))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span> <span class="o">=</span> <span class="k">await</span> <span class="n">AsyncWeb3</span><span class="p">(</span><span class="n">AsyncWeb3</span><span class="o">.</span><span class="n">WebSocketProvider</span><span class="p">(</span><span class="s1">&#39;wss://&lt;your-provider-url&gt;&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This endpoint is provided by the remote node service, typically after you create an account.</p>
+</section>
+</section>
+<section id="getting-blockchain-info">
+<span id="first-w3-use"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">Getting Blockchain Info</a><a class="headerlink" href="#getting-blockchain-info" title="Link to this heading"></a></h2>
+<p>It's time to start using web3.py! Once properly configured, the <code class="docutils literal notranslate"><span class="pre">w3</span></code> instance will allow you
+to interact with the Ethereum blockchain. Try getting all the information about the latest block:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">w3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+<span class="go">{&#39;difficulty&#39;: 1,</span>
+<span class="go"> &#39;gasLimit&#39;: 6283185,</span>
+<span class="go"> &#39;gasUsed&#39;: 0,</span>
+<span class="go"> &#39;hash&#39;: HexBytes(&#39;0x53b983fe73e16f6ed8178f6c0e0b91f23dc9dad4cb30d0831f178291ffeb8750&#39;),</span>
+<span class="go"> &#39;logsBloom&#39;: HexBytes(&#39;0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000&#39;),</span>
+<span class="go"> &#39;miner&#39;: &#39;0x0000000000000000000000000000000000000000&#39;,</span>
+<span class="go"> &#39;mixHash&#39;: HexBytes(&#39;0x0000000000000000000000000000000000000000000000000000000000000000&#39;),</span>
+<span class="go"> &#39;nonce&#39;: HexBytes(&#39;0x0000000000000000&#39;),</span>
+<span class="go"> &#39;number&#39;: 0,</span>
+<span class="go"> &#39;parentHash&#39;: HexBytes(&#39;0x0000000000000000000000000000000000000000000000000000000000000000&#39;),</span>
+<span class="go"> &#39;proofOfAuthorityData&#39;: HexBytes(&#39;0x0000000000000000000000000000000000000000000000000000000000000000dddc391ab2bf6701c74d0c8698c2e13355b2e4150000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000&#39;),</span>
+<span class="go"> &#39;receiptsRoot&#39;: HexBytes(&#39;0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421&#39;),</span>
+<span class="go"> &#39;sha3Uncles&#39;: HexBytes(&#39;0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347&#39;),</span>
+<span class="go"> &#39;size&#39;: 622,</span>
+<span class="go"> &#39;stateRoot&#39;: HexBytes(&#39;0x1f5e460eb84dc0606ab74189dbcfe617300549f8f4778c3c9081c119b5b5d1c1&#39;),</span>
+<span class="go"> &#39;timestamp&#39;: 0,</span>
+<span class="go"> &#39;totalDifficulty&#39;: 1,</span>
+<span class="go"> &#39;transactions&#39;: [],</span>
+<span class="go"> &#39;transactionsRoot&#39;: HexBytes(&#39;0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421&#39;),</span>
+<span class="go"> &#39;uncles&#39;: []}</span>
+</pre></div>
+</div>
+<p>web3.py can help you read block data, sign and send transactions, deploy and interact with contracts,
+and a number of other features.</p>
+<p>A few suggestions from here:</p>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="overview.html"><span class="doc">概览</span></a> page provides a summary of web3.py's features.</p></li>
+<li><p>The <a class="reference internal" href="web3.eth.html#web3.eth.Eth" title="web3.eth.Eth"><code class="xref py py-class docutils literal notranslate"><span class="pre">w3.eth</span></code></a> API contains the most frequently used methods.</p></li>
+<li><p>A guide to <a class="reference internal" href="web3.contract.html#contracts"><span class="std std-ref">Contracts</span></a> includes deployment and usage examples.</p></li>
+<li><p>The nuances of <a class="reference internal" href="transactions.html"><span class="doc">交易</span></a> are explained in another guide.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>It is recommended that your development environment have the <code class="docutils literal notranslate"><span class="pre">PYTHONWARNINGS=default</span></code>
+environment variable set. Some deprecation warnings will not show up
+without this variable being set.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="页脚">
+        <a href="index.html" class="btn btn-neutral float-left" title="gm（早安）" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+        <a href="overview.html" class="btn btn-neutral float-right" title="概览" accesskey="n" rel="next">下一页 <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2016-2025, The Ethereum Foundation。</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用的
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a> 开发.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book fa-element"> RTD </span>
+
+    <span class="fa fa-element">
+    <input class="container_toggle" type="checkbox" id="switch" name="mode">
+    <label for="switch"></label>
+    </span>
+
+    <span class="fa fa-v fa-element"> v:  <span class="fa fa-caret-down"></span></span>
+
+    </span>
+    <div class="rst-other-versions">
+        <dl>
+            <dt>版本</dt>
+        </dl>
+        <dl>
+            <dt>下载</dt>
+        </dl>
+        <dl>
+
+            <dt>托管于 Read the Docs</dt>
+            <dd>
+                <a href="///projects//?fromdocs=">项目主页</a>
+            </dd>
+            <dd>
+                <a href="///builds//?fromdocs=">构建</a>
+            </dd>
+        </dl>
+    </div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>
