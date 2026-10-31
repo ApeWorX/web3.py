@@ -452,3 +452,57 @@ To sign a transaction locally that will invoke a smart contract:
     # When you run send_raw_transaction, you get the same result as the hash of the transaction:
     >>> w3.to_hex(w3.keccak(signed_txn.raw_transaction))
     '0x748db062639a45e519dba934fce09c367c92043867409160c9989673439dc817'
+
+Hardware security module (HSM)
+------------------------------
+
+Generally, HSM refers to techniques in which a cloud service provider offers a service for public key cryptography. Private keys can never leave a service or "hardware".
+
+- HSM should always be used if you need to have a private key available on a server, so-called "hot wallet"
+- HSMs are for a general use case, not just for Ethereum or cryptocurrencies, encrypting files being the most popular one
+- HSM value promise is that private key cannot be copied and thus leaked or exported
+- HSM services often provide audit records to see what has been signed and by who
+
+HSM services are available from [Google Cloud](https://cloud.google.com/kms/docs/hsm), Amazon AWS and others.
+
+To use HSM private keys in Web3.py, see
+
+- [web3-google-hsm](https://github.com/Ankvik-Tech-Labs/web3-google-hsm) - Google cloud HSM signing for Web3.py and Ethereum
+
+Example code for using Google Cloud HSM:
+
+.. code-block:: python
+
+  from web3_google_hsm.accounts.gcp_kms_account import GCPKmsAccount
+
+  account = GCPKmsAccount()
+
+  # Get the Ethereum address derived from your GCP KMS key
+  print(f"GCP KMS Account address: {account.address}")
+
+  tx = {
+      "from": account.address,
+      "chain_id": w3.eth.chain_id,
+      "nonce": w3.eth.get_transaction_count(account.address),
+      "value": w3.to_wei(0.000001, "ether"),
+      "data": "0x00",
+      "to": "0xa5D3241A1591061F2a4bB69CA0215F66520E67cf",
+      "type": 0,
+      "gas_limit": 1000000,
+      "gas_price": 300000000000,
+  }
+
+  # Convert dict to Transaction object and sign
+  signed_tx = account.sign_transaction(Transaction.from_dict(tx))
+
+  tx_hash = w3.eth.send_raw_transaction(signed_tx)
+
+  # Wait for transaction receipt
+  receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+  print(f"Transaction hash: {receipt['transactionHash'].hex()}")
+  print(f"From: {receipt['from']}")
+  print(f"To: {receipt['to']}")
+  print(f"Gas used: {receipt['gasUsed']}")
+
+Note that HSM does not protect against supply chain attacks, as any software running on the cloud having access to the HSM module can still sign arbitrary transactions. You still need to secure your server access e.g. with two-factor authentication and have audit logs of the software deployments.
