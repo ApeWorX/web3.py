@@ -589,3 +589,94 @@ async def test_session_manager_async_use_new_session_if_session_closed_for_cache
 
     # appropriately close the new session
     await session2.close()
+
+
+def test_session_manager_lock_is_per_instance():
+    # Regression test for https://github.com/ethereum/web3.py/issues/3867
+    # `_lock` was a class attribute, so every provider instance in the process
+    # shared a single lock: one stalled provider wedged all the others.
+    assert HTTPSessionManager()._lock is not HTTPSessionManager()._lock
+
+
+@pytest.mark.asyncio
+async def test_async_lock_released_when_cancelled_during_acquire():
+    # Regression test for https://github.com/ethereum/web3.py/issues/3867
+    # If a task awaiting `async_lock` is cancelled (e.g. an
+    # `asyncio.wait_for` timeout) while the executor thread is already
+    # blocked in `lock.acquire()`, the lock must not be left held forever
+    # once the executor thread acquires it.
+    from web3._utils.async_caching import async_lock
+
+    class SignalingLockProxy:
+        # Wraps a real lock so the test knows exactly when the executor
+        # thread enters and finishes `acquire()`.
+        def __init__(self):
+            self._lock = threading.Lock()
+            self.acquire_started = threading.Event()
+            self.acquire_completed = threading.Event()
+
+        def acquire(self):
+            self.acquire_started.set()
+            result = self._lock.acquire()
+            self.acquire_completed.set()
+            return result
+
+        def locked(self):
+            return self._lock.locked()
+
+        def release(self):
+            return self._lock.release()
+
+    pool = ThreadPoolExecutor(max_workers=1)
+    lock = SignalingLockProxy()
+
+    holder_has_lock = threading.Event()
+    release_holder = threading.Event()
+    holder_errors = []
+
+    def hold_lock():
+        lock.acquire()
+        holder_has_lock.set()
+        assert release_holder.wait(timeout=10)
+        try:
+            lock.release()
+        except RuntimeError as e:  # lock already released out from under us
+            holder_errors.append(e)
+
+    holder = threading.Thread(target=hold_lock, daemon=True)
+    holder.start()
+    assert holder_has_lock.wait(timeout=10)
+    # The holder thread tripped the proxy signals; reset them so they only
+    # fire for the executor thread's `acquire()`.
+    lock.acquire_started.clear()
+    lock.acquire_completed.clear()
+
+    async def contender():
+        async with async_lock(pool, lock):
+            pass
+
+    task = asyncio.create_task(contender())
+    # Wait until the executor thread is provably blocked in `acquire()`.
+    await asyncio.get_event_loop().run_in_executor(None, lock.acquire_started.wait, 10)
+    assert lock.acquire_started.is_set()
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+
+    # Let the stranded executor thread proceed to acquire the lock.
+    release_holder.set()
+    holder.join(timeout=10)
+
+    # Wait until the executor thread has provably acquired the lock...
+    await asyncio.get_event_loop().run_in_executor(
+        None, lock.acquire_completed.wait, 10
+    )
+    assert lock.acquire_completed.is_set(), "executor thread never acquired the lock"
+
+    # ...then it must be released rather than held forever.
+    for _ in range(200):
+        if not lock.locked():
+            break
+        await asyncio.sleep(0.01)
+    assert not lock.locked(), "lock left held after task cancelled during acquire"
+    pool.shutdown(wait=True)

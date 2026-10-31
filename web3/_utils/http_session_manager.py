@@ -40,7 +40,6 @@ from web3.utils.caching import (
 
 class HTTPSessionManager:
     logger = logging.getLogger("web3._utils.http_session_manager.HTTPSessionManager")
-    _lock: threading.Lock = threading.Lock()
 
     def __init__(
         self,
@@ -48,6 +47,10 @@ class HTTPSessionManager:
         session_pool_max_workers: int = 5,
         explicit_session: requests.Session | None = None,
     ) -> None:
+        # Per-instance lock: a class-level lock meant every provider in the
+        # process shared one lock, so a stall in one provider wedged all of
+        # them. See https://github.com/ethereum/web3.py/issues/3867
+        self._lock = threading.Lock()
         self.session_cache = SimpleCache(cache_size)
         self.session_pool = ThreadPoolExecutor(max_workers=session_pool_max_workers)
         self._explicit_session = explicit_session
