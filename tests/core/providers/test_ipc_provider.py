@@ -203,3 +203,29 @@ def test_ipc_provider_write_messages_end_with_new_line_delimiter(jsonrpc_ipc_pip
 
     request_data = b'{"jsonrpc": "2.0", "method": "method", "params": [], "id": 0}'
     provider._socket.sock.sendall.assert_called_with(request_data + b"\n")
+
+
+def test_ipc_provider_retry_write_ends_with_new_line_delimiter(
+    jsonrpc_ipc_pipe_path,
+):
+    provider = IPCProvider(pathlib.Path(jsonrpc_ipc_pipe_path), timeout=3)
+
+    broken_socket = Mock()
+    broken_socket.sendall.side_effect = BrokenPipeError
+    retry_socket = Mock()
+    retry_socket.recv.return_value = b'{"id":0, "jsonrpc": "2.0", "result": {}}\n'
+
+    provider._socket.sock = broken_socket
+
+    with patch(
+        "web3.providers.ipc.get_ipc_socket", return_value=retry_socket
+    ) as get_ipc_socket:
+        provider.make_request("method", [])
+
+    request_data = b'{"jsonrpc": "2.0", "method": "method", "params": [], "id": 0}'
+
+    # the reconnect happened exactly once ...
+    get_ipc_socket.assert_called_once()
+    broken_socket.sendall.assert_called_once_with(request_data + b"\n")
+    # ... and the retried message keeps the delimiter
+    retry_socket.sendall.assert_called_once_with(request_data + b"\n")

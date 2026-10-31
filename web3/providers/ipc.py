@@ -165,7 +165,7 @@ class IPCProvider(JSONBaseProvider):
             except BrokenPipeError:
                 # one extra attempt, then give up
                 sock = self._socket.reset()
-                sock.sendall(request)
+                sock.sendall(request + b"\n")
 
             raw_response = b""
             with Timeout(self.timeout) as timeout:
