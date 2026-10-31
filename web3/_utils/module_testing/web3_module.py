@@ -34,6 +34,7 @@ from web3.contract import (
 from web3.exceptions import (
     InvalidAddress,
     MethodNotSupported,
+    Web3TypeError,
     Web3ValueError,
 )
 from web3.types import (
@@ -134,8 +135,48 @@ class Web3ModuleTest:
                 ["bytes3"],
                 ["0x5402"],
                 HexBytes(
-                    "0x4ed9171bda52fca71ab28e7f452bd6eacc3e5a568a47e0fa53b503159a9b8910"
+                    "0xed37fb74bea5aeae9f9f34a372c106f5cc83101151f42c7e99373aceee83efae"
                 ),
+            ),
+            (
+                ["bytes2"],
+                [b"a"],
+                HexBytes(
+                    "0xa3fe1181ce8d13858f6f383445749f49a3ae8b0cab89823918bab81153ca4300"
+                ),
+            ),
+            (
+                ["bytes2"],
+                ["0x61"],
+                HexBytes(
+                    "0xa3fe1181ce8d13858f6f383445749f49a3ae8b0cab89823918bab81153ca4300"
+                ),
+            ),
+            (
+                ["bytes4"],
+                ["0x1234"],
+                HexBytes(
+                    "0x83cdd5d8e9eedfbb36b0f6748705833df28b0a094f672873aea9e21eda67aed9"
+                ),
+            ),
+            (
+                ["bytes32"],
+                ["0x01"],
+                HexBytes(
+                    "0x48078cfed56339ea54962e72c37c7f588fc4f8e5bc173827ba75cb10a63a96a5"
+                ),
+            ),
+            (
+                ["bytes4", "bytes1"],
+                [b"\x01\x02", b"\x03"],
+                HexBytes(
+                    "0x84afedaad86a2a001d15855349ff553d74b46c88542d01c5252455ff23f7dfbd"
+                ),
+            ),
+            (
+                ["bytes2"],
+                ["0x010203"],
+                Web3TypeError,
             ),
             (
                 ["bytes"],
@@ -176,6 +217,19 @@ class Web3ModuleTest:
                 ],
                 HexBytes(
                     "0x8cc6eabb25b842715e8ca39e2524ed946759aa37bfb7d4b81829cf5a7e266103"
+                ),
+            ),
+            (
+                ["string", "bool", "uint16", "bytes4", "address"],
+                [
+                    "testing a string!",
+                    False,
+                    299,
+                    "0x5402",
+                    "0x49EdDD3769c0712032808D86597B84ac5c2F5614",
+                ],
+                HexBytes(
+                    "0x9f22f3fb2eefd6438e76329cdf6a657528f2aaadb1b513438da9e63540961e9d"
                 ),
             ),
             (

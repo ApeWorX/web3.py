@@ -394,7 +394,10 @@ Cryptographic Hashing
     Returns the Keccak-256 as it would be computed by the solidity ``keccak``
     function on a *packed* ABI encoding of the ``value`` list contents.  The ``abi_types``
     argument should be a list of solidity type strings which correspond to each
-    of the provided values.
+    of the provided values. A ``bytesN`` value shorter than ``N`` bytes is
+    right-padded with zero bytes to ``N`` bytes, matching Solidity's
+    ``bytesN`` conversion; a value longer than ``N`` bytes raises a
+    ``Web3TypeError``.
 
 
     .. code-block:: python
@@ -414,6 +417,9 @@ Cryptographic Hashing
         >>> Web3.solidity_keccak(['address'], ["ethereumfoundation.eth"])
         HexBytes("0x913c99ea930c78868f1535d34cd705ab85929b2eaaf70fcd09677ecd6e5d75e9")
 
+        >>> Web3.solidity_keccak(['bytes4'], ['0x1234'])
+        HexBytes("0x83cdd5d8e9eedfbb36b0f6748705833df28b0a094f672873aea9e21eda67aed9")
+
 
     Comparable solidity usage:
 
@@ -423,6 +429,8 @@ Cryptographic Hashing
         assert(data1 == hex"5fe7f977e71dba2ea1a68e21057beebb9be2ac30c6410aa38d4f3fbe41dcffd2");
         bytes32 data2 = keccak256(abi.encodePacked(uint8(97), uint8(98), uint8(99)));
         assert(data2 == hex"4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45");
+        bytes32 data3 = keccak256(abi.encodePacked(bytes4(hex"1234")));
+        assert(data3 == hex"83cdd5d8e9eedfbb36b0f6748705833df28b0a094f672873aea9e21eda67aed9");
 
 
 Check Encodability
