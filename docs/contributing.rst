@@ -138,7 +138,7 @@ some time by checking for linting errors manually:
 
 .. code:: sh
 
-   $ make lint
+   $ uv run prek run --all-files
 
 
 It is important to understand that each pull request must pass the full test
@@ -290,14 +290,14 @@ manually with:
 
 .. code:: sh
 
-   $ make lint
+   $ uv run prek run --all-files
 
 
 If you need to make a commit that skips the ``prek`` checks, you can do so with
 ``git commit --no-verify``.
 
-We use Black as part of our linting. To ignore the commits that introduced Black in
-git history, you can configure your git environment like so:
+We use Ruff for linting and formatting. Black was used previously; to ignore the
+commits that introduced Black in git history, you can configure your git environment like so:
 
 .. code:: sh
 
