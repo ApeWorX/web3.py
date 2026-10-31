@@ -5,6 +5,7 @@ from unittest.mock import (
 
 import aiohttp
 from requests.exceptions import (
+    ConnectionError as RequestsConnectionError,
     HTTPError,
     Timeout,
     TooManyRedirects,
@@ -42,11 +43,37 @@ def test_default_request_retry_configuration_for_http_provider():
     w3 = Web3(HTTPProvider())
     assert w3.provider.exception_retry_configuration == ExceptionRetryConfiguration(
         errors=(
-            ConnectionError,
+            RequestsConnectionError,
             HTTPError,
             Timeout,
         )
     )
+
+
+@pytest.mark.parametrize(
+    "error",
+    (
+        # requests raises its own ConnectionError, not the builtin one
+        RequestsConnectionError,
+        HTTPError,
+        Timeout,
+    ),
+)
+def test_default_request_retry_configuration_retries_requests_errors(error):
+    w3 = Web3(HTTPProvider())
+    retries = w3.provider.exception_retry_configuration.retries
+
+    with patch(
+        "web3.providers.rpc.rpc.HTTPSessionManager.make_post_request"
+    ) as make_post_request_mock:
+        make_post_request_mock.side_effect = error
+
+        with patch("web3.providers.rpc.rpc.time.sleep"):
+            with pytest.raises(error):
+                w3.provider.make_request(
+                    RPCEndpoint("eth_getBalance"), [f"0x{'00' * 20}"]
+                )
+        assert make_post_request_mock.call_count == retries
 
 
 def test_check_without_retry_config():

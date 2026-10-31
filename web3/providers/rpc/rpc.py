@@ -88,7 +88,7 @@ class HTTPProvider(JSONBaseProvider):
         if isinstance(self._exception_retry_configuration, Empty):
             self._exception_retry_configuration = ExceptionRetryConfiguration(
                 errors=(
-                    ConnectionError,
+                    requests.ConnectionError,
                     requests.HTTPError,
                     requests.Timeout,
                 )
