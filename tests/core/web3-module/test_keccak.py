@@ -119,3 +119,11 @@ def test_keccak_raise_if_hexstr_and_text():
 def test_keccak_raise_if_no_args():
     with pytest.raises(TypeError):
         Web3.keccak()
+
+
+def test_solidity_keccak_bytes_padding():
+    # bytes1 value 0x01 should be padded to 32 bytes in Solidity
+    result = Web3.solidity_keccak(["bytes1"], [b"\x01"])
+    # The padded value is 0x01 followed by 31 zero bytes
+    expected = Web3.keccak(hexstr="0x01" + "00" * 31)
+    assert result == expected
