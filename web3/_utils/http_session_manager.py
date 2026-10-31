@@ -60,7 +60,7 @@ class HTTPSessionManager:
         self,
         endpoint_uri: URI,
         session: requests.Session = None,
-        request_timeout: float | None = None,
+        request_timeout: float | tuple[float | None, float | None] | None = None,
     ) -> requests.Session:
         # If an explicit session was provided at init time, always use it
         # regardless of which thread is making the request
@@ -92,6 +92,11 @@ class HTTPSessionManager:
                 self.logger.debug(
                     "Session cache full. Session evicted from cache: %s",
                     evicted_session,
+                )
+            if isinstance(request_timeout, tuple):
+                # `requests` accepts a `(connect, read)` timeout tuple. Wait for both.
+                request_timeout = (
+                    None if None in request_timeout else sum(request_timeout)
                 )
             threading.Timer(
                 # If `request_timeout` is `None`, don't wait forever for the closing
@@ -265,10 +270,11 @@ class HTTPSessionManager:
             # is closed.
             asyncio.create_task(
                 self._async_close_evicted_sessions(
-                    # if `ClientTimeout.total` is `None`, don't wait forever for the
-                    # closing session to finish the request. Instead, use the default
-                    # timeout.
-                    request_timeout.total or DEFAULT_HTTP_TIMEOUT + 0.1,
+                    # if no `request_timeout` was given, or `ClientTimeout.total` is
+                    # `None`, don't wait forever for the closing session to finish the
+                    # request. Instead, use the default timeout.
+                    (request_timeout and request_timeout.total)
+                    or DEFAULT_HTTP_TIMEOUT + 0.1,
                     evicted_sessions,
                 )
             )
