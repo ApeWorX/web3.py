@@ -260,3 +260,36 @@ async def test_async_offchain_resolution_with_improperly_formatted_http_response
         ),
     ):
         await async_ens.address("offchainexample.eth")
+
+
+class AsyncMockHttpNonJsonResponse:
+    status = 200
+
+    @staticmethod
+    async def json():
+        raise ValueError("Attempt to decode JSON with unexpected mimetype: text/html")
+
+
+@pytest.mark.asyncio
+async def test_async_offchain_resolution_closes_session_when_response_is_not_json(
+    async_ens, monkeypatch
+):
+    _mock_getaddrinfo_public(monkeypatch)
+
+    async def mock_get(*_args, **_kwargs):
+        return AsyncMockHttpNonJsonResponse()
+
+    closed_sessions = []
+    original_close = ClientSession.close
+
+    async def tracking_close(session):
+        closed_sessions.append(session)
+        await original_close(session)
+
+    monkeypatch.setattr(ClientSession, "get", mock_get)
+    monkeypatch.setattr(ClientSession, "close", tracking_close)
+    with pytest.raises(ValueError, match="unexpected mimetype"):
+        await async_ens.address("offchainexample.eth")
+
+    assert len(closed_sessions) == 1
+    assert closed_sessions[0].closed
