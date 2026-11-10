@@ -2,6 +2,7 @@ import asyncio
 from concurrent.futures import (
     ThreadPoolExecutor,
 )
+import json
 import logging
 import os
 import threading
@@ -36,6 +37,44 @@ from web3.exceptions import (
 from web3.utils.caching import (
     SimpleCache,
 )
+
+
+def _is_json_rpc_error_response(body: bytes) -> bool:
+    """
+    Return True if `body` parses as a JSON-RPC response carrying an error.
+
+    Accepts a single response object whose "error" is an object with an integer
+    "code" and a string "message", or a batch (array) of response objects where
+    every element carries either a "result" or such an "error". Anything else
+    (non-JSON bodies, HTML error pages, REST-style error shapes) returns False,
+    so the caller keeps raising the plain HTTP error for those.
+    """
+    try:
+        data = json.loads(body)
+    except ValueError:
+        return False
+
+    if isinstance(data, dict):
+        error = data.get("error")
+        return (
+            isinstance(error, dict)
+            and isinstance(error.get("code"), int)
+            and isinstance(error.get("message"), str)
+        )
+    elif isinstance(data, list):
+        return bool(data) and all(
+            isinstance(item, dict)
+            and (
+                "result" in item
+                or (
+                    isinstance(item.get("error"), dict)
+                    and isinstance(item["error"].get("code"), int)
+                    and isinstance(item["error"].get("message"), str)
+                )
+            )
+            for item in data
+        )
+    return False
 
 
 class HTTPSessionManager:
@@ -148,7 +187,15 @@ class HTTPSessionManager:
         with self.get_response_from_post_request(
             endpoint_uri, data=data, **kwargs
         ) as response:
-            response.raise_for_status()
+            if not response.ok:
+                # Read the body before raising: a non-2xx response may still
+                # carry a JSON-RPC error object. Return it so the provider can
+                # surface it as a `Web3RPCError` with the provider's code and
+                # message, instead of a bare HTTP error that drops that detail.
+                body = response.content
+                if _is_json_rpc_error_response(body):
+                    return body
+                response.raise_for_status()
             if kwargs.get("stream"):
                 return self._handle_streaming_response(response, start, timeout)
             else:
@@ -188,7 +235,13 @@ class HTTPSessionManager:
             if cache_key not in self.session_cache:
                 if session is None:
                     session = ClientSession(
-                        raise_for_status=True,
+                        # Do not raise here: the session manager reads the
+                        # response body first, so a non-2xx response carrying a
+                        # JSON-RPC error object can be surfaced as a
+                        # `Web3RPCError` instead of a bare HTTP error. Callers
+                        # that need the HTTP error raise it explicitly via
+                        # `response.raise_for_status()`.
+                        raise_for_status=False,
                         connector=TCPConnector(
                             force_close=True, enable_cleanup_closed=True
                         ),
@@ -235,7 +288,9 @@ class HTTPSessionManager:
 
                     # replace stale session with a new session at the cache key
                     _session = ClientSession(
-                        raise_for_status=True,
+                        # See the note above: do not raise before the response
+                        # body is read.
+                        raise_for_status=False,
                         connector=TCPConnector(
                             force_close=True, enable_cleanup_closed=True
                         ),
@@ -319,8 +374,16 @@ class HTTPSessionManager:
         response = await self.async_get_response_from_post_request(
             endpoint_uri, data=data, **kwargs
         )
-        response.raise_for_status()
-        return await response.read()
+        body = await response.read()
+        if not response.ok:
+            # Read the body before raising: a non-2xx response may still carry
+            # a JSON-RPC error object. Return it so the provider can surface
+            # it as a `Web3RPCError` with the provider's code and message,
+            # instead of a bare HTTP error that drops that detail.
+            if _is_json_rpc_error_response(body):
+                return body
+            response.raise_for_status()
+        return body
 
     async def _async_close_evicted_sessions(
         self, timeout: float, evicted_sessions: list[ClientSession]
