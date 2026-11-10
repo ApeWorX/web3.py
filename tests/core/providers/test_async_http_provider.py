@@ -41,6 +41,25 @@ from web3.providers.rpc import (
 URI = "http://mynode.local:8545"
 
 
+class AsyncMockedHTTPErrorResponse:
+    """A non-2xx `aiohttp` response, mimicking a provider HTTP error."""
+
+    def __init__(self, body: bytes, status: int = 400):
+        self.status = status
+        self.ok = 200 <= status < 400
+        self._body = body
+
+    def __await__(self):
+        yield
+        return self
+
+    async def read(self):
+        return self._body
+
+    def raise_for_status(self) -> None:
+        raise Exception("called raise_for_status()")  # noqa: E704
+
+
 @pytest.mark.asyncio
 async def test_async_no_args() -> None:
     provider = AsyncHTTPProvider()
@@ -129,3 +148,24 @@ async def test_async_http_empty_batch_response(mock_async_post):
             await batch.async_execute()
 
     assert not async_w3.provider._is_batching
+
+
+@patch("aiohttp.ClientSession.post")
+@pytest.mark.asyncio
+async def test_async_http_provider_surfaces_rpc_error_on_http_error_response(
+    mock_post,
+):
+    # Regression test for https://github.com/ethereum/web3.py/issues/3915 :
+    # a provider that answers a JSON-RPC error with a non-2xx HTTP status
+    # should surface the JSON-RPC error, not a bare HTTP error.
+    mock_post.return_value = AsyncMockedHTTPErrorResponse(
+        b'{"jsonrpc":"2.0","id":0,'
+        b'"error":{"code":-32602,"message":"Log response size exceeded."}}'
+    )
+    async_w3 = AsyncWeb3(AsyncHTTPProvider(endpoint_uri=URI))
+    with pytest.raises(Web3RPCError, match="Log response size exceeded"):
+        await async_w3.eth.get_logs({"fromBlock": 0, "toBlock": 1000000})
+
+    # -- teardown -- #
+    for _, session in async_w3.provider._request_session_manager.session_cache.items():
+        await session.close()
