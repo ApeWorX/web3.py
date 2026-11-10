@@ -15,6 +15,7 @@ from eth_typing import (
     URI,
 )
 from requests import (
+    HTTPError,
     Session,
     adapters,
 )
@@ -28,6 +29,7 @@ from web3._utils.caching import (
 )
 from web3._utils.http_session_manager import (
     HTTPSessionManager,
+    _is_json_rpc_error_response,
 )
 from web3.exceptions import (
     TimeExhausted,
@@ -62,6 +64,28 @@ class MockedResponse:
 
     def raise_for_status(self):
         pass
+
+
+class MockedHTTPErrorResponse:
+    """A non-2xx `requests` response, mimicking a provider HTTP error."""
+
+    def __init__(self, body: bytes, status_code: int = 400):
+        assert isinstance(body, bytes)
+        assert isinstance(status_code, int)
+        self.status_code = status_code
+        self.ok = 200 <= status_code < 400
+        self.content = body
+        self.text = body.decode("utf-8", errors="replace")
+        self.reason = "Bad Request"
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
+
+    def raise_for_status(self):
+        raise HTTPError(f"{self.status_code} Client Error", response=self)
 
 
 TEST_URI = URI("http://mynode.local:8545")
@@ -207,6 +231,110 @@ def test_session_manager_make_post_request_times_out_while_streaming(
     assert adapter._pool_maxsize == DEFAULT_POOLSIZE
 
 
+RPC_ERROR_BODY = json.dumps(
+    {
+        "jsonrpc": "2.0",
+        "id": 0,
+        "error": {"code": -32602, "message": "Log response size exceeded."},
+    }
+).encode()
+
+RPC_ERROR_BATCH_BODY = json.dumps(
+    [
+        {
+            "jsonrpc": "2.0",
+            "id": 0,
+            "error": {"code": -32602, "message": "Log response size exceeded."},
+        },
+        {"jsonrpc": "2.0", "id": 1, "result": "0x1"},
+    ]
+).encode()
+
+
+@pytest.mark.parametrize(
+    "body,expected",
+    [
+        (RPC_ERROR_BODY, True),
+        (RPC_ERROR_BATCH_BODY, True),
+        (b"<html>Bad Gateway</html>", False),
+        (b"", False),
+        (b"not json", False),
+        (json.dumps({"error": "bad request"}).encode(), False),
+        (
+            json.dumps({"error": {"code": "not-an-int", "message": "m"}}).encode(),
+            False,
+        ),
+        (
+            json.dumps({"error": {"code": -32602}}).encode(),
+            False,
+        ),
+        (json.dumps({"jsonrpc": "2.0", "id": 0, "result": "0x1"}).encode(), False),
+        (
+            json.dumps(
+                [{"jsonrpc": "2.0", "id": 0, "error": {"code": 1, "message": "m"}}]
+            ).encode(),
+            True,
+        ),
+        (json.dumps([]).encode(), False),
+    ],
+)
+def test_is_json_rpc_error_response(body, expected):
+    assert _is_json_rpc_error_response(body) is expected
+
+
+def test_session_manager_make_post_request_returns_rpc_error_body_on_http_error(
+    mocker, http_session_manager
+):
+    # Regression test for https://github.com/ethereum/web3.py/issues/3915
+    mocker.patch(
+        "requests.Session.post",
+        return_value=MockedHTTPErrorResponse(RPC_ERROR_BODY),
+    )
+
+    response = http_session_manager.make_post_request(TEST_URI, data=b"request")
+    assert response == RPC_ERROR_BODY
+
+
+def test_session_manager_make_post_request_returns_rpc_error_batch_body_on_http_error(
+    mocker, http_session_manager
+):
+    mocker.patch(
+        "requests.Session.post",
+        return_value=MockedHTTPErrorResponse(RPC_ERROR_BATCH_BODY),
+    )
+
+    response = http_session_manager.make_post_request(TEST_URI, data=b"request")
+    assert response == RPC_ERROR_BATCH_BODY
+
+
+def test_session_manager_make_post_request_streaming_returns_rpc_error_body_on_http_error(  # noqa: E501
+    mocker, http_session_manager
+):
+    mocker.patch(
+        "requests.Session.post",
+        return_value=MockedHTTPErrorResponse(RPC_ERROR_BODY),
+    )
+
+    response = http_session_manager.make_post_request(
+        TEST_URI, data=b"request", stream=True
+    )
+    assert response == RPC_ERROR_BODY
+
+
+def test_session_manager_make_post_request_raises_http_error_for_non_rpc_error_body(
+    mocker, http_session_manager
+):
+    mocker.patch(
+        "requests.Session.post",
+        return_value=MockedHTTPErrorResponse(
+            b"<html>Bad Gateway</html>", status_code=502
+        ),
+    )
+
+    with pytest.raises(HTTPError):
+        http_session_manager.make_post_request(TEST_URI, data=b"request")
+
+
 def test_session_manager_precached_session(mocker, http_session_manager):
     mocker.patch("requests.Session.post", return_value=MockedResponse())
 
@@ -314,6 +442,8 @@ def test_session_manager_unique_cache_keys_created_per_thread_with_same_uri(
 
 class AsyncMockedResponse:
     status_code = 200
+    status = 200
+    ok = True
 
     def __await__(self):
         yield
@@ -330,6 +460,32 @@ class AsyncMockedResponse:
     @staticmethod
     def raise_for_status() -> None:
         pass
+
+
+class AsyncMockedHTTPErrorResponse:
+    """A non-2xx `aiohttp` response, mimicking a provider HTTP error."""
+
+    def __init__(self, body: bytes, status: int = 400):
+        assert isinstance(body, bytes)
+        assert isinstance(status, int)
+        self.status = status
+        self.status_code = status
+        self.ok = 200 <= status < 400
+        self._body = body
+
+    def __await__(self):
+        yield
+        return self
+
+    async def read(self):
+        return self._body
+
+    @staticmethod
+    async def json():
+        return json.dumps({"data": "content"})
+
+    def raise_for_status(self) -> None:
+        raise Exception("called raise_for_status()")  # noqa: E704
 
 
 @pytest.mark.asyncio
@@ -402,6 +558,47 @@ async def test_session_manager_async_make_post_request(mocker, http_session_mana
             total=30, connect=None, sock_read=None, sock_connect=None
         ),
     )
+    await session.close()
+
+
+@pytest.mark.asyncio
+async def test_session_manager_async_make_post_request_returns_rpc_error_body_on_http_error(  # noqa: E501
+    mocker, http_session_manager
+):
+    # Regression test for https://github.com/ethereum/web3.py/issues/3915
+    mocker.patch(
+        "aiohttp.ClientSession.post",
+        return_value=AsyncMockedHTTPErrorResponse(RPC_ERROR_BODY),
+    )
+
+    response = await http_session_manager.async_make_post_request(
+        TEST_URI, data=b"request"
+    )
+    assert response == RPC_ERROR_BODY
+
+    # -- teardown -- #
+    cache_key = generate_cache_key(f"{id(asyncio.get_event_loop())}:{TEST_URI}")
+    session = http_session_manager.session_cache.get_cache_entry(cache_key)
+    await session.close()
+
+
+@pytest.mark.asyncio
+async def test_session_manager_async_make_post_request_raises_http_error_for_non_rpc_error_body(  # noqa: E501
+    mocker, http_session_manager
+):
+    mocker.patch(
+        "aiohttp.ClientSession.post",
+        return_value=AsyncMockedHTTPErrorResponse(
+            b"<html>Bad Gateway</html>", status=502
+        ),
+    )
+
+    with pytest.raises(Exception, match="called raise_for_status"):
+        await http_session_manager.async_make_post_request(TEST_URI, data=b"request")
+
+    # -- teardown -- #
+    cache_key = generate_cache_key(f"{id(asyncio.get_event_loop())}:{TEST_URI}")
+    session = http_session_manager.session_cache.get_cache_entry(cache_key)
     await session.close()
 
 
