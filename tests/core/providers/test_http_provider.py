@@ -7,6 +7,7 @@ from unittest.mock import (
 )
 
 from requests import (
+    HTTPError,
     Session,
 )
 from requests.adapters import (
@@ -44,6 +45,26 @@ from web3.providers import (
 )
 
 URI = "http://mynode.local:8545"
+
+
+class MockedHTTPErrorResponse:
+    """A non-2xx `requests` response, mimicking a provider HTTP error."""
+
+    def __init__(self, body: bytes, status_code: int = 400):
+        self.status_code = status_code
+        self.ok = 200 <= status_code < 400
+        self.content = body
+        self.text = body.decode("utf-8", errors="replace")
+        self.reason = "Bad Request"
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
+
+    def raise_for_status(self):
+        raise HTTPError(f"{self.status_code} Client Error", response=self)
 
 
 def test_no_args():
@@ -135,6 +156,30 @@ def test_http_empty_batch_response(mock_post):
 
     # assert that even though there was an error, we have reset the batching state
     assert not w3.provider._is_batching
+
+
+@patch("requests.Session.post")
+def test_http_provider_surfaces_rpc_error_on_http_error_response(mock_post):
+    # Regression test for https://github.com/ethereum/web3.py/issues/3915 :
+    # a provider that answers a JSON-RPC error with a non-2xx HTTP status
+    # should surface the JSON-RPC error, not a bare HTTP error.
+    mock_post.return_value = MockedHTTPErrorResponse(
+        b'{"jsonrpc":"2.0","id":0,'
+        b'"error":{"code":-32602,"message":"Log response size exceeded."}}'
+    )
+    w3 = Web3(HTTPProvider(endpoint_uri=URI))
+    with pytest.raises(Web3RPCError, match="Log response size exceeded"):
+        w3.eth.get_logs({"fromBlock": 0, "toBlock": 1000000})
+
+
+@patch("requests.Session.post")
+def test_http_provider_raises_http_error_for_non_rpc_error_body(mock_post):
+    mock_post.return_value = MockedHTTPErrorResponse(
+        b"<html>Bad Gateway</html>", status_code=502
+    )
+    w3 = Web3(HTTPProvider(endpoint_uri=URI))
+    with pytest.raises(HTTPError):
+        w3.eth.get_logs({"fromBlock": 0, "toBlock": 1000000})
 
 
 def test_user_provided_session_shared_across_threads():
