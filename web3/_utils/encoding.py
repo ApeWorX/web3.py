@@ -85,9 +85,21 @@ def hex_encode_abi_type(
         return pad_hex(value, data_size)
     elif is_bytes_type(abi_type):
         if is_bytes(value):
-            return encode_hex(value)
+            encoded = encode_hex(value)
         else:
-            return value
+            encoded = value
+        sized = re.fullmatch(r"bytes(\d+)", abi_type)
+        if sized is not None:
+            # Fixed-size bytesN: Solidity's packed encoding right-pads the
+            # value with zero bytes to exactly N bytes. Values shorter than
+            # N are valid (see validate_abi_value), so pad them here to
+            # match Solidity and eth_abi.packed.
+            return HexStr(
+                add_0x_prefix(
+                    remove_0x_prefix(encoded).ljust(int(sized.group(1)) * 2, "0")
+                )
+            )
+        return HexStr(encoded)
     elif is_string_type(abi_type):
         return to_hex(text=value)
     else:
