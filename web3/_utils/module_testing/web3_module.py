@@ -134,7 +134,28 @@ class Web3ModuleTest:
                 ["bytes3"],
                 ["0x5402"],
                 HexBytes(
-                    "0x4ed9171bda52fca71ab28e7f452bd6eacc3e5a568a47e0fa53b503159a9b8910"
+                    "0xed37fb74bea5aeae9f9f34a372c106f5cc83101151f42c7e99373aceee83efae"
+                ),
+            ),
+            (
+                ["bytes2"],
+                [b"a"],
+                HexBytes(
+                    "0xa3fe1181ce8d13858f6f383445749f49a3ae8b0cab89823918bab81153ca4300"
+                ),
+            ),
+            (
+                ["bytes32"],
+                ["0x01"],
+                HexBytes(
+                    "0x48078cfed56339ea54962e72c37c7f588fc4f8e5bc173827ba75cb10a63a96a5"
+                ),
+            ),
+            (
+                ["bytes4", "bytes1"],
+                [b"\x01\x02", b"\x03"],
+                HexBytes(
+                    "0x84afedaad86a2a001d15855349ff553d74b46c88542d01c5252455ff23f7dfbd"
                 ),
             ),
             (
