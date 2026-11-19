@@ -329,7 +329,12 @@ class RequestBlocks:
         block_range_iter = iter_latest_block_ranges(self.w3, self.start_block, None)
 
         for block_range in block_range_iter:
-            yield (block_hashes_in_range(self.w3, block_range))
+            hashes = block_hashes_in_range(self.w3, block_range)
+            # Each poll creates a new iterator and only consumes its first yield.
+            # Save progress after fetching succeeds, before returning the hashes.
+            if block_range[1] is not None:
+                self.start_block = BlockNumber(block_range[1] + 1)
+            yield hashes
 
 
 @to_list
@@ -556,6 +561,8 @@ class AsyncRequestBlocks:
         )
         async for block_range in block_range_iter:
             hash = await async_block_hashes_in_range(self.w3, block_range)
+            if block_range[1] is not None:
+                self.start_block = BlockNumber(block_range[1] + 1)
             yield hash
 
 
