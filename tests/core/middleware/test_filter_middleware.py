@@ -243,6 +243,28 @@ def test_LocalFilterMiddleware(w3, iter_block_number):
     assert len(filter_ids) == len(set(filter_ids))
 
 
+def test_block_filter_retries_failed_range(w3, iter_block_number, request_mocker):
+    requested_blocks = []
+
+    def get_block(method, params):
+        requested_blocks.append(params[0])
+        if params[0] == "0x2" and len(requested_blocks) == 2:
+            raise RuntimeError("Temporary block lookup failure")
+        return {"hash": BLOCK_HASH}
+
+    with request_mocker(w3, mock_results={"eth_getBlockByNumber": get_block}):
+        block_filter = w3.eth.filter("latest")
+        iter_block_number.send(2)
+        with pytest.raises(RuntimeError, match="Temporary block lookup failure"):
+            block_filter.get_new_entries()
+        assert block_filter.get_new_entries() == [HexBytes(BLOCK_HASH)] * 2
+        iter_block_number.send(3)
+        assert block_filter.get_new_entries() == [HexBytes(BLOCK_HASH)]
+        assert block_filter.get_new_entries() == []
+
+    assert requested_blocks == ["0x1", "0x2", "0x1", "0x2", "0x3"]
+
+
 # --- async --- #
 
 
@@ -379,3 +401,30 @@ async def test_async_LocalFilterMiddleware(async_w3, iter_block_number):
 
     # Test that all ids are unique
     assert len(filter_ids) == len(set(filter_ids))
+
+
+@pytest.mark.asyncio
+async def test_async_block_filter_retries_failed_range(
+    async_w3, iter_block_number, request_mocker
+):
+    requested_blocks = []
+
+    def get_block(method, params):
+        requested_blocks.append(params[0])
+        if params[0] == "0x2" and len(requested_blocks) == 2:
+            raise RuntimeError("Temporary block lookup failure")
+        return {"hash": BLOCK_HASH}
+
+    async with request_mocker(
+        async_w3, mock_results={"eth_getBlockByNumber": get_block}
+    ):
+        block_filter = await async_w3.eth.filter("latest")
+        iter_block_number.send(2)
+        with pytest.raises(RuntimeError, match="Temporary block lookup failure"):
+            await block_filter.get_new_entries()
+        assert await block_filter.get_new_entries() == [HexBytes(BLOCK_HASH)] * 2
+        iter_block_number.send(3)
+        assert await block_filter.get_new_entries() == [HexBytes(BLOCK_HASH)]
+        assert await block_filter.get_new_entries() == []
+
+    assert requested_blocks == ["0x1", "0x2", "0x1", "0x2", "0x3"]
