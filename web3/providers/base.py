@@ -14,6 +14,9 @@ from eth_utils import (
     to_text,
 )
 
+from web3._utils.batching import (
+    validate_batch_response_count,
+)
 from web3._utils.caching import (
     CACHEABLE_REQUESTS,
 )
@@ -183,7 +186,15 @@ class JSONBaseProvider(BaseProvider):
         middleware: tuple[Middleware, ...] = middleware_onion.as_tuple_of_middleware()
 
         if self._batch_request_func_cache[0] != middleware:
-            accumulator_fn = self.make_batch_request
+
+            def checked_batch_request(
+                requests: list[tuple[RPCEndpoint, Any]],
+            ) -> list[RPCResponse] | RPCResponse:
+                response = self.make_batch_request(requests)
+                validate_batch_response_count(len(requests), response)
+                return response
+
+            accumulator_fn = checked_batch_request
             for mw in reversed(middleware):
                 # type ignore bc in order to wrap the method, we have to call
                 # `wrap_make_batch_request` with the accumulator_fn as the argument

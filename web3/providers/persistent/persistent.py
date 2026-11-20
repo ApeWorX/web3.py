@@ -20,6 +20,7 @@ from websockets import (
 from web3._utils.batching import (
     BATCH_REQUEST_ID,
     sort_batch_response_by_response_ids,
+    validate_batch_response_count,
 )
 from web3._utils.caching import (
     generate_cache_key,
@@ -32,6 +33,7 @@ from web3._utils.validation import (
     validate_rpc_response_and_raise_if_error,
 )
 from web3.exceptions import (
+    BadResponseFormat,
     PersistentConnectionClosedOK,
     ProviderConnectionError,
     TaskNotRunning,
@@ -301,12 +303,21 @@ class PersistentConnectionProvider(AsyncJSONBaseProvider, ABC):
         return request_dicts
 
     async def recv_for_batch_request(
-        self, _request_dicts: list[RPCRequest]
+        self, request_dicts: list[RPCRequest]
     ) -> list[RPCResponse]:
         response = cast(
             list[RPCResponse],
             await self._get_response_for_request_id(BATCH_REQUEST_ID),
         )
+        try:
+            validate_batch_response_count(len(request_dicts), response)
+        except BadResponseFormat:
+            # No response will reach the manager to consume these entries.
+            for request in request_dicts:
+                self._request_processor.pop_cached_request_information(
+                    generate_cache_key(request["id"])
+                )
+            raise
         return response
 
     async def make_batch_request(
