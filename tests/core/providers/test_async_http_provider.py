@@ -1,4 +1,5 @@
 import pytest
+import json
 from unittest.mock import (
     AsyncMock,
     patch,
@@ -16,6 +17,7 @@ from web3.eth import (
     AsyncEth,
 )
 from web3.exceptions import (
+    BadResponseFormat,
     ProviderConnectionError,
     Web3RPCError,
 )
@@ -112,6 +114,24 @@ def test_get_request_headers(provider):
         headers["User-Agent"] == f"web3.py/{web3py_version}/"
         f"{AsyncHTTPProvider.__module__}.{AsyncHTTPProvider.__qualname__}"
     )
+
+
+@pytest.mark.parametrize("ids", [(1,), (0, 1, 2)])
+@patch(
+    "web3._utils.http_session_manager.HTTPSessionManager.async_make_post_request",
+    new_callable=AsyncMock,
+)
+@pytest.mark.asyncio
+async def test_async_http_batch_response_count(mock_post, ids):
+    mock_post.return_value = json.dumps(
+        [{"jsonrpc": "2.0", "id": i, "result": "0x1"} for i in ids]
+    ).encode()
+    w3 = AsyncWeb3(AsyncHTTPProvider())
+    async with w3.batch_requests() as batch:
+        batch.add(w3.eth.block_number)
+        batch.add(w3.eth.chain_id)
+        with pytest.raises(BadResponseFormat, match=f"expected 2, received {len(ids)}"):
+            await batch.async_execute()
 
 
 @patch(

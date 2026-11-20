@@ -15,6 +15,7 @@ from web3._utils.compat import (
     Self,
 )
 from web3.exceptions import (
+    BadResponseFormat,
     Web3ValueError,
 )
 from web3.types import (
@@ -185,6 +186,17 @@ class RequestBatcher(Generic[TFunc]):
         exc_tb: TracebackType,
     ) -> None:
         self._end_batching()
+
+
+def validate_batch_response_count(
+    request_count: int, response: Union[list["RPCResponse"], "RPCResponse"]
+) -> None:
+    # A single error object applies to the entire batch.
+    if isinstance(response, list) and len(response) != request_count:
+        raise BadResponseFormat(
+            f"Batch response count mismatch (expected {request_count}, "
+            f"received {len(response)})."
+        )
 
 
 def sort_batch_response_by_response_ids(

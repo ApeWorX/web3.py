@@ -21,10 +21,14 @@ from websockets import (
 from web3 import (
     AsyncWeb3,
 )
+from web3._utils.caching import (
+    generate_cache_key,
+)
 from web3.datastructures import (
     AttributeDict,
 )
 from web3.exceptions import (
+    BadResponseFormat,
     ReadBufferLimitReached,
     Web3RPCError,
 )
@@ -372,6 +376,26 @@ async def test_async_ipc_provider_write_messages_end_with_new_line_delimiter(
 
         request_data = b'{"id": 0, "jsonrpc": "2.0", "method": "method", "params": []}'
         w3.provider._writer.write.assert_called_with(request_data + b"\n")
+
+
+@pytest.mark.asyncio
+async def test_persistent_connection_provider_incomplete_batch(mocker):
+    provider = AsyncIPCProvider()
+    w3 = AsyncWeb3(provider)
+    mocker.patch.object(provider, "socket_send")
+    mocker.patch.object(
+        provider,
+        "_get_response_for_request_id",
+        return_value=[{"jsonrpc": "2.0", "id": 1, "result": "0x1"}],
+    )
+    async with w3.batch_requests() as batch:
+        batch.add(w3.eth.block_number)
+        batch.add(w3.eth.chain_id)
+        with pytest.raises(BadResponseFormat, match="expected 2, received 1"):
+            await batch.async_execute()
+
+    cache = provider._request_processor._request_information_cache
+    assert all(generate_cache_key(i) not in cache for i in (0, 1))
 
 
 @pytest.mark.asyncio

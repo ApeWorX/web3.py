@@ -15,6 +15,9 @@ from eth_utils import (
     to_text,
 )
 
+from web3._utils.batching import (
+    validate_batch_response_count,
+)
 from web3._utils.caching import (
     CACHEABLE_REQUESTS,
 )
@@ -132,7 +135,15 @@ class AsyncBaseProvider:
 
         cache_key = self._batch_request_func_cache[0]
         if cache_key != middleware:
-            accumulator_fn = self.make_batch_request
+
+            async def checked_batch_request(
+                requests: list[tuple[RPCEndpoint, Any]],
+            ) -> list[RPCResponse] | RPCResponse:
+                response = await self.make_batch_request(requests)
+                validate_batch_response_count(len(requests), response)
+                return response
+
+            accumulator_fn = checked_batch_request
             for mw in reversed(middleware):
                 initialized = mw(async_w3)
                 # type ignore bc in order to wrap the method, we have to call
