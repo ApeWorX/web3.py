@@ -1,0 +1,15 @@
+name: PR Title
+
+on:
+  pull_request_target:
+    types:
+    - opened
+    - edited
+    - synchronize
+
+permissions:
+  contents: read
+
+jobs:
+  check-title:
+    uses: ApeWorX/.github/.github/workflows/prtitle.yaml@main

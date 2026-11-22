@@ -2,23 +2,18 @@ name: Release
 
 on:
   release:
-    types: [released]
+    types: [published]
 
-env:
-  UV_CACHE_DIR: /tmp/uv-cache
-
+# Thin caller: release trigger + workflow filename stay here so PyPI
+# Trusted Publishing (OIDC) still matches this repo's publish.yaml.
+# Job body is the org composite action (reusable workflows are not
+# supported by PyPI TP today — pypi/warehouse#11096).
+# Merge ApeWorX/.github#4 before merging this PR.
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       id-token: write
-
     steps:
-    - uses: actions/checkout@v5
-      with:
-        fetch-depth: 0
-    - uses: astral-sh/setup-uv@v7
-    - name: Build Package
-      run: uv build
-    - name: Publish Package
-      uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: ApeWorX/.github/.github/actions/publish@main
