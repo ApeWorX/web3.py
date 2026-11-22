@@ -8,6 +8,9 @@ from web3.exceptions import (
     Web3ValidationError,
     Web3ValueError,
 )
+from web3.gas_strategies.time_based import (
+    fast_gas_price_strategy,
+)
 
 
 def test_build_transaction_not_paying_to_nonpayable_function(
@@ -410,6 +413,32 @@ async def test_async_build_transaction_with_gas_price_strategy_set(
         "gasPrice": 5,
         "chainId": 131277322940537,
     }
+
+
+@pytest.mark.asyncio
+async def test_async_build_transaction_with_fast_gas_price_strategy(
+    async_w3, async_math_contract, async_build_transaction, request_mocker
+):
+    async_w3.eth.set_gas_price_strategy(fast_gas_price_strategy)
+
+    async with request_mocker(
+        async_w3,
+        mock_results={
+            "eth_getBlockByNumber": {
+                "hash": "0x" + "00" * 32,
+                "number": 0,
+                "parentHash": None,
+                "transactions": [],
+                "miner": "0x" + "AA" * 20,
+                "timestamp": 0,
+            }
+        },
+    ):
+        txn = await async_build_transaction(
+            contract=async_math_contract, contract_function="incrementCounter"
+        )
+
+    assert isinstance(txn["gasPrice"], int)
 
 
 @pytest.mark.asyncio
