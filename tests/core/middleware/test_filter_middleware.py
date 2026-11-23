@@ -212,6 +212,19 @@ def test_pending_block_filter_middleware(w3):
         w3.eth.filter("pending")
 
 
+@pytest.mark.parametrize("poll_at_bound", [False, True])
+def test_local_log_filter_stays_within_upper_bound(
+    w3, iter_block_number, poll_at_bound
+):
+    log_filter = w3.eth.filter({"fromBlock": 0, "toBlock": 0})
+    if poll_at_bound:
+        assert log_filter.get_new_entries() == FILTER_LOG
+
+    for head in (1, 1, 2, 2):
+        iter_block_number.send(head)
+        assert log_filter.get_new_entries() == []
+
+
 def test_LocalFilterMiddleware(w3, iter_block_number):
     block_filter = w3.eth.filter("latest")
     block_filter.get_new_entries()
@@ -379,3 +392,17 @@ async def test_async_LocalFilterMiddleware(async_w3, iter_block_number):
 
     # Test that all ids are unique
     assert len(filter_ids) == len(set(filter_ids))
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("poll_at_bound", [False, True])
+async def test_async_local_log_filter_stays_within_upper_bound(
+    async_w3, iter_block_number, poll_at_bound
+):
+    log_filter = await async_w3.eth.filter({"fromBlock": 0, "toBlock": 0})
+    if poll_at_bound:
+        assert await log_filter.get_new_entries() == FILTER_LOG
+
+    for head in (1, 1, 2, 2):
+        iter_block_number.send(head)
+        assert await log_filter.get_new_entries() == []
