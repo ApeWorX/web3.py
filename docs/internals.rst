@@ -209,8 +209,6 @@ bold:
     - **eth_getTransactionByBlockHashAndIndex**
     - **eth_getBlockTransactionCountByHash**
     - **eth_getRawTransactionByBlockHashAndIndex**
-    - **eth_getUncleByBlockHashAndIndex**
-    - **eth_getUncleCountByBlockHash**
 
 .. code-block:: python
 
