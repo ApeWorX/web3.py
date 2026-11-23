@@ -46,7 +46,7 @@ class:
 
 - :class:`~web3.providers.rpc.HTTPProvider`
 - :class:`~web3.providers.ipc.IPCProvider`
-- :class:`~web3.providers.async_rpc.AsyncHTTPProvider`
+- :class:`~web3.providers.rpc.AsyncHTTPProvider`
 - :class:`~web3.providers.persistent.AsyncIPCProvider` (Persistent Connection Provider)
 - :class:`~web3.providers.persistent.WebSocketProvider` (Persistent Connection Provider)
 
