@@ -161,6 +161,7 @@ def iter_latest_block(
         latest_block = w3.eth.block_number
         if is_bounded_range and latest_block > cast(BlockNumber, to_block):
             yield None
+            continue
         #  No new blocks since last iteration.
         if _last is not None and _last == latest_block:
             yield None
@@ -376,6 +377,7 @@ async def async_iter_latest_block(
         # type ignored b/c is_bounded_range prevents unsupported comparison
         if is_bounded_range and latest_block > cast(int, to_block):
             yield None
+            continue
         #  No new blocks since last iteration.
         if _last is not None and _last == latest_block:
             yield None
