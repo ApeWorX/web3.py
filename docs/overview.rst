@@ -22,7 +22,7 @@ following built-in providers:
 
 - :class:`~web3.providers.rpc.HTTPProvider` for connecting to http and https based JSON-RPC servers.
 - :class:`~web3.providers.ipc.IPCProvider` for connecting to ipc socket based JSON-RPC servers.
-- :class:`~web3.providers.async_rpc.AsyncHTTPProvider` for connecting to http and https based JSON-RPC servers asynchronously.
+- :class:`~web3.providers.rpc.AsyncHTTPProvider` for connecting to http and https based JSON-RPC servers asynchronously.
 - :class:`~web3.providers.persistent.AsyncIPCProvider` for connecting to ipc socket based JSON-RPC servers asynchronously via a persistent connection.
 - :class:`~web3.providers.persistent.WebSocketProvider` for connecting to websocket based JSON-RPC servers asynchronously via a persistent connection.
 
