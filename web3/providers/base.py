@@ -96,7 +96,8 @@ class BaseProvider:
         """
         Check if the provider is currently batching requests.
         """
-        return self._batching_context.get() is not None
+        batch = self._batching_context.get()
+        return batch is not None and batch._is_active
 
     def request_func(
         self, w3: "Web3", middleware_onion: MiddlewareOnion

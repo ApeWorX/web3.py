@@ -110,7 +110,8 @@ Batch Requests
         assert len(responses) == 4
 
     The ``execute`` method returns a list of responses in the order they were included in
-    the batch.
+    the batch. When execution raises an exception, the batch ends and ordinary calls
+    can resume. Create a fresh batch to retry the requests.
 
     If you need to abandon or rebuild a batch request, utilize the ``clear`` method:
 

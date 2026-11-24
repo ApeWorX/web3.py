@@ -106,7 +106,8 @@ class AsyncBaseProvider:
 
     @property
     def _is_batching(self) -> bool:
-        return self._batching_context.get() is not None
+        batch = self._batching_context.get()
+        return batch is not None and batch._is_active
 
     async def request_func(
         self, async_w3: "AsyncWeb3[Any]", middleware_onion: MiddlewareOnion
