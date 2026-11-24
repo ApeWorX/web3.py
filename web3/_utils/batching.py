@@ -83,17 +83,20 @@ class RequestBatcher(Generic[TFunc]):
         )
 
     def _validate_is_batching(self) -> None:
-        if self._provider._batching_context.get() is not self:
+        if not self._is_active or self._provider._batching_context.get() is not self:
             raise Web3ValueError(
                 "Batch has already been executed or cancelled. Create a new batch to "
                 "issue batched requests."
             )
 
     def _initialize_batching(self) -> None:
+        self._is_active = True
         self._provider._batching_context.set(self)
         self.clear()
 
     def _end_batching(self) -> None:
+        # Tasks inherit a copy of the context that still points to this batch.
+        self._is_active = False
         self.clear()
         if self._provider._batching_context.get() is self:
             self._provider._batching_context.set(None)

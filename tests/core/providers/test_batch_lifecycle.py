@@ -103,3 +103,30 @@ async def test_manual_socket_batch_can_restart_after_write_failure(mocker):
     retry = w3.batch_requests()
     retry.add(w3.eth.block_number)
     assert await retry.async_execute() == [42]
+
+
+@pytest.mark.asyncio
+async def test_cancelling_batch_in_task_releases_callers_context(mocker):
+    w3 = AsyncWeb3(AsyncHTTPProvider())
+    started = asyncio.Event()
+
+    async def wait_for_reply(requests):
+        started.set()
+        await asyncio.Future()
+
+    mocker.patch.object(w3.provider, "make_batch_request", side_effect=wait_for_reply)
+    request = mocker.patch.object(
+        w3.provider,
+        "make_request",
+        return_value={"jsonrpc": "2.0", "id": 1, "result": "0x2a"},
+    )
+    batch = w3.batch_requests()
+    batch.add(w3.eth.block_number)
+    task = asyncio.create_task(batch.async_execute())
+    await started.wait()
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+
+    assert await w3.eth.block_number == 42
+    request.assert_awaited_once()
