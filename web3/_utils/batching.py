@@ -83,7 +83,7 @@ class RequestBatcher(Generic[TFunc]):
         )
 
     def _validate_is_batching(self) -> None:
-        if not self._provider._is_batching:
+        if self._provider._batching_context.get() is not self:
             raise Web3ValueError(
                 "Batch has already been executed or cancelled. Create a new batch to "
                 "issue batched requests."
@@ -95,7 +95,8 @@ class RequestBatcher(Generic[TFunc]):
 
     def _end_batching(self) -> None:
         self.clear()
-        self._provider._batching_context.set(None)
+        if self._provider._batching_context.get() is self:
+            self._provider._batching_context.set(None)
 
     def add(self, batch_payload: TReturn) -> None:
         self._validate_is_batching()
@@ -132,9 +133,10 @@ class RequestBatcher(Generic[TFunc]):
 
     def execute(self) -> list["RPCResponse"]:
         self._validate_is_batching()
-        responses = self.web3.manager._make_batch_request(self._requests_info)
-        self._end_batching()
-        return responses
+        try:
+            return self.web3.manager._make_batch_request(self._requests_info)
+        finally:
+            self._end_batching()
 
     def clear(self) -> None:
         self._requests_info = []
@@ -161,16 +163,16 @@ class RequestBatcher(Generic[TFunc]):
 
     async def async_execute(self) -> list["RPCResponse"]:
         self._validate_is_batching()
-        if self._provider.has_persistent_connection:
-            responses = await self.web3.manager._async_make_socket_batch_request(
+        try:
+            if self._provider.has_persistent_connection:
+                return await self.web3.manager._async_make_socket_batch_request(
+                    self._async_requests_info
+                )
+            return await self.web3.manager._async_make_batch_request(
                 self._async_requests_info
             )
-        else:
-            responses = await self.web3.manager._async_make_batch_request(
-                self._async_requests_info
-            )
-        self._end_batching()
-        return responses
+        finally:
+            self._end_batching()
 
     # -- async context manager -- #
 
