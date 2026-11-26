@@ -53,7 +53,7 @@ class MockedResponse:
     def __exit__(self, exc_type, exc_value, traceback):
         pass
 
-    def iter_content(self):
+    def iter_content(self, chunk_size=1):
         return [b"iter content"]
 
     @staticmethod
@@ -178,6 +178,25 @@ def test_session_manager_make_post_request_streaming(mocker, http_session_manage
     assert isinstance(adapter, HTTPAdapter)
     assert adapter._pool_connections == DEFAULT_POOLSIZE
     assert adapter._pool_maxsize == DEFAULT_POOLSIZE
+
+
+def test_session_manager_make_post_request_streaming_reads_chunks(
+    mocker, http_session_manager
+):
+    response = MockedResponse()
+    chunks = [b"a" * 10_000, b"b" * 10_000, b"c"]
+    response.iter_content = mocker.Mock(return_value=chunks)
+    mocker.patch("requests.Session.post", return_value=response)
+
+    body = http_session_manager.make_post_request(
+        TEST_URI, data=b"request", stream=True
+    )
+
+    assert body == b"".join(chunks)
+    assert isinstance(body, bytes)
+    # ``iter_content()`` defaults to 1-byte chunks, so a chunk size must be passed
+    (chunk_size,) = response.iter_content.call_args.kwargs.values()
+    assert chunk_size > 1
 
 
 def test_session_manager_make_post_request_times_out_while_streaming(

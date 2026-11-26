@@ -37,6 +37,8 @@ from web3.utils.caching import (
     SimpleCache,
 )
 
+STREAMING_CHUNK_SIZE = 8192
+
 
 class HTTPSessionManager:
     logger = logging.getLogger("web3._utils.http_session_manager.HTTPSessionManager")
@@ -158,14 +160,16 @@ class HTTPSessionManager:
     def _handle_streaming_response(
         response: requests.Response, start: float, timeout: float
     ) -> bytes:
-        response_body = b""
-        for data in response.iter_content():
+        # ``iter_content()`` defaults to 1-byte chunks; read larger chunks into a
+        # ``bytearray`` so large responses are not concatenated byte by byte.
+        response_body = bytearray()
+        for data in response.iter_content(chunk_size=STREAMING_CHUNK_SIZE):
             response_body += data
             # Manually manage timeout so streaming responses time out
             # rather than resetting the timeout each time a response comes back
             if (time.time() - start) > timeout:
                 raise TimeExhausted
-        return response_body
+        return bytes(response_body)
 
     def _close_evicted_sessions(self, evicted_sessions: list[requests.Session]) -> None:
         for evicted_session in evicted_sessions:
