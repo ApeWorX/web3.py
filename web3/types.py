@@ -360,6 +360,8 @@ class FeeHistory(TypedDict):
     gasUsedRatio: list[float]
     oldestBlock: BlockNumber
     reward: list[list[Wei]]
+    baseFeePerBlobGas: NotRequired[list[Wei]]
+    blobGasUsedRatio: NotRequired[list[float]]
 
 
 class StateOverrideParams(TypedDict, total=False):

@@ -1049,6 +1049,10 @@ The following methods are available on the ``web3.eth`` namespace.
     * **gasUsedRatio** *(List[float])* -- An array of ``gasUsed``/``gasLimit`` float values for the requested blocks.
     * **reward** *(List[List[Wei]])* -- *(optional)* A two-dimensional array of effective priority fees per gas at the
       requested block percentiles.
+    * **baseFeePerBlobGas** *(List[Wei])* -- *(optional)* An array of block base fees per blob gas. Like ``baseFeePerGas``
+      this includes the next block after the newest of the returned range. Only returned by clients that support EIP-4844.
+    * **blobGasUsedRatio** *(List[float])* -- *(optional)* An array of ``blobGasUsed``/max blob gas per block float values
+      for the requested blocks. Only returned by clients that support EIP-4844.
 
     .. code-block:: python
 

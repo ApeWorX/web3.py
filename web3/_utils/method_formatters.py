@@ -462,6 +462,12 @@ FEE_HISTORY_FORMATTERS = {
         is_not_null,
         apply_formatter_to_array(apply_formatter_to_array(to_integer_if_hex)),
     ),
+    "baseFeePerBlobGas": apply_formatter_if(
+        is_not_null, apply_formatter_to_array(to_integer_if_hex)
+    ),
+    "blobGasUsedRatio": apply_formatter_if(
+        is_not_null, apply_formatter_to_array(float)
+    ),
 }
 
 fee_history_formatter = type_aware_apply_formatters_to_dict(FEE_HISTORY_FORMATTERS)
