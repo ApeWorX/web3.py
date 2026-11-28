@@ -571,6 +571,36 @@ The following methods are available on the ``web3.eth`` namespace.
         })
 
 
+.. py:method:: Eth.get_block_receipts(block_identifier)
+
+    * Delegates to ``eth_getBlockReceipts`` RPC Method
+
+    Returns the list of transaction receipts of the block specified by
+    ``block_identifier``, in the order of the transactions in the block. Each
+    receipt has the same fields as the result of
+    :meth:`~web3.eth.Eth.get_transaction_receipt`. ``block_identifier`` can be
+    a block number, a block hash, or one of the predefined block parameters
+    ``'latest'``, ``'earliest'``, ``'pending'``, ``'safe'`` or ``'finalized'``.
+
+    .. code-block:: python
+
+        >>> web3.eth.get_block_receipts(46147)
+        [AttributeDict({
+            'blockHash': '0x4e3a3754410177e6937ef1f84bba68ea139e8d1a2258c5f85db9f1cd715a1bdd',
+            'blockNumber': 46147,
+            'contractAddress': None,
+            'cumulativeGasUsed': 21000,
+            'from': '0xA1E4380A3B1f749673E270229993eE55F35663b4',
+            'gasUsed': 21000,
+            'logs': [],
+            'logsBloom': '0x000000000000000000000000000000000000000000000000...0000',
+            'status': 1,
+            'to': '0x5DF9B87991262F6BA471F09758CDE1c0FC1De734',
+            'transactionHash': '0x5c504ed432cb51138bcf09aa5e8a410dd4a1e204ef84bfed1be16dfba1b22060',
+            'transactionIndex': 0,
+        })]
+
+
 .. py:method:: Eth.get_transaction_count(account, block_identifier=web3.eth.default_block)
 
     * Delegates to ``eth_getTransactionCount`` RPC Method
@@ -906,7 +936,7 @@ The following methods are available on the ``web3.eth`` namespace.
     can be accessed via the ``data`` attribute on ``ContractLogicError``.
 
 
-.. py:method:: Eth.simulateV1(payload, block_identifier)
+.. py:method:: Eth.simulate_v1(payload, block_identifier)
 
     * Delegates to ``eth_simulateV1`` RPC Method
 
@@ -914,7 +944,7 @@ The following methods are available on the ``web3.eth`` namespace.
 
     .. code-block:: python
 
-        >>> w3.eth.simulateV1(
+        >>> w3.eth.simulate_v1(
         ...   {
         ...     "blockStateCalls": [
         ...       {
